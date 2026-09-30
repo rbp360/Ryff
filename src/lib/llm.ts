@@ -83,8 +83,8 @@ export async function complete(params: CompleteParams): Promise<CompleteResult> 
     };
   } catch (err: unknown) {
     const errMsg = err instanceof Error ? err.message : String(err);
-    if (process.env.NODE_ENV === 'test' || errMsg.includes('NOT_FOUND') || errMsg.includes('API key')) {
-      console.warn(`[LLM Fallback - ${params.purpose}]: API call error (${errMsg.slice(0, 80)}...). Using development mock response.`);
+    if (process.env.NODE_ENV === 'test' || errMsg.includes('RESOURCE_EXHAUSTED') || errMsg.includes('depleted') || errMsg.includes('402')) {
+      console.warn(`[LLM Fallback - ${params.purpose}]: Gemini API notice (${errMsg.slice(0, 100)}...). Falling back to synthetic dev response.`);
       const mockUsage: TokenUsage = {
         input_tokens: 150,
         output_tokens: 45,

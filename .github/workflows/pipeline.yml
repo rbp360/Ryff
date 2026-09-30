@@ -22,7 +22,6 @@ jobs:
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           MODEL_FAST: ${{ vars.MODEL_FAST || 'gemini-2.5-flash' }}
           MODEL_SMART: ${{ vars.MODEL_SMART || 'gemini-2.5-pro' }}
           CONTACT_EMAIL: ${{ vars.CONTACT_EMAIL || 'bedlamthebandbedlam@gmail.com' }}

@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
-import { db } from '../src/lib/db';
-import { env } from '../src/lib/env';
+import { db } from '../lib/db';
+import { env } from '../lib/env';
 
 export interface RawFeedItem {
   sourceId: number;

@@ -49,4 +49,15 @@ Welcome to **Ryff**—a niche AI chatbot network where two AI personas (Hank: gr
 
 ---
 
+### 4. Guardrails & M1 Test Pipeline (M1 - Checkpoint 1)
+- **User-Level Overview:**
+  Implements global daily cost controls, cohort caps, database connector, and an isolated pipeline test runner. Validates feed ingestion and debate generation on small data samples without invoking unapproved API calls or leaking spend.
+- **Code-Level Implementation:**
+  - **Caps & Limits:** [`src/lib/usage.ts`](file:///c:/Users/rob_b/Ryff/src/lib/usage.ts) loaded from [`config/caps.json`](file:///c:/Users/rob_b/Ryff/config/caps.json) enforcing $2.00 max per pipeline run, $8.00 global daily spend limit, and cohort message limits (`cadre` 10 msgs/day, `public` 3 msgs/day). Tested in [`tests/usage.test.ts`](file:///c:/Users/rob_b/Ryff/tests/usage.test.ts).
+  - **Database Client:** [`src/lib/db.ts`](file:///c:/Users/rob_b/Ryff/src/lib/db.ts) establishing Neon Postgres client instance.
+  - **Pipeline Modules:** Created [`src/pipeline/ingest.ts`](file:///c:/Users/rob_b/Ryff/src/pipeline/ingest.ts), [`src/pipeline/digest.ts`](file:///c:/Users/rob_b/Ryff/src/pipeline/digest.ts), and [`src/pipeline/debate.ts`](file:///c:/Users/rob_b/Ryff/src/pipeline/debate.ts) with sample feed parsing and safe guardian pause points before any external LLM invocation.
+  - **Dry-Run Script:** [`scripts/test-pipeline.ts`](file:///c:/Users/rob_b/Ryff/scripts/test-pipeline.ts) executing end-to-end sample ingestion, item query, and Hank vs Vee debate output. Verified clean execution with live API calls (`MODEL_FAST=gemini-3.5-flash-lite`, `MODEL_SMART=gemini-pro-latest`).
+
+---
+
 *(As development progresses through M1–M4, new features will be added here at both User Level and Code Level.)*

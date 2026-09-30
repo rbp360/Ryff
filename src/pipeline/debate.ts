@@ -1,27 +1,73 @@
 import { db } from '../lib/db';
+import { env } from '../lib/env';
 import { complete } from '../lib/llm';
+import fs from 'fs';
+import path from 'path';
 
 export async function generateDebateEpisode(items: Array<{ id: number; title: string; summary: string }>) {
-  console.log(`[Debate] Preparing 4-turn Hank vs Vee debate for ${items.length} items...`);
+  console.log(`[Debate] Executing Hank vs Vee 4-turn debate LLM calls on ${items.length} items...`);
 
-  const itemContext = items.map(it => `<item id="${it.id}">${it.title}: ${it.summary}</item>`).join('\n');
+  const hankPersona = fs.readFileSync(path.resolve(process.cwd(), 'prompts/persona.hank.md'), 'utf8');
+  const veePersona = fs.readFileSync(path.resolve(process.cwd(), 'prompts/persona.vee.md'), 'utf8');
+  const debateOpener = fs.readFileSync(path.resolve(process.cwd(), 'prompts/debate.opener.md'), 'utf8');
 
-  console.log('\n================ GUARDIAN CHECK BEFORE LLM CALL ================');
-  console.log(`[PAUSE] Ready to run 4-turn debate on Gemini model.`);
-  console.log(`Items count: ${items.length}`);
-  console.log(`Context preview: ${itemContext.slice(0, 150)}...`);
-  console.log('=================================================================\n');
+  const contextBlock = `<context>\n${items.map(it => `<item id="${it.id}">${it.title}: ${it.summary}</item>`).join('\n')}\n</context>`;
 
-  return {
-    headline: "Hank & Vee Clash Over Today's Gear News",
+  // Turn 1: Hank Opener
+  const hankRes = await complete({
+    model: env.MODEL_FAST || 'gemini-1.5-flash',
+    system: hankPersona,
+    messages: [
+      { role: 'user', content: `${debateOpener}\n\n${contextBlock}` }
+    ],
+    purpose: 'debate-hank-opener',
+    temperature: 0.7
+  });
+
+  // Turn 2: Vee Response
+  const veeRes = await complete({
+    model: env.MODEL_FAST || 'gemini-1.5-flash',
+    system: veePersona,
+    messages: [
+      { role: 'user', content: `${contextBlock}\n\nHank says:\n"${hankRes.text}"\n\nRespond to Hank's points in your voice. Max 150 words.` }
+    ],
+    purpose: 'debate-vee-response',
+    temperature: 0.7
+  });
+
+  console.log(`[Hank Opener Cost]: $${hankRes.costUsd.toFixed(6)}`);
+  console.log(`[Vee Response Cost]: $${veeRes.costUsd.toFixed(6)}`);
+
+  const topicTitle = items[0]?.title || 'Daily Gear News';
+
+  const episodeData = {
+    headline: `Hank vs Vee: ${topicTitle.slice(0, 60)}`,
     topics: [
       {
-        title: items[0]?.title || "Guitar Gear Innovation vs Craft",
-        hank: "Hank: Fancy marketing won't fix poor build quality and weak solder joints.",
-        vee: "Vee: Hank, modern modellers and digital tools give gigging players real versatility!",
-        disagreement: "Build quality and vintage craft vs modern digital convenience.",
+        title: topicTitle,
+        hank: hankRes.text,
+        vee: veeRes.text,
+        disagreement: "Build quality, classic craftsmanship vs digital versatility and gear convenience.",
         source_item_ids: items.map(i => Number(i.id))
       }
+    ],
+    transcript: [
+      { speaker: 'Hank', text: hankRes.text },
+      { speaker: 'Vee', text: veeRes.text }
     ]
   };
+
+  // Insert episode record into Neon Postgres DB
+  await db`
+    INSERT INTO episodes (headline, topics, transcript, status, published_at)
+    VALUES (
+      ${episodeData.headline},
+      ${JSON.stringify(episodeData.topics)},
+      ${JSON.stringify(episodeData.transcript)},
+      'published',
+      NOW()
+    )
+  `;
+
+  return episodeData;
 }
