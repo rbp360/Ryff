@@ -1,0 +1,20 @@
+{
+  "cadre": {
+    "daily_msgs": 10,
+    "monthly_budget_usd": 1.5,
+    "max_output_tokens": 350,
+    "max_input_chars": 500,
+    "history_turns": 6
+  },
+  "public": {
+    "daily_msgs": 3,
+    "monthly_budget_usd": 0.3,
+    "max_output_tokens": 300,
+    "max_input_chars": 400,
+    "history_turns": 4
+  },
+  "global": {
+    "daily_spend_usd": 8,
+    "pipeline_run_usd": 2
+  }
+}

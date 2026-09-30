@@ -1,0 +1,602 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"
+	xmlns:content="http://purl.org/rss/1.0/modules/content/"
+	xmlns:wfw="http://wellformedweb.org/CommentAPI/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+	xmlns:slash="http://purl.org/rss/1.0/modules/slash/"
+	
+	xmlns:georss="http://www.georss.org/georss"
+	xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"
+	>
+
+<channel>
+	<title>Pedal Haven</title>
+	<atom:link href="http://www.pedalhaven.com/feed/" rel="self" type="application/rss+xml" />
+	<link>http://www.pedalhaven.com</link>
+	<description>Guitar Effect Pedal News &#38; Reviews</description>
+	<lastBuildDate>Thu, 22 Jan 2026 00:20:00 +0000</lastBuildDate>
+	<language>en-US</language>
+	<sy:updatePeriod>
+	hourly	</sy:updatePeriod>
+	<sy:updateFrequency>
+	1	</sy:updateFrequency>
+	<generator>https://wordpress.org/?v=6.3.12</generator>
+
+<image>
+	<url>http://www.pedalhaven.com/wp-content/uploads/2016/08/cropped-pedal-haven-black-logo-1-32x32.png</url>
+	<title>Pedal Haven</title>
+	<link>http://www.pedalhaven.com</link>
+	<width>32</width>
+	<height>32</height>
+</image> 
+<site xmlns="com-wordpress:feed-additions:1">115891104</site>	<item>
+		<title>RhPf Electronics Reveals the Shodhana Overdrive</title>
+		<link>http://www.pedalhaven.com/rhpf-electronics-shodhana/</link>
+		
+		<dc:creator><![CDATA[pedalhaven]]></dc:creator>
+		<pubDate>Thu, 22 Jan 2026 00:19:53 +0000</pubDate>
+				<category><![CDATA[Pedal Information]]></category>
+		<guid isPermaLink="false">http://www.pedalhaven.com/?p=3941</guid>
+
+					<description><![CDATA[<p>RhPf Electronics has released Shodhana, a balanced overdrive designed to move fluidly between two distinct gain characters: a transparent MOSFET boost and a focused, high-mid forward drive. Rather than stacking gain stages or adding tone controls, Shodhana’s single Drive knob lets both gain and voicing evolve together, allowing players to shape not just how much [&#8230;]</p>
+<p>The post <a rel="nofollow" href="http://www.pedalhaven.com/rhpf-electronics-shodhana/">RhPf Electronics Reveals the Shodhana Overdrive</a> appeared first on <a rel="nofollow" href="http://www.pedalhaven.com">Pedal Haven</a>.</p>
+]]></description>
+										<content:encoded><![CDATA[<p>RhPf Electronics has released <strong>Shodhana</strong>, a balanced overdrive designed to move fluidly between two distinct gain characters: a transparent MOSFET boost and a focused, high-mid forward drive. Rather than stacking gain stages or adding tone controls, Shodhana’s single Drive knob lets both gain and voicing evolve together, allowing players to shape not just how much distortion they hear, but how the tone sits in the mix.</p>
+<p><img decoding="async" fetchpriority="high" class="aligncenter size-large wp-image-3943" src="http://www.pedalhaven.com/wp-content/uploads/2026/01/IMG_6430-1024x578.jpg" alt="RhPf Electronics Shodhana" width="1024" height="578" srcset="http://www.pedalhaven.com/wp-content/uploads/2026/01/IMG_6430-1024x578.jpg 1024w, http://www.pedalhaven.com/wp-content/uploads/2026/01/IMG_6430-300x169.jpg 300w, http://www.pedalhaven.com/wp-content/uploads/2026/01/IMG_6430-768x434.jpg 768w, http://www.pedalhaven.com/wp-content/uploads/2026/01/IMG_6430-1536x867.jpg 1536w, http://www.pedalhaven.com/wp-content/uploads/2026/01/IMG_6430-2048x1156.jpg 2048w, http://www.pedalhaven.com/wp-content/uploads/2026/01/IMG_6430-750x423.jpg 750w, http://www.pedalhaven.com/wp-content/uploads/2026/01/IMG_6430-600x339.jpg 600w" sizes="(max-width: 1024px) 100vw, 1024px" /></p>
+<p>At low Drive settings, Shodhana behaves like a fast, full-range boost, adding clarity and energy without altering the natural character of the guitar and amp. As the Drive increases, the response gradually shifts toward a stronger upper-mid bite and faster attack, delivering the kind of snap and presence that helps single notes and chords cut clearly through dense arrangements. The transition is continuous, making it easy to find anything from subtle enhancement to assertive, mix-ready drive.</p>
+<p>Shodhana is designed to reward interaction with the instrument. As the high-mid snap builds with gain, the guitar’s tone control becomes a powerful way to fine-tune how much edge and bite you want in the sound. Rolled back, the pedal delivers smoother textures; wide open, it delivers maximum attack and cut. Whether used as a wide-open boost or a focused drive, Shodhana responds clearly to touch, pickup choice, and real-time playing dynamics.</p>
+<p><iframe title="YouTube video player" src="https://www.youtube.com/embed/cgzO0BykJao?si=SgP4IbLhNb8PxSi9" width="560" height="315" frameborder="0" allowfullscreen="allowfullscreen"></iframe></p>
+<p><strong>Key Features</strong></p>
+<ul>
+<li>Dual-path gain architecture with parallel MOSFET boost and overdrive circuits</li>
+<li>Single Drive control that adjusts both gain and voicing without a separate tone knob</li>
+<li>High-mid focused response that develops strong bite and fast attack as gain increases</li>
+<li>High headroom and wide output range for boosting, stacking, or clean dynamic use</li>
+<li>Minimal two-knob layout with Drive and Level controls only</li>
+</ul>
+<p>Street price is $179 USD. Shodhana is available at select retailers and directly from the RhPf Electronics online store at <a href="https://rhpfelectronics.com/product/shodhana-low-gain-overdrive/" target="_blank" rel="noopener">rhpfelectronics.com</a>.</p>
+<p>Like all RhPf Electronics products, Shodhana is not a clone, mod, or derivative circuit. It is a fully original design developed from the ground up.</p>
+<p>RhPf Electronics is a guitar effects company based in Basel, Switzerland, designing fully original circuits with a focus on musical feel, clarity, and long-term reliability.</p>
+<p>The post <a rel="nofollow" href="http://www.pedalhaven.com/rhpf-electronics-shodhana/">RhPf Electronics Reveals the Shodhana Overdrive</a> appeared first on <a rel="nofollow" href="http://www.pedalhaven.com">Pedal Haven</a>.</p>
+]]></content:encoded>
+					
+		
+		
+		<post-id xmlns="com-wordpress:feed-additions:1">3941</post-id>	</item>
+		<item>
+		<title>Klowra Pedals Launch the Mantra, Dual Expression Pedal</title>
+		<link>http://www.pedalhaven.com/klowra-pedals-launch-the-mantra-dual-expression-pedal/</link>
+		
+		<dc:creator><![CDATA[pedalhaven]]></dc:creator>
+		<pubDate>Thu, 22 Jan 2026 00:03:45 +0000</pubDate>
+				<category><![CDATA[Pedal Reviews]]></category>
+		<guid isPermaLink="false">http://www.pedalhaven.com/?p=3935</guid>
+
+					<description><![CDATA[<p>This post may contain affiliate links Klowra Pedals, in collaboration with Hotone, has just launched the Mantra, a beautifully designed dual expression pedal that allows you to externally control two parameters at the same time &#8211; whether that is on two different pedals, or digital amps, MIDI controllers, or anything else that accepts expression pedals. [&#8230;]</p>
+<p>The post <a rel="nofollow" href="http://www.pedalhaven.com/klowra-pedals-launch-the-mantra-dual-expression-pedal/">Klowra Pedals Launch the Mantra, Dual Expression Pedal</a> appeared first on <a rel="nofollow" href="http://www.pedalhaven.com">Pedal Haven</a>.</p>
+]]></description>
+										<content:encoded><![CDATA[<p><span style="color: #999999;"><em>This post may contain affiliate links</em></span></p>
+<p><span style="font-weight: 400;">Klowra Pedals, in collaboration with Hotone, has just launched the <a href="https://amzn.to/49SCG0h" target="_blank" rel="noopener"><strong>Mantra</strong></a>, a beautifully designed dual expression pedal that allows you to externally control two parameters at the same time &#8211; whether that is on two different pedals, or digital amps, MIDI controllers, or anything else that accepts expression pedals.</span></p>
+<p><img decoding="async" class="aligncenter size-large wp-image-3937" src="http://www.pedalhaven.com/wp-content/uploads/2026/01/Klowra-Mantra-Side-1024x781.jpg" alt="klowra mantra expression pedal" width="1024" height="781" srcset="http://www.pedalhaven.com/wp-content/uploads/2026/01/Klowra-Mantra-Side-1024x781.jpg 1024w, http://www.pedalhaven.com/wp-content/uploads/2026/01/Klowra-Mantra-Side-300x229.jpg 300w, http://www.pedalhaven.com/wp-content/uploads/2026/01/Klowra-Mantra-Side-768x585.jpg 768w, http://www.pedalhaven.com/wp-content/uploads/2026/01/Klowra-Mantra-Side-1536x1171.jpg 1536w, http://www.pedalhaven.com/wp-content/uploads/2026/01/Klowra-Mantra-Side-2048x1561.jpg 2048w, http://www.pedalhaven.com/wp-content/uploads/2026/01/Klowra-Mantra-Side-750x572.jpg 750w, http://www.pedalhaven.com/wp-content/uploads/2026/01/Klowra-Mantra-Side-600x457.jpg 600w" sizes="(max-width: 1024px) 100vw, 1024px" /></p>
+<p><span style="color: #993300;"><strong>Where to Buy the Mantra</strong></span></p>
+<p><a href="https://amzn.to/49SCG0h" target="_blank" rel="noopener"><strong>View Price on Amazon</strong></a></p>
+<p>&nbsp;</p>
+<p><span style="font-weight: 400;">The Mantra features two separate ¼” TRS output jacks that can each be plugged into separate devices, allowing you to control each expression parameter simultaneously. </span></p>
+<p>&nbsp;</p>
+<p><i><span style="font-weight: 400;">The pedal comes with one ¼” TRS cable, which is a nice addition. But if you need a second one, <a href="https://amzn.to/3NXWNCA" target="_blank" rel="noopener">these are the TRS cables I’ve been using</a>.</span></i></p>
+<p>&nbsp;</p>
+<p><span style="font-weight: 400;">Each of the TRS output jacks on the Mantra has its own Direction (-/+) switch that allows you to reverse the polarity of that specific jack, granting you more control over the expression control.</span></p>
+<ul>
+<li style="font-weight: 400;" aria-level="1"><span style="font-weight: 400;">(+) Mode: Toe-down increases the value.</span></li>
+<li style="font-weight: 400;" aria-level="1"><span style="font-weight: 400;">(-) Mode: Toe-down decreases the value.</span></li>
+</ul>
+<p>&nbsp;</p>
+<p><span style="font-weight: 400;">Despite being so feature-packed, the Mantra is relatively small and won’t take up a ton of space on your pedalboard.</span></p>
+<p><a href="https://amzn.to/49SCG0h" target="_blank" rel="noopener"><img decoding="async" loading="lazy" class="aligncenter size-large wp-image-3936" src="http://www.pedalhaven.com/wp-content/uploads/2026/01/Klowra-Mantra-Closeup-1024x768.jpg" alt="klowra pedals mantra" width="1024" height="768" srcset="http://www.pedalhaven.com/wp-content/uploads/2026/01/Klowra-Mantra-Closeup-1024x768.jpg 1024w, http://www.pedalhaven.com/wp-content/uploads/2026/01/Klowra-Mantra-Closeup-300x225.jpg 300w, http://www.pedalhaven.com/wp-content/uploads/2026/01/Klowra-Mantra-Closeup-768x576.jpg 768w, http://www.pedalhaven.com/wp-content/uploads/2026/01/Klowra-Mantra-Closeup-1536x1152.jpg 1536w, http://www.pedalhaven.com/wp-content/uploads/2026/01/Klowra-Mantra-Closeup-2048x1536.jpg 2048w, http://www.pedalhaven.com/wp-content/uploads/2026/01/Klowra-Mantra-Closeup-750x563.jpg 750w, http://www.pedalhaven.com/wp-content/uploads/2026/01/Klowra-Mantra-Closeup-600x450.jpg 600w" sizes="(max-width: 1024px) 100vw, 1024px" /></a></p>
+<p><span style="color: #993300;"><strong>Where to Buy the Mantra</strong></span></p>
+<p><a href="https://amzn.to/49SCG0h" target="_blank" rel="noopener"><strong>View Price on Amazon</strong></a></p>
+<p>&nbsp;</p>
+<p><span style="font-weight: 400;">The Mantra is housed in a rugged, metal enclosure that features an extremely cool, originally hand-drawn silk screen artwork on the top of the expression treadle. The treadle is also topped with a coarse, sandpaper-like material (like skateboard griptape) for added grip when using the pedal.</span></p>
+<p>&nbsp;</p>
+<p><span style="font-weight: 400;">Lastly, the Mantra is a passive pedal, meaning it doesn’t need any power to be used.</span></p>
+<p>&nbsp;</p>
+<p><strong>Tech Specs:<br />
+</strong><span style="font-weight: 400;">Power: Passive; No power required</span></p>
+<p><span style="font-weight: 400;">Dimension: 2.0&#8243;H x 6.4&#8243;D x 3.2&#8243;W</span></p>
+<p><span style="font-weight: 400;">Weight: 0.98lbs</span></p>
+<p><span style="font-weight: 400;">Outputs: 2x 1/4&#8243; TRS jacks, 10kQ, Linear</span></p>
+<p>&nbsp;</p>
+<p><span style="font-weight: 400;">The Klowra team was kind enough to send a Mantra to me to check out, and I have been really enjoying integrating it into my pedalboard. The expression curve is very smooth, and having the ability to control the expression inputs on two different pedals on my board has been really fun!</span></p>
+<p>&nbsp;</p>
+<p><span style="font-weight: 400;">Learn more about the Mantra here: <a href="https://www.klowra.com/mantra-dual-expression-pedal" target="_blank" rel="noopener">https://www.klowra.com/mantra-dual-expression-pedal</a></span></p>
+<p>You can <a href="https://amzn.to/49SCG0h" target="_blank" rel="noopener">buy the Mantra on Amazon here</a> (affiliate link)</p>
+<p>The post <a rel="nofollow" href="http://www.pedalhaven.com/klowra-pedals-launch-the-mantra-dual-expression-pedal/">Klowra Pedals Launch the Mantra, Dual Expression Pedal</a> appeared first on <a rel="nofollow" href="http://www.pedalhaven.com">Pedal Haven</a>.</p>
+]]></content:encoded>
+					
+		
+		
+		<post-id xmlns="com-wordpress:feed-additions:1">3935</post-id>	</item>
+		<item>
+		<title>Klowra Pedals Vein Pitch Shifter Pedal Review</title>
+		<link>http://www.pedalhaven.com/klowra-pedals-vein-pitch-shifter/</link>
+		
+		<dc:creator><![CDATA[pedalhaven]]></dc:creator>
+		<pubDate>Wed, 21 Jan 2026 23:49:36 +0000</pubDate>
+				<category><![CDATA[Pedal Reviews]]></category>
+		<guid isPermaLink="false">http://www.pedalhaven.com/?p=3924</guid>
+
+					<description><![CDATA[<p>This post may contain affiliate links The Klowra Pedals Vein reignited my love for pitch-shifting effects. I’ve always had a bit of a love-hate relationship with pitch shifter pedals. On one hand, they are extremely fun to have on your pedalboard, but on the other hand, dealing with latency issues has always made it hard [&#8230;]</p>
+<p>The post <a rel="nofollow" href="http://www.pedalhaven.com/klowra-pedals-vein-pitch-shifter/">Klowra Pedals Vein Pitch Shifter Pedal Review</a> appeared first on <a rel="nofollow" href="http://www.pedalhaven.com">Pedal Haven</a>.</p>
+]]></description>
+										<content:encoded><![CDATA[<p><span style="color: #999999;"><em>This post may contain affiliate links</em></span></p>
+<p><strong><em>The Klowra Pedals Vein reignited my love for pitch-shifting effects.</em></strong> <a href="https://amzn.to/4rbsTJH" target="_blank" rel="noopener"><img decoding="async" loading="lazy" class="aligncenter  wp-image-3929" src="http://www.pedalhaven.com/wp-content/uploads/2026/01/Klowra-Vein-Pitch-Shifter-1024x768.jpg" alt="Klowra Vein Pitch Shifter" width="735" height="551" srcset="http://www.pedalhaven.com/wp-content/uploads/2026/01/Klowra-Vein-Pitch-Shifter-1024x768.jpg 1024w, http://www.pedalhaven.com/wp-content/uploads/2026/01/Klowra-Vein-Pitch-Shifter-300x225.jpg 300w, http://www.pedalhaven.com/wp-content/uploads/2026/01/Klowra-Vein-Pitch-Shifter-768x576.jpg 768w, http://www.pedalhaven.com/wp-content/uploads/2026/01/Klowra-Vein-Pitch-Shifter-1536x1152.jpg 1536w, http://www.pedalhaven.com/wp-content/uploads/2026/01/Klowra-Vein-Pitch-Shifter-2048x1536.jpg 2048w, http://www.pedalhaven.com/wp-content/uploads/2026/01/Klowra-Vein-Pitch-Shifter-750x563.jpg 750w, http://www.pedalhaven.com/wp-content/uploads/2026/01/Klowra-Vein-Pitch-Shifter-600x450.jpg 600w" sizes="(max-width: 735px) 100vw, 735px" /></a></p>
+<p><span style="font-weight: 400;">I’ve always had a bit of a love-hate relationship with pitch shifter pedals. On one hand, they are extremely fun to have on your pedalboard, but on the other hand, dealing with latency issues has always made it hard to find one that is truly usable. </span></p>
+<p><span style="font-weight: 400;">Enter the <a href="https://amzn.to/4rbsTJH" target="_blank" rel="noopener">Vein Pitch Shifter from Klowra Pedals</a>. I’ve been diving into this pedal for the past couple of weeks, and it has been a mind-bending experience in the best way. It has rekindled my desire to add a pitch shifter to my pedalboard.</span></p>
+<p>&nbsp;</p>
+<p><i><span style="font-weight: 400;">Note: If you already have a Vein Pitch Shifter (or are thinking of buying one), make sure you have it updated to the latest firmware update (2.0.2). This update significantly improves the pedal’s response time and fixes latency issues. Seriously, it&#8217;s like a night-and-day difference between the old firmware version and the new one.</span></i></p>
+<!-- /wp:media-text -->
+
+<!-- wp:block {"ref":3749} /-->
+
+<!-- wp:block {"ref":3774} /-->
+<h2><span style="font-weight: 400;">What is the Vein Pitch Shifter?</span></h2>
+<p><span style="font-weight: 400;">As it sounds, it&#8217;s a pitch-shifting pedal, but under the surface, it offers far more than that (we will get into that later). The Vein is a polyphonic pitch shifter that offers 17 different pitch intervals, ranging from two full octaves up/down to strange, microtonal sounds.</span></p>
+<p><a href="https://amzn.to/4rbsTJH" target="_blank" rel="noopener"><img decoding="async" loading="lazy" class="aligncenter  wp-image-3928" src="http://www.pedalhaven.com/wp-content/uploads/2026/01/Klowra-Vein-Pitch-Change-Knob-1024x768.jpg" alt="klowra vein pitch select knob" width="692" height="519" srcset="http://www.pedalhaven.com/wp-content/uploads/2026/01/Klowra-Vein-Pitch-Change-Knob-1024x768.jpg 1024w, http://www.pedalhaven.com/wp-content/uploads/2026/01/Klowra-Vein-Pitch-Change-Knob-300x225.jpg 300w, http://www.pedalhaven.com/wp-content/uploads/2026/01/Klowra-Vein-Pitch-Change-Knob-768x576.jpg 768w, http://www.pedalhaven.com/wp-content/uploads/2026/01/Klowra-Vein-Pitch-Change-Knob-1536x1152.jpg 1536w, http://www.pedalhaven.com/wp-content/uploads/2026/01/Klowra-Vein-Pitch-Change-Knob-2048x1536.jpg 2048w, http://www.pedalhaven.com/wp-content/uploads/2026/01/Klowra-Vein-Pitch-Change-Knob-750x563.jpg 750w, http://www.pedalhaven.com/wp-content/uploads/2026/01/Klowra-Vein-Pitch-Change-Knob-600x450.jpg 600w" sizes="(max-width: 692px) 100vw, 692px" /></a></p>
+<p><span style="color: #993300;"><strong>Where to Buy the Vein Pitch Shifter</strong></span></p>
+<p><strong><a href="https://amzn.to/4rbsTJH" target="_blank" rel="noopener">View Price on Amazon</a></strong></p>
+<p>&nbsp;</p>
+<p><span style="font-weight: 400;">Here is a breakdown of the 17 pitch intervals you can choose on the Pitch Select knob:</span></p>
+<ul>
+<li style="font-weight: 400;" aria-level="1"><span style="font-weight: 400;"> </span><b>(-)②:</b><span style="font-weight: 400;"> Up (or Down) 24 Semitones</span></li>
+<li style="font-weight: 400;" aria-level="1"><b> (-)①: </b><span style="font-weight: 400;">Up (or Down) 12 Semitones</span></li>
+<li style="font-weight: 400;" aria-level="1"><b> (-)p5: </b><span style="font-weight: 400;">Up (or Down) 7 Semitones</span></li>
+<li style="font-weight: 400;" aria-level="1"><b> (-)p4: </b><span style="font-weight: 400;">Up (or Down) 5 Semitones</span></li>
+<li style="font-weight: 400;" aria-level="1"><span style="font-weight: 400;"> </span><b>(-)M3:</b><span style="font-weight: 400;"> Up (or Down) 4 Semitones</span></li>
+<li style="font-weight: 400;" aria-level="1"><span style="font-weight: 400;"> </span><b>(-)m3: </b><span style="font-weight: 400;">Up (or Down) 3 Semitones</span></li>
+<li style="font-weight: 400;" aria-level="1"><b> (-)M2:</b><span style="font-weight: 400;"> Up (or Down) 2 Semitones</span></li>
+<li style="font-weight: 400;" aria-level="1"><b> (-)m2:</b><span style="font-weight: 400;"> Up (or Down) 1 Semitone</span></li>
+<li style="font-weight: 400;" aria-level="1"><span style="font-weight: 400;"> </span><b>UNI:</b><span style="font-weight: 400;"> Unison</span></li>
+</ul>
+<p><span style="font-weight: 400;">As you can see, you get a lot of choices with each mode (except for UNI), each having the option to pitch up or down &#8211; giving you access to all kinds of cool octave sounds and interesting harmonies. The Unison (UNI) mode acts more like a chorus pedal effect that you can adjust using the Rate and Detune knobs.</span></p>
+<p>I&#8217;ve really been enjoying the 12 and 24 semitone settings, as these provide either one or two full octaves up or down. Some of the other intervals sound quite good for creating interesting harmonizing sounds, and some intervals (like 1 or 2 semitones) are honestly a bit&#8230; <em>strange</em> &#8211; but if you&#8217;re into eerie, microtonal sounds, then you will dig those settings too!</p>
+<p>As I mentioned above, the UNI mode is also extremely usable. It is like a chorus effect and sounds fantastic.</p>
+<p><a href="https://amzn.to/4rbsTJH" target="_blank" rel="noopener"><img decoding="async" loading="lazy" class="aligncenter  wp-image-3927" src="http://www.pedalhaven.com/wp-content/uploads/2026/01/Klowra-Vein-closeup-1024x768.jpg" alt="Klowra Pedals Vein" width="691" height="518" srcset="http://www.pedalhaven.com/wp-content/uploads/2026/01/Klowra-Vein-closeup-1024x768.jpg 1024w, http://www.pedalhaven.com/wp-content/uploads/2026/01/Klowra-Vein-closeup-300x225.jpg 300w, http://www.pedalhaven.com/wp-content/uploads/2026/01/Klowra-Vein-closeup-768x576.jpg 768w, http://www.pedalhaven.com/wp-content/uploads/2026/01/Klowra-Vein-closeup-1536x1152.jpg 1536w, http://www.pedalhaven.com/wp-content/uploads/2026/01/Klowra-Vein-closeup-2048x1536.jpg 2048w, http://www.pedalhaven.com/wp-content/uploads/2026/01/Klowra-Vein-closeup-750x563.jpg 750w, http://www.pedalhaven.com/wp-content/uploads/2026/01/Klowra-Vein-closeup-600x450.jpg 600w" sizes="(max-width: 691px) 100vw, 691px" /></a></p>
+<p><span style="color: #993300;"><strong>Where to Buy the Vein Pitch Shifter</strong></span></p>
+<p><strong><a href="https://amzn.to/4rbsTJH" target="_blank" rel="noopener">View Price on Amazon</a></strong></p>
+<p><span style="font-weight: 400;">The other controls on the front of the pedal are what set the Vein apart, as they introduce a ton of interesting, creative features. Let’s talk about them:</span></p>
+<p><strong>LED Button:</strong></p>
+<p><span style="font-weight: 400;">The LED on the front of the pedal not only indicates whether the effect is on or off, but it is also a button that allows you to perform various functions and access hidden/secondary features of other knobs:</span></p>
+<ul>
+<li style="list-style-type: none;">
+<ul>
+<li style="font-weight: 400;" aria-level="1"><span style="font-weight: 400;"><strong>Latched/Momentary mode</strong>: Press the LED button to change between Latched or Momentary mode when the pedal is engaged.</span></li>
+<li style="font-weight: 400;" aria-level="1"><span style="font-weight: 400;"><strong>Save a “Snap-Set”</strong>: Press and hold the LED button to save the current parameter settings, which you can later recall.</span></li>
+<li style="font-weight: 400;" aria-level="1"><span style="font-weight: 400;"><strong>Secondary Knob Functions</strong>: Press and hold the LED while adjusting a knob to adjust the secondary functions of the knobs (see more below).</span></li>
+<li style="font-weight: 400;" aria-level="1"><span style="font-weight: 400;"><strong>Access Negative Pitch Intervals</strong>: Press and hold while turning the Pitch Select knob to access negative interval pitches and lower octaves.</span></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li style="font-weight: 400;" aria-level="1"><span style="font-weight: 400;"><strong>Rate:</strong> This knob adjusts the LFO’s pitch modulation frequency.</span></li>
+<li style="font-weight: 400;" aria-level="1"><span style="font-weight: 400;"><strong>Tone:</strong> (Rate Knob Secondary Function): Adjusts the high frequencies of the wet signal.</span></li>
+<li style="font-weight: 400;" aria-level="1"><span style="font-weight: 400;"><strong>Detune:</strong> Adjusts the stereo deviation of the LFO’s microtonal pitch changes (up to 100 cents).</span></li>
+<li style="font-weight: 400;" aria-level="1"><span style="font-weight: 400;"><strong>Mix:</strong> Controls the wet/dry mix of the effect and your input signal.</span></li>
+</ul>
+<p><b>Vein’s Glide feature:</b></p>
+<p><span style="font-weight: 400;">The Vein features a Glide function where the pitch will ramp up (or down) to the desired pitch when the pedal is activated &#8211; the Glide feature can be engaged in both Latched and Momentary modes.</span></p>
+<ul>
+<li style="font-weight: 400;" aria-level="1"><span style="font-weight: 400;"><strong>Glide ATK:</strong> Controls the attack time (how long it takes to ramp to the desired pitch)of the Glide feature.</span></li>
+<li style="font-weight: 400;" aria-level="1"><span style="font-weight: 400;"><strong>Glide RLS:</strong> Controls the release of the glide effect when the pedal is deactivated.</span></li>
+</ul>
+<p><b>Vein’s Ramp feature:</b></p>
+<p><span style="font-weight: 400;">The Vein also has a Ramp function that fades the effect back and forth between the panel-set (current knob configuration) and a saved ‘Snap-Set’. The Ramp feature can also be used in both Latched and Momentary modes, and can be tweaked using the secondary functions of the Detune and Mix knobs.</span></p>
+<ul>
+<li style="font-weight: 400;" aria-level="1"><span style="font-weight: 400;"><strong>RampATK</strong> (Secondary function of Detune knob): Controls the attack speed of the Ramp effect.</span></li>
+<li style="font-weight: 400;" aria-level="1"><span style="font-weight: 400;"><strong>RampRLS</strong> (Secondary function of the Mix knob): Controls the release speed of the Ramp effect.</span></li>
+</ul>
+<p><span style="font-weight: 400;">This has quickly become my favorite feature of the Vein. Having the ability to fade between two different settings on the pedal is really cool. I was jamming on the UNI setting and using the Ramp feature to jump to the +1 Octave pitch setting for fun little accents before ramping back down to the UNI setting.</span></p>
+<p><strong>External Controls</strong></p>
+<p><a href="https://amzn.to/4rbsTJH" target="_blank" rel="noopener"><img decoding="async" loading="lazy" class="aligncenter wp-image-3930 " src="http://www.pedalhaven.com/wp-content/uploads/2026/01/Klowra-Vein-Pitch-Shifter-2-1024x768.jpg" alt="Klowra Pedals Vein" width="783" height="587" srcset="http://www.pedalhaven.com/wp-content/uploads/2026/01/Klowra-Vein-Pitch-Shifter-2-1024x768.jpg 1024w, http://www.pedalhaven.com/wp-content/uploads/2026/01/Klowra-Vein-Pitch-Shifter-2-300x225.jpg 300w, http://www.pedalhaven.com/wp-content/uploads/2026/01/Klowra-Vein-Pitch-Shifter-2-768x576.jpg 768w, http://www.pedalhaven.com/wp-content/uploads/2026/01/Klowra-Vein-Pitch-Shifter-2-1536x1152.jpg 1536w, http://www.pedalhaven.com/wp-content/uploads/2026/01/Klowra-Vein-Pitch-Shifter-2-2048x1536.jpg 2048w, http://www.pedalhaven.com/wp-content/uploads/2026/01/Klowra-Vein-Pitch-Shifter-2-750x563.jpg 750w, http://www.pedalhaven.com/wp-content/uploads/2026/01/Klowra-Vein-Pitch-Shifter-2-600x450.jpg 600w" sizes="(max-width: 783px) 100vw, 783px" /></a></p>
+<p><span style="color: #993300;"><strong>Where to Buy the Vein Pitch Shifter</strong></span></p>
+<p><strong><a href="https://amzn.to/4rbsTJH" target="_blank" rel="noopener">View Price on Amazon</a></strong></p>
+<p><span style="font-weight: 400;">I’ve found that the Vein becomes even more fun and usable when paired with an expression pedal, which effectively turns the pedal into a pseudo-Whammy type of pedal. An external expression pedal allows you to externally control the pedal’s Ramp or Glide features &#8211; giving you the ability to easily change between the “Panel-Set” settings and the “Snap-Set” you’ve saved.</span></p>
+<p>The setup is extremely easy to do. Just connect your <a href="http://www.pedalhaven.com/the-best-expression-pedals-for-guitar-pedals/">expression pedal</a> to the Vein&#8217;s &#8220;CTRL&#8221; input jack using a 1/4&#8243; TRS cable (<a href="https://amzn.to/3NXWNCA" target="_blank" rel="noopener">like this one</a>). The Vein&#8217;s LED will then blink red, and you can calibrate the expression settings by cycling through the full range of your expression pedal so the pedal recognizes the expression pedal&#8217;s output &#8211; and then it&#8217;s ready to go.</p>
+<p>&nbsp;</p>
+<p><strong>Final Thoughts</strong></p>
+<p><span style="font-weight: 400;">Klowra Pedals have created something really special, and honestly, extremely fun with the Vein. Their new software update fixed a lot of latency issues that I experienced when I first got the pedal (before it was updated), but after the update, it has become an incredibly versatile and powerful pitch-shifting pedal that is packed with so many cool, usable, and unique features.</span></p>
+<p><span style="font-weight: 400;">If you’re on the hunt for a new pitch shifter, the Vein is one that should certainly be on your radar!</span></p>
+<p><span style="font-weight: 400;">Learn more about the Vein here: ​​</span><a href="https://www.klowra.com/vein-pitch-shifter" target="_blank" rel="noopener"><span style="font-weight: 400;">https://www.klowra.com/vein-pitch-shifter</span></a></p>
+<p>You can <a href="https://amzn.to/4rbsTJH" target="_blank" rel="noopener">buy the Vein on Amazon here</a> (affiliate link)</p>
+<!-- wp:block {"ref":3774} /-->
+
+<!-- wp:media-text -->
+<div class="wp-block-media-text is-stacked-on-mobile">
+<figure class="wp-block-media-text__media"></figure>
+<div class="wp-block-media-text__content"><!-- wp:paragraph {"placeholder":"Content…"} --><!-- /wp:paragraph --></div>
+</div>
+<!-- /wp:media-text --><p>The post <a rel="nofollow" href="http://www.pedalhaven.com/klowra-pedals-vein-pitch-shifter/">Klowra Pedals Vein Pitch Shifter Pedal Review</a> appeared first on <a rel="nofollow" href="http://www.pedalhaven.com">Pedal Haven</a>.</p>
+]]></content:encoded>
+					
+		
+		
+		<post-id xmlns="com-wordpress:feed-additions:1">3924</post-id>	</item>
+		<item>
+		<title>This Pedal Company Designed a Pedal to Raise Awareness for a Rare Disease. Meet RhPf Electronics&#8217;s &#8216;Tri-Hormonic Phalanx&#8217; Boost/Overdrive Pedal</title>
+		<link>http://www.pedalhaven.com/rhpf-electronics-tri-hormonic-phalanx/</link>
+		
+		<dc:creator><![CDATA[pedalhaven]]></dc:creator>
+		<pubDate>Fri, 12 Dec 2025 16:39:32 +0000</pubDate>
+				<category><![CDATA[Pedal Information]]></category>
+		<guid isPermaLink="false">http://www.pedalhaven.com/?p=3914</guid>
+
+					<description><![CDATA[<p>This post may contain affiliate links This extremely unique boost pedal gives you complete control over your gain structure. RhPF Electronics has released the Tri-Hormonic Phalanx, and it&#8217;s what they&#8217;re calling a &#8216;precision tone enhancer&#8217; that allows you to add gain to hand-picked high, mid, and low frequencies separately &#8211; allowing you to dial in [&#8230;]</p>
+<p>The post <a rel="nofollow" href="http://www.pedalhaven.com/rhpf-electronics-tri-hormonic-phalanx/">This Pedal Company Designed a Pedal to Raise Awareness for a Rare Disease. Meet RhPf Electronics&#8217;s &#8216;Tri-Hormonic Phalanx&#8217; Boost/Overdrive Pedal</a> appeared first on <a rel="nofollow" href="http://www.pedalhaven.com">Pedal Haven</a>.</p>
+]]></description>
+										<content:encoded><![CDATA[<p><em><span style="color: #999999;">This post may contain affiliate links</span></em></p>
+<p><strong>This extremely unique boost pedal gives you complete control over your gain structure.</strong></p>
+<p><img decoding="async" loading="lazy" class="aligncenter  wp-image-3915" src="http://www.pedalhaven.com/wp-content/uploads/2025/12/IMG_6047-1024x578.jpg" alt="rhpf electronics tri hormonic phalanx" width="725" height="409" srcset="http://www.pedalhaven.com/wp-content/uploads/2025/12/IMG_6047-1024x578.jpg 1024w, http://www.pedalhaven.com/wp-content/uploads/2025/12/IMG_6047-300x169.jpg 300w, http://www.pedalhaven.com/wp-content/uploads/2025/12/IMG_6047-768x434.jpg 768w, http://www.pedalhaven.com/wp-content/uploads/2025/12/IMG_6047-1536x867.jpg 1536w, http://www.pedalhaven.com/wp-content/uploads/2025/12/IMG_6047-2048x1156.jpg 2048w, http://www.pedalhaven.com/wp-content/uploads/2025/12/IMG_6047-750x423.jpg 750w, http://www.pedalhaven.com/wp-content/uploads/2025/12/IMG_6047-600x339.jpg 600w" sizes="(max-width: 725px) 100vw, 725px" /></p>
+<p>RhPF Electronics has released the <strong>Tri-Hormonic Phalanx</strong>, and it&#8217;s what they&#8217;re calling a &#8216;precision tone enhancer&#8217; that allows you to add gain to hand-picked high, mid, and low frequencies separately &#8211; allowing you to dial in every aspect of your tone exactly as you want it.</p>
+<p>On the surface, it&#8217;s a <a href="http://www.pedalhaven.com/the-best-boost-pedals/">boost pedal</a>, but it is far more exciting than that. The Tri-Hormonic Phalanx works by separating your signal into three parallel paths, each running through its own MOFSET gain stage and its own level control. You can then decide to add gain to just your mids or highs, for example, or keep a frequency band clean to maintain clarity or create unique drive sounds. Then you can use the independent volume controls for each frequency to ensure the output is well-balanced in the mix.</p>
+<p><img decoding="async" loading="lazy" class="aligncenter  wp-image-3918" src="http://www.pedalhaven.com/wp-content/uploads/2025/12/IMG_6093-1024x578.jpg" alt="rhpf electronics tri hormonic phalanx controls" width="757" height="427" srcset="http://www.pedalhaven.com/wp-content/uploads/2025/12/IMG_6093-1024x578.jpg 1024w, http://www.pedalhaven.com/wp-content/uploads/2025/12/IMG_6093-300x169.jpg 300w, http://www.pedalhaven.com/wp-content/uploads/2025/12/IMG_6093-768x434.jpg 768w, http://www.pedalhaven.com/wp-content/uploads/2025/12/IMG_6093-1536x867.jpg 1536w, http://www.pedalhaven.com/wp-content/uploads/2025/12/IMG_6093-2048x1156.jpg 2048w, http://www.pedalhaven.com/wp-content/uploads/2025/12/IMG_6093-750x423.jpg 750w, http://www.pedalhaven.com/wp-content/uploads/2025/12/IMG_6093-600x339.jpg 600w" sizes="(max-width: 757px) 100vw, 757px" /></p>
+<p><strong>Key Features:</strong></p>
+<ul>
+<li>Triple-Band Parallel Architecture</li>
+<li>Independent Gain and Level controls for Low, Mid, and High Frequencies</li>
+<li>MOFSET Gain Stages for Natural, Amp-like Harmonic Character</li>
+<li>Full-Range Clean Boost or Targeted Drive for Specific Frequency Registers</li>
+</ul>
+<p>The Tri-Hormonic Phalanx is a powerful addition to the front of your pedal chain and can work well as an extremely unique and powerful boost or drive pedal on its own. Alternatively, it can be used in front of other overdrive or fuzz pedals to really shape which frequencies are being pushed into them.</p>
+<p>Check it out at the RhPf Electronics website <a href="https://rhpfelectronics.com/product/tri-hormonic-phalanx-tone-shaping-boost/" target="_blank" rel="noopener">here</a>.</p>
+<h3>The Story Behind the Tri-Hormonic Phalanx</h3>
+<p>The Phalanx carries a subtle tribute to Acromegaly into its identity. <a href="https://rhpfelectronics.com/rhpf-electronics-handmade-guitar-pedals-in-switzerland/tri-band-distortion-pedal-awareness-acromegaly/" target="_blank" rel="noopener">Acromegaly</a> is a rare disease, and early diagnosis can drastically improve patients’ lives. Your awareness can make a difference.</p>
+<p>Thomas from RhPf Electronics writes:</p>
+<p><em>&#8220;In late 2023, I received a diagnosis of acromegaly. This rare condition transformed my life, pushing me to reevaluate my priorities. Although I decided to continue my corporate job, I also chose to pursue a lifelong dream: sharing my passion for creating high-quality guitar pedals. For years, I designed pedals for myself, family, and friends. However, this journey inspired me to make my work available to others.</em></p>
+<p><em>The Tri-Hormonic Phalanx represents the beginning of this new chapter. Its name reflects its unique tri-band parallel distortion design and my battle with acromegaly. I named the three gain controls—IGF-1 (Low), GH (Mid), and ACTH (High)—after key hormones affected by this condition. IGF-1 (Insulin-like Growth Factor 1) and GH (Growth Hormone) are closely tied to the overproduction that causes acromegaly. Meanwhile, ACTH (Adrenocorticotropic Hormone) highlights another critical pituitary function. These labels honor my journey and help raise awareness of this rare condition.</em></p>
+<p><em>The Tri-Hormonic Phalanx blends my passion for music and design with a cause close to my heart. It’s more than just a pedal—it’s a testament to resilience, creativity, and the power of pursuing dreams despite life’s challenges.&#8221;</em></p>
+<p>&nbsp;</p>
+<h3>About RhPf Electronics</h3>
+<p>RhPf Electronics is a family-run pedal company from Basel, Switzerland. The team focuses on original circuits built with intention, musical purpose, and Swiss precision. Every pedal is hand-built, voiced carefully, and designed to help players get more out of their rigs.</p>
+<p>Learn More about RhPf Electronics here: <a href="https://rhpfelectronics.com/" target="_blank" rel="noopener">https://rhpfelectronics.com/</a></p>
+<p>The post <a rel="nofollow" href="http://www.pedalhaven.com/rhpf-electronics-tri-hormonic-phalanx/">This Pedal Company Designed a Pedal to Raise Awareness for a Rare Disease. Meet RhPf Electronics&#8217;s &#8216;Tri-Hormonic Phalanx&#8217; Boost/Overdrive Pedal</a> appeared first on <a rel="nofollow" href="http://www.pedalhaven.com">Pedal Haven</a>.</p>
+]]></content:encoded>
+					
+		
+		
+		<post-id xmlns="com-wordpress:feed-additions:1">3914</post-id>	</item>
+		<item>
+		<title>A Guitar Pedal Inspired by a Plugin? The SilverBOY Preamp Brings a Digital Amp to the Physical World</title>
+		<link>http://www.pedalhaven.com/dirty-boy-co-silverboy-preamp/</link>
+		
+		<dc:creator><![CDATA[pedalhaven]]></dc:creator>
+		<pubDate>Sat, 06 Dec 2025 14:15:01 +0000</pubDate>
+				<category><![CDATA[Pedal Information]]></category>
+		<guid isPermaLink="false">http://www.pedalhaven.com/?p=3908</guid>
+
+					<description><![CDATA[<p>This post may contain affiliate links In a world where analog guitar amps and effects are being digitally modeled and recreated as computer programs, Dirty Boy is fighting back by releasing the SilverBOY, the first preamp pedal inspired by a digital plugin. The pedal originated in plugin form as the SilverBOY TSM-AI amp, a virtual [&#8230;]</p>
+<p>The post <a rel="nofollow" href="http://www.pedalhaven.com/dirty-boy-co-silverboy-preamp/">A Guitar Pedal Inspired by a Plugin? The SilverBOY Preamp Brings a Digital Amp to the Physical World</a> appeared first on <a rel="nofollow" href="http://www.pedalhaven.com">Pedal Haven</a>.</p>
+]]></description>
+										<content:encoded><![CDATA[<p><span style="color: #999999;"><em>This post may contain affiliate links</em></span></p>
+<p><em><span style="font-weight: 400;">In a world where analog guitar amps and effects are being digitally modeled and recreated as computer programs, Dirty Boy is fighting back by releasing the </span><b>SilverBOY</b><span style="font-weight: 400;">, the first preamp pedal inspired by a digital plugin.</span></em></p>
+<p><img decoding="async" loading="lazy" class="aligncenter  wp-image-3911" src="http://www.pedalhaven.com/wp-content/uploads/2025/12/SilverBOY-819x1024.png" alt="dirty boy pedals silverboy" width="370" height="462" srcset="http://www.pedalhaven.com/wp-content/uploads/2025/12/SilverBOY-819x1024.png 819w, http://www.pedalhaven.com/wp-content/uploads/2025/12/SilverBOY-240x300.png 240w, http://www.pedalhaven.com/wp-content/uploads/2025/12/SilverBOY-768x960.png 768w, http://www.pedalhaven.com/wp-content/uploads/2025/12/SilverBOY-750x938.png 750w, http://www.pedalhaven.com/wp-content/uploads/2025/12/SilverBOY-600x750.png 600w, http://www.pedalhaven.com/wp-content/uploads/2025/12/SilverBOY.png 1080w" sizes="(max-width: 370px) 100vw, 370px" /></p>
+<p><span style="font-weight: 400;">The pedal originated in plugin form as the SilverBOY TSM-AI amp, a virtual amplifier created in collaboration with Two notes Audio Engineering for their GENOME platform. That digital amp captured the spirit of the original Dirty Boy Preamp.</span></p>
+<p><span style="font-weight: 400;">The plugin sounded so good that the Dirty Boy team felt it needed to exist in hardware form, and the SilverBOY was born.</span></p>
+<p><span style="font-weight: 400;">‘</span><i><span style="font-weight: 400;">SilverBOY was born as code. Now it exists as hardware. It’s the first time we’ve built an analog circuit from a virtual amp — reversing the whole industry’s direction,</span></i><span style="font-weight: 400;">’ said Danny Gomez, Dirty Boy owner. </span></p>
+<p><span style="font-weight: 400;">They worked backwards, capturing the feel, responsiveness, and sound of the virtual TSM-AI amp to shape the tone of the SilverBOY, then rebuilt it in physical form.</span></p>
+<p><img decoding="async" loading="lazy" class="aligncenter  wp-image-3909" src="http://www.pedalhaven.com/wp-content/uploads/2025/12/SilverBOY_2-819x1024.png" alt="silverboy preamp guts" width="370" height="463" srcset="http://www.pedalhaven.com/wp-content/uploads/2025/12/SilverBOY_2-819x1024.png 819w, http://www.pedalhaven.com/wp-content/uploads/2025/12/SilverBOY_2-240x300.png 240w, http://www.pedalhaven.com/wp-content/uploads/2025/12/SilverBOY_2-768x960.png 768w, http://www.pedalhaven.com/wp-content/uploads/2025/12/SilverBOY_2-750x938.png 750w, http://www.pedalhaven.com/wp-content/uploads/2025/12/SilverBOY_2-600x750.png 600w, http://www.pedalhaven.com/wp-content/uploads/2025/12/SilverBOY_2.png 1080w" sizes="(max-width: 370px) 100vw, 370px" /></p>
+<h2><span style="font-weight: 400;">What is the SilverBOY?</span></h2>
+<p><span style="font-weight: 400;">The SilverBOY is a fully analog <a href="http://www.pedalhaven.com/the-best-amp-sim-pedals/">amp simulator</a> made for direct LINE use, a highly-tweakable preamp for your amp’s <a href="http://www.pedalhaven.com/how-to-use-the-effects-loop-on-your-guitar-amp/">FX loop</a>, or a tube-like boost to drive the front end of your amp &#8211; capable of producing anything from sparkly cleans to snarling, collapsing fuzz-soak saturation.</span></p>
+<p><img decoding="async" loading="lazy" class="aligncenter  wp-image-3910" src="http://www.pedalhaven.com/wp-content/uploads/2025/12/SilverBOY_3-819x1024.png" alt="silverboy preamp" width="329" height="412" srcset="http://www.pedalhaven.com/wp-content/uploads/2025/12/SilverBOY_3-819x1024.png 819w, http://www.pedalhaven.com/wp-content/uploads/2025/12/SilverBOY_3-240x300.png 240w, http://www.pedalhaven.com/wp-content/uploads/2025/12/SilverBOY_3-768x960.png 768w, http://www.pedalhaven.com/wp-content/uploads/2025/12/SilverBOY_3-750x938.png 750w, http://www.pedalhaven.com/wp-content/uploads/2025/12/SilverBOY_3-600x750.png 600w, http://www.pedalhaven.com/wp-content/uploads/2025/12/SilverBOY_3.png 1080w" sizes="(max-width: 329px) 100vw, 329px" /></p>
+<p><span style="font-weight: 400;">The pedal is housed in a gnarly-looking enclosure with a DIY feel. The front of the pedal is completely packed with knobs to dial in your tone, including everything from Volume and Drive to a 3-band EQ section and a knob for the Variac Simulator, which emulates amp sag and creates voltage-starved fuzz sounds.</span></p>
+<p><span style="font-weight: 400;">As far as jacks go, the SilverBOY offers an input jack, a stereo LINE IN jack with a level control, a headphone jack, a PREAMP output, and an Emulated output.</span></p>
+<p><span style="font-weight: 400;">The SilverBOY also features a built-in 2&#215;12 cabinet emulation.</span></p>
+<p>&nbsp;</p>
+<p><span style="font-weight: 400;">Head over to the <a href="https://www.dirtyboy.co/products/silverboy" target="_blank" rel="noopener">Dirty Boy website</a> to learn more about the SilverBOY.</span></p>
+<p>The post <a rel="nofollow" href="http://www.pedalhaven.com/dirty-boy-co-silverboy-preamp/">A Guitar Pedal Inspired by a Plugin? The SilverBOY Preamp Brings a Digital Amp to the Physical World</a> appeared first on <a rel="nofollow" href="http://www.pedalhaven.com">Pedal Haven</a>.</p>
+]]></content:encoded>
+					
+		
+		
+		<post-id xmlns="com-wordpress:feed-additions:1">3908</post-id>	</item>
+		<item>
+		<title>Orange Amps Launches &#8220;King Comp&#8221; Compressor Pedal</title>
+		<link>http://www.pedalhaven.com/orange-amps-launches-king-comp-compressor-pedal/</link>
+		
+		<dc:creator><![CDATA[pedalhaven]]></dc:creator>
+		<pubDate>Wed, 22 Oct 2025 13:56:05 +0000</pubDate>
+				<category><![CDATA[Pedal Information]]></category>
+		<guid isPermaLink="false">http://www.pedalhaven.com/?p=3894</guid>
+
+					<description><![CDATA[<p>(22nd October, 2025 &#8211; London, UK) &#8211; The new Orange Amps King Comp is a super low noise Class A VCA compressor pedal with 18V DC power supply for extra headroom and subtle envelope shaping control. It brings studio-style compression dynamics to any pedalboard and offers a warm musical response with an exceptionally low noise floor. Developed [&#8230;]</p>
+<p>The post <a rel="nofollow" href="http://www.pedalhaven.com/orange-amps-launches-king-comp-compressor-pedal/">Orange Amps Launches &#8220;King Comp&#8221; Compressor Pedal</a> appeared first on <a rel="nofollow" href="http://www.pedalhaven.com">Pedal Haven</a>.</p>
+]]></description>
+										<content:encoded><![CDATA[<p><strong>(22nd October, 2025 &#8211; London, UK) &#8211; </strong>The new <strong>Orange Amps King Comp</strong> is a super low noise Class A VCA <a href="http://www.pedalhaven.com/the-best-compressor-pedals-for-guitar/">compressor pedal</a> with 18V DC power supply for extra headroom and subtle envelope shaping control. It brings studio-style compression dynamics to any pedalboard and offers a warm musical response with an exceptionally low noise floor.<br />
+Developed to meet the ever-evolving musical needs of guitarists and bassists, the King Comp pedal enhances sound by adding sustain, snap, and sparkle rather than flattening it, offering smooth, musical, pro-level compression with real character.</p>
+<p><img decoding="async" loading="lazy" class="aligncenter wp-image-3896" src="http://www.pedalhaven.com/wp-content/uploads/2025/10/orange-amps-king-comp-2-1024x1024.webp" alt="orange amps king comp" width="473" height="473" srcset="http://www.pedalhaven.com/wp-content/uploads/2025/10/orange-amps-king-comp-2-1024x1024.webp 1024w, http://www.pedalhaven.com/wp-content/uploads/2025/10/orange-amps-king-comp-2-300x300.webp 300w, http://www.pedalhaven.com/wp-content/uploads/2025/10/orange-amps-king-comp-2-150x150.webp 150w, http://www.pedalhaven.com/wp-content/uploads/2025/10/orange-amps-king-comp-2-768x768.webp 768w, http://www.pedalhaven.com/wp-content/uploads/2025/10/orange-amps-king-comp-2-750x750.webp 750w, http://www.pedalhaven.com/wp-content/uploads/2025/10/orange-amps-king-comp-2-600x600.webp 600w, http://www.pedalhaven.com/wp-content/uploads/2025/10/orange-amps-king-comp-2-100x100.webp 100w, http://www.pedalhaven.com/wp-content/uploads/2025/10/orange-amps-king-comp-2.webp 1100w" sizes="(max-width: 473px) 100vw, 473px" /></p>
+<p>The super useful dual attack and release knobs mean users can set how quickly the compression kicks in and shape every note they play. The versatile <em>attack contro</em>l allows anything from understated tightening to pronounced pogoing bounce to be dialled in. At the same time, the equally adaptable <em>release control</em> gives long-lasting sustain for notes and chords that can go on for miles. Plus, there is also visual feedback of any compression applied when the King Comp’s onboard LED switches from blue to pink.</p>
+<p>At the heart of the King Comp pedal is the Class A VCA compression circuit that delivers precision dynamics with a warm, natural feel.  There is also a high-quality buffered bypass to ensure signals stay strong and consistent, even when the pedal is off. The buffer maintains clarity, keeping sound punchy and defined, and makes the King Comp reliable as an always-on part of any setup.</p>
+<p><img decoding="async" loading="lazy" class="aligncenter size-full wp-image-3899" src="http://www.pedalhaven.com/wp-content/uploads/2025/10/Screen-Shot-2025-10-22-at-7.58.57-AM.png" alt="king comp" width="518" height="518" srcset="http://www.pedalhaven.com/wp-content/uploads/2025/10/Screen-Shot-2025-10-22-at-7.58.57-AM.png 518w, http://www.pedalhaven.com/wp-content/uploads/2025/10/Screen-Shot-2025-10-22-at-7.58.57-AM-300x300.png 300w, http://www.pedalhaven.com/wp-content/uploads/2025/10/Screen-Shot-2025-10-22-at-7.58.57-AM-150x150.png 150w, http://www.pedalhaven.com/wp-content/uploads/2025/10/Screen-Shot-2025-10-22-at-7.58.57-AM-100x100.png 100w" sizes="(max-width: 518px) 100vw, 518px" /></p>
+<p>Running with the external 18V DC supply maximises the King Comp’s dynamic range and reduces compression artefacts, so the pedal delivers the most transparent version of any instrument&#8217;s tone, making it especially useful with hot pickups, basses, and more complex pedalboards.</p>
+<p>The King Comp pedal offers precise dynamic control with a musical feel that responds like a great amp. To find out more please go to <a href="https://orangeamps.com/en-us/products/king-comp-compressor-pedal" target="_blank" rel="noopener" data-saferedirecturl="https://www.google.com/url?q=https://news.mail.armarketing.co.uk/9ECAA0E1717B500C17F591D70E3F4AD5B12E75AA5919F975D3D6A15E53F8362E/5426AF027299AFBFB7BC2C16B83B0C83/LE35&amp;source=gmail&amp;ust=1761197569156000&amp;usg=AOvVaw0NaY5ogac1_SGWKR6QvebD">www.orangeamps.com</a>.</p>
+<p>The post <a rel="nofollow" href="http://www.pedalhaven.com/orange-amps-launches-king-comp-compressor-pedal/">Orange Amps Launches &#8220;King Comp&#8221; Compressor Pedal</a> appeared first on <a rel="nofollow" href="http://www.pedalhaven.com">Pedal Haven</a>.</p>
+]]></content:encoded>
+					
+		
+		
+		<post-id xmlns="com-wordpress:feed-additions:1">3894</post-id>	</item>
+		<item>
+		<title>RhPf Electronics Unveils the Twin Peaks Eiger-Mönch, Dual Delay</title>
+		<link>http://www.pedalhaven.com/rhpf-electronics-twin-peaks-eiger-monch/</link>
+		
+		<dc:creator><![CDATA[pedalhaven]]></dc:creator>
+		<pubDate>Mon, 29 Sep 2025 21:17:38 +0000</pubDate>
+				<category><![CDATA[Pedal Information]]></category>
+		<guid isPermaLink="false">http://www.pedalhaven.com/?p=3883</guid>
+
+					<description><![CDATA[<p>The Twin Peaks Eiger-Mönch isn’t just yet another delay. With two purpose-voiced delay lines that can run in parallel or interact in a true cascade, it redefines what a delay pedal can be: a source of rhythm, texture, and inspiration that stays musical at every setting. RhPf Electronics just released the Twin Peaks Eiger-Mönch, a [&#8230;]</p>
+<p>The post <a rel="nofollow" href="http://www.pedalhaven.com/rhpf-electronics-twin-peaks-eiger-monch/">RhPf Electronics Unveils the Twin Peaks Eiger-Mönch, Dual Delay</a> appeared first on <a rel="nofollow" href="http://www.pedalhaven.com">Pedal Haven</a>.</p>
+]]></description>
+										<content:encoded><![CDATA[<p><em>The Twin Peaks Eiger-Mönch isn’t just yet another delay. With two purpose-voiced delay lines that can run in parallel or interact in a true cascade, it redefines what a delay pedal can be: a source of rhythm, texture, and inspiration that stays musical at every setting.</em></p>
+<p><img decoding="async" loading="lazy" class="aligncenter size-large wp-image-3884" src="http://www.pedalhaven.com/wp-content/uploads/2025/09/IMG_4749-1024x578.jpg" alt="Twin Peaks Eiger-Mönch" width="1024" height="578" srcset="http://www.pedalhaven.com/wp-content/uploads/2025/09/IMG_4749-1024x578.jpg 1024w, http://www.pedalhaven.com/wp-content/uploads/2025/09/IMG_4749-300x169.jpg 300w, http://www.pedalhaven.com/wp-content/uploads/2025/09/IMG_4749-768x434.jpg 768w, http://www.pedalhaven.com/wp-content/uploads/2025/09/IMG_4749-1536x867.jpg 1536w, http://www.pedalhaven.com/wp-content/uploads/2025/09/IMG_4749-2048x1156.jpg 2048w, http://www.pedalhaven.com/wp-content/uploads/2025/09/IMG_4749-750x423.jpg 750w, http://www.pedalhaven.com/wp-content/uploads/2025/09/IMG_4749-600x339.jpg 600w" sizes="(max-width: 1024px) 100vw, 1024px" /></p>
+<p>RhPf Electronics just released the <strong>Twin Peaks Eiger-Mönch</strong>, a two-voice delay that opens doors to new creative spaces. One channel is shimmery and airy, the other mellow and warm. Each line has its own Speed and Feedback control. In parallel mode, the voices spread wide and clear, giving a stereo-like dimension from a mono rig. In cascade mode, the two lines feed into each other, weaving syncopated swing and evolving echoes that answer each other while fading out.</p>
+<p><strong>What makes it different:</strong></p>
+<ul>
+<li><strong>Two distinct voices:</strong> vintage warmth on one side, modern brilliance on the other. Each has independent controls for endless rhythmic combinations.</li>
+<li><strong>Parallel mode:</strong> wide, layered echoes that stay open and defined; a stereo-like sense of space.</li>
+<li><strong>Cascade mode:</strong> true cross-feedback so each line feeds the other; repeats intertwine and evolve into living textures while fading out.</li>
+</ul>
+<p>The Twin Peaks Eiger-Mönch is no ordinary <a href="http://www.pedalhaven.com/the-best-delay-pedals/">delay pedal</a> or one-trick pony. It creates ambience and textures ranging from subtle reverb to intricate rhythm patterns that groove. Every setting stays musical thanks to carefully tuned feedback, avoiding runaway oscillation and gimmicks.</p>
+<p>Rather than sitting on top of your tone, it becomes part of it. Elevating riffs, chords, and textures without getting in the way. Guitarists keep coming back to one thing: it sparks creativity.</p>
+<p><em>“We wanted a fresh take on delay, one that inspires patterns and syncopation without relying on glitchy </em><em>tricks. It should sound good anywhere on the knobs and feel like part of your sound. We wanted a delay </em><em>that lands on a board and stays there.”</em></p>
+<p>Learn more about the Twin Peaks Eiger-Mönch on the <a href="https://rhpfelectronics.com/product/twin-peaks-eiger-monch-by-rhpf-electronics-dual-parallel-delay-pedal/" target="_blank" rel="noopener">RhPf Electronics site</a>.</p>
+<p>Like every RhPf pedal, the Twin Peaks Eiger-Mönch is a ground-up original, not a clone, not a mod. Hand-built in Basel by a small family-run workshop, it reflects a dedication to sound, detail, and originality.</p>
+<p> </p>
+
+
+<div class="wp-block-query is-layout-flow wp-block-query-is-layout-flow"><ul class="wp-block-post-template is-layout-flow wp-block-post-template-is-layout-flow"><li class="wp-block-post post-2342 post type-post status-publish format-standard has-post-thumbnail hentry category-shopping-guides">
+
+<div class="wp-block-columns are-vertically-aligned-center is-layout-flex wp-container-3 wp-block-columns-is-layout-flex">
+<div class="wp-block-column is-vertically-aligned-center is-layout-flow wp-block-column-is-layout-flow" style="flex-basis:25%"><figure class="wp-block-post-featured-image"><a href="http://www.pedalhaven.com/the-best-compressor-pedals-for-guitar/" target="_self"><img loading="lazy" width="851" height="315" src="http://www.pedalhaven.com/wp-content/uploads/2024/12/Best-Compressor-guitar-pedals.png" class="attachment-post-thumbnail size-post-thumbnail wp-post-image" alt="The Best Guitar Compressor Pedals in 2025: Ultimate Buyer&#8217;s Guide" decoding="async" style="object-fit:cover;" srcset="http://www.pedalhaven.com/wp-content/uploads/2024/12/Best-Compressor-guitar-pedals.png 851w, http://www.pedalhaven.com/wp-content/uploads/2024/12/Best-Compressor-guitar-pedals-300x111.png 300w, http://www.pedalhaven.com/wp-content/uploads/2024/12/Best-Compressor-guitar-pedals-768x284.png 768w, http://www.pedalhaven.com/wp-content/uploads/2024/12/Best-Compressor-guitar-pedals-750x278.png 750w, http://www.pedalhaven.com/wp-content/uploads/2024/12/Best-Compressor-guitar-pedals-600x222.png 600w" sizes="(max-width: 851px) 100vw, 851px" /></a></figure></div>
+
+
+
+<div class="wp-block-column is-vertically-aligned-center is-layout-flow wp-block-column-is-layout-flow" style="flex-basis:75%"><h2 class="wp-block-post-title"><a href="http://www.pedalhaven.com/the-best-compressor-pedals-for-guitar/" target="_self">The Best Guitar Compressor Pedals in 2025: Ultimate Buyer&#8217;s Guide</a></h2></div>
+</div>
+
+</li><li class="wp-block-post post-3363 post type-post status-publish format-standard has-post-thumbnail hentry category-shopping-guides">
+
+<div class="wp-block-columns are-vertically-aligned-center is-layout-flex wp-container-6 wp-block-columns-is-layout-flex">
+<div class="wp-block-column is-vertically-aligned-center is-layout-flow wp-block-column-is-layout-flow" style="flex-basis:25%"><figure class="wp-block-post-featured-image"><a href="http://www.pedalhaven.com/the-best-ambient-guitar-pedals/" target="_self"><img loading="lazy" width="851" height="315" src="http://www.pedalhaven.com/wp-content/uploads/2024/10/The-best-ambient-pedals.png" class="attachment-post-thumbnail size-post-thumbnail wp-post-image" alt="The Best Ambient Guitar Pedals" decoding="async" style="object-fit:cover;" srcset="http://www.pedalhaven.com/wp-content/uploads/2024/10/The-best-ambient-pedals.png 851w, http://www.pedalhaven.com/wp-content/uploads/2024/10/The-best-ambient-pedals-300x111.png 300w, http://www.pedalhaven.com/wp-content/uploads/2024/10/The-best-ambient-pedals-768x284.png 768w, http://www.pedalhaven.com/wp-content/uploads/2024/10/The-best-ambient-pedals-750x278.png 750w, http://www.pedalhaven.com/wp-content/uploads/2024/10/The-best-ambient-pedals-600x222.png 600w" sizes="(max-width: 851px) 100vw, 851px" /></a></figure></div>
+
+
+
+<div class="wp-block-column is-vertically-aligned-center is-layout-flow wp-block-column-is-layout-flow" style="flex-basis:75%"><h2 class="wp-block-post-title"><a href="http://www.pedalhaven.com/the-best-ambient-guitar-pedals/" target="_self">The Best Ambient Guitar Pedals</a></h2></div>
+</div>
+
+</li><li class="wp-block-post post-3341 post type-post status-publish format-standard has-post-thumbnail hentry category-shopping-guides">
+
+<div class="wp-block-columns are-vertically-aligned-center is-layout-flex wp-container-9 wp-block-columns-is-layout-flex">
+<div class="wp-block-column is-vertically-aligned-center is-layout-flow wp-block-column-is-layout-flow" style="flex-basis:25%"><figure class="wp-block-post-featured-image"><a href="http://www.pedalhaven.com/the-best-vibrato-pedals/" target="_self"><img loading="lazy" width="851" height="315" src="http://www.pedalhaven.com/wp-content/uploads/2024/09/Best-Vibrato-pedals.png" class="attachment-post-thumbnail size-post-thumbnail wp-post-image" alt="The Best Vibrato Pedals for Guitarists: A Comprehensive Guide" decoding="async" style="object-fit:cover;" srcset="http://www.pedalhaven.com/wp-content/uploads/2024/09/Best-Vibrato-pedals.png 851w, http://www.pedalhaven.com/wp-content/uploads/2024/09/Best-Vibrato-pedals-300x111.png 300w, http://www.pedalhaven.com/wp-content/uploads/2024/09/Best-Vibrato-pedals-768x284.png 768w, http://www.pedalhaven.com/wp-content/uploads/2024/09/Best-Vibrato-pedals-750x278.png 750w, http://www.pedalhaven.com/wp-content/uploads/2024/09/Best-Vibrato-pedals-600x222.png 600w" sizes="(max-width: 851px) 100vw, 851px" /></a></figure></div>
+
+
+
+<div class="wp-block-column is-vertically-aligned-center is-layout-flow wp-block-column-is-layout-flow" style="flex-basis:75%"><h2 class="wp-block-post-title"><a href="http://www.pedalhaven.com/the-best-vibrato-pedals/" target="_self">The Best Vibrato Pedals for Guitarists: A Comprehensive Guide</a></h2></div>
+</div>
+
+</li></ul></div>
+<p>The post <a rel="nofollow" href="http://www.pedalhaven.com/rhpf-electronics-twin-peaks-eiger-monch/">RhPf Electronics Unveils the Twin Peaks Eiger-Mönch, Dual Delay</a> appeared first on <a rel="nofollow" href="http://www.pedalhaven.com">Pedal Haven</a>.</p>
+]]></content:encoded>
+					
+		
+		
+		<post-id xmlns="com-wordpress:feed-additions:1">3883</post-id>	</item>
+		<item>
+		<title>Dronechov Noise Machines Release &#8220;Megaphone&#8221;, A Unique Boost Pedal</title>
+		<link>http://www.pedalhaven.com/dronechov-noise-machines-megaphone-boost/</link>
+		
+		<dc:creator><![CDATA[pedalhaven]]></dc:creator>
+		<pubDate>Mon, 15 Sep 2025 18:45:04 +0000</pubDate>
+				<category><![CDATA[Pedal Information]]></category>
+		<guid isPermaLink="false">http://www.pedalhaven.com/?p=3873</guid>
+
+					<description><![CDATA[<p>Utrecht-based boutique guitar pedal builder Dronechov Noise Machines announcedMegaphone, a transparent, high-impedance MOSFET boost pedal.     Megaphone carries the sound, feeling, and clarity of tube boosters and can drive your preamp into distorted bliss. The pedal offers extra headroom and doesn&#8217;t color your tone, but is packed with enough output to saturate any amp. [&#8230;]</p>
+<p>The post <a rel="nofollow" href="http://www.pedalhaven.com/dronechov-noise-machines-megaphone-boost/">Dronechov Noise Machines Release &#8220;Megaphone&#8221;, A Unique Boost Pedal</a> appeared first on <a rel="nofollow" href="http://www.pedalhaven.com">Pedal Haven</a>.</p>
+]]></description>
+										<content:encoded><![CDATA[<p>Utrecht-based boutique guitar pedal builder <a href="https://www.dronechovnm.com/" target="_blank" rel="noopener"><strong>Dronechov Noise Machines</strong></a> announced<br /><strong>Megaphone</strong>, a transparent, high-impedance MOSFET <a href="http://www.pedalhaven.com/the-best-boost-pedals/">boost pedal</a>.</p>
+<p><img decoding="async" loading="lazy" class="aligncenter wp-image-3877 size-full" src="http://www.pedalhaven.com/wp-content/uploads/2025/09/Screen-Shot-2025-09-15-at-12.40.04-PM.png" alt="dronechov noise machines megaphone boost pedal" width="970" height="640" srcset="http://www.pedalhaven.com/wp-content/uploads/2025/09/Screen-Shot-2025-09-15-at-12.40.04-PM.png 970w, http://www.pedalhaven.com/wp-content/uploads/2025/09/Screen-Shot-2025-09-15-at-12.40.04-PM-300x198.png 300w, http://www.pedalhaven.com/wp-content/uploads/2025/09/Screen-Shot-2025-09-15-at-12.40.04-PM-768x507.png 768w, http://www.pedalhaven.com/wp-content/uploads/2025/09/Screen-Shot-2025-09-15-at-12.40.04-PM-750x495.png 750w, http://www.pedalhaven.com/wp-content/uploads/2025/09/Screen-Shot-2025-09-15-at-12.40.04-PM-600x396.png 600w" sizes="(max-width: 970px) 100vw, 970px" /></p>
+<p> </p>
+<p> </p>
+<p>Megaphone carries the sound, feeling, and clarity of tube boosters and can drive your preamp into distorted bliss. The pedal offers extra headroom and doesn&#8217;t color your tone, but is packed with enough output to saturate any amp. Compatible with both Single Coil and Humbucker pickups, Megaphone sounds impressive not only when used on a guitar but on bass as well.</p>
+<p>While boosting itself keeps the signal clean, the pedal&#8217;s three-band EQ allows you to add the right amount of punch along the spectrum. This makes it extremely versatile and handy, no matter if you&#8217;re playing 1970s rock or high-gain metal. At first glance, Megaphone is a simple boost pedal, which it can be, but plug it directly into the Return input of an amp, and you can even use it as a preamp.</p>
+<p>You can learn more about the Megaphone and order it <a href="https://notpedals.com/collections/dronechov-noise-machines" target="_blank" rel="noopener">here</a>.</p>
+<h2> </h2>
+<h2>About Dronechov Noise Machines</h2>
+<p><a href="https://www.dronechovnm.com/" target="_blank" rel="noopener">Dronechov Noise Machines</a> is a one-man operation, founded in 2020. It started as a passion project for building various mods and pedal clones, but in early 2025, they introduced their own Black Philip fuzz. The first limited batch quickly sold out, but a new one is already available. Megaphone is their second guitar pedal, which like all of their items, is hand-built in Utrecht, the Netherlands.</p>
+<p> </p>
+<h2>Shop the Pedal Haven shop</h2>
+
+<div data-block-name="woocommerce/product-best-sellers" data-columns="4" data-rows="1" class="wc-block-grid wp-block-product-best-sellers wc-block-product-best-sellers has-4-columns"><ul class="wc-block-grid__products"><li class="wc-block-grid__product">
+				<a href="http://www.pedalhaven.com/product/ask-me-about-my-pedalboard-sticker/" class="wc-block-grid__product-link">
+					<div class="wc-block-grid__product-image"><img loading="lazy" width="300" height="300" src="http://www.pedalhaven.com/wp-content/uploads/2020/12/IMG_2278-300x300.jpg" class="attachment-woocommerce_thumbnail size-woocommerce_thumbnail" alt="&quot;Ask me about my pedalboard&quot; sticker" decoding="async" srcset="http://www.pedalhaven.com/wp-content/uploads/2020/12/IMG_2278-300x300.jpg 300w, http://www.pedalhaven.com/wp-content/uploads/2020/12/IMG_2278-150x150.jpg 150w, http://www.pedalhaven.com/wp-content/uploads/2020/12/IMG_2278-100x100.jpg 100w" sizes="(max-width: 300px) 100vw, 300px" /></div>
+					<div class="wc-block-grid__product-title">&#8220;Ask Me About My Pedalboard&#8221; Sticker</div>
+				</a>
+				
+				<div class="wc-block-grid__product-price price"><span class="woocommerce-Price-amount amount"><span class="woocommerce-Price-currencySymbol">&#036;</span>3.99</span></div>
+				
+				<div class="wp-block-button wc-block-grid__product-add-to-cart"><a href="http://www.pedalhaven.com/product/ask-me-about-my-pedalboard-sticker/?add-to-cart=871" aria-label="Add &ldquo;&quot;Ask Me About My Pedalboard&quot; Sticker&rdquo; to your cart" data-quantity="1" data-product_id="871" data-product_sku="1" rel="nofollow" class="wp-block-button__link add_to_cart_button ajax_add_to_cart">Add to cart</a></div>
+			</li><li class="wc-block-grid__product">
+				<a href="http://www.pedalhaven.com/product/ask-dont-ask-dual-pack/" class="wc-block-grid__product-link">
+					<div class="wc-block-grid__product-image"><img loading="lazy" width="300" height="300" src="http://www.pedalhaven.com/wp-content/uploads/2021/01/IMG_2277-300x300.jpg" class="attachment-woocommerce_thumbnail size-woocommerce_thumbnail" alt="&quot;ask me about my pedalboard&quot; and &quot;don&#039;t ask me about my pedalboard&quot; sticker pack" decoding="async" srcset="http://www.pedalhaven.com/wp-content/uploads/2021/01/IMG_2277-300x300.jpg 300w, http://www.pedalhaven.com/wp-content/uploads/2021/01/IMG_2277-150x150.jpg 150w, http://www.pedalhaven.com/wp-content/uploads/2021/01/IMG_2277-100x100.jpg 100w" sizes="(max-width: 300px) 100vw, 300px" /></div>
+					<div class="wc-block-grid__product-title">DUAL STICKER PACK &#8220;Ask Me/Don&#8217;t Ask Me&#8221;</div>
+				</a>
+				
+				<div class="wc-block-grid__product-price price"><span class="woocommerce-Price-amount amount"><span class="woocommerce-Price-currencySymbol">&#036;</span>6.99</span></div>
+				
+				<div class="wp-block-button wc-block-grid__product-add-to-cart"><a href="http://www.pedalhaven.com/product/ask-dont-ask-dual-pack/?add-to-cart=947" aria-label="Add &ldquo;DUAL STICKER PACK &quot;Ask Me/Don&#039;t Ask Me&quot;&rdquo; to your cart" data-quantity="1" data-product_id="947" data-product_sku="3" rel="nofollow" class="wp-block-button__link add_to_cart_button ajax_add_to_cart">Add to cart</a></div>
+			</li><li class="wc-block-grid__product">
+				<a href="http://www.pedalhaven.com/product/guitar-pedals-ruined-my-life-sticker/" class="wc-block-grid__product-link">
+					<div class="wc-block-grid__product-image"><img loading="lazy" width="300" height="300" src="http://www.pedalhaven.com/wp-content/uploads/2021/09/IMG_2345-300x300.jpg" class="attachment-woocommerce_thumbnail size-woocommerce_thumbnail" alt="guitar pedals ruined my life sticker" decoding="async" srcset="http://www.pedalhaven.com/wp-content/uploads/2021/09/IMG_2345-300x300.jpg 300w, http://www.pedalhaven.com/wp-content/uploads/2021/09/IMG_2345-1024x1024.jpg 1024w, http://www.pedalhaven.com/wp-content/uploads/2021/09/IMG_2345-150x150.jpg 150w, http://www.pedalhaven.com/wp-content/uploads/2021/09/IMG_2345-768x768.jpg 768w, http://www.pedalhaven.com/wp-content/uploads/2021/09/IMG_2345-1536x1536.jpg 1536w, http://www.pedalhaven.com/wp-content/uploads/2021/09/IMG_2345-750x750.jpg 750w, http://www.pedalhaven.com/wp-content/uploads/2021/09/IMG_2345-600x600.jpg 600w, http://www.pedalhaven.com/wp-content/uploads/2021/09/IMG_2345-100x100.jpg 100w, http://www.pedalhaven.com/wp-content/uploads/2021/09/IMG_2345.jpg 2000w" sizes="(max-width: 300px) 100vw, 300px" /></div>
+					<div class="wc-block-grid__product-title">&#8220;GUITAR PEDALS RUINED MY LIFE&#8221; Sticker</div>
+				</a>
+				
+				<div class="wc-block-grid__product-price price"><span class="woocommerce-Price-amount amount"><span class="woocommerce-Price-currencySymbol">&#036;</span>3.99</span></div>
+				
+				<div class="wp-block-button wc-block-grid__product-add-to-cart"><a href="http://www.pedalhaven.com/product/guitar-pedals-ruined-my-life-sticker/?add-to-cart=1615" aria-label="Add &ldquo;&quot;GUITAR PEDALS RUINED MY LIFE&quot; Sticker&rdquo; to your cart" data-quantity="1" data-product_id="1615" data-product_sku="4" rel="nofollow" class="wp-block-button__link add_to_cart_button ajax_add_to_cart">Add to cart</a></div>
+			</li><li class="wc-block-grid__product">
+				<a href="http://www.pedalhaven.com/product/pedal-haven-4-sticker-pack/" class="wc-block-grid__product-link">
+					<div class="wc-block-grid__product-image"><img loading="lazy" width="300" height="300" src="http://www.pedalhaven.com/wp-content/uploads/2021/09/IMG_2353-300x300.jpg" class="attachment-woocommerce_thumbnail size-woocommerce_thumbnail" alt="pedal haven sticker pack" decoding="async" srcset="http://www.pedalhaven.com/wp-content/uploads/2021/09/IMG_2353-300x300.jpg 300w, http://www.pedalhaven.com/wp-content/uploads/2021/09/IMG_2353-1024x1024.jpg 1024w, http://www.pedalhaven.com/wp-content/uploads/2021/09/IMG_2353-150x150.jpg 150w, http://www.pedalhaven.com/wp-content/uploads/2021/09/IMG_2353-768x768.jpg 768w, http://www.pedalhaven.com/wp-content/uploads/2021/09/IMG_2353-1536x1536.jpg 1536w, http://www.pedalhaven.com/wp-content/uploads/2021/09/IMG_2353-750x750.jpg 750w, http://www.pedalhaven.com/wp-content/uploads/2021/09/IMG_2353-600x600.jpg 600w, http://www.pedalhaven.com/wp-content/uploads/2021/09/IMG_2353-100x100.jpg 100w, http://www.pedalhaven.com/wp-content/uploads/2021/09/IMG_2353.jpg 1855w" sizes="(max-width: 300px) 100vw, 300px" /></div>
+					<div class="wc-block-grid__product-title">Pedal Haven 4 Sticker Pack</div>
+				</a>
+				
+				<div class="wc-block-grid__product-price price"><span class="woocommerce-Price-amount amount"><span class="woocommerce-Price-currencySymbol">&#036;</span>9.99</span></div>
+				
+				<div class="wp-block-button wc-block-grid__product-add-to-cart"><a href="http://www.pedalhaven.com/product/pedal-haven-4-sticker-pack/?add-to-cart=1617" aria-label="Add &ldquo;Pedal Haven 4 Sticker Pack&rdquo; to your cart" data-quantity="1" data-product_id="1617" data-product_sku="7" rel="nofollow" class="wp-block-button__link add_to_cart_button ajax_add_to_cart">Add to cart</a></div>
+			</li></ul></div>
+
+
+<h2 class="wp-block-heading">More From Pedal Haven</h2>
+
+
+
+<div class="wp-block-query is-layout-flow wp-block-query-is-layout-flow"><ul class="wp-block-post-template is-layout-flow wp-block-post-template-is-layout-flow"><li class="wp-block-post post-2342 post type-post status-publish format-standard has-post-thumbnail hentry category-shopping-guides">
+<figure class="wp-block-post-featured-image"><img loading="lazy" width="851" height="315" src="http://www.pedalhaven.com/wp-content/uploads/2024/12/Best-Compressor-guitar-pedals.png" class="attachment-post-thumbnail size-post-thumbnail wp-post-image" alt="" decoding="async" style="object-fit:cover;" srcset="http://www.pedalhaven.com/wp-content/uploads/2024/12/Best-Compressor-guitar-pedals.png 851w, http://www.pedalhaven.com/wp-content/uploads/2024/12/Best-Compressor-guitar-pedals-300x111.png 300w, http://www.pedalhaven.com/wp-content/uploads/2024/12/Best-Compressor-guitar-pedals-768x284.png 768w, http://www.pedalhaven.com/wp-content/uploads/2024/12/Best-Compressor-guitar-pedals-750x278.png 750w, http://www.pedalhaven.com/wp-content/uploads/2024/12/Best-Compressor-guitar-pedals-600x222.png 600w" sizes="(max-width: 851px) 100vw, 851px" /></figure>
+
+<div class="wp-block-post-date"><time datetime="2024-12-15T20:42:37+00:00">December 15, 2024</time></div>
+
+<h2 class="wp-block-post-title">The Best Guitar Compressor Pedals in 2025: Ultimate Buyer&#8217;s Guide</h2>
+</li><li class="wp-block-post post-3363 post type-post status-publish format-standard has-post-thumbnail hentry category-shopping-guides">
+<figure class="wp-block-post-featured-image"><img loading="lazy" width="851" height="315" src="http://www.pedalhaven.com/wp-content/uploads/2024/10/The-best-ambient-pedals.png" class="attachment-post-thumbnail size-post-thumbnail wp-post-image" alt="the best ambient guitar pedals" decoding="async" style="object-fit:cover;" srcset="http://www.pedalhaven.com/wp-content/uploads/2024/10/The-best-ambient-pedals.png 851w, http://www.pedalhaven.com/wp-content/uploads/2024/10/The-best-ambient-pedals-300x111.png 300w, http://www.pedalhaven.com/wp-content/uploads/2024/10/The-best-ambient-pedals-768x284.png 768w, http://www.pedalhaven.com/wp-content/uploads/2024/10/The-best-ambient-pedals-750x278.png 750w, http://www.pedalhaven.com/wp-content/uploads/2024/10/The-best-ambient-pedals-600x222.png 600w" sizes="(max-width: 851px) 100vw, 851px" /></figure>
+
+<div class="wp-block-post-date"><time datetime="2024-10-01T02:56:18+00:00">October 1, 2024</time></div>
+
+<h2 class="wp-block-post-title">The Best Ambient Guitar Pedals</h2>
+</li><li class="wp-block-post post-3341 post type-post status-publish format-standard has-post-thumbnail hentry category-shopping-guides">
+<figure class="wp-block-post-featured-image"><img loading="lazy" width="851" height="315" src="http://www.pedalhaven.com/wp-content/uploads/2024/09/Best-Vibrato-pedals.png" class="attachment-post-thumbnail size-post-thumbnail wp-post-image" alt="the best vibrato pedals" decoding="async" style="object-fit:cover;" srcset="http://www.pedalhaven.com/wp-content/uploads/2024/09/Best-Vibrato-pedals.png 851w, http://www.pedalhaven.com/wp-content/uploads/2024/09/Best-Vibrato-pedals-300x111.png 300w, http://www.pedalhaven.com/wp-content/uploads/2024/09/Best-Vibrato-pedals-768x284.png 768w, http://www.pedalhaven.com/wp-content/uploads/2024/09/Best-Vibrato-pedals-750x278.png 750w, http://www.pedalhaven.com/wp-content/uploads/2024/09/Best-Vibrato-pedals-600x222.png 600w" sizes="(max-width: 851px) 100vw, 851px" /></figure>
+
+<div class="wp-block-post-date"><time datetime="2024-09-26T23:49:59+00:00">September 26, 2024</time></div>
+
+<h2 class="wp-block-post-title">The Best Vibrato Pedals for Guitarists: A Comprehensive Guide</h2>
+</li></ul>
+
+<nav class="wp-block-query-pagination is-layout-flex wp-block-query-pagination-is-layout-flex" aria-label="Pagination">
+
+
+<div class="wp-block-query-pagination-numbers"><span aria-current="page" class="page-numbers current">1</span>
+<a class="page-numbers" href="?query-2-page=2">2</a>
+<a class="page-numbers" href="?query-2-page=3">3</a>
+<span class="page-numbers dots">&hellip;</span>
+<a class="page-numbers" href="?query-2-page=7">7</a></div>
+
+<a href="/feed/?query-2-page=2" class="wp-block-query-pagination-next">Next Page</a>
+</nav>
+
+</div>
+<p>The post <a rel="nofollow" href="http://www.pedalhaven.com/dronechov-noise-machines-megaphone-boost/">Dronechov Noise Machines Release &#8220;Megaphone&#8221;, A Unique Boost Pedal</a> appeared first on <a rel="nofollow" href="http://www.pedalhaven.com">Pedal Haven</a>.</p>
+]]></content:encoded>
+					
+		
+		
+		<post-id xmlns="com-wordpress:feed-additions:1">3873</post-id>	</item>
+		<item>
+		<title>RhPf Electronics Reveal The Mosferatwo, Dual Stage MOFSET Overdrive</title>
+		<link>http://www.pedalhaven.com/rhpf-electronics-mosferatwo-overdrive/</link>
+		
+		<dc:creator><![CDATA[pedalhaven]]></dc:creator>
+		<pubDate>Tue, 12 Aug 2025 23:19:02 +0000</pubDate>
+				<category><![CDATA[Pedal Information]]></category>
+		<guid isPermaLink="false">http://www.pedalhaven.com/?p=3837</guid>
+
+					<description><![CDATA[<p>RhPf Electronics, out of Basel, Switzerland, have revealed their new MOSFET-based overdrive pedal, the Mosferatwo. The Mosferatwo, originally designed for grungy blues-rock guitarists, is an overdrive pedal that features a 100% unique circuit utilizing two different gain stages to deliver a wide range of drive sounds, from clean boost to the sound of a full-blown [&#8230;]</p>
+<p>The post <a rel="nofollow" href="http://www.pedalhaven.com/rhpf-electronics-mosferatwo-overdrive/">RhPf Electronics Reveal The Mosferatwo, Dual Stage MOFSET Overdrive</a> appeared first on <a rel="nofollow" href="http://www.pedalhaven.com">Pedal Haven</a>.</p>
+]]></description>
+										<content:encoded><![CDATA[<p><strong>RhPf Electronics</strong>, out of Basel, Switzerland, have revealed their new MOSFET-based overdrive pedal, the <strong><a href="https://rhpfelectronics.com/product/mosferatwo-by-rhpf-electronics-mosfet-overdrive-pedal/" target="_blank" rel="noopener">Mosferatwo</a></strong>.</p>
+<p><img decoding="async" loading="lazy" class="aligncenter size-large wp-image-3839" src="http://www.pedalhaven.com/wp-content/uploads/2025/08/Mosferatwo-7-1024x578.jpg" alt="RhPf Electronics Mosferatwo" width="1024" height="578" srcset="http://www.pedalhaven.com/wp-content/uploads/2025/08/Mosferatwo-7-1024x578.jpg 1024w, http://www.pedalhaven.com/wp-content/uploads/2025/08/Mosferatwo-7-300x169.jpg 300w, http://www.pedalhaven.com/wp-content/uploads/2025/08/Mosferatwo-7-768x434.jpg 768w, http://www.pedalhaven.com/wp-content/uploads/2025/08/Mosferatwo-7-1536x867.jpg 1536w, http://www.pedalhaven.com/wp-content/uploads/2025/08/Mosferatwo-7-2048x1156.jpg 2048w, http://www.pedalhaven.com/wp-content/uploads/2025/08/Mosferatwo-7-750x423.jpg 750w, http://www.pedalhaven.com/wp-content/uploads/2025/08/Mosferatwo-7-600x339.jpg 600w" sizes="(max-width: 1024px) 100vw, 1024px" /></p>
+<p>The Mosferatwo, originally designed for grungy blues-rock guitarists, is an <a href="http://www.pedalhaven.com/the-best-overdrive-pedals/">overdrive pedal</a> that features a 100% unique circuit utilizing two different gain stages to deliver a wide range of drive sounds, from clean boost to the sound of a full-blown tube amp being pushed to the max &#8211; all while remaining extremely responsive.</p>
+<hr />
+<p><a href="http://www.pedalhaven.com/store/"><img decoding="async" loading="lazy" class="aligncenter wp-image-1618 size-medium" src="http://www.pedalhaven.com/wp-content/uploads/2021/09/IMG_2353-300x300.jpg" alt="pedal haven sticker pack" width="300" height="300" srcset="http://www.pedalhaven.com/wp-content/uploads/2021/09/IMG_2353-300x300.jpg 300w, http://www.pedalhaven.com/wp-content/uploads/2021/09/IMG_2353-1024x1024.jpg 1024w, http://www.pedalhaven.com/wp-content/uploads/2021/09/IMG_2353-150x150.jpg 150w, http://www.pedalhaven.com/wp-content/uploads/2021/09/IMG_2353-768x768.jpg 768w, http://www.pedalhaven.com/wp-content/uploads/2021/09/IMG_2353-1536x1536.jpg 1536w, http://www.pedalhaven.com/wp-content/uploads/2021/09/IMG_2353-750x750.jpg 750w, http://www.pedalhaven.com/wp-content/uploads/2021/09/IMG_2353-600x600.jpg 600w, http://www.pedalhaven.com/wp-content/uploads/2021/09/IMG_2353-100x100.jpg 100w, http://www.pedalhaven.com/wp-content/uploads/2021/09/IMG_2353.jpg 1855w" sizes="(max-width: 300px) 100vw, 300px" /></a></p>
+<p style="text-align: center;"><a href="http://www.pedalhaven.com/store/"><strong>Shop Pedal Haven Merch</strong></a></p>
+<hr />
+<p>The Mosferatwo features some interesting controls that offer a variety of unique ways to shape your tone:</p>
+<ul>
+<li><strong>Drive knob:</strong> controls both gain stages, allowing you to dial in the desired amount of distortion.</li>
+<li><strong>Focus knob:</strong> Changes the dynamic feel and frequency response of the drive sound, from bold and bloomy to tight and articulate.</li>
+<li><strong>Heart and Bite Toggle Switches/Knobs:</strong> These allow you to boost carefully-selected low and midrange sections of your EQ, further shaping your tone. The small black knobs above them allow you to dial in which frequencies are boosted.</li>
+</ul>
+<p><img decoding="async" loading="lazy" class="aligncenter size-large wp-image-3840" src="http://www.pedalhaven.com/wp-content/uploads/2025/08/Copy-of-IMG_3998-1024x578.jpg" alt="Mosferatwo RhPf Electronics" width="1024" height="578" srcset="http://www.pedalhaven.com/wp-content/uploads/2025/08/Copy-of-IMG_3998-1024x578.jpg 1024w, http://www.pedalhaven.com/wp-content/uploads/2025/08/Copy-of-IMG_3998-300x169.jpg 300w, http://www.pedalhaven.com/wp-content/uploads/2025/08/Copy-of-IMG_3998-768x434.jpg 768w, http://www.pedalhaven.com/wp-content/uploads/2025/08/Copy-of-IMG_3998-1536x867.jpg 1536w, http://www.pedalhaven.com/wp-content/uploads/2025/08/Copy-of-IMG_3998-2048x1156.jpg 2048w, http://www.pedalhaven.com/wp-content/uploads/2025/08/Copy-of-IMG_3998-750x423.jpg 750w, http://www.pedalhaven.com/wp-content/uploads/2025/08/Copy-of-IMG_3998-600x339.jpg 600w" sizes="(max-width: 1024px) 100vw, 1024px" /></p>
+<p><em>&#8220;Its saturated yet articulate tone, dry crunch, and melodic grit have resonated with those chasing anything from jangly garage textures to hypnotic, riff-heavy drive. The pedal now finds itself at home across genres — from vintage blues to modern desert rock and everything in between.&#8221;</em></p>
+<p>&nbsp;</p>
+<p>Head over to the <a href="https://rhpfelectronics.com/product/mosferatwo-by-rhpf-electronics-mosfet-overdrive-pedal/" target="_blank" rel="noopener">RhPf Electronics website</a> to learn more about the Mosferatwo or watch the demos available &#8211; including an extremely cool interactive demo from <a href="https://loopydemos.com/" target="_blank" rel="noopener">Loopy Demos</a> and a tool that lets you tweak the knobs of the Mosferato to see exactly how it&#8217;s shaping your tone.</p>
+<p>The post <a rel="nofollow" href="http://www.pedalhaven.com/rhpf-electronics-mosferatwo-overdrive/">RhPf Electronics Reveal The Mosferatwo, Dual Stage MOFSET Overdrive</a> appeared first on <a rel="nofollow" href="http://www.pedalhaven.com">Pedal Haven</a>.</p>
+]]></content:encoded>
+					
+		
+		
+		<post-id xmlns="com-wordpress:feed-additions:1">3837</post-id>	</item>
+		<item>
+		<title>J. Rockett Archer Select Review: Seven Klons in One</title>
+		<link>http://www.pedalhaven.com/j-rockett-audio-designs-release-the-archer-select/</link>
+		
+		<dc:creator><![CDATA[pedalhaven]]></dc:creator>
+		<pubDate>Mon, 04 Aug 2025 16:42:38 +0000</pubDate>
+				<category><![CDATA[Pedal Information]]></category>
+		<guid isPermaLink="false">http://www.pedalhaven.com/?p=2864</guid>
+
+					<description><![CDATA[<p>This post may contain affiliate links &#160; J. Rockett Audio Designs, the pedal company behind one of the most iconic Klon clones, The Archer, just released their latest pedal &#8211; the Archer Select. Since its release in 1994, the Klon Centaur, and its now-astronomical price tag, has sparked a world of different Klon clones. And [&#8230;]</p>
+<p>The post <a rel="nofollow" href="http://www.pedalhaven.com/j-rockett-audio-designs-release-the-archer-select/">J. Rockett Archer Select Review: Seven Klons in One</a> appeared first on <a rel="nofollow" href="http://www.pedalhaven.com">Pedal Haven</a>.</p>
+]]></description>
+										<content:encoded><![CDATA[<p><em><span style="color: #999999;">This post may contain affiliate links</span></em></p>
+<p>&nbsp;</p>
+<p><span style="font-weight: 400;">J. Rockett Audio Designs, the pedal company behind one of the most iconic Klon clones, The Archer, just released their latest pedal &#8211; the <strong>Archer Select</strong>.</span></p>
+<p><a href="https://reverb.grsm.io/pedalhaven-reverb?type=p&amp;product=j-rockett-archer-select" target="_blank" rel="noopener"><img decoding="async" loading="lazy" class="aligncenter wp-image-2867 size-full" src="http://www.pedalhaven.com/wp-content/uploads/2023/03/IMG_6185-scaled.jpg" alt="archer select j rockett audio designs" width="2560" height="1707" srcset="http://www.pedalhaven.com/wp-content/uploads/2023/03/IMG_6185-scaled.jpg 2560w, http://www.pedalhaven.com/wp-content/uploads/2023/03/IMG_6185-300x200.jpg 300w, http://www.pedalhaven.com/wp-content/uploads/2023/03/IMG_6185-1024x683.jpg 1024w, http://www.pedalhaven.com/wp-content/uploads/2023/03/IMG_6185-768x512.jpg 768w, http://www.pedalhaven.com/wp-content/uploads/2023/03/IMG_6185-1536x1024.jpg 1536w, http://www.pedalhaven.com/wp-content/uploads/2023/03/IMG_6185-2048x1365.jpg 2048w, http://www.pedalhaven.com/wp-content/uploads/2023/03/IMG_6185-750x500.jpg 750w, http://www.pedalhaven.com/wp-content/uploads/2023/03/IMG_6185-600x400.jpg 600w" sizes="(max-width: 2560px) 100vw, 2560px" /></a></p>
+<p><span style="font-weight: 400;">Since its release in 1994, the Klon Centaur, and its now-astronomical price tag, has sparked a world of different <a href="http://www.pedalhaven.com/klon-centaur-clones/">Klon clones</a>. And with those clones comes debate &#8211; a lot of which is centered around which clipping diodes make the best &#8216;Klon&#8217; sound.</span></p>
+<p>&nbsp;</p>
+<p><span style="font-weight: 400;">The J. Rockett Audio Designs team has decided to put that question to rest with the release of the Archer Select &#8211; which features seven different clipping modes (6 NOS germanium diodes plus a red LED clipping option).</span></p>
+<p><strong>WHERE TO BUY</strong></p>
+<p><a href="https://amzn.to/4lg8wHY" target="_blank" rel="noopener"><span style="color: #ff0000;"><b>See Price Amazon</b></span></a></p>
+<p><span style="font-weight: 400;">Check out our demo of the Archer Select here:</span><br />
+<iframe loading="lazy" title="YouTube video player" src="https://www.youtube.com/embed/F2TLkMBc_Ro" width="560" height="315" frameborder="0" allowfullscreen="allowfullscreen"></iframe></p>
+<h2>Review and Overview of the Archer Select</h2>
+<p>The J. Rockett Audio Designs team has taken the classic Klon formula and turned it into something truly special and customizable, with the Archer Select. It really nails that classic Klon sound, but it invites you to explore the circuit in new ways by changing the clipping diodes &#8211; which provide a wide range of new overdrive sounds that you don&#8217;t find in many other Klon clones.</p>
+<p>The Archer Select retains everything that made their original Archer pedals great, but adds a lot of little bonuses (like the DI Output with a built-in speaker simulator) that make it a great choice for the studio or the stage.</p>
+<p><strong>WHERE TO BUY</strong></p>
+<p><a href="https://amzn.to/4lg8wHY" target="_blank" rel="noopener"><span style="color: #ff0000;"><b>See Price Amazon</b></span></a></p>
+<h3>Archer Select&#8217;s Features</h3>
+<p><span style="font-weight: 400;">The Archer Select features a “Clipping” footswitch, which allows you to select one of the 6 additional clipping modes you’ve selected on the “Clipping” knob. When the “Clipping” footswitch is not engaged, the Archer Select uses <strong>OA10 diodes</strong>. </span></p>
+<p>&nbsp;</p>
+<p><span style="font-weight: 400;">The other 6 clipping diode options on the “Clipping” knob are:</span></p>
+<ul>
+<li style="font-weight: 400;" aria-level="1"><span style="font-weight: 400;"><strong>1N270</strong> NOS germanium diodes (The same diodes found in the original Archer)</span></li>
+<li style="font-weight: 400;" aria-level="1"><span style="font-weight: 400;"><strong>1N695</strong> NOS germanium diodes (The same diodes found in the Jeff Mod Archer)</span></li>
+<li style="font-weight: 400;" aria-level="1"><span style="font-weight: 400;"><strong>1N34A</strong> NOS germanium diodes (The same diodes found in the original Klon Centaur)</span></li>
+<li style="font-weight: 400;" aria-level="1"><span style="font-weight: 400;"><strong>D9B</strong> NOS germanium diodes </span></li>
+<li style="font-weight: 400;" aria-level="1"><span style="font-weight: 400;"><strong>D9E</strong> NOS germanium diodes (The same diodes found in the Archer iKon)</span></li>
+<li style="font-weight: 400;" aria-level="1"><span style="font-weight: 400;"><strong>Red LED</strong>s</span></li>
+</ul>
+<p>Although the differences between all of these clipping modes are quite subtle at low-to-medium gain settings, you start to hear how these clipping modes affect the compression and mid-range frequencies once you get into the higher gain settings.</p>
+<p><span style="font-weight: 400;">Aside from the clipping options, the Archer Select features all the knobs you would expect on a k-style overdrive pedal &#8211; <strong>Output</strong> (volume), <strong>Gain</strong>, and <strong>Treble</strong> (Controls the high end).</span></p>
+<p><strong>WHERE TO BUY</strong></p>
+<p><a href="https://amzn.to/4lg8wHY" target="_blank" rel="noopener"><span style="color: #ff0000;"><b>See Price Amazon</b></span></a></p>
+<p><a href="https://reverb.grsm.io/pedalhaven-reverb?type=p&amp;product=j-rockett-archer-select" target="_blank" rel="noopener"><img decoding="async" loading="lazy" class="aligncenter wp-image-2865 size-full" src="http://www.pedalhaven.com/wp-content/uploads/2023/03/IMG_6179-scaled.jpg" alt="" width="2560" height="1707" srcset="http://www.pedalhaven.com/wp-content/uploads/2023/03/IMG_6179-scaled.jpg 2560w, http://www.pedalhaven.com/wp-content/uploads/2023/03/IMG_6179-300x200.jpg 300w, http://www.pedalhaven.com/wp-content/uploads/2023/03/IMG_6179-1024x683.jpg 1024w, http://www.pedalhaven.com/wp-content/uploads/2023/03/IMG_6179-768x512.jpg 768w, http://www.pedalhaven.com/wp-content/uploads/2023/03/IMG_6179-1536x1024.jpg 1536w, http://www.pedalhaven.com/wp-content/uploads/2023/03/IMG_6179-2048x1365.jpg 2048w, http://www.pedalhaven.com/wp-content/uploads/2023/03/IMG_6179-750x500.jpg 750w, http://www.pedalhaven.com/wp-content/uploads/2023/03/IMG_6179-600x400.jpg 600w" sizes="(max-width: 2560px) 100vw, 2560px" /></a></p>
+<p>If the clipping options aren&#8217;t enough, the J. Rockett team has also implemented a 1/4&#8243; D.I. output on the side of the pedal equipped with an onboard speaker simulator for monitoring and/or direct-in recording. The toggle switch on the front of the Archer Select is a ground lift for the D.I. output.</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>Overall, the Archer Select is an incredibly versatile drive pedal that delivers that sweet Klon-like tone right out of the box. The addition of the various clipping options makes it seem right at home for any pedalboard or studio setup.</p>
+<p><strong>WHERE TO BUY</strong></p>
+<p><a href="https://amzn.to/4lg8wHY" target="_blank" rel="noopener"><span style="color: #ff0000;"><b>See Price Amazon</b></span></a></p>
+<p>&nbsp;</p>
+<p>The post <a rel="nofollow" href="http://www.pedalhaven.com/j-rockett-audio-designs-release-the-archer-select/">J. Rockett Archer Select Review: Seven Klons in One</a> appeared first on <a rel="nofollow" href="http://www.pedalhaven.com">Pedal Haven</a>.</p>
+]]></content:encoded>
+					
+		
+		
+		<post-id xmlns="com-wordpress:feed-additions:1">2864</post-id>	</item>
+	</channel>
+</rss>
+
+<!--
+Performance optimized by W3 Total Cache. Learn more: https://www.boldgrid.com/w3-total-cache/
+
+Page Caching using disk: enhanced (Page is feed) 
+
+Served from: www.pedalhaven.com @ 2026-09-30 07:02:55 by W3 Total Cache
+-->

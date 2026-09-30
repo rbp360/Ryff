@@ -1,0 +1,46 @@
+{
+  "name": "guitarbot",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "test": "vitest run",
+    "migrate": "tsx scripts/migrate.ts",
+    "seed": "tsx scripts/seed-sources.ts",
+    "check:feeds": "tsx scripts/check-feeds.ts",
+    "invites": "tsx scripts/create-invites.ts --count 100",
+    "pipeline": "tsx scripts/run-pipeline.ts",
+    "episode": "tsx scripts/print-episode.ts",
+    "evals": "tsx evals/run-evals.ts"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.129.0",
+    "@google/genai": "^2.24.0",
+    "@neon/config": "^1.8.2",
+    "@neon/env": "^1.4.7",
+    "jose": "^6.2.12",
+    "next": "16.3.7",
+    "postgres": "^3.4.9",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "rss-parser": "^3.13.0",
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.3.7",
+    "tailwindcss": "^4",
+    "tsx": "^4.23.15",
+    "typescript": "^5",
+    "vitest": "^5.0.2"
+  },
+  "packageManager": "pnpm@12.8.1"
+}

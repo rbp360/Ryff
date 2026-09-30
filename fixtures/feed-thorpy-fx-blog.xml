@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xml:lang="en" xmlns="http://www.w3.org/2005/Atom" xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:s="http://jadedpixel.com/-/spec/shopify">
+  <id>https://thorpyfx.com/blogs/effects-pedal-guidance.atom</id>
+  <link rel="alternate" type="text/html" href="https://thorpyfx.com/blogs/effects-pedal-guidance"/>
+  <link rel="self" type="application/atom+xml" href="https://thorpyfx.com/blogs/effects-pedal-guidance.atom"/>
+  <title>ThorpyFX Ltd - Effects Pedal Guidance</title>
+  <updated>2023-10-24T15:17:36+01:00</updated>
+  <author>
+    <name>ThorpyFX Ltd</name>
+  </author>
+  <entry>
+    <id>https://thorpyfx.com/blogs/effects-pedal-guidance/what-do-i-like-best-about-designing-guitar-pedals</id>
+    <published>2023-10-24T15:17:36+01:00</published>
+    <updated>2023-10-24T15:17:37+01:00</updated>
+    <link rel="alternate" type="text/html" href="https://thorpyfx.com/blogs/effects-pedal-guidance/what-do-i-like-best-about-designing-guitar-pedals"/>
+    <title>What do I like best about designing guitar pedals?</title>
+    <author>
+      <name>Adrian Thorpe</name>
+    </author>
+    <summary type="html">
+      <![CDATA[<meta charset="utf-8"><span data-mce-fragment="1">It’s at this point the parallel effort of the physical pedal design meets the pre-production guts. 99 times out of a hundred, this stage is easy… but some things (a pedal launching next year for example) has proven to be like trying to cram an elephant into a small car.</span><p><a class="read-more" href="https://thorpyfx.com/blogs/effects-pedal-guidance/what-do-i-like-best-about-designing-guitar-pedals">More</a></p>]]>
+    </summary>
+    <content type="html">
+      <![CDATA[<p style="text-align: center;" data-mce-fragment="1"><strong data-mce-fragment="1">What do I like best about designing guitar pedals? </strong></p>
+<p data-mce-fragment="1">Well, there’s a few stages to it, the first and most exciting (to begin with) is cultivating the idea. This stage is interesting because it begins with a blank sheet of paper and we just write ideas down, what we want it to do, how we want it to sound, what will be its unique selling point, who is the pedal for? Is it a long-term release or a limited run thing?</p>
+<p data-mce-fragment="1">Once all these questions are answered we begin to build the circuit concept, often it is done in a Duplo/Lego fashion with key building blocks such as power rails, noise filtering, input buffer, input filtering etc are laid down to set the foundations. Once these are in place we flesh the core sound out, making sure the pedal has enough character to meet the needs of the design, enough EQ capabilities to make the design versatile for a variety of uses.</p>
+<p data-mce-fragment="1">Once the theory has been crafted, we begin to turn the theoretical into the physical, sometimes this is done on breadboard, sometimes this is done on veroboard but often we lay the circuit down on an outsized PCB that enables us to make changes easily and tap into and cut parts of the circuit out for modification.</p>
+<p data-mce-fragment="1">The delivery of these first prototype circuits induces fear, still all these years on from the creation of ThorpyFx I am nervous for the first plug in of a prototype circuit. Interestingly though, the nerves dissipate immediately upon the first strum of a guitar through the circuit, be it successful or a complete and utter failure. The reason the nerves subside regardless of the outcome is because at that point I REALLY must go to work. If it’s an utter failure, we must work out why (usually this will be human error, or a miscalculation) and fix the issue before plugging in again.</p>
+<p data-mce-fragment="1">If it’s successful at first or second plug in then we must again go to work because the pedal needs analysing, testing, adjusting, testing again in a feedback loop until I can confidently proclaim the pedal ready for pre-production layout and testing to find out quirks with particular guitars, amps etc.</p>
+<p data-mce-fragment="1">It’s at this point the parallel effort of the physical pedal design meets the pre-production guts. 99 times out of a hundred, this stage is easy… but some things (a pedal launching next year for example) has proven to be like trying to cram an elephant into a small car. The phrase “Never give up, never surrender” was used a lot during this development…</p>
+<p data-mce-fragment="1">Once the two are married up we send them out on the road to trusted people and receive feedback before getting the logistics in place and ramping up the production line.</p>
+<p data-mce-fragment="1">Then the fear sets in again, how will it be received? Will people love it? On launch day I’m tense as you can imagine, but recently I’ve found it best to set everything up and then be anywhere but in front of the computer. This phase is usually the culmination of years’ worth of work, lots of blood sweat and tears from myself and the team at ThorpyFx, is it worth it? Absolutely, I love creating boxes of joy that enable other (more talented) people get creative with. The very next day, we move onto the next pedal as if nothing happened the day before.</p>
+<p data-mce-fragment="1">At this point, you are probably wondering what I like best about the Pedal design process? The answer in short is I love the small details, solving problems, dealing with people, and overcoming anything that blocks the route of a pedal to your hands. But if you had me over a barrel to choose specifically, I’d say that first photo of the finished product makes me happier than you could imagine.</p>]]>
+    </content>
+  </entry>
+  <entry>
+    <id>https://thorpyfx.com/blogs/effects-pedal-guidance/how-do-you-integrate-a-new-pedal-into-your-rig</id>
+    <published>2023-01-03T17:09:02+00:00</published>
+    <updated>2023-01-03T17:09:02+00:00</updated>
+    <link rel="alternate" type="text/html" href="https://thorpyfx.com/blogs/effects-pedal-guidance/how-do-you-integrate-a-new-pedal-into-your-rig"/>
+    <title>How do you integrate a new pedal into your rig?</title>
+    <author>
+      <name>Adrian Thorpe</name>
+    </author>
+    <summary type="html">
+      <![CDATA[It can be hard to integrate a new pedal into your rig, heres a methodical method to make it as pain free as possible.<p><a class="read-more" href="https://thorpyfx.com/blogs/effects-pedal-guidance/how-do-you-integrate-a-new-pedal-into-your-rig">More</a></p>]]>
+    </summary>
+    <content type="html">
+      <![CDATA[<p><strong>You have a new pedal, what do you do with it?</strong></p>
+<p> There is a rude answer, an obvious answer, and a more thought-out answer. I’ll try and provide the latter.</p>
+<p>Whenever I get a new pedal, I first spend a little time reacquainting myself with my current “go to” sound. This gives me an auditory benchmark and reminds me of the background noise of my rig, the interaction between my guitar and gives me a chance to realise if something is amiss with my tone.</p>
+<p> I then put my pedalboard to one side and don’t touch it save for unplugging the two guitar leads I know to work. These are plugged into the new pedal as is the correct power supply. Ideally all the other power outputs on your power supply are disconnected and you can audition the new pedal in the most isolated way possible.  Personally, I tend to do this in small packets of time, different times of the day, different volumes that simulate home use, vs higher volumes simulating live use.</p>
+<p> Essentially, I treat any new pedal like an instrument, I take my time to explore the pedal enjoy it, learn it and ultimately integrate it into my rig once I am comfortable with how it sounds and how I use it. It probably sounds drawn out, and it is but, this way I only rip into my pedalboard once I know the pedal will fit in. by learning the new pedal I also have a better idea of whereabouts in the chain the pedal will be best placed. Reducing the amount of time tearing at Velcro with my hands.</p>
+<p>What if it interacts with other pedals badly? Occasionally (and I stress, it is rare) some pedals just don’t like each other. This can be for a number of reasons; however it is rarely terminal and like siblings that fight, often if you just keep them further apart or swap the order they sit, interaction issues disappear.</p>
+<p><strong>This all sounds like a lot of effort, is there an easier way?</strong></p>
+<p> Absolutely there is an easier way. It’s not as comprehensive but it works and makes life easier for those of us who like to change our pedals often. In short, always keep a blank space on your pedalboard. This should be wired for power and easy to plug a pedal into. I call this the audition slot. It allows you to do all the above easily and means that your pedalboard wiring doesn’t have to be touched until you are certain the pedal suits your needs.</p>
+<p> </p>]]>
+    </content>
+  </entry>
+  <entry>
+    <id>https://thorpyfx.com/blogs/effects-pedal-guidance/why-fallout-cloud</id>
+    <published>2022-11-20T18:00:02+00:00</published>
+    <updated>2022-11-20T18:00:02+00:00</updated>
+    <link rel="alternate" type="text/html" href="https://thorpyfx.com/blogs/effects-pedal-guidance/why-fallout-cloud"/>
+    <title>WHY FALLOUT CLOUD?</title>
+    <author>
+      <name>Adrian Thorpe</name>
+    </author>
+    <summary type="html">
+      <![CDATA[<meta charset="utf-8"><span>The ability to craft a fuzz pedal to sound how you like is what the FALLOUT CLOUD is about. Whilst its start point was emulation, the end design is so much more and we are proud to say it’s an award winning pedal.</span><p><a class="read-more" href="https://thorpyfx.com/blogs/effects-pedal-guidance/why-fallout-cloud">More</a></p>]]>
+    </summary>
+    <content type="html">
+      <![CDATA[<meta charset="utf-8">
+<p><span>The FALLOUT CLOUD is inspired by the famous 4 transistor silicon fuzz circuits from the 70s. I have long held a fascination for these circuits, the feel, touch responsiveness and violin like sustain are addictive as is the fact that all variants seem to have their own character. The Muff style fuzz very much became a “pokemon” situation for me, “gotta catch them all” that is until I tried a particularly incredible triangle big muff I had in for repair.</span></p>
+<p><span>Initially it was rubbish (as it was broken), but once fixed it let out this astonishing wall of sound that just blew me away. The issue I found though was that other versions of this type of circuit varied and not all were as inspiring. </span></p>
+<p><span>So we created the FALLOUT CLOUD to capture the magic of this<br>particular pedal and then offer so much more besides.</span></p>
+<p><span>Volume allows the pedal to go from subtle to maximum output in a<br>controlled manner, you the guitarist are in charge. The same can be said of gain control, fully functional throughout the range of its travel it can be smooth and almost overdrive like through to massive and fuzzed out.</span></p>
+<p><span>The secret sauce though is a particular type of active +/-6dB BAXANDALL EQ and recovery stage that enable the fuzz tobreath and match your rig. The ability to craft a fuzz pedal to sound how you like is what the FALLOUT CLOUD is about. Whilst its start point was emulation, the end design is so much more and we are proud to say it’s an award winning pedal. </span></p>
+<meta charset="utf-8">
+<p><b>TLDR: So why am I telling you all of this about the FALLOUT CLOUD? Because it's the Fuzz for fuzz lovers and people new to the type alike. Its immediately grin inducing and whats more its easily accessible for pretty much every guitar and bass player to get to grips with.</b></p>
+<p><b><iframe width="560" height="315" src="https://www.youtube.com/embed/W6ZEYSA10ME" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe><br></b></p>]]>
+    </content>
+  </entry>
+  <entry>
+    <id>https://thorpyfx.com/blogs/effects-pedal-guidance/why-does-the-heavy-water-exist</id>
+    <published>2022-11-18T17:29:20+00:00</published>
+    <updated>2022-11-18T17:29:20+00:00</updated>
+    <link rel="alternate" type="text/html" href="https://thorpyfx.com/blogs/effects-pedal-guidance/why-does-the-heavy-water-exist"/>
+    <title>Why does the Heavy Water Exist?</title>
+    <author>
+      <name>Adrian Thorpe</name>
+    </author>
+    <summary type="html">
+      <![CDATA[<meta charset="utf-8">
+<p>Boosting the right-hand side boost into the left-hand side but keeping the left hand side boost lower yields a very nice overdrive that feels and responds like Poweramp distortion.</p><p><a class="read-more" href="https://thorpyfx.com/blogs/effects-pedal-guidance/why-does-the-heavy-water-exist">More</a></p>]]>
+    </summary>
+    <content type="html">
+      <![CDATA[<meta charset="utf-8">
+<p><strong>WHY HEAVY WATER?</strong></p>
+<p>The Heavy Water was the answer to a chorus of voices asking for me to make the boost in the Dane available as a separate pedal. So, we did this, but I wanted to provide a more versatile pedal and as such 2 boosts were put into the same box. It might seem ludicrous, but I’ll explain why in a moment.</p>
+<p>The Boost in the Heavy water is designed to provide an absolutely incredible level of boost but it does it in such a way to be more useful to you the guitarist. The headroom the pedal offers means that whatever you run into the Heavy Water gets louder without adding its own distortion to the signal, right up until the upper reaches of Heavy Waters boost control.</p>
+<p>We also added a Lows control which gives you the opportunity to tailor your guitar to the pedal and then to your amp, it prevents the low end getting “flubby” and overwhelming the front end of your amp in a non-musical way. This lows control is the secret to maintaining control over your boost levels despite having masses of boost on tap.</p>
+<p><strong><span>What about the second boost?</span></strong></p>
+<p>The second boost (left hand side)offers more of the same, but with reduced headroom by introducing a pair of germanium diodes into the circuit that begins to clip the signal musically as the boost level increases. The second boost was added because it offers a different take on the boost but also because when combined with the first boost, the result is more than the sum of their parts.</p>
+<p>Boosting the right-hand side boost into the left-hand side but keeping the left hand side boost lower yields a very nice overdrive that feels and responds like Poweramp distortion.</p>
+<p>I went this route because I’d built a similar type of boost arrangement when I was doing DIY and it always made me smile every time I used it. Like the DIY version I built many moons ago,<br>the Heavy Water is designed to take what you have, add to it and work with it. A truly awesome tool to improve your amp and other pedals sound. Oh and for those that use switchers, we offer a variant that allows independent control of each side.</p>
+<p><strong>TLDR: So why am I telling you all of this about the HEAVY WATER? Because it's two boosts in one box that work in harmony with each other and crucially with your amp and other pedals.</strong></p>
+<p><strong><iframe width="560" height="315" src="https://www.youtube.com/embed/rybh1F8_75U?start=2457" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></strong></p>
+<p> </p>]]>
+    </content>
+  </entry>
+  <entry>
+    <id>https://thorpyfx.com/blogs/effects-pedal-guidance/why-the-warthog</id>
+    <published>2022-10-06T17:35:46+01:00</published>
+    <updated>2022-10-06T17:35:46+01:00</updated>
+    <link rel="alternate" type="text/html" href="https://thorpyfx.com/blogs/effects-pedal-guidance/why-the-warthog"/>
+    <title>Why the WARTHOG?</title>
+    <author>
+      <name>Adrian Thorpe</name>
+    </author>
+    <summary type="html">
+      <![CDATA[<meta charset="utf-8">So why Warthog? Because it could possibly be the perfect one pedal rig for open mic nights or for stacking with your other pedals. Need a boost, overdrive distortion or fuzz? Use the Warthog.<p><a class="read-more" href="https://thorpyfx.com/blogs/effects-pedal-guidance/why-the-warthog">More</a></p>]]>
+    </summary>
+    <content type="html">
+      <![CDATA[<meta charset="utf-8">
+<h2 style="text-align: center;"><strong>Why does the Warthog exist?</strong></h2>
+<p>Following on from the article as to why the Peacekeeper exists, I thought I would move onto the Warthog, especially as it stacks so very well with the Peacekeeper.</p>
+<p>The Warthog was designed at around the same time as the Gunshot pedal. My thinking was that the Gunshot would offer the British amp tonality and the Warthog would offer a more USA based tonality (think Santana, saturated boogie style). During its development it became very clear that the circuit had much more to offer than one fixed tone. So much so that we were going to name it after a chameleon to describe its wide range. In the end we stuck with our naming convention and chose to call it the Warthog after the A-10 Thunderbolts nickname.</p>
+<p> So where does the Warthog now sit tonally? Well, it is still definitely centred in the USA style of saturated gain but with more to offer through the combination of the gain and calibre controls which are where the magic of the pedal sits. Low calibre and low gain with high level gives you a crystal-clear boost. Adjust the calibre and gain upwards and you can roll through overdrive, into distortion and then at extreme settings you can achieve an incredibly touch sensitive fuzz.</p>
+<p>To further glean more sounds out of the pedal you can adjust the proportions of calibre and gain applied to emphasise each gain stages particular character.</p>
+<p>The tone control is a simple design but when adjusted with the calibre and gain controls it becomes more powerful.</p>
+<p>The only problem with the Warthog is the sheer amount of sounds you can get from it. We have customers who use two of them set very differently to provide the bulk of their overdrive sounds. But the best bit is how it stacks, we were put onto this by a customer of ours who was stacking his Peacekeeper after the Warthog. I wasn’t expecting it to be as glorious as it was so if you have a Warthog, put a low gain pedal after it in the chain and you’ll see just how good it can sound.</p>
+<p><strong>TLDR: So why Warthog? Because it could possibly be the perfect one pedal rig for open mic nights or for stacking with your other pedals. Need a boost, overdrive distortion or fuzz? Use the Warthog.</strong></p>]]>
+    </content>
+  </entry>
+  <entry>
+    <id>https://thorpyfx.com/blogs/effects-pedal-guidance/why-do-my-different-pedal-designs-exist</id>
+    <published>2022-09-20T17:39:53+01:00</published>
+    <updated>2022-09-20T17:49:30+01:00</updated>
+    <link rel="alternate" type="text/html" href="https://thorpyfx.com/blogs/effects-pedal-guidance/why-do-my-different-pedal-designs-exist"/>
+    <title>Why do my different pedal designs exist?</title>
+    <author>
+      <name>Adrian Thorpe</name>
+    </author>
+    <summary type="html">
+      <![CDATA[<meta charset="utf-8"><span>Our pedals typically exist to solve a perceived issue and/or ensure that in the segment of the pedal world they fit, they excel at what they are supposed to do. So, to that end I will try over the next few months to choose a pedal in our range and explain </span><strong>WHY</strong><span> it exists.</span><p><a class="read-more" href="https://thorpyfx.com/blogs/effects-pedal-guidance/why-do-my-different-pedal-designs-exist">More</a></p>]]>
+    </summary>
+    <content type="html">
+      <![CDATA[<p align="center" style="text-align: center;"><span style="font-size: 20.0pt; font-family: 'Impact',sans-serif; color: black;">Why do these different Pedals exist?</span></p>
+<p> </p>
+<p> </p>
+<p>In the past, I have been less than stellar at explaining WHY<br> we release a pedal… this is entirely my fault but usually it’s because I got too excited about getting the pedal into people’s hands. With every release there is method to the madness, a solid reason for the pedal to exist and improve<br> your tone. Our pedals typically exist to solve a perceived issue and/or ensure that in the segment of the pedal world they fit, they excel at what they are supposed to do. So, to that end I will try over the next few months to choose a pedal in our range and explain <strong>WHY</strong> it exists. Short answer at bottom :)</p>
+<p> </p>
+<p>Leading from the front, the Peacekeeper:</p>
+<p> </p>
+<p>The Peacekeeper is my take on a versatile low gain pedal. I<br> have long admired the versatility of pedals like the Tubescreamer, Klon, Bluesbreaker, Timmy etc. All of them have qualities that suit the usage they are designed for. What I wanted to do is make a pedal that gives you all the strengths of other low gain pedals but with more ability to mould them to your needs and enhance the amp and pedals you already have.</p>
+<p> </p>
+<p> First off, I chose the gain levels to fall into a very wide<br> range, from crystal clear with a touch of hair through to a low/mid gain level. This gain range covers most uses including stacking with amplifiers that are on the edge or with other pedals.</p>
+<p> </p>
+<p> Onto the tone controls, despite the awesome simplicity of a<br> standard tone control, I wanted to offer more flexibility and decided to offer a nonconventional EQ. The Bass and the Treble control are both active and placed "post drive" in the circuit. This allows you to scoop or peak each frequency after the drive level has been set, which means that the Peacekeeper can be<br> tailored to the amp or drive pedal you have. This design choice is important because rather than awkwardly fitting in with your requirements the Peacekeeper can be tailored to fit and enhance no matter what amp you use.</p>
+<p> </p>
+<p>However, the Peacekeeper's secret sauce is the presence<br> control. Strictly speaking this is a control over the mids within the pedal, but it’s been placed before drive. The reason for the location move is so that the presence can do more than just affect the mids, it affects the character of the drive available. From a scooped fender sound to a mid-focussed overdrive<br> like a marshal. </p>
+<p> </p>
+<p>The way the presence works is exactly how a treble booster<br> affects an amplifier, acting as a frequency focussed boost. Exciting the front end but over a specific range. Again, this has a massive effect on the character of the pedal and really sets it up to be whatever you want or need it to be. </p>
+<p> </p>
+<p><strong>TLDR: So why Peacekeeper? Because it adapts to your needs, it works with loads of rigs, can improve your core amplifier drive or stack and enhance your overdrives or fuzz pedals.</strong></p>
+<p> </p>
+<p style="text-align: center;"><strong>Also Check out this awesome video by the Studio Rats</strong></p>
+<p style="text-align: center;"><strong><iframe width="560" height="315" src="https://www.youtube.com/embed/WY3dPoBiaPI" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></strong></p>
+<p> </p>
+<p> </p>]]>
+    </content>
+  </entry>
+  <entry>
+    <id>https://thorpyfx.com/blogs/effects-pedal-guidance/how-do-i-build-pedalboards</id>
+    <published>2020-09-07T14:13:00+01:00</published>
+    <updated>2020-09-07T14:22:27+01:00</updated>
+    <link rel="alternate" type="text/html" href="https://thorpyfx.com/blogs/effects-pedal-guidance/how-do-i-build-pedalboards"/>
+    <title>How do I build pedalboards?</title>
+    <author>
+      <name>Adrian Thorpe</name>
+    </author>
+    <summary type="html">
+      <![CDATA[<span>Although all pedalboards follow differing design briefs, I build them following my tried and tested methodology. This isn’t magic, it’s much more mundane than that, its focussed primarily on planning and then implementing the plan.</span><p><a class="read-more" href="https://thorpyfx.com/blogs/effects-pedal-guidance/how-do-i-build-pedalboards">More</a></p>]]>
+    </summary>
+    <content type="html">
+      <![CDATA[<p><strong><u>How do I build pedalboards?</u></strong></p>
+<p>I’ve spent the last few weeks building some pedalboards in my spare time, one for a customer of ours, and being in “the zone” aka being a glutton for punishment I decided to build two more pedalboards for my work “studio”.</p>
+<p>Although all pedalboards followed differing design briefs, I built them following my tried and tested methodology. This isn’t magic, it’s much more mundane than that, its focussed primarily on planning and then implementing the plan.</p>
+<p>Step 1- Preparation</p>
+<p>Whatever you do, if you are planning to implement more than one pedal, start from scratch. This may seem laborious, but it ensures the board you have is designed to work as best as it can in the current iteration. If you don’t, you will end up with a piecemeal pedalboard, like adding layers to a cake after the cake is finished…</p>
+<p>So if you are starting from scratch or starting by ripping up your current board, get the board to an empty state. At this point, I line the board with large swathes of Velcro. My personal favourite is Velcro Heavy duty 50mm wide in black. I also go against the grain and use the furry side on the bottom of the pedal and the hook side on the pedalboard. This makes it easy to clean and when the pedals are not on a bord and just loose on the floor they don’t pick up crap from carpets, dogs, and other critters.</p>
+<p>Step 2 – Plan</p>
+<p>Draw your pedalboard layout focussing on signal path, power plan and routing. You want to use as little patch cable length as possible and so a good plan is key to enabling this. It also allows you to sort out your power plan once you know where the pedals are going to sit.</p>
+<p>Step 3 – Situate</p>
+<p>To prevent your pedals sticking to the pedalboard you’ve lovingly covered in Velcro, place sheets of A4 paper/newspaper on the board. Then following your pedalboard placement plan, put them physically in place. If your spacial awareness is crap you’ll end up adjusting this to ensure the pedals fit. For me personally, this stage always reveals a weakness I have, sideways pedals are not acceptable on my boards, I see it as a failure to layout the board properly. For normal people, this is fine.</p>
+<p>When you are happy with the physical positioning, you will then need to slide the paper out and fix the pedals down.</p>
+<p>Step 4 – Power</p>
+<p>Whether you are going for a modular system like the gigrig solution or for a fixed supply like the Strymon Ojai or voodoo lab stuff, the key thing is to ensure you have the following:</p>
+<ol>
+<li>Enough outlets, either through giving every pedal a separate outlet or by daisy chaining some outlets.</li>
+<li>Ensure you have the right voltages, polarity and current (mA) available for the pedals you want to use.</li>
+</ol>
+<p>Assuming the above is correct, you can start laying out your power cables. As a rule of thumb, I keep modulation and time-based (delay, reverb etc) effects on isolated outputs. This tends to eliminate cross talk, interference, noise etc. If they shared a daisy chained power outlet with a dirt pedal you can often have a higher propensity of ticking, noise and weird artefacts.</p>
+<p>Step 5 – Patch cables</p>
+<p>I personally use the Evidence Audio SIS kits because I find the flexibility, quality and ease of making the cables superior to most systems I have tried. I also use them because of their size, this is for a number of reasons, firstly I tend to use midi looper or switching units such as the Gigrig QMX and G2 systems, we also use the Morningstar system of the MC8 or MC6 with the ML5 looper. Any of these systems have banks of input and output jacks spaced really close together. Because of this you have no choice but to use compact patch cables. All cables I make are made to length for the position the pedal sits in (with a small amount of extra length for fudge factor) and I test them all on a multi meter before fitting them. This last step is CRUCIAL to save your sanity as on a 10 pedal looper based board you are likely to have a minimum of 20 patch cables.</p>
+<p>Step 6 – Midi cables.</p>
+<p>Make sure they work, make sure they are orientated “in to out” and connect them up from the input to the output as the midi signal flows.</p>
+<p>Step 7 – Midi programming and testing</p>
+<p>If you are running midi pedals, you will find that you need to programme your board to work as intended. Once this step is done (or if you don’t need this step) then all is left to do is test. Assuming all is well, great your pedalboard is done!! If you find something isn’t working, then start problem solving in a methodical manner. However, 9 times out of 10, in my experience a lot of issues with individual pedals come down to the in and out jacks being connected the wrong way around. We all get tired.</p>
+<p>Step 8 - Contingency</p>
+<p><span>Finally, before we sign off here, I know that you will lie to yourself and tell yourself that "this time my pedalboard is finished" we've all done it, but instead of that plan for the inevitable.... sometimes you are curious about a pedal, its the new thing on the block and you want to try it. In that case remember to leave an easily accessible slot for pedal auditioning. This way, you can try the pedal with your board and not have to rip everything up.....</span></p>
+<p><span>That is a VERY brief rundown on my pedalboard building methodology, I purposefully have stayed away from pedal order as that requires another Blog post entirely.</span></p>]]>
+    </content>
+  </entry>
+  <entry>
+    <id>https://thorpyfx.com/blogs/effects-pedal-guidance/is-it-possible-to-have-a-small-rig-and-sound-massive</id>
+    <published>2020-06-25T10:08:00+01:00</published>
+    <updated>2020-06-25T10:15:37+01:00</updated>
+    <link rel="alternate" type="text/html" href="https://thorpyfx.com/blogs/effects-pedal-guidance/is-it-possible-to-have-a-small-rig-and-sound-massive"/>
+    <title>Is it possible to have a small rig and sound massive?</title>
+    <author>
+      <name>Adrian Thorpe</name>
+    </author>
+    <summary type="html">
+      <![CDATA[<span>Lifting a full stack and carrying it into a venue can often be beyond soul and back destroying, but not as bad as the load out when all you really want to do is chill. Can you get a similar sound from a small rig?</span><p><a class="read-more" href="https://thorpyfx.com/blogs/effects-pedal-guidance/is-it-possible-to-have-a-small-rig-and-sound-massive">More</a></p>]]>
+    </summary>
+    <content type="html">
+      <![CDATA[<p> </p>
+<p>Notwithstanding the current world situation, it’s clear that there are less and less music venues to play in. however those that remain still have the standard level of awkwardness with regards load in. Because of this, lifting a full stack plus pedalboard and carrying it into a venue can often be beyond soul and back destroying, but not as bad as the load out when all you really want to do is chill.</p>
+<p>So, is there a solution in hand that can remove this burden and yet still provide room filling sound? The biggest amount of mass for your rig resides is really is down to your amplifier and cab choice but I believe so.</p>
+<p>Orange kicked off the lunchbox amplifier trend when Ade Emsley designed and released the Tiny Terror, this was a game changing bit of kit and since then there has been a plethora of compact but hugely versatile amps released in this format from brands such as Mesa Boogie, Victory, Orange, PRS, Dover and many others.</p>
+<p>A lot of these smaller lunchbox heads offer loads of output. The Orange Rocker 15 springs to mind as a 15W 2 channel amplifier (clean and dirty) in a tiny package. If you combine this with a compact 1x12 Ported Cab with a lightweight Neodymium speaker, you can achieve a much larger sound than its diminutive size would suggest. Another option would be the tiny 1x10 from Barefaced cabs that can handle 60W and spreads sound like a closed back 4x12.</p>
+<p><br>But an amplifier is only one part of the puzzle, if you take the time to build a small but functional pedalboard, say 5 pedals that fit on a tiny Pedaltrain I think it will surprise you what you can achieve. Starting with the drive section choose one fuzz and one overdrive with the requisite level of gain. These should obviously meet your needs and match your amp. If possible, choose fuzz and overdrives that are as versatile as possible. Something like the ThorpyFx Peacekeeper Overdrive is ideal and the Fallout Cloud or Field Marshall on fuzz duties. If you need a wah pedal, then the Dunlop Mini cry baby is perfect and is tiny. For Delay and Reverb, choose a digital multi-unit like the Source Audio Super Collider. Finally, the last space should be allocated to either one modulation pedal (Camoflange or Deep Oggin fit the bill here) or if you have the need for a unit that can run two modulation algorithms then the GFI Synesthesia is a new but really powerful offering to the effects market.</p>
+<p>In isolation these pedals offer a lot of bang in a very small package… but if you couple them with a programmable midi switcher such as the Morningstar MC6 then it makes them infinitely more useful. Indeed, this pedalboard will surprise you with how much ground it can cover. Remember though pedals are perfectly designed to be interchangeable so if you need to rip up a pedal and swap it for a specific gig… then DO IT!</p>
+<p>Finally, lots of people are now going either without an amp and cab or leaving just the cab out of the equation. Mixing the above pedalboard with say a Two Notes CAB M you can plug directly into the front of house and have a really rocking emulation of an Amp and cab that works with your pedalboard. Personally, I’d prefer to use the Two Notes Captor X or the BOSS WAZA in conjunction with my amp head and pedalboard. That way you get the interaction of your pedals with your amp but emulate the CAB into FOH. For me this would be the perfect lightweight and functional setup.</p>]]>
+    </content>
+  </entry>
+  <entry>
+    <id>https://thorpyfx.com/blogs/effects-pedal-guidance/why-do-you-need-an-eq-pedal</id>
+    <published>2020-06-08T11:25:00+01:00</published>
+    <updated>2020-06-08T11:31:58+01:00</updated>
+    <link rel="alternate" type="text/html" href="https://thorpyfx.com/blogs/effects-pedal-guidance/why-do-you-need-an-eq-pedal"/>
+    <title>Why do you need an EQ Pedal?</title>
+    <author>
+      <name>Adrian Thorpe</name>
+    </author>
+    <summary type="html">
+      <![CDATA[<strong>If your amp has EQ controls and so do your pedals, why do you need a standalone EQ pedal?</strong><p><a class="read-more" href="https://thorpyfx.com/blogs/effects-pedal-guidance/why-do-you-need-an-eq-pedal">More</a></p>]]>
+    </summary>
+    <content type="html">
+      <![CDATA[<div style="text-align: center;"><strong><span><u>Why do you need an EQ Pedal?</u></span></strong></div>
+<p><br>An EQ pedal is simply put a pedal that allows you to craft the frequency range of your sound by cutting or boosting specific frequencies as determined by the pedal designer. They can be very simple i.e. focusing on one frequency category (say Mids only) or they can be more versatile and operate over 3 frequency bands Bass, Mids and Treble. If you need more control, some EQ pedals offer 10 or 12 bands of fixed frequency shaping. Some even go one step further and offer parametric equalisation where you have full control over the frequencies chosen, the gain of those frequencies and the bandwidth of the frequencies adjusted.</p>
+<p><br>If your amp has EQ controls and so do your pedals, why do you need a standalone EQ pedal? A standalone EQ pedal gives you control over your sound in a way that a lot of pedals or amps just don’t. The ability to cut OR boost the frequencies to taste as opposed to just cutting them makes the EQ more powerful than the other tone shaping elements of your rig (say the amp or the pedals you have). If your guitar sound is booming in one venue, you can dial down the Bass, if you aren’t cutting through the mix you can accentuate the mids. An EQ pedal allows you to fine hone what you want to sound like and more control in your hands has to be better.</p>
+<p><br>Some drive pedals have very specific EQ characteristics, for example the legendary Tubescreamer and the ubiquitous Klon Centaur are actually often used as a single band EQ to accentuate the Mids for a guitarist. Often these pedals are used with mid scooped amps to fill the frequency deficit common with that amps design, or they are used to lift the mids with the aim of giving space in the mix for a solo to shine through. A well-designed EQ can do all of this and more so it is my personal belief that if you like your core driven sounds, then an EQ pedal is better suited to provide the tonal sculpting you need.</p>
+<p>If this is your first foray into EQ pedals, give the ThorpyFx Team Medic a go... 3 band ACTIVE EQ, boost, buffer and more boost. its a real Swiss army knife of a pedal.</p>
+<p>Hopefully that swift run through will allow you to get the EQ you need, and if I could recommend one other thing, stick the EQ at the end of your pedalboard, it can then act as a post EQ for your Pedals and a Pre EQ for your amp.</p>]]>
+    </content>
+  </entry>
+</feed>

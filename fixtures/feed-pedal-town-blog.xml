@@ -1,0 +1,342 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"
+	xmlns:content="http://purl.org/rss/1.0/modules/content/"
+	xmlns:wfw="http://wellformedweb.org/CommentAPI/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+	xmlns:slash="http://purl.org/rss/1.0/modules/slash/"
+	>
+
+<channel>
+	<title>Pedaltown</title>
+	<atom:link href="https://www.pedaltown.nl/en/feed" rel="self" type="application/rss+xml" />
+	<link>https://www.pedaltown.nl/en</link>
+	<description>Gitaar effecten en effectpedalen voor gitaristen</description>
+	<lastBuildDate>Sat, 19 Sep 2026 16:15:15 +0000</lastBuildDate>
+	<language>en-US</language>
+	<sy:updatePeriod>
+	hourly	</sy:updatePeriod>
+	<sy:updateFrequency>
+	1	</sy:updateFrequency>
+	<generator>https://wordpress.org/?v=7.0.5</generator>
+
+<image>
+	<url>https://www.pedaltown.nl/wp-content/uploads/2018/06/cropped-cropped-logo2-2-32x32.png</url>
+	<title>Pedaltown</title>
+	<link>https://www.pedaltown.nl/en</link>
+	<width>32</width>
+	<height>32</height>
+</image> 
+	<item>
+		<title>What is Neural Amp Modelling? NAM, TONEX and Neural DSP explained</title>
+		<link>https://www.pedaltown.nl/en/what-is-neural-amp-modelling-nam-tonex-and-neural-dsp-explained</link>
+					<comments>https://www.pedaltown.nl/en/what-is-neural-amp-modelling-nam-tonex-and-neural-dsp-explained#respond</comments>
+		
+		<dc:creator><![CDATA[Leon Keemer]]></dc:creator>
+		<pubDate>Sat, 19 Sep 2026 14:57:00 +0000</pubDate>
+				<category><![CDATA[Background]]></category>
+		<category><![CDATA[Amp Modelling]]></category>
+		<category><![CDATA[NAM]]></category>
+		<category><![CDATA[Neural Amp Modeler]]></category>
+		<category><![CDATA[Neural Capture]]></category>
+		<category><![CDATA[Neural DSP]]></category>
+		<category><![CDATA[TONEX]]></category>
+		<guid isPermaLink="false">https://pedaltown.nl/?p=99612</guid>
+
+					<description><![CDATA[<p>Digital guitar amplifiers have improved enormously in recent years. While traditional amp modelling attempts to digitally recreate an amplifier based on its individual components and circuits, a new generation of systems takes a different approach. Using machine learning, these systems analyse what happens to a signal as it passes through an amplifier, effects pedal or [&#8230;]</p>
+<p>Het bericht <a href="https://www.pedaltown.nl/en/what-is-neural-amp-modelling-nam-tonex-and-neural-dsp-explained">What is Neural Amp Modelling? NAM, TONEX and Neural DSP explained</a> verscheen eerst op <a href="https://www.pedaltown.nl/en">Pedaltown</a>.</p>
+]]></description>
+		
+					<wfw:commentRss>https://www.pedaltown.nl/en/what-is-neural-amp-modelling-nam-tonex-and-neural-dsp-explained/feed</wfw:commentRss>
+			<slash:comments>0</slash:comments>
+		
+		
+			</item>
+		<item>
+		<title>Guitar Summit 2026: these are the new effect pedals we are keeping an eye on.</title>
+		<link>https://www.pedaltown.nl/en/guitar-summit-2026-these-are-the-new-effect-pedals-we-are-keeping-an-eye-on</link>
+					<comments>https://www.pedaltown.nl/en/guitar-summit-2026-these-are-the-new-effect-pedals-we-are-keeping-an-eye-on#respond</comments>
+		
+		<dc:creator><![CDATA[Leon Keemer]]></dc:creator>
+		<pubDate>Fri, 04 Sep 2026 12:58:40 +0000</pubDate>
+				<category><![CDATA[News]]></category>
+		<category><![CDATA[Crazy Tube Circuits]]></category>
+		<category><![CDATA[Darkglass Electronics]]></category>
+		<category><![CDATA[Death by Audio]]></category>
+		<category><![CDATA[DSM & Humboldt]]></category>
+		<category><![CDATA[Earthquaker Devices]]></category>
+		<category><![CDATA[Jam Pedals]]></category>
+		<category><![CDATA[JCA Audio]]></category>
+		<category><![CDATA[Nobels]]></category>
+		<category><![CDATA[Walrus Audio]]></category>
+		<category><![CDATA[XRecer]]></category>
+		<guid isPermaLink="false">https://pedaltown.nl/?p=99532</guid>
+
+					<description><![CDATA[<p>From September 25 to 27, 2026, the Congress Center Rosengarten in Mannheim will once again be completely dedicated to guitars, amplifiers and, of course, effects pedals. Guitar Summit has now grown into one of Europe’s most important guitar shows, with hundreds of brands represented again this year. Naturally, we are particularly interested in the effects [&#8230;]</p>
+<p>Het bericht <a href="https://www.pedaltown.nl/en/guitar-summit-2026-these-are-the-new-effect-pedals-we-are-keeping-an-eye-on">Guitar Summit 2026: these are the new effect pedals we are keeping an eye on.</a> verscheen eerst op <a href="https://www.pedaltown.nl/en">Pedaltown</a>.</p>
+]]></description>
+		
+					<wfw:commentRss>https://www.pedaltown.nl/en/guitar-summit-2026-these-are-the-new-effect-pedals-we-are-keeping-an-eye-on/feed</wfw:commentRss>
+			<slash:comments>0</slash:comments>
+		
+		
+			</item>
+		<item>
+		<title>Neural DSP CorOS 4.1.0: the biggest Quad Cortex update yet</title>
+		<link>https://www.pedaltown.nl/en/neural-dsp-coros-4-1-0-the-biggest-quad-cortex-update-yet</link>
+					<comments>https://www.pedaltown.nl/en/neural-dsp-coros-4-1-0-the-biggest-quad-cortex-update-yet#respond</comments>
+		
+		<dc:creator><![CDATA[Leon Keemer]]></dc:creator>
+		<pubDate>Thu, 03 Sep 2026 08:27:15 +0000</pubDate>
+				<category><![CDATA[News]]></category>
+		<category><![CDATA[Arpeggio Delay]]></category>
+		<category><![CDATA[Crystal Delay]]></category>
+		<category><![CDATA[Douglas Shining Comp]]></category>
+		<category><![CDATA[DSP plugins]]></category>
+		<category><![CDATA[Glitch]]></category>
+		<category><![CDATA[John Mayer X]]></category>
+		<category><![CDATA[Misha Mansoor X]]></category>
+		<category><![CDATA[Multivoicer]]></category>
+		<category><![CDATA[Petrucci X]]></category>
+		<category><![CDATA[Plugin Parametric-4]]></category>
+		<category><![CDATA[Rabea X]]></category>
+		<category><![CDATA[Ring Modulator]]></category>
+		<category><![CDATA[Tim Henson X]]></category>
+		<category><![CDATA[Vintage Digital]]></category>
+		<guid isPermaLink="false">https://pedaltown.nl/?p=99474</guid>
+
+					<description><![CDATA[<p>Neural DSP has released CorOS 4.1.0 for the Quad Cortex and Quad Cortex mini, alongside Cortex Control 4.1.0. Neural DSP describes it as the biggest CorOS update it has released so far, and for good reason. The update introduces eight new effects, significantly expands compatibility with Neural DSP plugins, and adds Device Presets, making it [&#8230;]</p>
+<p>Het bericht <a href="https://www.pedaltown.nl/en/neural-dsp-coros-4-1-0-the-biggest-quad-cortex-update-yet">Neural DSP CorOS 4.1.0: the biggest Quad Cortex update yet</a> verscheen eerst op <a href="https://www.pedaltown.nl/en">Pedaltown</a>.</p>
+]]></description>
+		
+					<wfw:commentRss>https://www.pedaltown.nl/en/neural-dsp-coros-4-1-0-the-biggest-quad-cortex-update-yet/feed</wfw:commentRss>
+			<slash:comments>0</slash:comments>
+		
+		
+			</item>
+		<item>
+		<title>Everything you need to know about an expression pedal</title>
+		<link>https://www.pedaltown.nl/en/everything-you-need-to-know-about-an-expression-pedal</link>
+					<comments>https://www.pedaltown.nl/en/everything-you-need-to-know-about-an-expression-pedal#respond</comments>
+		
+		<dc:creator><![CDATA[Leon Keemer]]></dc:creator>
+		<pubDate>Tue, 25 Aug 2026 06:40:23 +0000</pubDate>
+				<category><![CDATA[Background]]></category>
+		<guid isPermaLink="false">https://pedaltown.nl/?p=98932</guid>
+
+					<description><![CDATA[<p>Anyone who delves into effect pedals, synthesizers, or modern digital amplifiers will sooner or later come into contact with the expression pedal. Yet, many musicians do not know exactly what an expression pedal does and why so many professionals consider it an indispensable part of their equipment. That is actually not so strange, because at [&#8230;]</p>
+<p>Het bericht <a href="https://www.pedaltown.nl/en/everything-you-need-to-know-about-an-expression-pedal">Everything you need to know about an expression pedal</a> verscheen eerst op <a href="https://www.pedaltown.nl/en">Pedaltown</a>.</p>
+]]></description>
+		
+					<wfw:commentRss>https://www.pedaltown.nl/en/everything-you-need-to-know-about-an-expression-pedal/feed</wfw:commentRss>
+			<slash:comments>0</slash:comments>
+		
+		
+			</item>
+		<item>
+		<title>Choosing fuzz or distortion for your sound</title>
+		<link>https://www.pedaltown.nl/en/choosing-fuzz-or-distortion-for-your-sound</link>
+					<comments>https://www.pedaltown.nl/en/choosing-fuzz-or-distortion-for-your-sound#respond</comments>
+		
+		<dc:creator><![CDATA[Leon Keemer]]></dc:creator>
+		<pubDate>Thu, 13 Aug 2026 16:57:00 +0000</pubDate>
+				<category><![CDATA[Buying Guide]]></category>
+		<category><![CDATA[Catalinbread CB Distortion]]></category>
+		<category><![CDATA[Catalinbread CB Fuzz]]></category>
+		<category><![CDATA[Cornerstone Nero Fuzz]]></category>
+		<category><![CDATA[Dunlop Jimi Hendrix Fuzz Face Mini]]></category>
+		<category><![CDATA[Earthquaker Devices Bellows]]></category>
+		<category><![CDATA[Earthquaker Devices Sunn O))) Half Life]]></category>
+		<category><![CDATA[Electro Harmonix Bender Royale Black]]></category>
+		<category><![CDATA[Electro Harmonix Big Muff Pi]]></category>
+		<category><![CDATA[Electro Harmonix Nano Metal Muff]]></category>
+		<category><![CDATA[Fjord Fuzz Thor]]></category>
+		<category><![CDATA[Fortin Kali]]></category>
+		<category><![CDATA[Foxgear Fenix]]></category>
+		<category><![CDATA[Gamechanger Audio Plasma]]></category>
+		<category><![CDATA[Great Eastern FX Focus Silicon]]></category>
+		<category><![CDATA[Hiwatt Filter Fuzz]]></category>
+		<category><![CDATA[Ibanez Super Metal Mini]]></category>
+		<category><![CDATA[Jam Pedals Fuzz Phrase Black LTD]]></category>
+		<category><![CDATA[JAM pedals Rattler MKII]]></category>
+		<category><![CDATA[JHS 3S Distortion]]></category>
+		<category><![CDATA[Kernom Moho]]></category>
+		<category><![CDATA[MXR Distortion III]]></category>
+		<category><![CDATA[MXR Randy Rhoads Distortion +]]></category>
+		<category><![CDATA[REVV G3 V2]]></category>
+		<category><![CDATA[Rodenberg Commander Distortion]]></category>
+		<category><![CDATA[Silktone Fuzz+]]></category>
+		<category><![CDATA[Vox VFZ 1 Fuzz]]></category>
+		<category><![CDATA[Walrus Audio Fundamental Distortion]]></category>
+		<category><![CDATA[Walrus Audio Fundamental Fuzz]]></category>
+		<category><![CDATA[Wampler Phenom]]></category>
+		<category><![CDATA[Wren and Cuff Your Face 70s]]></category>
+		<guid isPermaLink="false">https://pedaltown.nl/?p=98919</guid>
+
+					<description><![CDATA[<p>If you are torn between fuzz and distortion, it is usually not about more gain, but about character. Choosing fuzz or distortion means choosing how a note responds under your fingers, how chords hold up, and how your guitar behaves in a band mix. You don&#8217;t just hear that difference—you feel it immediately, too. For [&#8230;]</p>
+<p>Het bericht <a href="https://www.pedaltown.nl/en/choosing-fuzz-or-distortion-for-your-sound">Choosing fuzz or distortion for your sound</a> verscheen eerst op <a href="https://www.pedaltown.nl/en">Pedaltown</a>.</p>
+]]></description>
+		
+					<wfw:commentRss>https://www.pedaltown.nl/en/choosing-fuzz-or-distortion-for-your-sound/feed</wfw:commentRss>
+			<slash:comments>0</slash:comments>
+		
+		
+			</item>
+		<item>
+		<title>Guitar Pedalboard Setup Guide &#124; Build the Perfect Pedalboard</title>
+		<link>https://www.pedaltown.nl/en/guitar-pedalboard-setup-guide-build-the-perfect-pedalboard</link>
+					<comments>https://www.pedaltown.nl/en/guitar-pedalboard-setup-guide-build-the-perfect-pedalboard#respond</comments>
+		
+		<dc:creator><![CDATA[Leon Keemer]]></dc:creator>
+		<pubDate>Mon, 03 Aug 2026 11:11:41 +0000</pubDate>
+				<category><![CDATA[Buying Guide]]></category>
+		<guid isPermaLink="false">https://pedaltown.nl/?p=97497</guid>
+
+					<description><![CDATA[<p>You only really notice a good pedalboard when it doesn’t get in your way during a rehearsal or gig. No mess of cables, no hum, no power supply that just falls short, and above all: a setup that feels logical under your feet. Anyone who takes building a pedalboard seriously isn’t just buying individual pedals, [&#8230;]</p>
+<p>Het bericht <a href="https://www.pedaltown.nl/en/guitar-pedalboard-setup-guide-build-the-perfect-pedalboard">Guitar Pedalboard Setup Guide | Build the Perfect Pedalboard</a> verscheen eerst op <a href="https://www.pedaltown.nl/en">Pedaltown</a>.</p>
+]]></description>
+		
+					<wfw:commentRss>https://www.pedaltown.nl/en/guitar-pedalboard-setup-guide-build-the-perfect-pedalboard/feed</wfw:commentRss>
+			<slash:comments>0</slash:comments>
+		
+		
+			</item>
+		<item>
+		<title>Differences between chorus and flanger explained</title>
+		<link>https://www.pedaltown.nl/en/differences-between-chorus-and-flanger-explained</link>
+					<comments>https://www.pedaltown.nl/en/differences-between-chorus-and-flanger-explained#respond</comments>
+		
+		<dc:creator><![CDATA[Leon Keemer]]></dc:creator>
+		<pubDate>Wed, 22 Jul 2026 07:44:33 +0000</pubDate>
+				<category><![CDATA[Background]]></category>
+		<category><![CDATA[Boss-CE-2W]]></category>
+		<category><![CDATA[EHX Electric Mistress]]></category>
+		<category><![CDATA[MXR Flanger]]></category>
+		<category><![CDATA[Warm Audio WA-C1]]></category>
+		<guid isPermaLink="false">https://pedaltown.nl/?p=98037</guid>
+
+					<description><![CDATA[<p>You hear a wide, floating sound and quickly think: modulation. But the difference between chorus and flanger only becomes truly clear once you pay attention to movement, depth and how the effect settles into your sound. For guitarists and bassists who are looking for the right pedal, that difference is not a minor detail. It [&#8230;]</p>
+<p>Het bericht <a href="https://www.pedaltown.nl/en/differences-between-chorus-and-flanger-explained">Differences between chorus and flanger explained</a> verscheen eerst op <a href="https://www.pedaltown.nl/en">Pedaltown</a>.</p>
+]]></description>
+		
+					<wfw:commentRss>https://www.pedaltown.nl/en/differences-between-chorus-and-flanger-explained/feed</wfw:commentRss>
+			<slash:comments>0</slash:comments>
+		
+		
+			</item>
+		<item>
+		<title>How many pedals on a power supply?</title>
+		<link>https://www.pedaltown.nl/en/how-many-pedals-on-a-power-supply</link>
+					<comments>https://www.pedaltown.nl/en/how-many-pedals-on-a-power-supply#respond</comments>
+		
+		<dc:creator><![CDATA[Leon Keemer]]></dc:creator>
+		<pubDate>Mon, 06 Jul 2026 10:52:00 +0000</pubDate>
+				<category><![CDATA[Buying Guide]]></category>
+		<category><![CDATA[Cioks Ciokolate]]></category>
+		<category><![CDATA[Cioks DC 10]]></category>
+		<category><![CDATA[Cioks SOL]]></category>
+		<category><![CDATA[Electro Harmonix EU96 DC]]></category>
+		<category><![CDATA[Mooer PDNW 9V]]></category>
+		<category><![CDATA[MXR Iso Brick]]></category>
+		<category><![CDATA[MXR Mini Iso Brick]]></category>
+		<category><![CDATA[Rockboard Iso Power Block V10 V2]]></category>
+		<category><![CDATA[Rockboard Iso Power Block V16]]></category>
+		<category><![CDATA[Rockpower NT 22]]></category>
+		<category><![CDATA[RockPower NT 5]]></category>
+		<category><![CDATA[Strymon Zuma R300]]></category>
+		<category><![CDATA[Voodoo Lab Pedal Power 3 Plus]]></category>
+		<category><![CDATA[Walrus Audio Canvas HP +]]></category>
+		<category><![CDATA[Walrus Audio Canvas Power 15]]></category>
+		<category><![CDATA[Walrus Audio Canvas Power 5]]></category>
+		<guid isPermaLink="false">https://pedaltown.nl/?p=97625</guid>
+
+					<description><![CDATA[<p>Your board only really works well when the power supply is right. The question of how many pedals you can run from one power supply may seem simple, but the right answer almost always depends on current draw, pedal type and the way you power your pedals. If you only look at the number of [&#8230;]</p>
+<p>Het bericht <a href="https://www.pedaltown.nl/en/how-many-pedals-on-a-power-supply">How many pedals on a power supply?</a> verscheen eerst op <a href="https://www.pedaltown.nl/en">Pedaltown</a>.</p>
+]]></description>
+		
+					<wfw:commentRss>https://www.pedaltown.nl/en/how-many-pedals-on-a-power-supply/feed</wfw:commentRss>
+			<slash:comments>0</slash:comments>
+		
+		
+			</item>
+		<item>
+		<title>Why does my pedalboard suddenly start humming?</title>
+		<link>https://www.pedaltown.nl/en/why-does-my-pedalboard-suddenly-start-humming</link>
+					<comments>https://www.pedaltown.nl/en/why-does-my-pedalboard-suddenly-start-humming#respond</comments>
+		
+		<dc:creator><![CDATA[Leon Keemer]]></dc:creator>
+		<pubDate>Fri, 19 Jun 2026 07:36:43 +0000</pubDate>
+				<category><![CDATA[Background]]></category>
+		<category><![CDATA[buffer]]></category>
+		<category><![CDATA[current]]></category>
+		<category><![CDATA[daisy chain]]></category>
+		<category><![CDATA[earth hum]]></category>
+		<category><![CDATA[ground loop]]></category>
+		<category><![CDATA[hum]]></category>
+		<category><![CDATA[instrument cable]]></category>
+		<category><![CDATA[interference]]></category>
+		<category><![CDATA[isolated power supply]]></category>
+		<category><![CDATA[Multi-power supply]]></category>
+		<category><![CDATA[polarity]]></category>
+		<category><![CDATA[power supply]]></category>
+		<category><![CDATA[voltage]]></category>
+		<guid isPermaLink="false">https://pedaltown.nl/?p=97995</guid>
+
+					<description><![CDATA[<p>You turn on your amp, engage a favorite pedal, and there it is immediately: an annoying hum underneath your tone. If you’re wondering why is my pedalboard humming, the issue usually isn’t one mysterious component, but rather the combination of power supply, cabling, gain staging, and the environment you’re playing in. The frustration is familiar, [&#8230;]</p>
+<p>Het bericht <a href="https://www.pedaltown.nl/en/why-does-my-pedalboard-suddenly-start-humming">Why does my pedalboard suddenly start humming?</a> verscheen eerst op <a href="https://www.pedaltown.nl/en">Pedaltown</a>.</p>
+]]></description>
+		
+					<wfw:commentRss>https://www.pedaltown.nl/en/why-does-my-pedalboard-suddenly-start-humming/feed</wfw:commentRss>
+			<slash:comments>0</slash:comments>
+		
+		
+			</item>
+		<item>
+		<title>Guide for overdrive pedals: this is how you choose well</title>
+		<link>https://www.pedaltown.nl/en/guide-for-overdrive-pedals-this-is-how-you-choose-well</link>
+					<comments>https://www.pedaltown.nl/en/guide-for-overdrive-pedals-this-is-how-you-choose-well#respond</comments>
+		
+		<dc:creator><![CDATA[Leon Keemer]]></dc:creator>
+		<pubDate>Thu, 04 Jun 2026 08:52:00 +0000</pubDate>
+				<category><![CDATA[Buying Guide]]></category>
+		<category><![CDATA[Benson Preamp]]></category>
+		<category><![CDATA[Browne Amplification The Carbon V2]]></category>
+		<category><![CDATA[Catalinbread Dirty Little Secret]]></category>
+		<category><![CDATA[Catalinbread Formula 51]]></category>
+		<category><![CDATA[Coppersound Foxcatcher V2]]></category>
+		<category><![CDATA[Cornerstone Antique]]></category>
+		<category><![CDATA[Electro Harmonix Spruce Goose]]></category>
+		<category><![CDATA[Friedman BE-OD Overdrive]]></category>
+		<category><![CDATA[Greer Amps Lightspeed]]></category>
+		<category><![CDATA[Ibanez Tube Screamer TS9]]></category>
+		<category><![CDATA[J Rockett Blue Note OD]]></category>
+		<category><![CDATA[J Rockett GTO]]></category>
+		<category><![CDATA[Jackson Audio Golden Boy]]></category>
+		<category><![CDATA[JHS Morning Glory V4]]></category>
+		<category><![CDATA[JHS The AT+]]></category>
+		<category><![CDATA[JHS The Bonsai]]></category>
+		<category><![CDATA[Karma ODR-10]]></category>
+		<category><![CDATA[Keeley Noble Screamer]]></category>
+		<category><![CDATA[Mad Professor Super Black]]></category>
+		<category><![CDATA[MXR Duke of Tone]]></category>
+		<category><![CDATA[MXR Timmy Overdrive]]></category>
+		<category><![CDATA[Nobels ODR-1X]]></category>
+		<category><![CDATA[ThorpyFX The J]]></category>
+		<category><![CDATA[Vemuram Jan Ray]]></category>
+		<category><![CDATA[VS Audio Janglemaster]]></category>
+		<category><![CDATA[Vs Audio Straight Flush]]></category>
+		<category><![CDATA[Wampler Belle Overdrive]]></category>
+		<category><![CDATA[Wampler Moxie]]></category>
+		<guid isPermaLink="false">https://pedaltown.nl/?p=97973</guid>
+
+					<description><![CDATA[<p>Your clean channel sounds too polite, your crunch lacks focus, or your solo disappears in the mix. That is exactly where this guide to overdrive pedals begins. Not with vague tone descriptions, but with the question that actually matters: what problem does the pedal need to solve? You rarely buy an overdrive because you simply [&#8230;]</p>
+<p>Het bericht <a href="https://www.pedaltown.nl/en/guide-for-overdrive-pedals-this-is-how-you-choose-well">Guide for overdrive pedals: this is how you choose well</a> verscheen eerst op <a href="https://www.pedaltown.nl/en">Pedaltown</a>.</p>
+]]></description>
+		
+					<wfw:commentRss>https://www.pedaltown.nl/en/guide-for-overdrive-pedals-this-is-how-you-choose-well/feed</wfw:commentRss>
+			<slash:comments>0</slash:comments>
+		
+		
+			</item>
+	</channel>
+</rss>

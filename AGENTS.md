@@ -1,16 +1,9 @@
-# AGENTS Guidelines & Instructions for Ryff
+<!-- BEGIN:nextjs-agent-rules -->
 
-## Core Directives
+# This is NOT the Next.js you know
 
-### 1. Maintain Feature Documentation (`Ryff_features.md`)
-- Whenever you add new features, update code capabilities, modify the architecture, or implement key functionality, **you must update [`Ryff_features.md`](file:///c:/Users/rob_b/Ryff/Ryff_features.md)**.
-- Document both developer-facing technical details (what the code does under the hood) and user-facing feature summaries (what value/capability it provides).
-- This feature document serves dual purposes: technical reference for developers and feature source material for marketing/communication.
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
 
----
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
 
-## Workspace Rules & Best Practices
-
-- Preserve clean code structure and follow established architecture.
-- Keep secret credentials and API keys in `.env.local` and never commit sensitive keys to source control.
-- Test new components and verify functionality before declaring implementation complete.
+<!-- END:nextjs-agent-rules -->
