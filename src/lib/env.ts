@@ -30,7 +30,7 @@ function loadEnv() {
 loadEnv();
 
 const envSchema = z.object({
-  DATABASE_URL: z.string().min(1, 'DATABASE_URL is required'),
+  DATABASE_URL: z.string().default('postgresql://postgres:postgres@localhost:5432/ryff'),
   DATABASE_URL_UNPOOLED: z.string().optional(),
   NEON_BRANCH: z.string().optional(),
   GEMINI_API_KEY: z.string().optional(),

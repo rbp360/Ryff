@@ -194,7 +194,7 @@ export default async function AdminCommandCentrePage() {
               {okSources}/{activeSources}
             </p>
             <span className="text-xs text-slate-500 block font-mono">
-              {errorSources > 0 ? `⚠️ ${errorSources} with errors` : 'All active feeds healthy'}
+              {errorSources > 0 ? `⚠️ ${errorSources} with errors (${totalSources} total)` : `All active healthy (${totalSources} total)`}
             </span>
           </div>
         </div>
