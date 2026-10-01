@@ -43,13 +43,13 @@
 **Goal:** see Hank and Vee argue about today's real news, in the terminal, and make it good. This is the creative core — spend the time here.
 
 **Tasks**
-- [ ] `pipeline/ingest.ts`: fetch all feeds, dedupe, store `items`.
-- [ ] `pipeline/digest.ts`: batch-digest items with Haiku; store summary/type/brands/products/hype; validate with zod.
-- [ ] `pipeline/debate.ts`: 4-turn debate (Hank → Vee → Hank → Vee) on Sonnet, then the Haiku formatter to JSON. Store as an `episodes` row (`draft`).
-- [ ] `scripts/print-episode.ts --latest`: pretty-print the episode with source titles under each topic.
-- [ ] `scripts/run-pipeline.ts`: runs ingest → digest → debate and prints the cost.
-- [ ] **Freeze inputs for prompt testing:** dump the digested item set to `fixtures/items-YYYY-MM-DD.json` on 5–10 separate days. A `--from-fixture` flag lets the debate step rerun on identical inputs so prompt versions can be compared fairly.
-- [ ] **Prompt versioning:** keep `prompts/v1/`, `prompts/v2/`… and an env/flag to pick the version. Record which version produced each episode.
+- [x] `pipeline/ingest.ts`: fetch all feeds, dedupe, store `items`.
+- [x] `pipeline/digest.ts`: batch-digest items with Gemini Flash-Lite; store summary/type/brands/products/hype; validate with zod.
+- [x] `pipeline/debate.ts`: 4-turn debate (Hank → Vee → Hank → Vee) on Gemini Pro, then the Formatter to JSON. Store as an `episodes` row (`published`/`draft`).
+- [x] `scripts/print-episode.ts --latest`: pretty-print the episode with source titles under each topic.
+- [x] `scripts/run-pipeline.ts`: runs ingest → digest → debate and prints the cost.
+- [x] **Freeze inputs for prompt testing:** dump the digested item set to `fixtures/frozen/items-YYYY-MM-DD.json`. A `--from-fixture` flag in `scripts/test-eval-prompt.ts` lets the debate step rerun on identical inputs so prompt versions can be compared fairly.
+- [x] **Prompt versioning:** keep `prompts/v1/`, `prompts/v2/`… and an env/flag (`--version v1`) to pick the version. Record which version produced each episode.
 
 **Persona iteration protocol (the actual work of M1)**
 1. Run the debate on 3 frozen days with prompt version N.

@@ -36,8 +36,8 @@ export default async function AdminCommandCentrePage() {
 
   const total = sources.length;
   const activeCount = sources.filter(s => s.active).length;
-  const okCount = sources.filter(s => s.last_status && s.last_status.includes('OK')).length;
-  const errorCount = sources.filter(s => s.last_status && (s.last_status.includes('HTTP 4') || s.last_status.includes('HTTP 5') || s.last_status.includes('ERROR'))).length;
+  const okCount = sources.filter(s => s.last_status && s.last_status.toLowerCase() === 'ok').length;
+  const errorCount = sources.filter(s => s.last_status && (s.last_status.toLowerCase().includes('error') || s.last_status.includes('403') || s.last_status.includes('429'))).length;
   const pendingCount = total - (okCount + errorCount);
 
   return (
@@ -117,8 +117,8 @@ export default async function AdminCommandCentrePage() {
               <tbody className="divide-y divide-slate-800/60 font-mono text-xs">
                 {sources.map((src) => {
                   const status = src.last_status || 'Pending';
-                  const isOk = status.includes('OK');
-                  const isError = status.includes('HTTP 4') || status.includes('HTTP 5') || status.includes('ERROR');
+                  const isOk = status.toLowerCase() === 'ok';
+                  const isError = status.toLowerCase().includes('error') || status.includes('403') || status.includes('429');
                   
                   return (
                     <tr key={src.id} className="hover:bg-slate-800/40 transition">

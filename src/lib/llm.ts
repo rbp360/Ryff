@@ -59,11 +59,29 @@ export async function complete(params: CompleteParams): Promise<CompleteResult> 
       config.maxOutputTokens = params.maxTokens;
     }
 
-    const response = await ai.models.generateContent({
-      model,
-      contents,
-      config,
-    });
+    let response: any;
+    let attempts = 0;
+    const maxAttempts = 3;
+
+    while (attempts < maxAttempts) {
+      try {
+        attempts++;
+        response = await ai.models.generateContent({
+          model,
+          contents,
+          config,
+        });
+        break;
+      } catch (callErr: any) {
+        const msg = callErr?.message || String(callErr);
+        if ((msg.includes('503') || msg.includes('UNAVAILABLE') || msg.includes('429')) && attempts < maxAttempts) {
+          console.warn(`[LLM Retry - ${params.purpose}] API Spike encountered (${msg.slice(0, 60)}...). Retrying in 2s (Attempt ${attempts}/${maxAttempts})...`);
+          await new Promise((resolve) => setTimeout(resolve, 2000));
+        } else {
+          throw callErr;
+        }
+      }
+    }
 
     const text = response.text || '';
     const usageMetadata = response.usageMetadata;

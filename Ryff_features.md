@@ -60,4 +60,36 @@ Welcome to **Ryff**—a niche AI chatbot network where two AI personas (Hank: gr
 
 ---
 
+### 5. Live Feed Ingestion & Batch Item Digest (M1 - Checkpoint 2)
+- **User-Level Overview:**
+  Fetches live RSS editorial feeds and YouTube video Atom feeds across 43 active sources, deduplicating news items into Postgres. Batches undigested items through Gemini 3.5 Flash-Lite to categorize gear launches, reviews, deals, and hype scores, storing structured metadata in the database.
+- **Code-Level Implementation:**
+  - **Feed Parser:** [`src/lib/feeds.ts`](file:///c:/Users/rob_b/Ryff/src/lib/feeds.ts) with custom user-agent header, canonical URL sanitization, keyword pre-filtering, and SHA256 URL hashing.
+  - **Full Feed Ingest:** [`src/pipeline/ingest.ts`](file:///c:/Users/rob_b/Ryff/src/pipeline/ingest.ts) fetching active database sources, updating `last_fetched_at` / `last_status`, and inserting 830+ live items into Postgres with conflict resolution.
+  - **Batch Item Digest:** [`src/pipeline/digest.ts`](file:///c:/Users/rob_b/Ryff/src/pipeline/digest.ts) using `MODEL_FAST` (`gemini-3.5-flash-lite`) to summarize items, classify item types (`launch`, `review`, `deal`, `rumour`, `opinion`, `news`), extract brand tags (`PRS`, `Fender`, `Martin`, `VOX`), evaluate hype (0–5), and validate via Zod schema (`digestOutputSchema`).
+  - **Verification Script:** Executed [`scripts/test-ingest-digest.ts`](file:///c:/Users/rob_b/Ryff/scripts/test-ingest-digest.ts) processing 830+ live feed items across 43 sources and 16 batch-digested items for $0.001010 total LLM spend.
+
+---
+
+### 6. 4-Turn Debate Engine, JSON Formatter & Terminal Publisher (M1 - Checkpoint 3)
+- **User-Level Overview:**
+  Orchestrates the autonomous Hank vs Vee 4-turn debate over digested news stories with structured disagreements and source citations. Formats the full debate transcript into topics with Gemini and publishes episodes to Postgres for terminal viewing.
+- **Code-Level Implementation:**
+  - **Debate Pipeline:** [`src/pipeline/debate.ts`](file:///c:/Users/rob_b/Ryff/src/pipeline/debate.ts) executing Turn 1 (Hank Opener), Turn 2 (Vee Response), Turn 3 (Hank Rebuttal), Turn 4 (Vee Closing), and JSON Schema formatting validated with Zod.
+  - **Master Pipeline CLI Runner:** [`scripts/run-pipeline.ts`](file:///c:/Users/rob_b/Ryff/scripts/run-pipeline.ts) running Ingest → Batch Digest → 4-Turn Debate with real-time spend calculation ($0.001857 total run cost, capped under $2.00) and recording run health in `pipeline_runs`.
+  - **Episode Terminal Viewer:** [`scripts/print-episode.ts`](file:///c:/Users/rob_b/Ryff/scripts/print-episode.ts) formatting published episodes (`episodes` table) with headlines, topic debates, and source item link references in terminal.
+  - **Command Centre RAG Fix:** Updated [`src/app/admin/page.tsx`](file:///c:/Users/rob_b/Ryff/src/app/admin/page.tsx) to match feed status case-insensitively, displaying healthy feeds in green (🟢 OK) and failed feeds in red (🔴 FAIL).
+
+---
+
+### 7. Fixture Freezing & Prompt Versioning Suite (M1 - Checkpoint 4)
+- **User-Level Overview:**
+  Allows the team to freeze real digested news datasets into timestamped snapshot files and benchmark prompt iterations (`v1`, `v2`) on identical news inputs to evaluate Hank & Vee's voices, disagreement quality, and source grounding.
+- **Code-Level Implementation:**
+  - **Dataset Freezing:** [`scripts/freeze-items.ts`](file:///c:/Users/rob_b/Ryff/scripts/freeze-items.ts) dumping digested Postgres items to [`fixtures/frozen/items-YYYY-MM-DD.json`](file:///c:/Users/rob_b/Ryff/fixtures/frozen/items-2026-09-30.json).
+  - **Prompt Version Directories:** Created [`prompts/v1/`](file:///c:/Users/rob_b/Ryff/prompts/v1) and [`prompts/v2/`](file:///c:/Users/rob_b/Ryff/prompts/v2) for persona and formatting prompt evolution.
+  - **Versioned Debate Evaluator:** [`scripts/test-eval-prompt.ts`](file:///c:/Users/rob_b/Ryff/scripts/test-eval-prompt.ts) supporting `--from-fixture <file>` and `--version <v1|v2>` flags to test and compare character takes against fixed benchmark data.
+
+---
+
 *(As development progresses through M1–M4, new features will be added here at both User Level and Code Level.)*

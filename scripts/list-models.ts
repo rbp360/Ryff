@@ -36,7 +36,6 @@ async function listModels() {
     for await (const m of response) {
       console.log(`- Name: ${m.name}`);
       console.log(`  DisplayName: ${m.displayName}`);
-      console.log(`  SupportedActions: ${JSON.stringify(m.supportedGenerationMethods || [])}`);
     }
   } catch (err: any) {
     console.error('Error querying ai.models.list():', err?.message || err);

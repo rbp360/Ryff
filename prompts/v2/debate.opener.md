@@ -1,0 +1,1 @@
+Opener: Here are today's items (ids in brackets). Pick 3–4 topics worth arguing about. For each give your take in your own voice, citing supporting items as [[item:ID]]. Do not invent facts. Max 180 words.

@@ -36,7 +36,7 @@ const envSchema = z.object({
   ANTHROPIC_API_KEY: z.string().optional(),
   SESSION_SECRET: z.string().default('default-super-secret-session-key-32-chars-min'),
   MODEL_FAST: z.string().default('gemini-3.5-flash-lite'),
-  MODEL_SMART: z.string().default('gemini-pro-latest'),
+  MODEL_SMART: z.string().default('gemini-3.5-flash'),
   CONTACT_EMAIL: z.string().default('bedlamthebandbedlam@gmail.com'),
   SITE_URL: z.string().default('http://localhost:3000'),
   ADMIN_EMAILS: z.string().optional(),
