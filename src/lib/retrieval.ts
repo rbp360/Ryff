@@ -1,5 +1,5 @@
 import { db } from './db';
-import { ItemContext, DealContext } from './guard';
+import { DealContext } from './guard';
 
 export interface RetrievedContext {
   episode: {
@@ -21,7 +21,7 @@ export interface RetrievedContext {
     brands: string[];
     products: string[];
     url: string;
-    source_name?: string;
+    source_name?: string | null;
   }>;
   rigItems: Array<{
     id: number;
@@ -112,7 +112,16 @@ export async function retrieveChatContext(userId: string, userMessage: string): 
     .split(/\s+/)
     .filter((w) => w.length > 2);
 
-  let relevantItems: any[] = [];
+  let relevantItems: Array<{
+    id: number;
+    title: string;
+    snippet: string;
+    summary: string | null;
+    brands: string[];
+    products: string[];
+    url: string;
+    source_name: string | null;
+  }> = [];
 
   if (words.length > 0) {
     // Attempt full-text search and brand matching

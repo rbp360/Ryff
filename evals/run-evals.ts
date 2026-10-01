@@ -1,6 +1,5 @@
 import fs from 'fs';
 import path from 'path';
-import { db } from '../src/lib/db';
 import { retrieveChatContext } from '../src/lib/retrieval';
 import { validateUserInput, renderTokens } from '../src/lib/guard';
 import { complete } from '../src/lib/llm';

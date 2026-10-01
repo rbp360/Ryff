@@ -42,27 +42,31 @@ export default function ChatPage() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    loadChatHistory();
+    let ignore = false;
+    async function fetchHistory() {
+      try {
+        const res = await fetch(`/api/chat?bot=${bot}`);
+        if (res.ok && !ignore) {
+          const data = await res.json();
+          setMessages(data.messages || []);
+          if (data.usage) {
+            setUsage(data.usage);
+          }
+        }
+      } catch (err) {
+        console.error('Failed to load chat history:', err);
+      }
+    }
+
+    fetchHistory();
+    return () => {
+      ignore = true;
+    };
   }, [bot]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, loading]);
-
-  async function loadChatHistory() {
-    try {
-      const res = await fetch(`/api/chat?bot=${bot}`);
-      if (res.ok) {
-        const data = await res.json();
-        setMessages(data.messages || []);
-        if (data.usage) {
-          setUsage(data.usage);
-        }
-      }
-    } catch (err) {
-      console.error('Failed to load chat history:', err);
-    }
-  }
 
   async function sendMessage(textToSend?: string) {
     const messageText = textToSend || input;

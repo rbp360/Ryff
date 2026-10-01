@@ -29,3 +29,19 @@
 - LLM spend (actual): $0.004358 across all 20 eval tests (avg $0.000218/query vs ≤$0.004 target).
 - Acceptance tests: All 8 criteria passed.
 - Unit tests: 18/18 passing in Vitest.
+
+## M4 — Harden, Dogfood & Cadre Launch Scaffold [SCAFFOLD READY]
+- Status: Development / Scaffold Complete (Invites paused until founder testing sign-off)
+- Delivered in Scaffold:
+  - 10-category red-team attack evaluation dataset created at `evals/redteam.json`.
+  - Deterministic red-team evaluation test harness (`evals/run-redteam.ts`) passing 12/12 checks offline.
+  - Risk register and residual security posture documented in `docs/risks.md`.
+  - 30-second onboarding flow at `/onboarding` ("add 3 pieces of gear you own and 1 you want", plus suggested starter questions).
+  - Compliance & legal suite: UK GDPR privacy policy with 90-day retention notice & instant account deletion (`/api/account/delete`), Terms of Service (18+ requirement, AI personas disclaimer), and Affiliate Disclosure on all pages with `/api/out` links.
+  - Admin command centre enhanced with flagged message triage queue, user feedback & survey logs, cohort metrics, and >50% daily spend alert banner.
+  - Cohort tagging (`cadre`/`public`) and UK residency collection in auth.
+  - Typecheck (0 errors), Lint (0 errors/warnings), and 18/18 Vitest unit tests passing.
+- LLM spend (M4 live red-team security testing): $0.001230 across 15 attack vectors (100% pass rate).
+- Total LLM spend to date (M0 + M1 + M2 + M3 + M4 Security): ~$0.085 (Well within $500 budget cap).
+
+

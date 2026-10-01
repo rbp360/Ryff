@@ -23,34 +23,38 @@ export default function RigPage() {
   const [success, setSuccess] = useState(false);
 
   useEffect(() => {
-    fetchRig();
-  }, []);
-
-  async function fetchRig() {
-    setLoading(true);
-    try {
-      const res = await fetch('/api/rig');
-      if (res.ok) {
-        const data = await res.json();
-        setItems(data.items || []);
-        // Populate textarea with existing items formatted
-        if (data.items?.length) {
-          const lines = data.items.map((i: RigItem) => {
-            if (i.kind === 'want') {
-              const budget = i.budget_gbp ? ` under £${i.budget_gbp}` : '';
-              return `Want: ${i.brand ? i.brand + ' ' : ''}${i.model || i.raw_text}${budget}`;
-            }
-            return `${i.brand ? i.brand + ' ' : ''}${i.model || i.raw_text}`;
-          });
-          setTextInput(lines.join('\n'));
+    let isCancelled = false;
+    async function loadRig() {
+      try {
+        const res = await fetch('/api/rig');
+        if (res.ok && !isCancelled) {
+          const data = await res.json();
+          setItems(data.items || []);
+          if (data.items?.length) {
+            const lines = data.items.map((i: RigItem) => {
+              if (i.kind === 'want') {
+                const budget = i.budget_gbp ? ` under £${i.budget_gbp}` : '';
+                return `Want: ${i.brand ? i.brand + ' ' : ''}${i.model || i.raw_text}${budget}`;
+              }
+              return `${i.brand ? i.brand + ' ' : ''}${i.model || i.raw_text}`;
+            });
+            setTextInput(lines.join('\n'));
+          }
+        }
+      } catch (err) {
+        console.error('Failed to load rig:', err);
+      } finally {
+        if (!isCancelled) {
+          setLoading(false);
         }
       }
-    } catch (err) {
-      console.error('Failed to load rig:', err);
-    } finally {
-      setLoading(false);
     }
-  }
+
+    loadRig();
+    return () => {
+      isCancelled = true;
+    };
+  }, []);
 
   async function handleSave(e: React.FormEvent) {
     e.preventDefault();

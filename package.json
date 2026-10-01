@@ -15,7 +15,8 @@
     "invites": "tsx scripts/create-invites.ts --count 100",
     "pipeline": "tsx scripts/run-pipeline.ts",
     "episode": "tsx scripts/print-episode.ts",
-    "evals": "tsx evals/run-evals.ts"
+    "evals": "tsx evals/run-evals.ts",
+    "redteam": "tsx evals/run-redteam.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.129.0",

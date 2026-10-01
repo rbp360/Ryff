@@ -31,7 +31,7 @@ export default function LoginPage() {
         throw new Error(data.error || 'Sign in failed');
       }
 
-      router.push('/chat');
+      router.push('/onboarding');
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Sign in failed');
     } finally {

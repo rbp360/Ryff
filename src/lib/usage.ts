@@ -9,8 +9,16 @@ export interface UsageCaps {
   historyTurns: number;
 }
 
+interface RawCohortCap {
+  daily_msgs: number;
+  monthly_budget_usd: number;
+  max_output_tokens: number;
+  max_input_chars: number;
+  history_turns: number;
+}
+
 export function getCapsForCohort(cohort: 'cadre' | 'public' = 'public'): UsageCaps {
-  const cohortCaps = (capsConfig as Record<string, any>)[cohort] || capsConfig.public;
+  const cohortCaps = ((capsConfig as unknown) as Record<string, RawCohortCap>)[cohort] || capsConfig.public;
   return {
     dailyMsgs: cohortCaps.daily_msgs,
     monthlyBudgetUsd: cohortCaps.monthly_budget_usd,
@@ -54,7 +62,6 @@ export async function checkUserUsage(
   `;
 
   const msgsToday = todayUsage ? Number(todayUsage.msgs) : 0;
-  const todayCost = todayUsage ? Number(todayUsage.cost_usd) : 0;
 
   // 2. Check user monthly total spend
   const [monthUsage] = await db`
