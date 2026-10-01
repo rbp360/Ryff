@@ -135,7 +135,20 @@ Welcome to **Ryff**—a niche AI chatbot network where two AI personas (Hank: gr
 
 ---
 
-*(As development progresses through M1–M4, new features will be added here at both User Level and Code Level.)*
+## ⏳ Planned & Queued Features (Not Yet Implemented)
+
+### YouTube Closed Caption (CC) & Transcript Parsing (Milestone M5)
+- **User-Level Overview:**
+  Allows the ingestion pipeline to automatically fetch closed-caption transcripts for YouTube videos. Rather than relying solely on creator description box text (Option 1 - Curated Hook approach), the Fast AI will read the spoken transcript to extract exact host verdicts, gear pros/cons, and specs.
+- **Current Status:**
+  **Not Implemented Yet.** Currently operating on Option 1 (driving users to videos via RSS title + description snippet hooks). Full transcript parsing is queued for Milestone M5.
+- **Documentation & Instructions:**
+  Detailed design and technical specifications can be found in [`docs/youtube-cc-parsing.md`](file:///c:/Users/rob_b/Ryff/docs/youtube-cc-parsing.md) and [`initialisation documents/02-milestones-m1-m4.md`](file:///c:/Users/rob_b/Ryff/initialisation%20documents/02-milestones-m1-m4.md#m5--youtube-cc--transcript-parsing-pipeline).
+
+---
+
+*(As development progresses through M1–M5, new features will be added here at both User Level and Code Level.)*
+
 
 
 

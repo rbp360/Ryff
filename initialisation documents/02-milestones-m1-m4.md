@@ -183,6 +183,24 @@
 
 ---
 
+## M5 — YouTube CC & Transcript Parsing Pipeline (~4–6 h)
+
+> **Specification & Detailed Instructions:** See [`docs/youtube-cc-parsing.md`](file:///c:/Users/rob_b/Ryff/docs/youtube-cc-parsing.md)
+
+**Goal:** Upgrade YouTube feed digestion from description snippets to full spoken closed-caption transcripts, allowing the Fast AI to capture objective video conclusions and host verdicts.
+
+**Tasks**
+- [ ] Create YouTube transcript extraction module [`src/lib/youtube.ts`](file:///c:/Users/rob_b/Ryff/src/lib/youtube.ts) using lightweight, zero-cost public caption parsing (`youtube-transcript`).
+- [ ] Add 1-second polite rate-limiting delay between transcript fetches to avoid IP throttle.
+- [ ] Implement graceful fallback to RSS title + description snippet when no speech track is present (e.g., playthrough/jam demos or disabled CC).
+- [ ] Update `digestPendingItems` in [`src/pipeline/digest.ts`](file:///c:/Users/rob_b/Ryff/src/pipeline/digest.ts) to attach transcript context to `<item>` blocks when `source_type === 'youtube'`.
+- [ ] Update [`prompts/digest.system.md`](file:///c:/Users/rob_b/Ryff/prompts/digest.system.md) to instruct the model to filter sponsor/intro fluff and isolate gear takeaways and final verdicts.
+- [ ] Add unit tests in [`tests/youtube.test.ts`](file:///c:/Users/rob_b/Ryff/tests/youtube.test.ts) with caption XML/JSON fixtures.
+
+**Done when** YouTube feed items digest with full spoken conclusions in dry-run tests without throwing rate limits or increasing LLM spend beyond ~$0.0005 per video.
+
+---
+
 ## After M4 → Stage 3
 
 See `03-master-context-braindump.md` §14 for the four-week cadre test, metric thresholds, interviews, wave-2 growth, monetisation switch-on and B2B gates. Instrumentation is already in place via the `events` table; the agent's follow-on tasks are:
