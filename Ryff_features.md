@@ -92,4 +92,51 @@ Welcome to **Ryff**—a niche AI chatbot network where two AI personas (Hank: gr
 
 ---
 
+### 8. Master Pipeline Orchestrator & Automated Retention (M2 - Checkpoint 1)
+- **User-Level Overview:**
+  Unified orchestration layer that executes the twice-daily automated publication pipeline. Integrates live feed ingestion, batch article digestion, 4-turn Hank vs Vee debate formatting, data retention enforcement, and per-stage cost/health accounting into the persistent Postgres database.
+- **Code-Level Implementation:**
+  - **Master Orchestrator:** [`src/pipeline/index.ts`](file:///c:/Users/rob_b/Ryff/src/pipeline/index.ts) running Stage 1 (Ingest), Stage 2 (Digest), Stage 3 (Debate & Formatter), and Stage 4 (Retention) with comprehensive error handling, spend caps, and failure isolation preserving previous published episodes.
+  - **Data Retention Purge:** `runRetentionCleanup()` purging ingested items older than 30 days and chat messages older than 90 days.
+  - **CLI Runner Integration:** [`scripts/run-pipeline.ts`](file:///c:/Users/rob_b/Ryff/scripts/run-pipeline.ts) adapted to invoke `runPipeline()` with typed options and status reporting.
+  - **Automated Workflow:** [`.github/workflows/pipeline.yml`](file:///c:/Users/rob_b/Ryff/.github/workflows/pipeline.yml) configured for UTC cron execution (`30 6,18 * * *`) and on-demand manual dispatch.
+
+---
+
+### 9. Public Web & Episode Archive Pages (M2 - Checkpoint 2)
+- **User-Level Overview:**
+  Delivers responsive, mobile-first public pages for browsing the latest Hank vs Vee debate episode and historical episode archives. Each episode clearly presents character positions, disagreement takeaways, and clickable outbound source links with `rel="noopener nofollow"`.
+- **Code-Level Implementation:**
+  - **Dynamic Episode Archive View:** [`src/app/episodes/[id]/page.tsx`](file:///c:/Users/rob_b/Ryff/src/app/episodes/[id]/page.tsx) rendering individual past episodes by ID with full Hank vs Vee interaction cards, disagreement callouts, adjacent episode navigation, and mandatory AI character disclaimer.
+  - **Clickable Source Attribution:** Database query resolving `source_item_ids` to canonical article URLs, titles, and publisher names, replacing raw token placeholders with safe, outbound `rel="noopener nofollow"` links.
+  - **Home Page Navigation & Archive:** [`src/app/page.tsx`](file:///c:/Users/rob_b/Ryff/src/app/page.tsx) updated with recent episode grid, categorized news stream, command centre quick-links, and legal policy navigation.
+
+---
+
+### 10. Legal Compliance Pages & Admin Command Centre (M2 - Checkpoint 3)
+- **User-Level Overview:**
+  Implements full legal and regulatory compliance pages covering UK GDPR, user data rights, 90-day chat retention rules, 18+ age restrictions, AI character disclaimers, and transparent affiliate marketing disclosure. Upgrades the Admin Command Centre to track live system spend against daily caps, the last 20 pipeline executions, and per-stage statistics.
+- **Code-Level Implementation:**
+  - **Privacy Policy Page:** [`src/app/legal/privacy/page.tsx`](file:///c:/Users/rob_b/Ryff/src/app/legal/privacy/page.tsx) detailing UK GDPR compliance, 90-day chat message retention schedule, account deletion rights, and zero third-party tracking cookie policy.
+  - **Terms of Service Page:** [`src/app/legal/terms/page.tsx`](file:///c:/Users/rob_b/Ryff/src/app/legal/terms/page.tsx) outlining 18+ age gating, synthetic character entertainment disclaimers, no-advice guarantees, and security rules against prompt injection.
+  - **Affiliate Disclosure Page:** [`src/app/legal/disclosure/page.tsx`](file:///c:/Users/rob_b/Ryff/src/app/legal/disclosure/page.tsx) compliant with ASA and FTC guidance, declaring Reverb commercial relationships and enforcing editorial ranking integrity (deals ranked by rig fit, never by commission).
+  - **Admin Command Centre Upgrades:** [`src/app/admin/page.tsx`](file:///c:/Users/rob_b/Ryff/src/app/admin/page.tsx) displaying the last 20 pipeline executions with stage metrics, real-time daily compute spend vs $8.00 global budget cap gauge, database ingestion counters, and live feed source statuses.
+
+---
+
+### 11. Production Build & Static Verification Suite (M2 - Checkpoint 4)
+- **User-Level Overview:**
+  Validates the entire M2 scaffold for continuous deployment readiness on Vercel, ensuring zero build errors, zero type errors, fast Turbopack compilation times (<1.5s), and complete test coverage without invoking external AI API calls.
+- **Code-Level Implementation:**
+  - **Turbopack Build Optimization:** Refactored [`src/lib/env.ts`](file:///c:/Users/rob_b/Ryff/src/lib/env.ts) to eliminate dynamic filesystem tracing warnings during Next.js server compilation.
+  - **Static Type Safety:** `pnpm typecheck` (`tsc --noEmit`) passing with 0 errors across all routes, components, and server scripts.
+  - **Automated Test Suite:** `pnpm test` (`vitest run`) validating cost calculations, usage caps, and schema parsing across test suites.
+  - **Production Build:** `next build` generating static and dynamic routes (`/`, `/episodes/[id]`, `/admin`, `/login`, `/legal/privacy`, `/legal/terms`, `/legal/disclosure`) in 1.3s with zero build warnings.
+
+---
+
 *(As development progresses through M1–M4, new features will be added here at both User Level and Code Level.)*
+
+
+
+

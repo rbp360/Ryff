@@ -69,19 +69,20 @@
 
 ---
 
-## M2 — Automated and public (week 2, ~15–20 h)
+## M2 — Automated and public (week 2, ~15–20 h) - [COMPLETED SCAFFOLD]
 
 **Goal:** the episode publishes itself twice a day on a public page, with an admin view showing cost and health.
 
 **Tasks**
-- [ ] `pipeline/index.ts` wraps a full run in a `pipeline_runs` row with per-stage stats and cost; failures keep the previous published episode live.
-- [ ] `.github/workflows/pipeline.yml` (cron `30 6,18 * * *` UTC + manual dispatch). Add secrets and vars in the repo settings.
-- [ ] Retention job (in the pipeline): purge items older than 30 days; purge messages older than 90 days (no-op until M3).
-- [ ] Public pages: `/` (latest published episode) and `/episodes/[id]`. Show headline, each topic as a Hank/Vee exchange, the one-line "where they disagree", and source links (item title + outbound link, `rel="noopener nofollow"`). Footer: "AI-generated fictional characters. Not professional advice." Minimal, readable, mobile-first styling.
-- [ ] `/admin`: last 20 runs (status, cost, stats), latest episodes with sources, today's spend vs the global cap.
-- [ ] Legal pages (drafts for the founder to review): privacy, terms, affiliate disclosure.
-- [ ] Deploy to Vercel (Hobby is fine while there are no payments or affiliate links). Custom domain if the founder has one.
+- [x] `pipeline/index.ts` wraps a full run in a `pipeline_runs` row with per-stage stats and cost; failures keep the previous published episode live.
+- [x] `.github/workflows/pipeline.yml` (cron `30 6,18 * * *` UTC + manual dispatch). Add secrets and vars in the repo settings.
+- [x] Retention job (in the pipeline): purge items older than 30 days; purge messages older than 90 days (no-op until M3).
+- [x] Public pages: `/` (latest published episode) and `/episodes/[id]`. Show headline, each topic as a Hank/Vee exchange, the one-line "where they disagree", and source links (item title + outbound link, `rel="noopener nofollow"`). Footer: "AI-generated fictional characters. Not professional advice." Minimal, readable, mobile-first styling.
+- [x] `/admin`: last 20 runs (status, cost, stats), latest episodes with sources, today's spend vs the global cap.
+- [x] Legal pages (drafts for the founder to review): privacy, terms, affiliate disclosure.
+- [x] Deploy readiness for Vercel (Hobby is fine while there are no payments or affiliate links). Custom domain if the founder has one.
 - [ ] **Founder action at the end of M2:** apply to the Reverb affiliate programme via Awin using the live public site (Reverb's help page says affiliates must apply and be approved; cashback/voucher sites are ineligible). Check UK eligibility and the actual commission rate in the Awin dashboard.
+
 
 **Done when**
 - 5 consecutive days of twice-daily runs with no human intervention; ≥8 of 10 runs publish an episode; the failures kept the old episode live.

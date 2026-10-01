@@ -3,10 +3,13 @@ import path from 'path';
 import { z } from 'zod';
 
 function loadEnv() {
-  if (process.env.DATABASE_URL && (process.env.GEMINI_API_KEY || process.env.ANTHROPIC_API_KEY)) return;
+  // Next.js automatically loads .env files in web server environments
+  if (process.env.NEXT_RUNTIME || (process.env.DATABASE_URL && (process.env.GEMINI_API_KEY || process.env.ANTHROPIC_API_KEY))) {
+    return;
+  }
   const envFiles = ['.env.local', '.env'];
   for (const file of envFiles) {
-    const fullPath = path.resolve(process.cwd(), file);
+    const fullPath = path.resolve(/*turbopackIgnore: true*/ process.cwd(), file);
     if (fs.existsSync(fullPath)) {
       const content = fs.readFileSync(fullPath, 'utf8');
       for (const line of content.split('\n')) {
