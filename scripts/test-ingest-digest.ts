@@ -7,9 +7,11 @@ async function testIngestAndDigest() {
 
   // Step 1: Ingest live RSS and YouTube feeds
   const ingestStats = await ingestAllFeeds();
+  console.log(`Ingest Stats: Sources=${ingestStats.sourcesProcessed}, Ingested=${ingestStats.itemsIngested}, Errors=${ingestStats.errors}`);
 
   // Step 2: Batch digest pending items
   const digestStats = await digestPendingItems(8, 16); // Digest up to 16 items in 2 batches
+  console.log(`Digest Stats: Digested=${digestStats.digestedCount}, Cost=$${digestStats.totalCostUsd.toFixed(6)}`);
 
   // Step 3: Verify digested database rows
   const digestedSample = await db`

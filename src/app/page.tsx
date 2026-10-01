@@ -112,7 +112,7 @@ export default async function HomePage() {
           </h1>
 
           <p className="text-slate-400 text-sm md:text-base max-w-2xl mx-auto">
-            Two fictional gear nerds read today's guitar launches, reviews, and rumours so you don't have to.
+            Two fictional gear nerds read today&apos;s guitar launches, reviews, and rumours so you don&apos;t have to.
           </p>
         </section>
 
@@ -124,7 +124,7 @@ export default async function HomePage() {
 
           {topics.length === 0 ? (
             <div className="bg-slate-900 border border-slate-800 rounded-xl p-8 text-center text-slate-400">
-              No episode debate topics found. Run <code className="text-cyan-400 font-mono">npx tsx scripts/run-pipeline.ts</code> to generate today's episode.
+              No episode debate topics found. Run <code className="text-cyan-400 font-mono">npx tsx scripts/run-pipeline.ts</code> to generate today&apos;s episode.
             </div>
           ) : (
             topics.map((topic, idx) => (
@@ -161,7 +161,7 @@ export default async function HomePage() {
                       </div>
                     </div>
                     <p className="text-slate-300 text-sm leading-relaxed italic border-l-2 border-amber-600/50 pl-3">
-                      "{topic.hank.replace(/^Hank:\s*/i, '')}"
+                      &ldquo;{topic.hank.replace(/^Hank:\s*/i, '')}&rdquo;
                     </p>
                   </div>
 
@@ -177,7 +177,7 @@ export default async function HomePage() {
                       </div>
                     </div>
                     <p className="text-slate-300 text-sm leading-relaxed italic border-l-2 border-cyan-600/50 pl-3">
-                      "{topic.vee.replace(/^Vee:\s*/i, '')}"
+                      &ldquo;{topic.vee.replace(/^Vee:\s*/i, '')}&rdquo;
                     </p>
                   </div>
                 </div>
@@ -204,7 +204,7 @@ export default async function HomePage() {
         <section className="space-y-6 pt-6">
           <div className="flex items-center justify-between border-b border-slate-800 pb-3">
             <h2 className="text-xl font-bold text-white flex items-center gap-2">
-              <span>📰</span> Today's Digested Gear Feed
+              <span>📰</span> Today&apos;s Digested Gear Feed
             </h2>
             <span className="text-xs text-slate-400 font-mono">
               Categorized & Summarized by Gemini Flash

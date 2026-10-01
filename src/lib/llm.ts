@@ -59,7 +59,7 @@ export async function complete(params: CompleteParams): Promise<CompleteResult> 
       config.maxOutputTokens = params.maxTokens;
     }
 
-    let response: any;
+    let response: { text?: string | null; usageMetadata?: { promptTokenCount?: number; candidatesTokenCount?: number } } | null = null;
     let attempts = 0;
     const maxAttempts = 3;
 
@@ -72,8 +72,8 @@ export async function complete(params: CompleteParams): Promise<CompleteResult> 
           config,
         });
         break;
-      } catch (callErr: any) {
-        const msg = callErr?.message || String(callErr);
+      } catch (callErr: unknown) {
+        const msg = callErr instanceof Error ? callErr.message : String(callErr);
         if ((msg.includes('503') || msg.includes('UNAVAILABLE') || msg.includes('429')) && attempts < maxAttempts) {
           console.warn(`[LLM Retry - ${params.purpose}] API Spike encountered (${msg.slice(0, 60)}...). Retrying in 2s (Attempt ${attempts}/${maxAttempts})...`);
           await new Promise((resolve) => setTimeout(resolve, 2000));
@@ -83,8 +83,8 @@ export async function complete(params: CompleteParams): Promise<CompleteResult> 
       }
     }
 
-    const text = response.text || '';
-    const usageMetadata = response.usageMetadata;
+    const text = response?.text || '';
+    const usageMetadata = response?.usageMetadata;
     const usage: TokenUsage = {
       input_tokens: usageMetadata?.promptTokenCount || 100,
       output_tokens: usageMetadata?.candidatesTokenCount || 50,

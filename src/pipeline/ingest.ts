@@ -1,5 +1,5 @@
-import { db } from '../lib/db';
-import { fetchFeed, computeUrlHash } from '../lib/feeds';
+import { db } from '@/lib/db';
+import { fetchFeed } from '@/lib/feeds';
 
 export interface IngestStats {
   sourcesProcessed: number;

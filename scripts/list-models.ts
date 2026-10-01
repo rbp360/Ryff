@@ -37,24 +37,26 @@ async function listModels() {
       console.log(`- Name: ${m.name}`);
       console.log(`  DisplayName: ${m.displayName}`);
     }
-  } catch (err: any) {
-    console.error('Error querying ai.models.list():', err?.message || err);
+  } catch (err: unknown) {
+    const errMsg = err instanceof Error ? err.message : String(err);
+    console.error('Error querying ai.models.list():', errMsg);
 
     // Fallback direct fetch to REST API endpoint if SDK method differs
     console.log('\nTrying direct REST query to https://generativelanguage.googleapis.com/v1beta/models...');
     try {
       const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${apiKey}`);
-      const data = await res.json();
+      const data = (await res.json()) as { models?: Array<{ name?: string; displayName?: string }> };
       if (data.models) {
         console.log('\n=== Available Models via REST ===');
-        data.models.forEach((m: any) => {
+        data.models.forEach((m) => {
           console.log(`- ${m.name} (${m.displayName})`);
         });
       } else {
         console.error('REST Response error:', JSON.stringify(data));
       }
-    } catch (fetchErr: any) {
-      console.error('REST Fetch Error:', fetchErr?.message);
+    } catch (fetchErr: unknown) {
+      const fetchMsg = fetchErr instanceof Error ? fetchErr.message : String(fetchErr);
+      console.error('REST Fetch Error:', fetchMsg);
     }
   }
 }

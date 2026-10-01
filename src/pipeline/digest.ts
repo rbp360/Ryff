@@ -1,6 +1,6 @@
-import { db } from '../lib/db';
-import { complete } from '../lib/llm';
-import { env } from '../lib/env';
+import { db } from '@/lib/db';
+import { complete } from '@/lib/llm';
+import { env } from '@/lib/env';
 import fs from 'fs';
 import path from 'path';
 import { z } from 'zod';

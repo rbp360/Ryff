@@ -33,8 +33,9 @@ async function testModelCall(modelName: string) {
       contents: [{ role: 'user', parts: [{ text: 'Say hello in 5 words.' }] }],
     });
     console.log(`[SUCCESS - ${modelName}]: "${res.text?.trim()}"`);
-  } catch (err: any) {
-    console.log(`[FAILED - ${modelName}]: ${err.message}`);
+  } catch (err: unknown) {
+    const msg = err instanceof Error ? err.message : String(err);
+    console.log(`[FAILED - ${modelName}]: ${msg}`);
   }
 }
 

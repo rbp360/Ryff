@@ -38,7 +38,17 @@ export async function runDebatePipeline(options: DebateOptions = {}) {
     return fs.readFileSync(path.join(fallbackPromptDir, file), 'utf8');
   };
 
-  let candidateItems: any[] = [];
+interface CandidateItem {
+  id: number | string;
+  title: string;
+  summary: string;
+  brands?: string[];
+  products?: string[];
+  hype?: number;
+  item_type?: string;
+}
+
+  let candidateItems: CandidateItem[] = [];
 
   if (options.fromFixture) {
     const fixturePath = path.isAbsolute(options.fromFixture) 
@@ -158,7 +168,7 @@ export async function runDebatePipeline(options: DebateOptions = {}) {
   });
   totalCostUsd += formatRes.costUsd;
 
-  let parsedEpisode: any;
+  let parsedEpisode: z.infer<typeof formattedEpisodeSchema>;
   try {
     const cleaned = formatRes.text.replace(/```json\n?|\n?```/g, '').trim();
     parsedEpisode = JSON.parse(cleaned);
