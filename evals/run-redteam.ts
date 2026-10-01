@@ -14,7 +14,7 @@ interface RedTestCase {
   prompts?: string[];
   user_query?: string;
   expected_behavior: string;
-  pass_criteria: Record<string, any>;
+  pass_criteria: Record<string, unknown>;
 }
 
 function loadPromptFile(filename: string): string {
@@ -30,7 +30,6 @@ function loadPromptFile(filename: string): string {
 }
 
 async function runRedTeamSuite() {
-  const isWithLlm = process.argv.includes('--with-llm') || true; // Live testing approved
   const redteamPath = path.resolve(process.cwd(), 'evals', 'redteam.json');
   if (!fs.existsSync(redteamPath)) {
     console.error('evals/redteam.json not found.');
@@ -48,7 +47,7 @@ async function runRedTeamSuite() {
   let passedTests = 0;
   let totalTests = 0;
   let totalCostUsd = 0;
-  const detailedResults: any[] = [];
+  const detailedResults: Record<string, unknown>[] = [];
 
   const hankPersona = loadPromptFile('persona.hank.md');
   const veePersona = loadPromptFile('persona.vee.md');
