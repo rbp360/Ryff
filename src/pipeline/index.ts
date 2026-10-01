@@ -2,6 +2,7 @@ import { db } from '@/lib/db';
 import { ingestAllFeeds, IngestStats } from './ingest';
 import { digestPendingItems } from './digest';
 import { runDebatePipeline } from './debate';
+import { runDealsPipeline, DealsStageResult } from './deals';
 import { checkPipelineSpendCap } from '@/lib/usage';
 
 export interface PipelineOptions {
@@ -11,6 +12,7 @@ export interface PipelineOptions {
   promptVersion?: string;
   fromFixture?: string;
   skipDebate?: boolean;
+  skipDeals?: boolean;
 }
 
 export interface RetentionStats {
@@ -26,6 +28,7 @@ export interface PipelineResult {
     ingest?: IngestStats;
     digest?: { digestedCount: number; totalCostUsd: number };
     debate?: { episodeId?: number; totalCostUsd: number } | null;
+    deals?: DealsStageResult;
     retention?: RetentionStats;
   };
   error?: string;
@@ -60,7 +63,7 @@ export async function runRetentionCleanup(): Promise<RetentionStats> {
 
 /**
  * Master pipeline orchestrator:
- * Ingest -> Batch Digest -> 4-Turn Debate & Formatter -> Retention
+ * Ingest -> Batch Digest -> 4-Turn Debate & Formatter -> Reverb Deal Matcher -> Retention
  */
 export async function runPipeline(options: PipelineOptions = {}): Promise<PipelineResult> {
   const startTime = Date.now();
@@ -110,8 +113,15 @@ export async function runPipeline(options: PipelineOptions = {}): Promise<Pipeli
       }
     }
 
-    // Stage 4: Retention cleanup
-    console.log(`\n--- [Pipeline Run #${runId}] Stage 4: Retention Cleanup ---`);
+    // Stage 4: Reverb Deal Matcher
+    if (!options.skipDeals) {
+      console.log(`\n--- [Pipeline Run #${runId}] Stage 4: Reverb Deal Matcher ---`);
+      const dealsStats = await runDealsPipeline();
+      stageStats.deals = dealsStats;
+    }
+
+    // Stage 5: Retention cleanup
+    console.log(`\n--- [Pipeline Run #${runId}] Stage 5: Retention Cleanup ---`);
     const retentionStats = await runRetentionCleanup();
     stageStats.retention = retentionStats;
 

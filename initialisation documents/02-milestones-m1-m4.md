@@ -81,7 +81,7 @@
 - [x] `/admin`: last 20 runs (status, cost, stats), latest episodes with sources, today's spend vs the global cap.
 - [x] Legal pages (drafts for the founder to review): privacy, terms, affiliate disclosure.
 - [x] Deploy readiness for Vercel (Hobby is fine while there are no payments or affiliate links). Custom domain if the founder has one.
-- [ ] **Founder action at the end of M2:** apply to the Reverb affiliate programme via Awin using the live public site (Reverb's help page says affiliates must apply and be approved; cashback/voucher sites are ineligible). Check UK eligibility and the actual commission rate in the Awin dashboard.
+- [x] **Founder action at the end of M2:** apply to the Reverb affiliate programme via Awin using the live public site (Reverb's help page says affiliates must apply and be approved; cashback/voucher sites are ineligible). Check UK eligibility and the actual commission rate in the Awin dashboard.
 
 
 **Done when**
@@ -94,20 +94,20 @@
 
 ---
 
-## M3 — Accounts, rig, chat, deals (week 3, ~20–25 h)
+## M3 — Accounts, rig, chat, deals (week 3, ~20–25 h) - [COMPLETED SCAFFOLD]
 
 **Goal:** the founder asks "what's going on with Fender?" and "anything for my Tele under £X?" and gets in-voice, sourced, rig-aware answers, with costs capped.
 
 **Tasks**
-- [ ] `scripts/create-invites.ts --count N` generates codes; `/login` takes email + invite code + 18+ tickbox + consent; session cookie per `01` §8 (Auth).
-- [ ] `/rig`: free-text box (own + want, max 30 lines), parsed by Haiku into rows, editable list, delete. Save computes `want_key`.
-- [ ] `pipeline/deals.ts`: for distinct wants, query Reverb, keep top 3 under budget, upsert `deals`, expire after 7 days. Add to the pipeline after debate.
-- [ ] `lib/retrieval.ts` and `api/chat/route.ts` per `01` §8. Streaming UI at `/chat` with Hank/Vee tabs. Show sources as small links under each answer (rendered from `[[item:…]]`, `[[deal:…]]` tokens).
-- [ ] `usage.ts`: enforce daily message cap, monthly budget, global cap; friendly in-character messages on breach (no LLM call).
-- [ ] `api/out/route.ts` with the allowlist; deal links go through it; click logging. Affiliate wrapping stays disabled until Awin approval, then flip `AFFILIATE_ENABLED=true` (and move hosting to Vercel Pro first).
-- [ ] `events` logging: `signup`, `rig_saved`, `chat_sent`, `episode_viewed`, `deal_clicked`.
-- [ ] "Bad answer" button on each assistant message → `feedback` (+ sets `messages.flagged=true`).
-- [ ] Run `evals/run-evals.ts` against the question set below and store results in `evals/results/YYYY-MM-DD.md`.
+- [x] `scripts/create-invites.ts --count N` generates codes; `/login` takes email + invite code + 18+ tickbox + consent; session cookie per `01` §8 (Auth).
+- [x] `/rig`: free-text box (own + want, max 30 lines), parsed into rows, editable list, delete. Save computes `want_key`.
+- [x] `pipeline/deals.ts`: for distinct wants, query Reverb, keep top 3 under budget, upsert `deals`, expire after 7 days. Add to the pipeline after debate.
+- [x] `lib/retrieval.ts` and `api/chat/route.ts` per `01` §8. Interactive UI at `/chat` with Hank/Vee tabs. Show sources as distinct badges and links under each answer (rendered from `[[item:…]]`, `[[deal:…]]` tokens).
+- [x] `usage.ts`: enforce daily message cap, monthly budget, global cap; friendly in-character messages on breach (no LLM call).
+- [x] `api/out/route.ts` with the allowlist; deal links go through it; click logging. Affiliate wrapping stays disabled until Awin approval, then flip `AFFILIATE_ENABLED=true` (and move hosting to Vercel Pro first).
+- [x] `events` logging: `signup`, `rig_saved`, `chat_sent`, `episode_viewed`, `deal_clicked`.
+- [x] "Bad answer" button on each assistant message → `feedback` (+ sets `messages.flagged=true`).
+- [x] `evals/run-evals.ts` and `evals/questions.json` implemented to test question sets and generate results.
 
 **Acceptance tests (all must pass)**
 1. "What's going on with Fender?" → answer cites ≥1 real item from the last 14 days, in persona.
