@@ -165,16 +165,101 @@
     }
   ],
   "youtube": [
-    { "name": "BERNTH", "channel_id": "UCZvo8TZtUZkLgiH3rJsj-Ow", "tier": "video" },
-    { "name": "Spectre Sound Studios", "channel_id": "UC-f76NUQN5M-Z0cd0MOP5xw", "tier": "video" },
-    { "name": "The Studio Rats", "channel_id": "UCW-S0JAM1Rtte4lU0HsD8BA", "tier": "video" },
-    { "name": "Know Your Gear", "channel_id": "UCEzJtFWNg7d7TZW7K9JyXmw", "tier": "video" },
-    { "name": "Ola Englund", "channel_id": "UCfWdGyZaZODBPQc9Lu0y6aw", "tier": "video" },
-    { "name": "Premier Guitar YT", "channel_id": "UC5J-hZ4wNf7OlkzIn49LHoQ", "tier": "video" },
-    { "name": "Guitar World YT", "channel_id": "UCqHkFMEmOPFO3ahcrrBAj4w", "tier": "video" },
-    { "name": "Guitar Center YT", "channel_id": "UCr4kaFJ16UqtDQRzadrVkzw", "tier": "video" },
-    { "name": "Marty Music", "channel_id": "UCmnlTWVJysjWPFiZhQ5uudg", "tier": "video" },
-    { "name": "Paul Davids", "channel_id": "UC_Oa7Ph3v94om5OyxY1nPKg", "tier": "video" }
+    {
+      "name": "BERNTH",
+      "channel_id": "UCZvo8TZtUZkLgiH3rJsj-Ow",
+      "tier": "video"
+    },
+    {
+      "name": "Spectre Sound Studios",
+      "channel_id": "UC-f76NUQN5M-Z0cd0MOP5xw",
+      "tier": "video"
+    },
+    {
+      "name": "The Trogly's Guitar Show",
+      "channel_id": "UCsNBeL5vY5GZT_g_4D3QAFQ",
+      "tier": "video"
+    },
+    {
+      "name": "Uncle Doug",
+      "channel_id": "UCuR4hQTXkG_KxozLxwPzEjQ",
+      "tier": "video"
+    },
+    {
+      "name": "The Studio Rats",
+      "channel_id": "UCW-S0JAM1Rtte4lU0HsD8BA",
+      "tier": "video"
+    },
+    {
+      "name": "Know Your Gear",
+      "channel_id": "UCEzJtFWNg7d7TZW7K9JyXmw",
+      "tier": "video"
+    },
+    {
+      "name": "Guitar MAX",
+      "channel_id": "UCinZIq2Mf0L3hvYzxL0FLVQ",
+      "tier": "video"
+    },
+    {
+      "name": "JHS Pedals",
+      "channel_id": "UCTN1OwPMtjgH3hQAxvF-l2Q",
+      "tier": "video"
+    },
+    {
+      "name": "Rick Beato",
+      "channel_id": "UCcp-HjtmTMeIJ-0RrSHSGLA",
+      "tier": "video"
+    },
+    {
+      "name": "Jim Lill",
+      "channel_id": "UCvAovXWLq8Q6VITKAB_Rjww",
+      "tier": "video"
+    },
+    {
+      "name": "Ola Englund",
+      "channel_id": "UCfWdGyZaZODBPQc9Lou0y6aw",
+      "tier": "video"
+    },
+    {
+      "name": "Andertons Music Co",
+      "channel_id": "UCSNxIry_FPFcQDFRbi3VOAw",
+      "tier": "video"
+    },
+    {
+      "name": "Premier Guitar YT",
+      "channel_id": "UC5J-hZ4wNf7OlkzIn49LHoQ",
+      "tier": "video"
+    },
+    {
+      "name": "Guitar World YT",
+      "channel_id": "UCqHkFMEmOPFO3ahcrrBAj4w",
+      "tier": "video"
+    },
+    {
+      "name": "Guitar Center YT",
+      "channel_id": "UCr4kaFJ16UqtDQRzadrVkzw",
+      "tier": "video"
+    },
+    {
+      "name": "Marty Music",
+      "channel_id": "UCmnlTWVJysjWPFiZhQ5uudg",
+      "tier": "video"
+    },
+    {
+      "name": "Paul Davids",
+      "channel_id": "UC_Oa7Ph3v94om5OyxY1nPKg",
+      "tier": "video"
+    },
+    {
+      "name": "60 Cycle Hum",
+      "channel_id": "UCUB6zi9kg1b6m8MfBtW5hkQ",
+      "tier": "video"
+    },
+    {
+      "name": "Leon Todd",
+      "channel_id": "UCrlsD6OalGm8pIqKVo81k6A",
+      "tier": "video"
+    }
   ],
   "todo": [
     "Optional: Gearnews"
