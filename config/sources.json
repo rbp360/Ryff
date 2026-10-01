@@ -34,11 +34,6 @@
       "tier": "news"
     },
     {
-      "name": "Gibson Gazette",
-      "url": "https://gazette.gibson.com/feed",
-      "tier": "brand_pr"
-    },
-    {
       "name": "Delicious Audio",
       "url": "https://delicious-audio.com/feed/",
       "tier": "news"
@@ -109,11 +104,6 @@
       "tier": "news"
     },
     {
-      "name": "Mixonline",
-      "url": "https://www.mixonline.com/feed",
-      "tier": "news"
-    },
-    {
       "name": "The Highway Star",
       "url": "https://www.thehighwaystar.com/feed/",
       "tier": "news"
@@ -160,7 +150,7 @@
     },
     {
       "name": "Ultimate Guitar News",
-      "url": "https://www.ultimate-guitar.com/news/rss",
+      "url": "https://www.ultimate-guitar.com/rss/news",
       "tier": "news"
     },
     {

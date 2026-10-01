@@ -1,45 +1,29 @@
 import Parser from 'rss-parser';
 import crypto from 'crypto';
 
-const parser = new Parser({
-  headers: {
-    'User-Agent': 'GuitarBot/0.1 (contact: bedlamthebandbedlam@gmail.com)',
-  },
-  timeout: 10000,
-});
-
-export interface ParsedFeedItem {
-  url: string;
-  urlHash: string;
-  title: string;
-  snippet: string;
-  publishedAt: Date | null;
-}
-
-export function canonicaliseUrl(rawUrl: string): string {
-  try {
-    const parsed = new URL(rawUrl);
-    parsed.hash = '';
-    const searchParams = new URLSearchParams(parsed.search);
-    for (const key of Array.from(searchParams.keys())) {
-      if (key.startsWith('utm_') || key === 'ref' || key === 'fbclid') {
-        searchParams.delete(key);
-      }
-    }
-    parsed.search = searchParams.toString();
-    return parsed.toString();
-  } catch {
-    return rawUrl;
-  }
-}
-
-export function computeUrlHash(url: string): string {
-  return crypto.createHash('sha256').update(canonicaliseUrl(url)).digest('hex');
-}
+const parser = new Parser();
 
 export async function fetchFeed(feedUrl: string, keywordPrefilter: string[] | null = null): Promise<{ items: ParsedFeedItem[]; status: string }> {
   try {
-    const feed = await parser.parseURL(feedUrl);
+    const res = await fetch(feedUrl, {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
+        'Accept': 'application/rss+xml, application/xml, text/xml, application/atom+xml, */*;q=0.8',
+        'Accept-Language': 'en-US,en;q=0.9',
+      },
+      signal: AbortSignal.timeout(10000),
+    });
+
+    if (!res.ok) {
+      return { items: [], status: `error: HTTP ${res.status} (${res.statusText || 'Fetch failed'})` };
+    }
+
+    const xmlText = await res.text();
+    if (xmlText.trim().startsWith('<!doctype html') || xmlText.trim().startsWith('<html')) {
+      return { items: [], status: 'error: Returned HTML page instead of RSS feed' };
+    }
+
+    const feed = await parser.parseString(xmlText);
     const items: ParsedFeedItem[] = [];
 
     for (const entry of feed.items || []) {

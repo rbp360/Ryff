@@ -1,0 +1,1329 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0"
+	xmlns:content="http://purl.org/rss/1.0/modules/content/"
+	xmlns:wfw="http://wellformedweb.org/CommentAPI/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+	xmlns:slash="http://purl.org/rss/1.0/modules/slash/"
+	xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd"
+xmlns:podcast="https://podcastindex.org/namespace/1.0"
+xmlns:rawvoice="https://blubrry.com/developer/rawvoice-rss/"
+>
+<channel>
+	<title>The Guitar Channel - Passion Amplifier</title>
+	<atom:link href="https://theguitarchannel.biz/feed/podcast/" rel="self" type="application/rss+xml" />
+	<link>https://theguitarchannel.biz/</link>
+	<description>Interviews with professionals of the guitar world (musicians, luthiers, builders, etc.) and gear reviews</description>
+	<lastBuildDate>Wed, 30 Sep 2026 10:48:46 +0000</lastBuildDate>
+	<language>en</language>
+	<sy:updatePeriod>hourly</sy:updatePeriod>
+	<sy:updateFrequency>1</sy:updateFrequency>
+		<generator>https://wordpress.org/?v=7.1.2</generator>
+
+<image>
+	<url>https://theguitarchannel.biz/wp-content/uploads/2015/05/cropped-MediatorLCG100-32x32.png</url>
+	<title>The Guitar Channel - Passion Amplifier</title>
+	<link>https://theguitarchannel.biz/</link>
+	<width>32</width>
+	<height>32</height>
+</image> 
+	<atom:link rel="hub" href="https://pubsubhubbub.appspot.com/" />
+	<itunes:author>Pierre Journel</itunes:author>
+	<itunes:explicit>false</itunes:explicit>
+	<itunes:image href="https://theguitarchannel.biz/wp-content/uploads/2021/02/Logo-EN-Square3000.jpg" />
+	<itunes:type>episodic</itunes:type>
+	<podcast:medium>podcast</podcast:medium>
+	<image>
+		<title>The Guitar Channel - Passion Amplifier</title>
+		<url>https://theguitarchannel.biz/wp-content/uploads/2021/02/Logo-EN-Square3000.jpg</url>
+		<link>https://theguitarchannel.biz</link>
+	</image>
+	<itunes:category text="Music">
+		<itunes:category text="Music Interviews" />
+	</itunes:category>
+	<itunes:category text="Arts">
+		<itunes:category text="Performing Arts" />
+	</itunes:category>
+	<itunes:category text="Arts" />
+	<podcast:podping usesPodping="true" />
+	<podcast:guid>c353e4c3-dc84-58a7-8612-81fb76857f3f</podcast:guid>
+	<rawvoice:subscribe feed="https://theguitarchannel.biz/feed/podcast/" itunes="https://itunes.apple.com/fr/podcast/the-guitar-channel/id392480217" spotify="https://open.spotify.com/show/2k6tfAFpRbPpK5kKr0m0UA?si=e5d22c5311c24cad"></rawvoice:subscribe>
+<site xmlns="com-wordpress:feed-additions:1">42867513</site>	<item>
+		<title>Fretboard Summit, Chicago Here I Come!</title>
+		<link>https://theguitarchannel.biz/2026/07/fretboard-summit-chicago-here-i-come/</link>
+		<pubDate>Tue, 07 Jul 2026 07:50:16 +0000</pubDate>
+		<guid isPermaLink="false">https://theguitarchannel.biz/?p=61698</guid>
+		<comments>https://theguitarchannel.biz/2026/07/fretboard-summit-chicago-here-i-come/#respond</comments>
+		<wfw:commentRss>https://theguitarchannel.biz/2026/07/fretboard-summit-chicago-here-i-come/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+		<category><![CDATA[All]]></category>
+		<category><![CDATA[News]]></category>
+		<category><![CDATA[Fretboard Summit]]></category>
+		<category><![CDATA[Guitar Show]]></category>
+		<category><![CDATA[Open]]></category>
+		<description><![CDATA[
+<p class="wp-block-paragraph">I’d been wanting to go and cover the <strong><a href="https://theguitarchannel.biz/tag/fretboard-summit/">Fretboard Summit</a></strong> (<a href="https://fretboardsummit.org/" target="_blank" rel="noreferrer noopener">fretboardsummit.org</a>) in Chicago for years. It’s a guitar event created by <strong><a href="https://theguitarchannel.biz/tag/jason-verlinde/">Jason Verlinde</a></strong>, editor-in-chief of the <strong><a href="https://theguitarchannel.biz/tag/fretboard-journal/">Fretboard Journal</a></strong> (<a href="https://www.fretboardjournal.com/" target="_blank" rel="noreferrer noopener">fretboardjournal.com</a>). It features concerts, talks, panel discussions and, of course, a <a href="https://theguitarchannel.biz/tag/montreux-international-guitar-show/">guitar show</a>. Well, 2026 will be the year this plan comes to fruition, as I’ll be in Chicago from 19 to 24 August.</p>
+
+
+<div class="wp-block-image">
+<figure class="aligncenter size-full is-resized"><a href="https://fretboardsummit.org/" target="_blank" rel=" noreferrer noopener"><img fetchpriority="high" decoding="async" width="1024" height="215" src="https://theguitarchannel.biz/wp-content/uploads/2026/07/Fretboard-Summit-logo-header.png" alt="" class="wp-image-61699" style="aspect-ratio:4.763001683352529;width:541px;height:auto" srcset="https://theguitarchannel.biz/wp-content/uploads/2026/07/Fretboard-Summit-logo-header.png 1024w, https://theguitarchannel.biz/wp-content/uploads/2026/07/Fretboard-Summit-logo-header-300x63.png 300w, https://theguitarchannel.biz/wp-content/uploads/2026/07/Fretboard-Summit-logo-header-768x161.png 768w, https://theguitarchannel.biz/wp-content/uploads/2026/07/Fretboard-Summit-logo-header-280x59.png 280w" sizes="(max-width: 1024px) 100vw, 1024px" /></a></figure>
+</div>
+
+
+<p class="wp-block-paragraph"></p>
+
+
+
+<p class="wp-block-paragraph">As I explain in the video below, I firmly believe that when times are tough, as they are at the moment, it’s the best time to break new ground. The program for this <strong><a href="https://theguitarchannel.biz/tag/fretboard-summit/">Fretboard Summit</a></strong> looks brilliant and promises some wonderful encounters and <a href="https://theguitarchannel.biz/tag/video-blogging/">fascinating reports</a>. I can’t wait to be there.</p>
+
+
+
+<h2 class="wp-block-heading">Fretboard Summit Announcement</h2>
+
+
+
+<iframe width="1120" height="630" src="https://www.youtube.com/embed/oSxQ6T8mEQk" frameborder="0" allowfullscreen></iframe>
+
+
+
+<h2 class="wp-block-heading">The Guitar Channel podcast</h2>
+
+
+
+<p class="wp-block-paragraph">The audio version of the video is available in the <a href="https://theguitarchannel.biz/tgcpodcast/">podcast</a> on <a href="https://itunes.apple.com/fr/podcast/the-guitar-channel-passion-amplifier/id392480217?mt=2" target="_blank" rel="noopener">iTunes</a>, <a href="https://open.spotify.com/show/4VZk1pRN8m7zXQALJK1Uv5" target="_blank" rel="noopener">Spotify</a>&nbsp;and below:</p>
+
+
+
+<p class="wp-block-paragraph">
+
+
+
+<p class="wp-block-paragraph">Until the next <a href="https://theguitarchannel.biz/category/interview/">interview</a> or <a href="https://theguitarchannel.biz/tag/gear/">gear review</a>, keep on playing the guitar!</p>
+
+
+
+<p class="wp-block-paragraph">Pierre Journel.</p>
+
+
+
+<p class="has-text-align-center has-x-large-font-size wp-block-paragraph">For more info:<br><a href="https://theguitarchannel.biz/tag/video-blogging/">The Guitar Channel Reports<br></a><a href="https://theguitarchannel.biz/tag/montreux-international-guitar-show/">Guitar Show Archives</a></p>]]></description>
+		<enclosure url="https://traffic.libsyn.com/lachaineguitare/2026_Fretboard_Summit_announcement.mp3" length="6466664" type="audio/mpeg" />
+		<itunes:episodeType>full</itunes:episodeType>
+		<itunes:duration>6:44</itunes:duration>
+		<rawvoice:embed>&lt;iframe width=&quot;320&quot; height=&quot;30&quot; src=&quot;https://theguitarchannel.biz/?powerpress_embed=61698-podcast&amp;amp;amp;powerpress_player=mediaelement-audio&quot; title=&quot;Blubrry Podcast Player&quot; frameborder=&quot;0&quot; scrolling=&quot;no&quot;&gt;&lt;/iframe&gt;</rawvoice:embed>
+<post-id xmlns="com-wordpress:feed-additions:1">61698</post-id>	</item>
+	<item>
+		<title>Finland ToneFest: Petri Matero Organizer Interview</title>
+		<link>https://theguitarchannel.biz/2026/03/finland-tonefest-petri-matero-organizer-interview/</link>
+		<pubDate>Thu, 19 Mar 2026 10:45:45 +0000</pubDate>
+		<guid isPermaLink="false">https://theguitarchannel.biz/?p=61312</guid>
+		<comments>https://theguitarchannel.biz/2026/03/finland-tonefest-petri-matero-organizer-interview/#respond</comments>
+		<wfw:commentRss>https://theguitarchannel.biz/2026/03/finland-tonefest-petri-matero-organizer-interview/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+		<category><![CDATA[All]]></category>
+		<category><![CDATA[Interviews]]></category>
+		<category><![CDATA[Guitar Show]]></category>
+		<category><![CDATA[Open]]></category>
+		<category><![CDATA[Petri Matero]]></category>
+		<category><![CDATA[Podcast]]></category>
+		<category><![CDATA[ToneFest]]></category>
+		<description><![CDATA[
+<p class="wp-block-paragraph">In 2026, The Guitar Channel travelled to <strong>Finland</strong> for the first time to cover <strong><a href="https://theguitarchannel.biz/tag/tonefest/">ToneFest</a></strong> (<a href="https://www.tonefest.fi/" target="_blank" rel="noreferrer noopener">tonefest.fi</a>), the country’s biggest guitar show. Here is an interview with <strong>Petri Matero</strong>, organiser of this wonderful event and owner of the shop <strong>Tonefest Guitar Gallery</strong> (<a href="https://www.tonefestguitargallery.com/" target="_blank" rel="noreferrer noopener">tonefestguitargallery.com</a>), also located in Tuusula, just north of <strong>Helsinki</strong>.</p>
+
+
+
+<p class="has-text-align-center has-large-font-size wp-block-paragraph">A big thank you to Petri, who partly funded my trip to Finland and thus made it possible</p>
+
+
+
+<h2 class="wp-block-heading">Petri Matero interview</h2>
+
+
+
+<center><iframe width="1120" height="630" src="https://www.youtube.com/embed/rwVAEsMoQi8" frameborder="0" allowfullscreen></iframe></center>
+
+
+
+<h2 class="wp-block-heading">The Guitar Channel podcast</h2>
+
+
+
+<p class="wp-block-paragraph">The audio version of the video is available in the <a href="https://theguitarchannel.biz/tgcpodcast/">podcast</a> on <a href="https://itunes.apple.com/fr/podcast/the-guitar-channel-passion-amplifier/id392480217?mt=2" target="_blank" rel="noopener">iTunes</a>, <a href="https://open.spotify.com/show/4VZk1pRN8m7zXQALJK1Uv5" target="_blank" rel="noopener">Spotify</a>&nbsp;and below:</p>
+
+
+
+<p class="wp-block-paragraph">
+
+
+
+<h2 class="wp-block-heading">Photo album</h2>
+
+
+
+<figure class="wp-block-gallery has-nested-images columns-4 is-cropped wp-block-gallery-1 is-layout-flex wp-block-gallery-is-layout-flex">
+<figure class="wp-block-image size-large"><img loading="lazy" decoding="async" width="1024" height="768" data-id="61096" src="https://theguitarchannel.biz/wp-content/uploads/2026/03/ToneFest-2026-jour-1-0298-1024x768.jpg" alt="" class="wp-image-61096" srcset="https://theguitarchannel.biz/wp-content/uploads/2026/03/ToneFest-2026-jour-1-0298-1024x768.jpg 1024w, https://theguitarchannel.biz/wp-content/uploads/2026/03/ToneFest-2026-jour-1-0298-300x225.jpg 300w, https://theguitarchannel.biz/wp-content/uploads/2026/03/ToneFest-2026-jour-1-0298-768x576.jpg 768w, https://theguitarchannel.biz/wp-content/uploads/2026/03/ToneFest-2026-jour-1-0298-1536x1152.jpg 1536w, https://theguitarchannel.biz/wp-content/uploads/2026/03/ToneFest-2026-jour-1-0298-2048x1536.jpg 2048w, https://theguitarchannel.biz/wp-content/uploads/2026/03/ToneFest-2026-jour-1-0298-249x187.jpg 249w, https://theguitarchannel.biz/wp-content/uploads/2026/03/ToneFest-2026-jour-1-0298-1494x1121.jpg 1494w" sizes="auto, (max-width: 1024px) 100vw, 1024px" /></figure>
+
+
+
+<figure class="wp-block-image size-large"><img loading="lazy" decoding="async" width="1024" height="768" data-id="61095" src="https://theguitarchannel.biz/wp-content/uploads/2026/03/ToneFest-2026-jour-1-0299-1024x768.jpg" alt="" class="wp-image-61095" srcset="https://theguitarchannel.biz/wp-content/uploads/2026/03/ToneFest-2026-jour-1-0299-1024x768.jpg 1024w, https://theguitarchannel.biz/wp-content/uploads/2026/03/ToneFest-2026-jour-1-0299-300x225.jpg 300w, https://theguitarchannel.biz/wp-content/uploads/2026/03/ToneFest-2026-jour-1-0299-768x576.jpg 768w, https://theguitarchannel.biz/wp-content/uploads/2026/03/ToneFest-2026-jour-1-0299-1536x1152.jpg 1536w, https://theguitarchannel.biz/wp-content/uploads/2026/03/ToneFest-2026-jour-1-0299-2048x1536.jpg 2048w, https://theguitarchannel.biz/wp-content/uploads/2026/03/ToneFest-2026-jour-1-0299-249x187.jpg 249w, https://theguitarchannel.biz/wp-content/uploads/2026/03/ToneFest-2026-jour-1-0299-1494x1121.jpg 1494w" sizes="auto, (max-width: 1024px) 100vw, 1024px" /></figure>
+
+
+
+<figure class="wp-block-image size-large"><img loading="lazy" decoding="async" width="1024" height="768" data-id="61090" src="https://theguitarchannel.biz/wp-content/uploads/2026/03/ToneFest-2026-jour-1-0304-1024x768.jpg" alt="" class="wp-image-61090" srcset="https://theguitarchannel.biz/wp-content/uploads/2026/03/ToneFest-2026-jour-1-0304-1024x768.jpg 1024w, https://theguitarchannel.biz/wp-content/uploads/2026/03/ToneFest-2026-jour-1-0304-300x225.jpg 300w, https://theguitarchannel.biz/wp-content/uploads/2026/03/ToneFest-2026-jour-1-0304-768x576.jpg 768w, https://theguitarchannel.biz/wp-content/uploads/2026/03/ToneFest-2026-jour-1-0304-1536x1152.jpg 1536w, https://theguitarchannel.biz/wp-content/uploads/2026/03/ToneFest-2026-jour-1-0304-2048x1536.jpg 2048w, https://theguitarchannel.biz/wp-content/uploads/2026/03/ToneFest-2026-jour-1-0304-249x187.jpg 249w, https://theguitarchannel.biz/wp-content/uploads/2026/03/ToneFest-2026-jour-1-0304-1494x1121.jpg 1494w" sizes="auto, (max-width: 1024px) 100vw, 1024px" /></figure>
+
+
+
+<figure class="wp-block-image size-large"><img loading="lazy" decoding="async" width="1024" height="768" data-id="61087" src="https://theguitarchannel.biz/wp-content/uploads/2026/03/ToneFest-2026-jour-1-0307-1024x768.jpg" alt="" class="wp-image-61087" srcset="https://theguitarchannel.biz/wp-content/uploads/2026/03/ToneFest-2026-jour-1-0307-1024x768.jpg 1024w, https://theguitarchannel.biz/wp-content/uploads/2026/03/ToneFest-2026-jour-1-0307-300x225.jpg 300w, https://theguitarchannel.biz/wp-content/uploads/2026/03/ToneFest-2026-jour-1-0307-768x576.jpg 768w, https://theguitarchannel.biz/wp-content/uploads/2026/03/ToneFest-2026-jour-1-0307-1536x1152.jpg 1536w, https://theguitarchannel.biz/wp-content/uploads/2026/03/ToneFest-2026-jour-1-0307-2048x1536.jpg 2048w, https://theguitarchannel.biz/wp-content/uploads/2026/03/ToneFest-2026-jour-1-0307-249x187.jpg 249w, https://theguitarchannel.biz/wp-content/uploads/2026/03/ToneFest-2026-jour-1-0307-1494x1121.jpg 1494w" sizes="auto, (max-width: 1024px) 100vw, 1024px" /></figure>
+
+
+
+<figure class="wp-block-image size-large"><img loading="lazy" decoding="async" width="1024" height="768" data-id="61079" src="https://theguitarchannel.biz/wp-content/uploads/2026/03/ToneFest-2026-jour-1-0315-1024x768.jpg" alt="" class="wp-image-61079" srcset="https://theguitarchannel.biz/wp-content/uploads/2026/03/ToneFest-2026-jour-1-0315-1024x768.jpg 1024w, https://theguitarchannel.biz/wp-content/uploads/2026/03/ToneFest-2026-jour-1-0315-300x225.jpg 300w, https://theguitarchannel.biz/wp-content/uploads/2026/03/ToneFest-2026-jour-1-0315-768x576.jpg 768w, https://theguitarchannel.biz/wp-content/uploads/2026/03/ToneFest-2026-jour-1-0315-1536x1152.jpg 1536w, https://theguitarchannel.biz/wp-content/uploads/2026/03/ToneFest-2026-jour-1-0315-2048x1536.jpg 2048w, https://theguitarchannel.biz/wp-content/uploads/2026/03/ToneFest-2026-jour-1-0315-249x187.jpg 249w, https://theguitarchannel.biz/wp-content/uploads/2026/03/ToneFest-2026-jour-1-0315-1494x1121.jpg 1494w" sizes="auto, (max-width: 1024px) 100vw, 1024px" /></figure>
+
+
+
+<figure class="wp-block-image size-large"><img loading="lazy" decoding="async" width="1024" height="768" data-id="61077" src="https://theguitarchannel.biz/wp-content/uploads/2026/03/ToneFest-2026-jour-1-0317-1024x768.jpg" alt="" class="wp-image-61077" srcset="https://theguitarchannel.biz/wp-content/uploads/2026/03/ToneFest-2026-jour-1-0317-1024x768.jpg 1024w, https://theguitarchannel.biz/wp-content/uploads/2026/03/ToneFest-2026-jour-1-0317-300x225.jpg 300w, https://theguitarchannel.biz/wp-content/uploads/2026/03/ToneFest-2026-jour-1-0317-768x576.jpg 768w, https://theguitarchannel.biz/wp-content/uploads/2026/03/ToneFest-2026-jour-1-0317-1536x1152.jpg 1536w, https://theguitarchannel.biz/wp-content/uploads/2026/03/ToneFest-2026-jour-1-0317-2048x1536.jpg 2048w, https://theguitarchannel.biz/wp-content/uploads/2026/03/ToneFest-2026-jour-1-0317-249x187.jpg 249w, https://theguitarchannel.biz/wp-content/uploads/2026/03/ToneFest-2026-jour-1-0317-1494x1121.jpg 1494w" sizes="auto, (max-width: 1024px) 100vw, 1024px" /></figure>
+
+
+
+<figure class="wp-block-image size-large"><img loading="lazy" decoding="async" width="1024" height="768" data-id="61071" src="https://theguitarchannel.biz/wp-content/uploads/2026/03/ToneFest-2026-jour-1-0323-1024x768.jpg" alt="" class="wp-image-61071" srcset="https://theguitarchannel.biz/wp-content/uploads/2026/03/ToneFest-2026-jour-1-0323-1024x768.jpg 1024w, https://theguitarchannel.biz/wp-content/uploads/2026/03/ToneFest-2026-jour-1-0323-300x225.jpg 300w, https://theguitarchannel.biz/wp-content/uploads/2026/03/ToneFest-2026-jour-1-0323-768x576.jpg 768w, https://theguitarchannel.biz/wp-content/uploads/2026/03/ToneFest-2026-jour-1-0323-1536x1152.jpg 1536w, https://theguitarchannel.biz/wp-content/uploads/2026/03/ToneFest-2026-jour-1-0323-2048x1536.jpg 2048w, https://theguitarchannel.biz/wp-content/uploads/2026/03/ToneFest-2026-jour-1-0323-249x187.jpg 249w, https://theguitarchannel.biz/wp-content/uploads/2026/03/ToneFest-2026-jour-1-0323-1494x1121.jpg 1494w" sizes="auto, (max-width: 1024px) 100vw, 1024px" /></figure>
+
+
+
+<figure class="wp-block-image size-large"><img loading="lazy" decoding="async" width="1024" height="768" data-id="61072" src="https://theguitarchannel.biz/wp-content/uploads/2026/03/ToneFest-2026-jour-1-0322-1024x768.jpg" alt="" class="wp-image-61072" srcset="https://theguitarchannel.biz/wp-content/uploads/2026/03/ToneFest-2026-jour-1-0322-1024x768.jpg 1024w, https://theguitarchannel.biz/wp-content/uploads/2026/03/ToneFest-2026-jour-1-0322-300x225.jpg 300w, https://theguitarchannel.biz/wp-content/uploads/2026/03/ToneFest-2026-jour-1-0322-768x576.jpg 768w, https://theguitarchannel.biz/wp-content/uploads/2026/03/ToneFest-2026-jour-1-0322-1536x1152.jpg 1536w, https://theguitarchannel.biz/wp-content/uploads/2026/03/ToneFest-2026-jour-1-0322-2048x1536.jpg 2048w, https://theguitarchannel.biz/wp-content/uploads/2026/03/ToneFest-2026-jour-1-0322-249x187.jpg 249w, https://theguitarchannel.biz/wp-content/uploads/2026/03/ToneFest-2026-jour-1-0322-1494x1121.jpg 1494w" sizes="auto, (max-width: 1024px) 100vw, 1024px" /></figure>
+
+
+
+<figure class="wp-block-image size-large"><img loading="lazy" decoding="async" width="768" height="1024" data-id="61061" src="https://theguitarchannel.biz/wp-content/uploads/2026/03/ToneFest-2026-jour-1-0333-768x1024.jpg" alt="" class="wp-image-61061" srcset="https://theguitarchannel.biz/wp-content/uploads/2026/03/ToneFest-2026-jour-1-0333-768x1024.jpg 768w, https://theguitarchannel.biz/wp-content/uploads/2026/03/ToneFest-2026-jour-1-0333-225x300.jpg 225w, https://theguitarchannel.biz/wp-content/uploads/2026/03/ToneFest-2026-jour-1-0333-1152x1536.jpg 1152w, https://theguitarchannel.biz/wp-content/uploads/2026/03/ToneFest-2026-jour-1-0333-1536x2048.jpg 1536w, https://theguitarchannel.biz/wp-content/uploads/2026/03/ToneFest-2026-jour-1-0333-140x187.jpg 140w, https://theguitarchannel.biz/wp-content/uploads/2026/03/ToneFest-2026-jour-1-0333-1494x1992.jpg 1494w, https://theguitarchannel.biz/wp-content/uploads/2026/03/ToneFest-2026-jour-1-0333-scaled.jpg 1920w" sizes="auto, (max-width: 768px) 100vw, 768px" /></figure>
+
+
+
+<figure class="wp-block-image size-large"><img loading="lazy" decoding="async" width="768" height="1024" data-id="61045" src="https://theguitarchannel.biz/wp-content/uploads/2026/03/ToneFest-2026-jour-1-0354-1-768x1024.jpg" alt="" class="wp-image-61045" srcset="https://theguitarchannel.biz/wp-content/uploads/2026/03/ToneFest-2026-jour-1-0354-1-768x1024.jpg 768w, https://theguitarchannel.biz/wp-content/uploads/2026/03/ToneFest-2026-jour-1-0354-1-225x300.jpg 225w, https://theguitarchannel.biz/wp-content/uploads/2026/03/ToneFest-2026-jour-1-0354-1-1152x1536.jpg 1152w, https://theguitarchannel.biz/wp-content/uploads/2026/03/ToneFest-2026-jour-1-0354-1-1536x2048.jpg 1536w, https://theguitarchannel.biz/wp-content/uploads/2026/03/ToneFest-2026-jour-1-0354-1-140x187.jpg 140w, https://theguitarchannel.biz/wp-content/uploads/2026/03/ToneFest-2026-jour-1-0354-1-1494x1992.jpg 1494w, https://theguitarchannel.biz/wp-content/uploads/2026/03/ToneFest-2026-jour-1-0354-1-scaled.jpg 1920w" sizes="auto, (max-width: 768px) 100vw, 768px" /></figure>
+
+
+
+<figure class="wp-block-image size-large"><img loading="lazy" decoding="async" width="768" height="1024" data-id="61040" src="https://theguitarchannel.biz/wp-content/uploads/2026/03/ToneFest-2026-jour-1-0360-1-768x1024.jpg" alt="" class="wp-image-61040" srcset="https://theguitarchannel.biz/wp-content/uploads/2026/03/ToneFest-2026-jour-1-0360-1-768x1024.jpg 768w, https://theguitarchannel.biz/wp-content/uploads/2026/03/ToneFest-2026-jour-1-0360-1-225x300.jpg 225w, https://theguitarchannel.biz/wp-content/uploads/2026/03/ToneFest-2026-jour-1-0360-1-1152x1536.jpg 1152w, https://theguitarchannel.biz/wp-content/uploads/2026/03/ToneFest-2026-jour-1-0360-1-1536x2048.jpg 1536w, https://theguitarchannel.biz/wp-content/uploads/2026/03/ToneFest-2026-jour-1-0360-1-140x187.jpg 140w, https://theguitarchannel.biz/wp-content/uploads/2026/03/ToneFest-2026-jour-1-0360-1-1494x1992.jpg 1494w, https://theguitarchannel.biz/wp-content/uploads/2026/03/ToneFest-2026-jour-1-0360-1-scaled.jpg 1920w" sizes="auto, (max-width: 768px) 100vw, 768px" /></figure>
+
+
+
+<figure class="wp-block-image size-large"><img loading="lazy" decoding="async" width="1024" height="768" data-id="61031" src="https://theguitarchannel.biz/wp-content/uploads/2026/03/ToneFest-2026-jour-2-0384-1024x768.jpg" alt="" class="wp-image-61031" srcset="https://theguitarchannel.biz/wp-content/uploads/2026/03/ToneFest-2026-jour-2-0384-1024x768.jpg 1024w, https://theguitarchannel.biz/wp-content/uploads/2026/03/ToneFest-2026-jour-2-0384-300x225.jpg 300w, https://theguitarchannel.biz/wp-content/uploads/2026/03/ToneFest-2026-jour-2-0384-768x576.jpg 768w, https://theguitarchannel.biz/wp-content/uploads/2026/03/ToneFest-2026-jour-2-0384-1536x1152.jpg 1536w, https://theguitarchannel.biz/wp-content/uploads/2026/03/ToneFest-2026-jour-2-0384-2048x1536.jpg 2048w, https://theguitarchannel.biz/wp-content/uploads/2026/03/ToneFest-2026-jour-2-0384-249x187.jpg 249w, https://theguitarchannel.biz/wp-content/uploads/2026/03/ToneFest-2026-jour-2-0384-1494x1121.jpg 1494w" sizes="auto, (max-width: 1024px) 100vw, 1024px" /></figure>
+
+
+
+<figure class="wp-block-image size-large"><img loading="lazy" decoding="async" width="768" height="1024" data-id="61037" src="https://theguitarchannel.biz/wp-content/uploads/2026/03/ToneFest-2026-jour-2-0376-768x1024.jpg" alt="" class="wp-image-61037" srcset="https://theguitarchannel.biz/wp-content/uploads/2026/03/ToneFest-2026-jour-2-0376-768x1024.jpg 768w, https://theguitarchannel.biz/wp-content/uploads/2026/03/ToneFest-2026-jour-2-0376-225x300.jpg 225w, https://theguitarchannel.biz/wp-content/uploads/2026/03/ToneFest-2026-jour-2-0376-1152x1536.jpg 1152w, https://theguitarchannel.biz/wp-content/uploads/2026/03/ToneFest-2026-jour-2-0376-1536x2048.jpg 1536w, https://theguitarchannel.biz/wp-content/uploads/2026/03/ToneFest-2026-jour-2-0376-140x187.jpg 140w, https://theguitarchannel.biz/wp-content/uploads/2026/03/ToneFest-2026-jour-2-0376-1494x1992.jpg 1494w, https://theguitarchannel.biz/wp-content/uploads/2026/03/ToneFest-2026-jour-2-0376-scaled.jpg 1920w" sizes="auto, (max-width: 768px) 100vw, 768px" /></figure>
+</figure>
+
+
+
+<h2 class="wp-block-heading">My take on this guitar show</h2>
+
+
+
+<p class="wp-block-paragraph">I absolutely loved covering this guitar show. It was a blast to meet luthiers producing instruments of the very highest standard. The Finnish musicians who were there, whether performing in concert or giving masterclasses, were top-class; I was truly blown away by meeting all these talented people.</p>
+
+
+
+<p class="wp-block-paragraph">If the stars align, I hope to be able to go back there in the future.</p>
+
+
+
+<p class="wp-block-paragraph">Until the next <a href="https://theguitarchannel.biz/category/interview/">interview</a> or <a href="https://theguitarchannel.biz/tag/gear/">gear review</a>, keep on playing the guitar!</p>
+
+
+
+<p class="wp-block-paragraph">Pierre Journel.</p>
+
+
+
+<p class="has-text-align-center has-x-large-font-size wp-block-paragraph">For more info:<br><a href="https://theguitarchannel.biz/tag/tonefest/">ToneFest Reports</a></p>]]></description>
+		<enclosure url="https://traffic.libsyn.com/lachaineguitare/Petri_Matero_interview_-_Tonefest_2026.mp3" length="6368862" type="audio/mpeg" />
+		<itunes:episodeType>full</itunes:episodeType>
+		<itunes:duration>6:38</itunes:duration>
+		<rawvoice:embed>&lt;iframe width=&quot;320&quot; height=&quot;30&quot; src=&quot;https://theguitarchannel.biz/?powerpress_embed=61312-podcast&amp;amp;amp;powerpress_player=mediaelement-audio&quot; title=&quot;Blubrry Podcast Player&quot; frameborder=&quot;0&quot; scrolling=&quot;no&quot;&gt;&lt;/iframe&gt;</rawvoice:embed>
+<post-id xmlns="com-wordpress:feed-additions:1">61312</post-id>	</item>
+	<item>
+		<title>Robert Pieculewicz Interview Polish Guitar Player</title>
+		<link>https://theguitarchannel.biz/2026/02/robert-pieculewicz-interview-polish-guitar-player/</link>
+		<pubDate>Wed, 18 Feb 2026 08:26:26 +0000</pubDate>
+		<guid isPermaLink="false">https://theguitarchannel.biz/?p=60793</guid>
+		<comments>https://theguitarchannel.biz/2026/02/robert-pieculewicz-interview-polish-guitar-player/#respond</comments>
+		<wfw:commentRss>https://theguitarchannel.biz/2026/02/robert-pieculewicz-interview-polish-guitar-player/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+		<category><![CDATA[All]]></category>
+		<category><![CDATA[Interviews]]></category>
+		<category><![CDATA[Open]]></category>
+		<category><![CDATA[Podcast]]></category>
+		<category><![CDATA[Robert Pieculewicz]]></category>
+		<description><![CDATA[
+<p class="wp-block-paragraph">Thanks to a long-time subscriber to La Chaîne Guitare (thank you, Michel!), I was able to get in touch with Polish musician <strong>Robert Pieculewicz</strong> (<a href="https://www.facebook.com/r.pieculewicz/">Facebook page</a>). Here he is in a Zoom interview to learn about his career and his projects.</p>
+
+
+
+<h2 class="wp-block-heading">Robert Pieculewicz interview</h2>
+
+
+
+<iframe loading="lazy" width="1120" height="630" src="https://www.youtube.com/embed/hkC9d5j1Djs" frameborder="0" allowfullscreen></iframe>
+
+
+
+<h2 class="wp-block-heading">The Guitar Channel podcast</h2>
+
+
+
+<p class="wp-block-paragraph">The audio version of the video is available in the <a href="https://theguitarchannel.biz/tgcpodcast/">podcast</a> on <a href="https://itunes.apple.com/fr/podcast/the-guitar-channel-passion-amplifier/id392480217?mt=2" target="_blank" rel="noopener">iTunes</a>, <a href="https://open.spotify.com/show/4VZk1pRN8m7zXQALJK1Uv5" target="_blank" rel="noopener">Spotify</a>&nbsp;and below:</p>
+
+
+
+<p class="wp-block-paragraph">
+
+</p>
+
+
+
+<p class="wp-block-paragraph">Until the next <a href="https://theguitarchannel.biz/category/interview/">interview</a>, keep on playing the guitar!</p>
+
+
+
+<p class="wp-block-paragraph">Pierre Journel.</p>
+
+
+
+<p class="has-text-align-center has-large-font-size wp-block-paragraph">For more info:<br><a href="https://theguitarchannel.biz/tag/guitar-in-hand/">Guitar in Hand Interview</a></p>]]></description>
+		<enclosure url="https://traffic.libsyn.com/lachaineguitare/Robert_Pieculewicz_interview.mp3" length="17123369" type="audio/mpeg" />
+		<itunes:episodeType>full</itunes:episodeType>
+		<itunes:duration>17:50</itunes:duration>
+		<rawvoice:embed>&lt;iframe width=&quot;320&quot; height=&quot;30&quot; src=&quot;https://theguitarchannel.biz/?powerpress_embed=60793-podcast&amp;amp;amp;powerpress_player=mediaelement-audio&quot; title=&quot;Blubrry Podcast Player&quot; frameborder=&quot;0&quot; scrolling=&quot;no&quot;&gt;&lt;/iframe&gt;</rawvoice:embed>
+<post-id xmlns="com-wordpress:feed-additions:1">60793</post-id>	</item>
+	<item>
+		<title>Puteaux Guitar Festival, Florent Monfort Interview</title>
+		<link>https://theguitarchannel.biz/2025/06/puteaux-guitar-festival-florent-monfort-interview/</link>
+		<pubDate>Mon, 30 Jun 2025 12:33:05 +0000</pubDate>
+		<guid isPermaLink="false">https://theguitarchannel.biz/?p=59803</guid>
+		<comments>https://theguitarchannel.biz/2025/06/puteaux-guitar-festival-florent-monfort-interview/#respond</comments>
+		<wfw:commentRss>https://theguitarchannel.biz/2025/06/puteaux-guitar-festival-florent-monfort-interview/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+		<category><![CDATA[All]]></category>
+		<category><![CDATA[Interviews]]></category>
+		<category><![CDATA[Festival]]></category>
+		<category><![CDATA[Florent Monfort]]></category>
+		<category><![CDATA[Guitar Show]]></category>
+		<category><![CDATA[Open]]></category>
+		<category><![CDATA[Podcast]]></category>
+		<category><![CDATA[Puteaux]]></category>
+		<description><![CDATA[
+<p class="wp-block-paragraph">The <strong><a href="https://theguitarchannel.biz/tag/puteaux/">Puteaux Guitar Festival / Festival Guitare de Puteaux</a></strong> (<a href="https://www.culture.puteaux.fr/" target="_blank" rel="noreferrer noopener">culture.puteaux.fr</a>) will hold its 6th edition from October 10th to 12th, 2025. It will be the first under the direction of<strong> Florent Monfort</strong>, who is now the director of the Puteaux conservatory. I work for Florent again via The Guitar Channel, as organizer of the luthier show and also to advise him on programming at his request. Here's the interview to start revealing what's going to happen in October.</p>
+
+
+
+<p class="has-text-align-center has-large-font-size wp-block-paragraph"><a href="https://theguitarchannel.biz/tag/puteaux/">Puteaux Guitar Festival<br></a>October 10th to 12th 2025</p>
+
+
+
+<h2 class="wp-block-heading">Florent Monfort interview</h2>
+
+
+
+<center><iframe loading="lazy" width="1120" height="630" src="https://www.youtube.com/embed/mad-G2xSmkA" frameborder="0" allowfullscreen></iframe></center>
+
+
+
+<h2 class="wp-block-heading">The Guitar Channel podcast</h2>
+
+
+
+<p class="wp-block-paragraph">The audio version of the video is available in the <a href="https://theguitarchannel.biz/tgcpodcast/">podcast</a> on <a href="https://itunes.apple.com/fr/podcast/the-guitar-channel-passion-amplifier/id392480217?mt=2" target="_blank" rel="noopener">iTunes</a>, <a href="https://open.spotify.com/show/4VZk1pRN8m7zXQALJK1Uv5" target="_blank" rel="noopener">Spotify</a>&nbsp;and below:</p>
+
+
+
+<p class="wp-block-paragraph">
+
+
+
+<h2 class="wp-block-heading">The Puteaux music academy: an extraordinary place dedicated to music</h2>
+
+
+
+<p class="wp-block-paragraph">Puteaux music academy is a magnificent venue with a top-class concert hall seating over 600. There are also numerous spaces available for masterclasses, instrument practice and additional concert halls.</p>
+
+
+
+<p class="has-text-align-center has-large-font-size wp-block-paragraph">Conservatoire Jean-Baptiste Lully<br>5bis, rue de Pressensé – 92800 Puteaux</p>
+
+
+<div class="wp-block-image">
+<figure class="aligncenter size-full is-resized"><img loading="lazy" decoding="async" width="134" height="130" src="https://theguitarchannel.biz/wp-content/uploads/2017/10/ConservatoireLullyPuteaux.jpg" alt="" class="wp-image-26084" style="aspect-ratio:1.0303030303030303;width:116px;height:auto"/></figure>
+</div>
+
+<div class="wp-block-image">
+<figure class="aligncenter size-large is-resized"><img loading="lazy" decoding="async" width="768" height="1024" src="https://theguitarchannel.biz/wp-content/uploads/2023/07/Conservatoire-Lully-Puteaux-768x1024.jpg" alt="" class="wp-image-52846" style="width:492px;height:656px" srcset="https://theguitarchannel.biz/wp-content/uploads/2023/07/Conservatoire-Lully-Puteaux-768x1024.jpg 768w, https://theguitarchannel.biz/wp-content/uploads/2023/07/Conservatoire-Lully-Puteaux-225x300.jpg 225w, https://theguitarchannel.biz/wp-content/uploads/2023/07/Conservatoire-Lully-Puteaux-1152x1536.jpg 1152w, https://theguitarchannel.biz/wp-content/uploads/2023/07/Conservatoire-Lully-Puteaux-1536x2048.jpg 1536w, https://theguitarchannel.biz/wp-content/uploads/2023/07/Conservatoire-Lully-Puteaux-140x187.jpg 140w, https://theguitarchannel.biz/wp-content/uploads/2023/07/Conservatoire-Lully-Puteaux-1494x1992.jpg 1494w, https://theguitarchannel.biz/wp-content/uploads/2023/07/Conservatoire-Lully-Puteaux-scaled.jpg 1920w" sizes="auto, (max-width: 768px) 100vw, 768px" /></figure>
+</div>
+
+<div class="wp-block-image">
+<figure class="aligncenter size-large is-resized"><img loading="lazy" decoding="async" width="1024" height="590" src="https://theguitarchannel.biz/wp-content/uploads/2022/06/Plan-Paris-conservatoire-Lully-1024x590.png" alt="" class="wp-image-48094" style="width:496px;height:286px" srcset="https://theguitarchannel.biz/wp-content/uploads/2022/06/Plan-Paris-conservatoire-Lully-1024x590.png 1024w, https://theguitarchannel.biz/wp-content/uploads/2022/06/Plan-Paris-conservatoire-Lully-300x173.png 300w, https://theguitarchannel.biz/wp-content/uploads/2022/06/Plan-Paris-conservatoire-Lully-768x443.png 768w, https://theguitarchannel.biz/wp-content/uploads/2022/06/Plan-Paris-conservatoire-Lully-1536x885.png 1536w, https://theguitarchannel.biz/wp-content/uploads/2022/06/Plan-Paris-conservatoire-Lully-280x161.png 280w, https://theguitarchannel.biz/wp-content/uploads/2022/06/Plan-Paris-conservatoire-Lully-1494x861.png 1494w, https://theguitarchannel.biz/wp-content/uploads/2022/06/Plan-Paris-conservatoire-Lully.png 1544w" sizes="auto, (max-width: 1024px) 100vw, 1024px" /></figure>
+</div>
+
+
+<h2 class="wp-block-heading">Guitar show</h2>
+
+
+
+<p class="wp-block-paragraph">Depending on the date on which you read this article, there may still be time to apply as a guitar builder to take part in the guitar show organized by The Guitar Channel.</p>
+
+
+
+<p class="has-text-align-center has-large-font-size wp-block-paragraph"><a href="https://theguitarchannel.biz/2025/05/submission-of-applications-for-the-2025-puteaux-guitar-show/">Click Here to Submit Your Application for the Guitar Show</a></p>
+
+
+
+<p class="wp-block-paragraph">Until the next <a href="https://theguitarchannel.biz/category/interview/">interview</a> or <a href="https://theguitarchannel.biz/tag/gear/">gear review</a>, keep on playing the guitar!</p>
+
+
+
+<p class="wp-block-paragraph">Pierre Journel.</p>
+
+
+
+<p class="has-text-align-center has-x-large-font-size wp-block-paragraph">For more info:<br><a href="https://theguitarchannel.biz/tag/puteaux/">Puteaux Reports<br></a><a href="https://theguitarchannel.biz/tag/guitar-show/">Guitar Show Reports</a></p>]]></description>
+		<enclosure url="https://traffic.libsyn.com/lachaineguitare/Interview_Florent_Monfort_-_Festival_Guitare_de_Puteaux_2025_EN.mp3" length="6143582" type="audio/mpeg" />
+		<itunes:episodeType>full</itunes:episodeType>
+		<itunes:duration>6:24</itunes:duration>
+		<rawvoice:embed>&lt;iframe width=&quot;320&quot; height=&quot;30&quot; src=&quot;https://theguitarchannel.biz/?powerpress_embed=59803-podcast&amp;amp;amp;powerpress_player=mediaelement-audio&quot; title=&quot;Blubrry Podcast Player&quot; frameborder=&quot;0&quot; scrolling=&quot;no&quot;&gt;&lt;/iframe&gt;</rawvoice:embed>
+<post-id xmlns="com-wordpress:feed-additions:1">59803</post-id>	</item>
+	<item>
+		<title>MIGS Academy: boost your guitar skills in Classical, Fingerstyle or Rock in Montreux</title>
+		<link>https://theguitarchannel.biz/2024/02/migs-academy-boost-your-guitar-skills-montreux/</link>
+		<pubDate>Sun, 18 Feb 2024 14:00:00 +0000</pubDate>
+		<guid isPermaLink="false">https://theguitarchannel.biz/?p=55804</guid>
+		<comments>https://theguitarchannel.biz/2024/02/migs-academy-boost-your-guitar-skills-montreux/#respond</comments>
+		<wfw:commentRss>https://theguitarchannel.biz/2024/02/migs-academy-boost-your-guitar-skills-montreux/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+		<category><![CDATA[All]]></category>
+		<category><![CDATA[Interviews]]></category>
+		<category><![CDATA[David Rosset]]></category>
+		<category><![CDATA[Emmanuel Cottier]]></category>
+		<category><![CDATA[MIGS]]></category>
+		<category><![CDATA[MIGS Academy]]></category>
+		<category><![CDATA[Open]]></category>
+		<category><![CDATA[Podcast]]></category>
+		<category><![CDATA[Vincent Schmidt]]></category>
+		<description><![CDATA[
+<p class="wp-block-paragraph">A major innovation for <strong><a href="https://theguitarchannel.biz/tag/migs/">Montreux International Guitar Show</a></strong> aka the <strong><a href="https://theguitarchannel.biz/tag/migs/">MIGS</a></strong> (<a href="https://www.migs.ch/" target="_blank" rel="noreferrer noopener">migs.ch</a>) is that this 2024 edition will be preceded by a guitar workshop with top Classical, Fingerstyle and Rock musicians! This is the <strong>MIGS Academy</strong> (<a href="https://www.migs-masters-camps.com/en" target="_blank" rel="noreferrer noopener">migs-masters-camps.com</a>) which will take place from <strong>Monday April 22 to Friday April 26 in Montreux</strong>.</p>
+
+
+
+<p class="wp-block-paragraph">Here's an interview with organizers <a href="https://theguitarchannel.biz/tag/david-rosset/">David Rosset</a> and <a href="https://theguitarchannel.biz/tag/emmanuel-cottier/">Emmanuel Cottier</a>, accompanied by musician <a href="https://lachaineguitare.com/tag/vincent-schmidt/">Vincent Schmidt</a>, one of the coaches.</p>
+
+
+<div class="wp-block-image">
+<figure class="aligncenter size-full"><a href="https://www.migs-masters-camps.com/en" target="_blank" rel="noreferrer noopener"><img loading="lazy" decoding="async" width="276" height="112" src="https://theguitarchannel.biz/wp-content/uploads/2024/02/MIGS-Acamedy-Logo.webp" alt="" class="wp-image-55812"/></a></figure>
+</div>
+
+
+<h2 class="wp-block-heading">Coaches by style</h2>
+
+
+
+<ul class="wp-block-list">
+<li><strong>Classique</strong>
+<ul class="wp-block-list">
+<li><a href="https://lachaineguitare.com/tag/thibault-cauvin/" target="_blank" rel="noreferrer noopener">Thibault Cauvin</a>, Pierre Willimann, Monica Torti</li>
+</ul>
+</li>
+
+
+
+<li><strong>Fingerstyle</strong>
+<ul class="wp-block-list">
+<li><a href="https://theguitarchannel.biz/tag/jon-gomm/">Jon Gomm</a>,&nbsp;<a href="https://theguitarchannel.biz/tag/alexandr-misko/">Alexandr Misko</a>,&nbsp;<a href="https://lachaineguitare.com/tag/vincent-schmidt/">Vincent Schmidt</a>, Adrien Delamarre</li>
+</ul>
+</li>
+
+
+
+<li><strong>Rock</strong>
+<ul class="wp-block-list">
+<li><a href="https://lachaineguitare.com/tag/saturax/">Saturax</a>, Jack Gardiner</li>
+</ul>
+</li>
+</ul>
+
+
+
+<h2 class="wp-block-heading">Interview with the MIGS Academy organizers</h2>
+
+
+
+<iframe loading="lazy" width="1120" height="630" src="https://www.youtube.com/embed/U3vq3Ja9Y0s" frameborder="0" allowfullscreen></iframe>
+
+
+
+<h2 class="wp-block-heading">The Guitar Channel podcast</h2>
+
+
+
+<p class="wp-block-paragraph">The audio version of the video is available in the <a href="https://theguitarchannel.biz/tgcpodcast/">podcast</a> on <a href="https://itunes.apple.com/fr/podcast/the-guitar-channel-passion-amplifier/id392480217?mt=2" target="_blank" rel="noopener">iTunes</a>, <a href="https://open.spotify.com/show/4VZk1pRN8m7zXQALJK1Uv5" target="_blank" rel="noopener">Spotify</a>&nbsp;and below:</p>
+
+
+
+<p class="wp-block-paragraph">
+
+</p>
+
+
+
+<p class="wp-block-paragraph">Until the next <a href="https://theguitarchannel.biz/category/interview/">interview</a>, keep on playing the guitar!</p>
+
+
+
+<p class="wp-block-paragraph">Pierre Journel.</p>
+
+
+
+<p class="has-text-align-center has-x-large-font-size wp-block-paragraph">For more info:<br><a href="https://theguitarchannel.biz/tag/migs/">MIGS Reports &amp; Interviews<br></a><a href="https://theguitarchannel.biz/tag/guitar-show/">Guitar Show Archives</a></p>]]></description>
+		<enclosure url="https://traffic.libsyn.com/lachaineguitare/MIGS_Academy_interview.mp3" length="11185005" type="audio/mpeg" />
+		<itunes:episodeType>full</itunes:episodeType>
+		<itunes:duration>11:39</itunes:duration>
+		<rawvoice:embed>&lt;iframe width=&quot;320&quot; height=&quot;30&quot; src=&quot;https://theguitarchannel.biz/?powerpress_embed=55804-podcast&amp;amp;amp;powerpress_player=mediaelement-audio&quot; title=&quot;Blubrry Podcast Player&quot; frameborder=&quot;0&quot; scrolling=&quot;no&quot;&gt;&lt;/iframe&gt;</rawvoice:embed>
+<post-id xmlns="com-wordpress:feed-additions:1">55804</post-id>	</item>
+	<item>
+		<title>Nyl Guitars &#8211; Presentation and demo by Michel Gentils in Puteaux</title>
+		<link>https://theguitarchannel.biz/2023/12/nyl-guitars-demo-by-michel-gentils/</link>
+		<pubDate>Sat, 09 Dec 2023 18:01:42 +0000</pubDate>
+		<guid isPermaLink="false">https://theguitarchannel.biz/?p=55028</guid>
+		<comments>https://theguitarchannel.biz/2023/12/nyl-guitars-demo-by-michel-gentils/#respond</comments>
+		<wfw:commentRss>https://theguitarchannel.biz/2023/12/nyl-guitars-demo-by-michel-gentils/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+		<category><![CDATA[All]]></category>
+		<category><![CDATA[Gear]]></category>
+		<category><![CDATA[Interviews]]></category>
+		<category><![CDATA[Acoustic]]></category>
+		<category><![CDATA[Demo concert]]></category>
+		<category><![CDATA[Julien Jalaguier]]></category>
+		<category><![CDATA[Michel Gentils]]></category>
+		<category><![CDATA[Nyl Guitars]]></category>
+		<category><![CDATA[Open]]></category>
+		<category><![CDATA[Podcast]]></category>
+		<category><![CDATA[Puteaux]]></category>
+		<description><![CDATA[
+<p class="wp-block-paragraph">Presentation and demonstration of two instruments by <strong>Nyl Guitars</strong> (<a href="https://fr.nylguitars.com/" target="_blank" rel="noreferrer noopener">fr.nylguitars.com</a>) by musician <strong>Michel Gentils</strong> (<a href="https://www.michelgentils.com/" target="_blank" rel="noreferrer noopener">michelgentils.com</a>) in the presence of <a href="https://theguitarchannel.biz/tag/luthier/">luthier</a> <strong>Julien Jalaguier</strong>.</p>
+
+
+
+<h2 class="wp-block-heading">Nyl Guitars demo concert</h2>
+
+
+
+<center><iframe loading="lazy" width="1120" height="630" src="https://www.youtube.com/embed/r6GaxuC1sAc" frameborder="0" allowfullscreen></iframe></center>
+
+
+
+<p class="has-text-align-center wp-block-paragraph">Sound, video and edit: <a href="https://lachaineguitare.com/tag/philippe-camus/" target="_blank" rel="noreferrer noopener">Philippe Camus</a></p>
+
+
+
+<h2 class="wp-block-heading">The Guitar Channel podcast</h2>
+
+
+
+<p class="wp-block-paragraph">The audio version of the video is available in the <a href="https://theguitarchannel.biz/tgcpodcast/">podcast</a> on <a href="https://itunes.apple.com/fr/podcast/the-guitar-channel-passion-amplifier/id392480217?mt=2" target="_blank" rel="noopener">iTunes</a>, <a href="https://open.spotify.com/show/4VZk1pRN8m7zXQALJK1Uv5" target="_blank" rel="noopener">Spotify</a>&nbsp;and below:</p>
+
+
+
+<p class="wp-block-paragraph">
+
+</p>
+
+
+<div class="wp-block-image">
+<figure class="aligncenter size-large is-resized"><img loading="lazy" decoding="async" width="670" height="268" src="https://theguitarchannel.biz/wp-content/uploads/2015/05/AmpliLCGEteinDetourePodcastTGC.png" alt="The Guitar Channel Podcast" class="wp-image-6229" style="width:283px;height:113px" srcset="https://theguitarchannel.biz/wp-content/uploads/2015/05/AmpliLCGEteinDetourePodcastTGC.png 670w, https://theguitarchannel.biz/wp-content/uploads/2015/05/AmpliLCGEteinDetourePodcastTGC-300x120.png 300w, https://theguitarchannel.biz/wp-content/uploads/2015/05/AmpliLCGEteinDetourePodcastTGC-500x200.png 500w, https://theguitarchannel.biz/wp-content/uploads/2015/05/AmpliLCGEteinDetourePodcastTGC-24x10.png 24w, https://theguitarchannel.biz/wp-content/uploads/2015/05/AmpliLCGEteinDetourePodcastTGC-36x14.png 36w, https://theguitarchannel.biz/wp-content/uploads/2015/05/AmpliLCGEteinDetourePodcastTGC-48x19.png 48w" sizes="auto, (max-width: 670px) 100vw, 670px" /></figure>
+</div>
+
+
+<h2 class="wp-block-heading">About the demo concerts</h2>
+
+
+
+<p class="wp-block-paragraph">As always, the Puteaux Guitar Festival included demo concerts, giving the opportunity to discover the instruments exhibited at the guitar show organized by The Guitar Channel during the festival in the magnificent Jean-Baptiste Lully conservatory.</p>
+
+
+
+<p class="has-text-align-center wp-block-paragraph"><strong>The filming and editing of the demo concert videos is 100% financed by The Guitar Channel</strong></p>
+
+
+
+<p class="wp-block-paragraph">It's an investment that's made because it's a great way of promoting the show for exhibitors who want it at no extra cost, for the demo musicians, for the festival and for the guitar in general.</p>
+
+
+
+<p class="wp-block-paragraph">The professional musicians are paid by the conservatory for their performance at the concerts.</p>
+
+
+<div class="wp-block-image">
+<figure class="aligncenter size-full is-resized"><img loading="lazy" decoding="async" width="600" height="268" src="https://theguitarchannel.biz/wp-content/uploads/2023/08/Affiche-Puteaux-2023-Pano-600.png" alt="List of exhibitors at the 2023 Puteaux Guitar Show organized by La Chaîne Guitare" class="wp-image-53395" style="width:294px;height:131px" srcset="https://theguitarchannel.biz/wp-content/uploads/2023/08/Affiche-Puteaux-2023-Pano-600.png 600w, https://theguitarchannel.biz/wp-content/uploads/2023/08/Affiche-Puteaux-2023-Pano-600-300x134.png 300w, https://theguitarchannel.biz/wp-content/uploads/2023/08/Affiche-Puteaux-2023-Pano-600-280x125.png 280w" sizes="auto, (max-width: 600px) 100vw, 600px" /></figure>
+</div>
+
+
+<p class="has-text-align-center has-x-large-font-size wp-block-paragraph">For more info:<br><a href="https://theguitarchannel.biz/tag/puteaux/">Puteaux Reports &amp; Interviews<br></a><a href="https://theguitarchannel.biz/tag/demo-concert/">Demo Concerts Archives<br></a><a href="https://theguitarchannel.biz/tag/luthier/">Luthier Interviews</a></p>]]></description>
+		<enclosure url="https://traffic.libsyn.com/lachaineguitare/Puteaux_2023_Nyl_Guitars.mp3" length="34260950" type="audio/mpeg" />
+		<itunes:episodeType>full</itunes:episodeType>
+		<itunes:duration>35:41</itunes:duration>
+		<rawvoice:embed>&lt;iframe width=&quot;320&quot; height=&quot;30&quot; src=&quot;https://theguitarchannel.biz/?powerpress_embed=55028-podcast&amp;amp;amp;powerpress_player=mediaelement-audio&quot; title=&quot;Blubrry Podcast Player&quot; frameborder=&quot;0&quot; scrolling=&quot;no&quot;&gt;&lt;/iframe&gt;</rawvoice:embed>
+<post-id xmlns="com-wordpress:feed-additions:1">55028</post-id>	</item>
+	<item>
+		<title>CF Guitars &#8211; Presentation and demo by Hugo Martin in Puteaux</title>
+		<link>https://theguitarchannel.biz/2023/12/cf-guitars-demo-by-hugo-martin/</link>
+		<pubDate>Fri, 08 Dec 2023 11:08:49 +0000</pubDate>
+		<guid isPermaLink="false">https://theguitarchannel.biz/?p=55022</guid>
+		<comments>https://theguitarchannel.biz/2023/12/cf-guitars-demo-by-hugo-martin/#respond</comments>
+		<wfw:commentRss>https://theguitarchannel.biz/2023/12/cf-guitars-demo-by-hugo-martin/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+		<category><![CDATA[All]]></category>
+		<category><![CDATA[Gear]]></category>
+		<category><![CDATA[CF Guitars]]></category>
+		<category><![CDATA[Demo concert]]></category>
+		<category><![CDATA[Fred Charpiot]]></category>
+		<category><![CDATA[Hugo Martin]]></category>
+		<category><![CDATA[Luthier Guitar]]></category>
+		<category><![CDATA[Open]]></category>
+		<category><![CDATA[Podcast]]></category>
+		<category><![CDATA[Puteaux]]></category>
+		<description><![CDATA[
+<p class="wp-block-paragraph">Presentation and demonstration of two instruments by <strong>CF Guitars</strong> (<a href="https://m.facebook.com/people/CFGuitars-Fred-Charp-Technicien-Guitares/100071167696164/" target="_blank" rel="noreferrer noopener nofollow">Facebook page</a>) by musician <strong><a href="https://theguitarchannel.biz/tag/hugo-martin/">Hugo Martin</a></strong> (<a href="http://coursdeguitaremoderne.fr/" target="_blank" rel="noreferrer noopener">coursdeguitaremoderne.fr</a>) in the presence of <a href="https://theguitarchannel.biz/tag/luthier/">luthier</a> <strong>Fred Charpiot</strong>.</p>
+
+
+
+<p class="wp-block-paragraph">Configuration: </p>
+
+
+
+<ul class="wp-block-list">
+<li>Amp: <a href="https://lachaineguitare.com/tag/kelt-amplification/">Kelt</a> <a href="https://lachaineguitare.com/tag/v-twin/">V-Twin</a></li>
+
+
+
+<li>Sound: <a href="https://lachaineguitare.com/tag/ox/">Ox Box</a> <a href="https://lachaineguitare.com/tag/universal-audio/">Universal Audio</a></li>
+</ul>
+
+
+
+<h2 class="wp-block-heading">CF Guitars demo concert</h2>
+
+
+
+<center><iframe loading="lazy" width="1120" height="630" src="https://www.youtube.com/embed/WDuXj_Su_MI" frameborder="0" allowfullscreen></iframe></center>
+
+
+
+<p class="has-text-align-center wp-block-paragraph">Sound, video and edit: <a href="https://lachaineguitare.com/tag/philippe-camus/" target="_blank" rel="noreferrer noopener">Philippe Camus</a></p>
+
+
+
+<h2 class="wp-block-heading">The Guitar Channel podcast</h2>
+
+
+
+<p class="wp-block-paragraph">The audio version of the video is available in the <a href="https://theguitarchannel.biz/tgcpodcast/">podcast</a> on <a href="https://itunes.apple.com/fr/podcast/the-guitar-channel-passion-amplifier/id392480217?mt=2" target="_blank" rel="noopener">iTunes</a>, <a href="https://open.spotify.com/show/4VZk1pRN8m7zXQALJK1Uv5" target="_blank" rel="noopener">Spotify</a>&nbsp;and below:</p>
+
+
+
+<p class="wp-block-paragraph">
+
+</p>
+
+
+<div class="wp-block-image">
+<figure class="aligncenter size-large is-resized"><img loading="lazy" decoding="async" width="670" height="268" src="https://theguitarchannel.biz/wp-content/uploads/2015/05/AmpliLCGEteinDetourePodcastTGC.png" alt="The Guitar Channel Podcast" class="wp-image-6229" style="width:283px;height:113px" srcset="https://theguitarchannel.biz/wp-content/uploads/2015/05/AmpliLCGEteinDetourePodcastTGC.png 670w, https://theguitarchannel.biz/wp-content/uploads/2015/05/AmpliLCGEteinDetourePodcastTGC-300x120.png 300w, https://theguitarchannel.biz/wp-content/uploads/2015/05/AmpliLCGEteinDetourePodcastTGC-500x200.png 500w, https://theguitarchannel.biz/wp-content/uploads/2015/05/AmpliLCGEteinDetourePodcastTGC-24x10.png 24w, https://theguitarchannel.biz/wp-content/uploads/2015/05/AmpliLCGEteinDetourePodcastTGC-36x14.png 36w, https://theguitarchannel.biz/wp-content/uploads/2015/05/AmpliLCGEteinDetourePodcastTGC-48x19.png 48w" sizes="auto, (max-width: 670px) 100vw, 670px" /></figure>
+</div>
+
+
+<h2 class="wp-block-heading">About the demo concerts</h2>
+
+
+
+<p class="wp-block-paragraph">As always, the Puteaux Guitar Festival included demo concerts, giving the opportunity to discover the instruments exhibited at the guitar show organized by The Guitar Channel during the festival in the magnificent Jean-Baptiste Lully conservatory.</p>
+
+
+
+<p class="has-text-align-center wp-block-paragraph"><strong>The filming and editing of the demo concert videos is 100% financed by The Guitar Channel</strong></p>
+
+
+
+<p class="wp-block-paragraph">It's an investment that's made because it's a great way of promoting the show for exhibitors who want it at no extra cost, for the demo musicians, for the festival and for the guitar in general.</p>
+
+
+
+<p class="wp-block-paragraph">The professional musicians are paid by the conservatory for their performance at the concerts.</p>
+
+
+<div class="wp-block-image">
+<figure class="aligncenter size-full is-resized"><img loading="lazy" decoding="async" width="600" height="268" src="https://theguitarchannel.biz/wp-content/uploads/2023/08/Affiche-Puteaux-2023-Pano-600.png" alt="List of exhibitors at the 2023 Puteaux Guitar Show organized by La Chaîne Guitare" class="wp-image-53395" style="width:294px;height:131px" srcset="https://theguitarchannel.biz/wp-content/uploads/2023/08/Affiche-Puteaux-2023-Pano-600.png 600w, https://theguitarchannel.biz/wp-content/uploads/2023/08/Affiche-Puteaux-2023-Pano-600-300x134.png 300w, https://theguitarchannel.biz/wp-content/uploads/2023/08/Affiche-Puteaux-2023-Pano-600-280x125.png 280w" sizes="auto, (max-width: 600px) 100vw, 600px" /></figure>
+</div>
+
+
+<p class="has-text-align-center has-x-large-font-size wp-block-paragraph">For more info:<br><a href="https://theguitarchannel.biz/tag/puteaux/">Puteaux Reports &amp; Interviews<br></a><a href="https://theguitarchannel.biz/tag/demo-concert/">Demo Concerts Archives<br></a><a href="https://theguitarchannel.biz/tag/luthier/">Luthier Interviews</a></p>]]></description>
+		<enclosure url="https://traffic.libsyn.com/lachaineguitare/Puteaux_2023_CF_Guitars.mp3" length="18966987" type="audio/mpeg" />
+		<itunes:episodeType>full</itunes:episodeType>
+		<itunes:duration>19:45</itunes:duration>
+		<rawvoice:embed>&lt;iframe width=&quot;320&quot; height=&quot;30&quot; src=&quot;https://theguitarchannel.biz/?powerpress_embed=55022-podcast&amp;amp;amp;powerpress_player=mediaelement-audio&quot; title=&quot;Blubrry Podcast Player&quot; frameborder=&quot;0&quot; scrolling=&quot;no&quot;&gt;&lt;/iframe&gt;</rawvoice:embed>
+<post-id xmlns="com-wordpress:feed-additions:1">55022</post-id>	</item>
+	<item>
+		<title>Criman Guitars &#8211; Presentation and demo by Hugo Martin in Puteaux</title>
+		<link>https://theguitarchannel.biz/2023/11/criman-guitars-demo-by-hugo-martin/</link>
+		<pubDate>Tue, 28 Nov 2023 16:26:57 +0000</pubDate>
+		<guid isPermaLink="false">https://theguitarchannel.biz/?p=54929</guid>
+		<comments>https://theguitarchannel.biz/2023/11/criman-guitars-demo-by-hugo-martin/#respond</comments>
+		<wfw:commentRss>https://theguitarchannel.biz/2023/11/criman-guitars-demo-by-hugo-martin/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+		<category><![CDATA[All]]></category>
+		<category><![CDATA[Gear]]></category>
+		<category><![CDATA[Interviews]]></category>
+		<category><![CDATA[Christian Sandu]]></category>
+		<category><![CDATA[Criman Guitars]]></category>
+		<category><![CDATA[Hugo Martin]]></category>
+		<category><![CDATA[Luthier Guitar]]></category>
+		<category><![CDATA[Open]]></category>
+		<category><![CDATA[Podcast]]></category>
+		<category><![CDATA[Puteaux]]></category>
+		<description><![CDATA[
+<p class="wp-block-paragraph">Presentation and demonstration of two instruments by <strong>Criman Guitars</strong> (<a href="https://www.criman.ro/en/home" target="_blank" rel="noreferrer noopener nofollow">criman.ro</a>) by musician <strong><a href="https://theguitarchannel.biz/tag/hugo-martin/">Hugo Martin</a></strong> (<a href="http://coursdeguitaremoderne.fr/" target="_blank" rel="noreferrer noopener">coursdeguitaremoderne.fr</a>) in the presence of <a href="https://theguitarchannel.biz/tag/luthier/">luthier</a> <strong>Christian Sandu</strong>.</p>
+
+
+
+<p class="wp-block-paragraph">Configuration: </p>
+
+
+
+<ul class="wp-block-list">
+<li>Amp: <a href="https://lachaineguitare.com/tag/kelt-amplification/">Kelt</a> <a href="https://lachaineguitare.com/tag/v-twin/">V-Twin</a></li>
+
+
+
+<li>Sound: <a href="https://lachaineguitare.com/tag/ox/">Ox Box</a> <a href="https://lachaineguitare.com/tag/universal-audio/">Universal Audio</a></li>
+</ul>
+
+
+
+<h2 class="wp-block-heading">Criman Guitars demo concert</h2>
+
+
+
+<center><iframe loading="lazy" width="1120" height="630" src="https://www.youtube.com/embed/HmVUzzFXsZI" frameborder="0" allowfullscreen></iframe></center>
+
+
+
+<p class="has-text-align-center wp-block-paragraph">Sound, video and edit: <a href="https://lachaineguitare.com/tag/philippe-camus/" target="_blank" rel="noreferrer noopener">Philippe Camus</a></p>
+
+
+
+<h2 class="wp-block-heading">The Guitar Channel podcast</h2>
+
+
+
+<p class="wp-block-paragraph">The audio version of the video is available in the <a href="https://theguitarchannel.biz/tgcpodcast/">podcast</a> on <a href="https://itunes.apple.com/fr/podcast/the-guitar-channel-passion-amplifier/id392480217?mt=2" target="_blank" rel="noopener">iTunes</a>, <a href="https://open.spotify.com/show/4VZk1pRN8m7zXQALJK1Uv5" target="_blank" rel="noopener">Spotify</a>&nbsp;and below:</p>
+
+
+
+<p class="wp-block-paragraph">
+
+</p>
+
+
+<div class="wp-block-image">
+<figure class="aligncenter size-large is-resized"><img loading="lazy" decoding="async" width="670" height="268" src="https://theguitarchannel.biz/wp-content/uploads/2015/05/AmpliLCGEteinDetourePodcastTGC.png" alt="The Guitar Channel Podcast" class="wp-image-6229" style="width:283px;height:113px" srcset="https://theguitarchannel.biz/wp-content/uploads/2015/05/AmpliLCGEteinDetourePodcastTGC.png 670w, https://theguitarchannel.biz/wp-content/uploads/2015/05/AmpliLCGEteinDetourePodcastTGC-300x120.png 300w, https://theguitarchannel.biz/wp-content/uploads/2015/05/AmpliLCGEteinDetourePodcastTGC-500x200.png 500w, https://theguitarchannel.biz/wp-content/uploads/2015/05/AmpliLCGEteinDetourePodcastTGC-24x10.png 24w, https://theguitarchannel.biz/wp-content/uploads/2015/05/AmpliLCGEteinDetourePodcastTGC-36x14.png 36w, https://theguitarchannel.biz/wp-content/uploads/2015/05/AmpliLCGEteinDetourePodcastTGC-48x19.png 48w" sizes="auto, (max-width: 670px) 100vw, 670px" /></figure>
+</div>
+
+
+<h2 class="wp-block-heading">About the demo concerts</h2>
+
+
+
+<p class="wp-block-paragraph">As always, the Puteaux Guitar Festival included demo concerts, giving the opportunity to discover the instruments exhibited at the guitar show organized by The Guitar Channel during the festival in the magnificent Jean-Baptiste Lully conservatory.</p>
+
+
+
+<p class="has-text-align-center wp-block-paragraph"><strong>The filming and editing of the demo concert videos is 100% financed by The Guitar Channel</strong></p>
+
+
+
+<p class="wp-block-paragraph">It's an investment that's made because it's a great way of promoting the show for exhibitors who want it at no extra cost, for the demo musicians, for the festival and for the guitar in general.</p>
+
+
+
+<p class="wp-block-paragraph">The professional musicians are paid by the conservatory for their performance at the concerts.</p>
+
+
+<div class="wp-block-image">
+<figure class="aligncenter size-full is-resized"><img loading="lazy" decoding="async" width="600" height="268" src="https://theguitarchannel.biz/wp-content/uploads/2023/08/Affiche-Puteaux-2023-Pano-600.png" alt="List of exhibitors at the 2023 Puteaux Guitar Show organized by La Chaîne Guitare" class="wp-image-53395" style="width:294px;height:131px" srcset="https://theguitarchannel.biz/wp-content/uploads/2023/08/Affiche-Puteaux-2023-Pano-600.png 600w, https://theguitarchannel.biz/wp-content/uploads/2023/08/Affiche-Puteaux-2023-Pano-600-300x134.png 300w, https://theguitarchannel.biz/wp-content/uploads/2023/08/Affiche-Puteaux-2023-Pano-600-280x125.png 280w" sizes="auto, (max-width: 600px) 100vw, 600px" /></figure>
+</div>
+
+
+<p class="has-text-align-center has-x-large-font-size wp-block-paragraph">For more info:<br><a href="https://theguitarchannel.biz/tag/puteaux/">Puteaux Reports &amp; Interviews<br></a><a href="https://theguitarchannel.biz/tag/demo-concert/">Demo Concerts Archives<br></a><a href="https://theguitarchannel.biz/tag/luthier/">Luthier Interviews</a></p>]]></description>
+		<enclosure url="https://traffic.libsyn.com/lachaineguitare/Criman_Guitars_demo_Hugo_Martin_Puteaux_2023.mp3" length="25916813" type="audio/mpeg" />
+		<itunes:episodeType>full</itunes:episodeType>
+		<itunes:duration>27:00</itunes:duration>
+		<rawvoice:embed>&lt;iframe width=&quot;320&quot; height=&quot;30&quot; src=&quot;https://theguitarchannel.biz/?powerpress_embed=54929-podcast&amp;amp;amp;powerpress_player=mediaelement-audio&quot; title=&quot;Blubrry Podcast Player&quot; frameborder=&quot;0&quot; scrolling=&quot;no&quot;&gt;&lt;/iframe&gt;</rawvoice:embed>
+<post-id xmlns="com-wordpress:feed-additions:1">54929</post-id>	</item>
+	<item>
+		<title>Thomas Grumler Lutherie &#8211; Presentation and demo by Hugo Martin in Puteaux</title>
+		<link>https://theguitarchannel.biz/2023/11/thomas-grumler-lutherie-demo-concert/</link>
+		<pubDate>Mon, 27 Nov 2023 11:04:43 +0000</pubDate>
+		<guid isPermaLink="false">https://theguitarchannel.biz/?p=54907</guid>
+		<comments>https://theguitarchannel.biz/2023/11/thomas-grumler-lutherie-demo-concert/#respond</comments>
+		<wfw:commentRss>https://theguitarchannel.biz/2023/11/thomas-grumler-lutherie-demo-concert/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+		<category><![CDATA[All]]></category>
+		<category><![CDATA[Gear]]></category>
+		<category><![CDATA[Interviews]]></category>
+		<category><![CDATA[Acoustic]]></category>
+		<category><![CDATA[Demo concert]]></category>
+		<category><![CDATA[Hugo Martin]]></category>
+		<category><![CDATA[Open]]></category>
+		<category><![CDATA[Podcast]]></category>
+		<category><![CDATA[Puteaux]]></category>
+		<category><![CDATA[Thomas Grumler Lutherie]]></category>
+		<description><![CDATA[
+<p class="wp-block-paragraph">Presentation and demonstration instruments by <strong>Thomas Grumler Lutherie</strong> (<a href="https://lutherieguitare.wordpress.com/" target="_blank" rel="noreferrer noopener">lutherieguitare.wordpress.com</a>) by musician <strong><a href="https://theguitarchannel.biz/tag/hugo-martin/">Hugo Martin</a></strong> (<a href="http://coursdeguitaremoderne.fr/" target="_blank" rel="noreferrer noopener">coursdeguitaremoderne.fr</a>) in the presence of <a href="https://theguitarchannel.biz/tag/luthier/">luthier</a> <strong>Thomas Grumler</strong> during the <a href="https://theguitarchannel.biz/tag/puteaux/">Puteaux Guitar Festival</a>.</p>
+
+
+
+<h2 class="wp-block-heading">Thomas Grumler Lutherie demo concert</h2>
+
+
+
+<center><iframe loading="lazy" width="1120" height="630" src="https://www.youtube.com/embed/W002fnnpWks" frameborder="0" allowfullscreen></iframe></center>
+
+
+
+<p class="has-text-align-center wp-block-paragraph">Sound, video and edit: <a href="https://lachaineguitare.com/tag/philippe-camus/" target="_blank" rel="noreferrer noopener">Philippe Camus</a></p>
+
+
+
+<h2 class="wp-block-heading">The Guitar Channel podcast</h2>
+
+
+
+<p class="wp-block-paragraph">The audio version of the video is available in the <a href="https://theguitarchannel.biz/tgcpodcast/">podcast</a> on <a href="https://itunes.apple.com/fr/podcast/the-guitar-channel-passion-amplifier/id392480217?mt=2" target="_blank" rel="noopener">iTunes</a>, <a href="https://open.spotify.com/show/4VZk1pRN8m7zXQALJK1Uv5" target="_blank" rel="noopener">Spotify</a>&nbsp;and below:</p>
+
+
+
+<p class="wp-block-paragraph">
+
+</p>
+
+
+<div class="wp-block-image">
+<figure class="aligncenter size-large is-resized"><img loading="lazy" decoding="async" width="670" height="268" src="https://theguitarchannel.biz/wp-content/uploads/2015/05/AmpliLCGEteinDetourePodcastTGC.png" alt="The Guitar Channel Podcast" class="wp-image-6229" style="width:283px;height:113px" srcset="https://theguitarchannel.biz/wp-content/uploads/2015/05/AmpliLCGEteinDetourePodcastTGC.png 670w, https://theguitarchannel.biz/wp-content/uploads/2015/05/AmpliLCGEteinDetourePodcastTGC-300x120.png 300w, https://theguitarchannel.biz/wp-content/uploads/2015/05/AmpliLCGEteinDetourePodcastTGC-500x200.png 500w, https://theguitarchannel.biz/wp-content/uploads/2015/05/AmpliLCGEteinDetourePodcastTGC-24x10.png 24w, https://theguitarchannel.biz/wp-content/uploads/2015/05/AmpliLCGEteinDetourePodcastTGC-36x14.png 36w, https://theguitarchannel.biz/wp-content/uploads/2015/05/AmpliLCGEteinDetourePodcastTGC-48x19.png 48w" sizes="auto, (max-width: 670px) 100vw, 670px" /></figure>
+</div>
+
+
+<h2 class="wp-block-heading">About the demo concerts</h2>
+
+
+
+<p class="wp-block-paragraph">As always, the Puteaux Guitar Festival included demo concerts, giving the opportunity to discover the instruments exhibited at the guitar show organized by The Guitar Channel during the festival in the magnificent Jean-Baptiste Lully conservatory.</p>
+
+
+
+<p class="has-text-align-center wp-block-paragraph"><strong>The filming and editing of the demo concert videos is 100% financed by The Guitar Channel</strong></p>
+
+
+
+<p class="wp-block-paragraph">It's an investment that's made because it's a great way of promoting the show for exhibitors who want it at no extra cost, for the demo musicians, for the festival and for the guitar in general.</p>
+
+
+
+<p class="wp-block-paragraph">The professional musicians are paid by the conservatory for their performance at the concerts.</p>
+
+
+<div class="wp-block-image">
+<figure class="aligncenter size-full is-resized"><img loading="lazy" decoding="async" width="600" height="268" src="https://theguitarchannel.biz/wp-content/uploads/2023/08/Affiche-Puteaux-2023-Pano-600.png" alt="List of exhibitors at the 2023 Puteaux Guitar Show organized by La Chaîne Guitare" class="wp-image-53395" style="width:294px;height:131px" srcset="https://theguitarchannel.biz/wp-content/uploads/2023/08/Affiche-Puteaux-2023-Pano-600.png 600w, https://theguitarchannel.biz/wp-content/uploads/2023/08/Affiche-Puteaux-2023-Pano-600-300x134.png 300w, https://theguitarchannel.biz/wp-content/uploads/2023/08/Affiche-Puteaux-2023-Pano-600-280x125.png 280w" sizes="auto, (max-width: 600px) 100vw, 600px" /></figure>
+</div>
+
+
+<p class="has-text-align-center has-x-large-font-size wp-block-paragraph">For more info:<br><a href="https://theguitarchannel.biz/tag/puteaux/">Puteaux Reports &amp; Interviews<br></a><a href="https://theguitarchannel.biz/tag/demo-concert/">Demo Concerts Archives<br></a><a href="https://theguitarchannel.biz/tag/luthier/">Luthier Interviews</a></p>]]></description>
+		<enclosure url="https://traffic.libsyn.com/lachaineguitare/Puteaux_2023_Grumler.mp3" length="17510400" type="audio/mpeg" />
+		<itunes:episodeType>full</itunes:episodeType>
+		<itunes:duration>18:14</itunes:duration>
+		<rawvoice:embed>&lt;iframe width=&quot;320&quot; height=&quot;30&quot; src=&quot;https://theguitarchannel.biz/?powerpress_embed=54907-podcast&amp;amp;amp;powerpress_player=mediaelement-audio&quot; title=&quot;Blubrry Podcast Player&quot; frameborder=&quot;0&quot; scrolling=&quot;no&quot;&gt;&lt;/iframe&gt;</rawvoice:embed>
+<post-id xmlns="com-wordpress:feed-additions:1">54907</post-id>	</item>
+	<item>
+		<title>Marine Guitars &#8211; Presentation an demo by Marwan Boulaïd in Puteaux</title>
+		<link>https://theguitarchannel.biz/2023/11/marine-guitars-demo-concert-marwan-boulaid/</link>
+		<pubDate>Tue, 21 Nov 2023 09:58:50 +0000</pubDate>
+		<guid isPermaLink="false">https://theguitarchannel.biz/?p=54204</guid>
+		<comments>https://theguitarchannel.biz/2023/11/marine-guitars-demo-concert-marwan-boulaid/#respond</comments>
+		<wfw:commentRss>https://theguitarchannel.biz/2023/11/marine-guitars-demo-concert-marwan-boulaid/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+		<category><![CDATA[All]]></category>
+		<category><![CDATA[Gear]]></category>
+		<category><![CDATA[Interviews]]></category>
+		<category><![CDATA[Demo concert]]></category>
+		<category><![CDATA[Marine Guitars]]></category>
+		<category><![CDATA[Marine Pacaut]]></category>
+		<category><![CDATA[Open]]></category>
+		<category><![CDATA[Podcast]]></category>
+		<category><![CDATA[Puteaux]]></category>
+		<description><![CDATA[
+<p class="wp-block-paragraph">Presentation and demonstration of two guitars by<strong> <a href="https://theguitarchannel.biz/tag/rainer-tausch/">Marine Guitars</a></strong> (<a href="https://www.marineguitars.com/" target="_blank" rel="noreferrer noopener nofollow">marineguitars.com</a>) by musician <a href="https://theguitarchannel.biz/tag/marwan-boulaid/">Marwan Boulaïd</a> (<a href="http://coursdeguitaremoderne.fr/" target="_blank" rel="noreferrer noopener">marwanboulaidmusic.com</a>) in the presence of <a href="https://theguitarchannel.biz/tag/luthier/">luthier</a> <strong>Marine Pacaut</strong>.</p>
+
+
+
+<h2 class="wp-block-heading">Marine Guitars demo concert</h2>
+
+
+
+<center><iframe loading="lazy" width="1120" height="630" src="https://www.youtube.com/embed/dcwj27vx2QA" frameborder="0" allowfullscreen></iframe></center>
+
+
+
+<p class="has-text-align-center wp-block-paragraph">Sound, video and edit: <a href="https://lachaineguitare.com/tag/philippe-camus/" target="_blank" rel="noreferrer noopener">Philippe Camus</a></p>
+
+
+
+<h2 class="wp-block-heading">The Guitar Channel podcast</h2>
+
+
+
+<p class="wp-block-paragraph">The audio version of the video is available in the <a href="https://theguitarchannel.biz/tgcpodcast/">podcast</a> on <a href="https://itunes.apple.com/fr/podcast/the-guitar-channel-passion-amplifier/id392480217?mt=2" target="_blank" rel="noopener">iTunes</a>, <a href="https://open.spotify.com/show/4VZk1pRN8m7zXQALJK1Uv5" target="_blank" rel="noopener">Spotify</a>&nbsp;and below:</p>
+
+
+
+<p class="wp-block-paragraph">
+
+</p>
+
+
+
+<h2 class="wp-block-heading">About the demo concerts</h2>
+
+
+
+<p class="wp-block-paragraph">As always, the Puteaux Guitar Festival included demo concerts, giving the opportunity to discover the instruments exhibited at the guitar show organized by The Guitar Channel during the festival in the magnificent Jean-Baptiste Lully conservatory.</p>
+
+
+
+<p class="has-text-align-center wp-block-paragraph"><strong>The filming and editing of the demo concert videos is 100% financed by The Guitar Channel</strong></p>
+
+
+
+<p class="wp-block-paragraph">It's an investment that's made because it's a great way of promoting the show for exhibitors who want it at no extra cost, for the demo musicians, for the festival and for the guitar in general.</p>
+
+
+
+<p class="wp-block-paragraph">The professional musicians are paid by the conservatory for their performance at the concerts.</p>
+
+
+<div class="wp-block-image">
+<figure class="aligncenter size-full is-resized"><img loading="lazy" decoding="async" width="600" height="268" src="https://theguitarchannel.biz/wp-content/uploads/2023/08/Affiche-Puteaux-2023-Pano-600.png" alt="List of exhibitors at the 2023 Puteaux Guitar Show organized by La Chaîne Guitare" class="wp-image-53395" style="width:294px;height:131px" srcset="https://theguitarchannel.biz/wp-content/uploads/2023/08/Affiche-Puteaux-2023-Pano-600.png 600w, https://theguitarchannel.biz/wp-content/uploads/2023/08/Affiche-Puteaux-2023-Pano-600-300x134.png 300w, https://theguitarchannel.biz/wp-content/uploads/2023/08/Affiche-Puteaux-2023-Pano-600-280x125.png 280w" sizes="auto, (max-width: 600px) 100vw, 600px" /></figure>
+</div>
+
+
+<p class="has-text-align-center has-x-large-font-size wp-block-paragraph">For more info:<br><a href="https://theguitarchannel.biz/tag/puteaux/">Puteaux Reports &amp; Interviews<br></a><a href="https://theguitarchannel.biz/tag/demo-concert/">Demo Concerts Archives<br></a><a href="https://theguitarchannel.biz/tag/luthier/">Luthier Interviews</a></p>]]></description>
+		<enclosure url="https://traffic.libsyn.com/lachaineguitare/Puteaux_2023_Marine_Guitars.mp3" length="20487105" type="audio/mpeg" />
+		<itunes:episodeType>full</itunes:episodeType>
+		<itunes:duration>21:20</itunes:duration>
+		<rawvoice:embed>&lt;iframe width=&quot;320&quot; height=&quot;30&quot; src=&quot;https://theguitarchannel.biz/?powerpress_embed=54204-podcast&amp;amp;amp;powerpress_player=mediaelement-audio&quot; title=&quot;Blubrry Podcast Player&quot; frameborder=&quot;0&quot; scrolling=&quot;no&quot;&gt;&lt;/iframe&gt;</rawvoice:embed>
+<post-id xmlns="com-wordpress:feed-additions:1">54204</post-id>	</item>
+	<item>
+		<title>Tausch Guitars &#8211; Presentation an demo by Marwan Boulaïd in Puteaux</title>
+		<link>https://theguitarchannel.biz/2023/11/tausch-guitars-demo-by-marwan-boulaid-in-puteaux/</link>
+		<pubDate>Wed, 15 Nov 2023 14:21:22 +0000</pubDate>
+		<guid isPermaLink="false">https://theguitarchannel.biz/?p=53833</guid>
+		<description>Presentation and demonstration of two guitars by Tausch Guitars (tausch-guitars.de) by musician Marwan Boulaïd (marwanboulaidmusic.com) in the presence of luthier Rainer Tausch. Tausch Guitars demo concert Sound, video and edit: Philippe Camus The Guitar Channel podcast The audio version of the video is available in the podcast on iTunes, Spotify and below: About the demo concerts</description>
+		<enclosure url="https://traffic.libsyn.com/lachaineguitare/Puteaux_2023_Tausch.mp3" length="24511216" type="audio/mpeg" />
+		<itunes:episodeType>full</itunes:episodeType>
+		<itunes:duration>25:32</itunes:duration>
+<post-id xmlns="com-wordpress:feed-additions:1">53833</post-id>	</item>
+	<item>
+		<title>Boxis Guitars &#8211; Presentation an demo by Marwan Boulaïd in Puteaux</title>
+		<link>https://theguitarchannel.biz/2023/11/boxis-guitares-demo-concert-marwan-boulaid/</link>
+		<pubDate>Tue, 14 Nov 2023 17:04:12 +0000</pubDate>
+		<guid isPermaLink="false">https://theguitarchannel.biz/?p=53828</guid>
+		<description>Presentation and demonstration of two guitars by Boris Guitars (boxisguitars.com) by musician Marwan Boulaïd (marwanboulaidmusic.com) in the presence of luthier Alexis Bonin. Boxis Guitars demo concert Sound, video and edit: Philippe Camus The Guitar Channel podcast The audio version of the video is available in the podcast on iTunes, Spotify and below: About the demo concerts</description>
+		<enclosure url="https://traffic.libsyn.com/lachaineguitare/Puteaux_2023_Boxis.mp3" length="13454106" type="audio/mpeg" />
+		<itunes:episodeType>full</itunes:episodeType>
+		<itunes:duration>14:01</itunes:duration>
+<post-id xmlns="com-wordpress:feed-additions:1">53828</post-id>	</item>
+	<item>
+		<title>Berg Guitares &#8211; Presentation and demo by Hugo Martin in Puteaux</title>
+		<link>https://theguitarchannel.biz/2023/11/berg-guitares-presentation-and-demo-by-hugo-martin-in-puteaux/</link>
+		<pubDate>Thu, 09 Nov 2023 09:27:18 +0000</pubDate>
+		<guid isPermaLink="false">https://theguitarchannel.biz/?p=53790</guid>
+		<description>Presentation and demonstration of two instruments by Berg Guitares (berg-guitares.com) by musician Hugo Martin (coursdeguitaremoderne.fr) in the presence of luthier Jonathan Berg. Configuration: Berg Guitares demo concert Sound, video and edit: Philippe Camus The Guitar Channel podcast The audio version of the video is available in the podcast on iTunes, Spotify and below: About the demo</description>
+		<enclosure url="https://traffic.libsyn.com/lachaineguitare/Puteaux_2023_Berg.mp3" length="24637022" type="audio/mpeg" />
+		<itunes:episodeType>full</itunes:episodeType>
+		<itunes:duration>25:40</itunes:duration>
+<post-id xmlns="com-wordpress:feed-additions:1">53790</post-id>	</item>
+	<item>
+		<title>Micoud Guitares &#8211; Presentation an demo by Marwan Boulaïd in Puteaux</title>
+		<link>https://theguitarchannel.biz/2023/11/micoud-guitares-demo-concert-marwan-boulaid/</link>
+		<pubDate>Wed, 08 Nov 2023 14:00:00 +0000</pubDate>
+		<guid isPermaLink="false">https://theguitarchannel.biz/?p=53776</guid>
+		<description>Presentation and demonstration of two guitars by Micoud Guitares (micoud-guitares.com) by musician Marwan Boulaïd (marwanboulaidmusic.com) in the presence of luthier Baptiste Micoud. Micoud Guitares demo concert Sound, video and edit: Philippe Camus The Guitar Channel podcast The audio version of the video is available in the podcast on iTunes, Spotify and below: About the demo concerts</description>
+		<enclosure url="https://traffic.libsyn.com/lachaineguitare/Puteaux_2023_Micoud.mp3" length="18893844" type="audio/mpeg" />
+		<itunes:episodeType>full</itunes:episodeType>
+		<itunes:duration>19:41</itunes:duration>
+<post-id xmlns="com-wordpress:feed-additions:1">53776</post-id>	</item>
+	<item>
+		<title>TM Lutherie &#8211; Presentation an demo by Marwan Boulaïd in Puteaux</title>
+		<link>https://theguitarchannel.biz/2023/10/tm-lutherie-demo-marwan-boulaid/</link>
+		<pubDate>Tue, 31 Oct 2023 14:00:00 +0000</pubDate>
+		<guid isPermaLink="false">https://theguitarchannel.biz/?p=53725</guid>
+		<description>Presentation and demonstration of two guitars by TM Lutherie (tmlutherie.fr) by musician Marwan Boulaïd (marwanboulaidmusic.com) in the presence of luthier Thomas Meuret. TM Lutherie demo concert Sound, video and edit: Philippe Camus The Guitar Channel podcast The audio version of the video is available in the podcast on iTunes, Spotify and below: About the demo concerts</description>
+		<enclosure url="https://traffic.libsyn.com/lachaineguitare/Puteaux_2023_TM_Lutherie.mp3" length="13710315" type="audio/mpeg" />
+		<itunes:episodeType>full</itunes:episodeType>
+		<itunes:duration>14:17</itunes:duration>
+<post-id xmlns="com-wordpress:feed-additions:1">53725</post-id>	</item>
+	<item>
+		<title>Kopo Guitar &#8211; Presentation and demo by Hugo Martin in Puteaux</title>
+		<link>https://theguitarchannel.biz/2023/10/kopo-guitar-demo-by-hugo-martin/</link>
+		<pubDate>Mon, 30 Oct 2023 14:00:00 +0000</pubDate>
+		<guid isPermaLink="false">https://theguitarchannel.biz/?p=53724</guid>
+		<description>Presentation and demonstration of two instruments by Kopo Guitar (kopo.fr) by musician Hugo Martin (coursdeguitaremoderne.fr) in the presence of luthier Fred Pons. Configuration: Kopo Guitar demo concert Sound, video and edit: Philippe Camus The Guitar Channel podcast The audio version of the video is available in the podcast on iTunes, Spotify and below: About the demo</description>
+		<enclosure url="https://traffic.libsyn.com/lachaineguitare/Puteaux_2023_Kopo.mp3" length="23833286" type="audio/mpeg" />
+		<itunes:episodeType>full</itunes:episodeType>
+		<itunes:duration>24:50</itunes:duration>
+<post-id xmlns="com-wordpress:feed-additions:1">53724</post-id>	</item>
+	<item>
+		<title>Lame Horse Instruments &#8211; Presentation and demo by Hugo Martin in Puteaux</title>
+		<link>https://theguitarchannel.biz/2023/10/lame-horse-instruments-demo-hugo-martin/</link>
+		<pubDate>Sun, 29 Oct 2023 16:46:27 +0000</pubDate>
+		<guid isPermaLink="false">https://theguitarchannel.biz/?p=53715</guid>
+		<description>Presentation and demonstration of a Lame Horse Instruments (lamehorse.net) guitar by musician Hugo Martin (coursdeguitaremoderne.fr) in the presence of luthier Chris Jenkins. Lame Horse Instruments demo concert Sound, video and edit: Philippe Camus The Guitar Channel podcast The audio version of the video is available in the podcast on iTunes, Spotify and below: About the demo</description>
+		<enclosure url="https://traffic.libsyn.com/lachaineguitare/Puteaux_2023_Lame_Horse.mp3" length="21779017" type="audio/mpeg" />
+		<itunes:episodeType>full</itunes:episodeType>
+		<itunes:duration>22:41</itunes:duration>
+<post-id xmlns="com-wordpress:feed-additions:1">53715</post-id>	</item>
+	<item>
+		<title>Dejardin Guitare &#8211; Presentation and demo by Hugo Martin in Puteaux</title>
+		<link>https://theguitarchannel.biz/2023/10/dejardin-guitare-demo-hugo-martin/</link>
+		<pubDate>Wed, 18 Oct 2023 11:30:00 +0000</pubDate>
+		<guid isPermaLink="false">https://theguitarchannel.biz/?p=53597</guid>
+		<description>Presentation and demonstration of two Dejardin Guitare (dejardinguitare.be) by musician Hugo Martin (coursdeguitaremoderne.fr) in the presence of luthier Ghislain Dejardin. Dejardin Guitare demo concert Sound, video and edit: Philippe Camus The Guitar Channel podcast The audio version of the video is available in the podcast on iTunes, Spotify and below: About the demo concerts As always,</description>
+		<enclosure url="https://traffic.libsyn.com/lachaineguitare/Puteaux_2023_Dejardin.mp3" length="30956564" type="audio/mpeg" />
+		<itunes:episodeType>full</itunes:episodeType>
+		<itunes:duration>32:15</itunes:duration>
+<post-id xmlns="com-wordpress:feed-additions:1">53597</post-id>	</item>
+	<item>
+		<title>Guitares Berdah &#8211; Presentation an demo by Hugo Martin in Puteaux</title>
+		<link>https://theguitarchannel.biz/2023/10/guitares-berdah-demo-by-hugo-martin/</link>
+		<pubDate>Tue, 17 Oct 2023 18:04:37 +0000</pubDate>
+		<guid isPermaLink="false">https://theguitarchannel.biz/?p=53589</guid>
+		<description>Presentation and demonstration of two Guitares Berdah (guitaresberdah.com) by musician Hugo Martin (coursdeguitaremoderne.fr) in the presence of luthier Michel Berdah. Guitares Berdah demo concert Sound, video and edit: Philippe Camus The Guitar Channel podcast The audio version of the video is available in the podcast on iTunes, Spotify and below: About the demo concerts As always,</description>
+		<enclosure url="https://traffic.libsyn.com/lachaineguitare/Puteaux_2023_Guitares_Berdah.mp3" length="24406308" type="audio/mpeg" />
+		<itunes:episodeType>full</itunes:episodeType>
+		<itunes:duration>25:25</itunes:duration>
+<post-id xmlns="com-wordpress:feed-additions:1">53589</post-id>	</item>
+	<item>
+		<title>Tausch Guitars 665 Raw review of a great sounding German boutique guitar</title>
+		<link>https://theguitarchannel.biz/2023/06/tausch-guitars-665-raw-review/</link>
+		<pubDate>Wed, 21 Jun 2023 09:06:48 +0000</pubDate>
+		<guid isPermaLink="false">https://theguitarchannel.biz/?p=52731</guid>
+		<description>German luthier Rainer Tausch (tausch-guitars.de) builds incredible guitars that are a successful blend of tradition and modernity. Indeed, the lines of his guitars are inspired by well-known American models, such as the Telecaster in the case of this 665 Raw. But Rainer doesn&#039;t just copy a well-known recipe - far from it! The 665 Raw</description>
+		<enclosure url="https://traffic.libsyn.com/lachaineguitare/Tausch_665_EN.mp3" length="9451729" type="audio/mpeg" />
+		<itunes:episodeType>full</itunes:episodeType>
+		<itunes:duration>9:51</itunes:duration>
+<post-id xmlns="com-wordpress:feed-additions:1">52731</post-id>	</item>
+	<item>
+		<title>Songwriting in a 50h course: Henning Pauly and Rafael Cano interview to know everything!</title>
+		<link>https://theguitarchannel.biz/2023/04/songwriting-in-50-hours-henning-pauly-rafael-cano-interview/</link>
+		<pubDate>Sun, 30 Apr 2023 16:52:44 +0000</pubDate>
+		<guid isPermaLink="false">https://theguitarchannel.biz/?p=51491</guid>
+		<description>I&#039;ve known Henning Pauly for years since I&#039;ve seen him at almost every show except the NAMM where he decided not to go anymore. You probably also know him because his videos on YouTube are a must. Well, this time Henning decided to share his knowledge of songwriting by putting together a 50+ hour course</description>
+		<enclosure url="https://traffic.libsyn.com/lachaineguitare/Interview_Henning_et_Rafael.mp3" length="24658755" type="audio/mpeg" />
+		<itunes:episodeType>full</itunes:episodeType>
+		<itunes:duration>25:41</itunes:duration>
+<post-id xmlns="com-wordpress:feed-additions:1">51491</post-id>	</item>
+	<item>
+		<title>Teuffel, Ruokangas, Spalt, Sergio and Tausch, what the guitar builders have to say about The Guitar Channel</title>
+		<link>https://theguitarchannel.biz/2023/01/listen-to-the-best-guitar-builders-about-the-guitar-channel/</link>
+		<pubDate>Sun, 08 Jan 2023 21:30:30 +0000</pubDate>
+		<guid isPermaLink="false">https://theguitarchannel.biz/?p=50514</guid>
+		<description>In January 2021, we were still in lockdown mode all over the world so there was no Winter NAMM that year. So I decided to do a live interview with several of the best and most original luthiers in Europe: Here is what they said spontaneously at the end of the interview. I was touched</description>
+		<enclosure url="https://traffic.libsyn.com/lachaineguitare/Interviews_luthiers_Ruokangas_Spalt_Ergon_Spalt_Teuffel.mp3" length="2814119" type="audio/mpeg" />
+		<itunes:episodeType>full</itunes:episodeType>
+		<itunes:duration>2:56</itunes:duration>
+<post-id xmlns="com-wordpress:feed-additions:1">50514</post-id>	</item>
+	<item>
+		<title>Cem Ocek from Ocek Guitars interview with a Turkish builder with some cool new shapes</title>
+		<link>https://theguitarchannel.biz/2022/05/cem-ocek-interviews-turkish-builder/</link>
+		<pubDate>Wed, 18 May 2022 07:15:00 +0000</pubDate>
+		<guid isPermaLink="false">https://theguitarchannel.biz/?p=46770</guid>
+		<description>Cem Ocek (ocekguitars.com) is a Turkish luthier based in Germany who offers very original guitar shapes. Here he is in Zoom interview to present his Synapse and Puduhepa models. He has a very original approach to guitar design. The results are some cool instrument shapes very far from the usual LP or S style shapes</description>
+		<enclosure url="https://traffic.libsyn.com/lachaineguitare/Cem_Ocek_interview.mp3" length="29357035" type="audio/mpeg" />
+		<itunes:episodeType>full</itunes:episodeType>
+		<itunes:duration>30:35</itunes:duration>
+<post-id xmlns="com-wordpress:feed-additions:1">46770</post-id>	</item>
+	<item>
+		<title>MIDI pedalboard configuration to drive your guitar software on a computer</title>
+		<link>https://theguitarchannel.biz/2022/03/midi-pedalboard-configuration-to-drive-your-guitar-software-on-a-computer-blue-cat-audio-review/</link>
+		<pubDate>Tue, 08 Mar 2022 10:00:00 +0000</pubDate>
+		<guid isPermaLink="false">https://theguitarchannel.biz/?p=46654</guid>
+		<description>In this CAM or CAG gear chronicle (as you prefer), we tackle with Guillaume Jeulin from Blue Cat Audio (bluecataudio.com) a subject that usually makes guitarists run away: MIDI! Don&#039;t worry, we&#039;re not going to talk about guitar synthesizers but about configuring and using a pedal board to drive via MIDI what&#039;s happening on your</description>
+		<enclosure url="https://traffic.libsyn.com/lachaineguitare/Chronicle_EN_BCA_MIDI_Pedalboard.mp3" length="17195676" type="audio/mpeg" />
+		<itunes:episodeType>full</itunes:episodeType>
+		<itunes:duration>17:55</itunes:duration>
+<post-id xmlns="com-wordpress:feed-additions:1">46654</post-id>	</item>
+	<item>
+		<title>Kari Nieminen, Finnish Luthier for Versoul Guitars</title>
+		<link>https://theguitarchannel.biz/2022/03/kari-nieminen-interview-finnish-builders-versoul-guitars/</link>
+		<pubDate>Sun, 06 Mar 2022 09:30:00 +0000</pubDate>
+		<guid isPermaLink="false">https://theguitarchannel.biz/?p=46689</guid>
+		<description>During a tourist visit in Paris, France of Kari Nieminen, I had the pleasure to welcome the Finnish luthier at the showroom to do an interview about his extraordinary instruments. Versoul Guitars (versoul.com) offers beautifully crafted instruments with unique designs. Kari Nieminen interview The Guitar Channel podcast The audio version of the video is available</description>
+		<enclosure url="https://traffic.libsyn.com/lachaineguitare/Interview_Kari_Nieminen_2021.mp3" length="18632620" type="audio/mpeg" />
+		<itunes:episodeType>full</itunes:episodeType>
+		<itunes:duration>19:25</itunes:duration>
+<post-id xmlns="com-wordpress:feed-additions:1">46689</post-id>	</item>
+	<item>
+		<title>How to setup an audio interface to play guitar on your Mac computer &#8211; Blue Cat Audio chronicle</title>
+		<link>https://theguitarchannel.biz/2022/02/how-to-setup-an-audio-interface-to-play-guitar-on-your-mac/</link>
+		<pubDate>Tue, 22 Feb 2022 10:00:00 +0000</pubDate>
+		<guid isPermaLink="false">https://theguitarchannel.biz/?p=46630</guid>
+		<description>As part of a collaboration with Blue Cat Audio (bluecataudio.com), editor of CAM software for the studio and for the guitar, here is a new CAM (Computer Assisted Music) column. or CAG (Computer Assisted Guitar), as Guillaume Jeulin, the founder of Blue Cat Audio, likes to say. This time it is the connection and configuration</description>
+		<enclosure url="https://traffic.libsyn.com/lachaineguitare/Chronicle_EN_BCA_Audio_interface_Mac.mp3" length="10687634" type="audio/mpeg" />
+		<itunes:episodeType>full</itunes:episodeType>
+		<itunes:duration>11:08</itunes:duration>
+<post-id xmlns="com-wordpress:feed-additions:1">46630</post-id>	</item>
+	<item>
+		<title>Setup an audio interface to play guitar on your PC computer &#8211; Blue Cat Audio chronicle</title>
+		<link>https://theguitarchannel.biz/2022/02/how-to-setup-an-audio-interface-to-play-guitar-on-your-pc/</link>
+		<pubDate>Tue, 15 Feb 2022 09:10:00 +0000</pubDate>
+		<guid isPermaLink="false">https://theguitarchannel.biz/?p=46632</guid>
+		<description>As part of a collaboration with Blue Cat Audio (bluecataudio.com), a software editor for studio and guitar, we recorded a series of videos dedicated to Computer Assisted Music (CAM). Guillaume Jeulin, founder and developer of Blue Cat Audio, even talks about CAG (Computer Assisted Guitar). In this first part, we start with the basics: connecting</description>
+		<enclosure url="https://traffic.libsyn.com/lachaineguitare/Chronicle_EN_BCA_Audio_interface_PC.mp3" length="12377861" type="audio/mpeg" />
+		<itunes:episodeType>full</itunes:episodeType>
+		<itunes:duration>12:54</itunes:duration>
+<post-id xmlns="com-wordpress:feed-additions:1">46632</post-id>	</item>
+	<item>
+		<title>Montreux International Guitar Show 2022, interviews with the Swizz organizers</title>
+		<link>https://theguitarchannel.biz/2021/11/montreux-international-guitar-show-2022-interviews/</link>
+		<pubDate>Mon, 08 Nov 2021 08:55:00 +0000</pubDate>
+		<guid isPermaLink="false">https://theguitarchannel.biz/?p=46210</guid>
+		<description>David Rosset and Emmanuel Cottier are the two Swiss organizers of the Montreux International Guitar Show (migs.ch) which will take place from April 29 to May 1, 2022 on the shores of Lake Geneva in Montreux in the Casino Barrière. MIGS organizers interview Photo album of the Casino Barrière The Guitar Channel will be in</description>
+		<enclosure url="https://traffic.libsyn.com/secure/lachaineguitare/Interview_MIGS_2022_EN.mp3" length="11070902" type="audio/mpeg" />
+		<itunes:episodeType>full</itunes:episodeType>
+		<itunes:duration>11:32</itunes:duration>
+<post-id xmlns="com-wordpress:feed-additions:1">46210</post-id>	</item>
+	<item>
+		<title>Blue Cat Audio, interview with Guillaume Jeulin in his development studio</title>
+		<link>https://theguitarchannel.biz/2021/08/blue-cat-audio-interview-guillaume-jeulin/</link>
+		<pubDate>Tue, 03 Aug 2021 08:00:00 +0000</pubDate>
+		<guid isPermaLink="false">https://theguitarchannel.biz/?p=45901</guid>
+		<description>Guillaume Jeulin, developer and founder of the software company Blue Cat Audio (bluecataudio.com) was, as yours truly, one of the speakers of the guitar workshop organized by Pat O&#039;May in Brittany, the Guit-Ar-Camp. On my way back from the 3 days workshop, I stopped at his place to record this interview. Guillaume Jeulin interview The</description>
+		<enclosure url="https://traffic.libsyn.com/secure/lachaineguitare/Guillaume_Jeulin_Blue_Cat_Audio_interview.mp3" length="11187513" type="audio/mpeg" />
+		<itunes:episodeType>full</itunes:episodeType>
+		<itunes:duration>11:39</itunes:duration>
+<post-id xmlns="com-wordpress:feed-additions:1">45901</post-id>	</item>
+	<item>
+		<title>Victor Lee guitar in hand interview with the Korean born American musician</title>
+		<link>https://theguitarchannel.biz/2021/06/victor-lee-guitar-in-hand-interview/</link>
+		<pubDate>Wed, 30 Jun 2021 08:10:00 +0000</pubDate>
+		<guid isPermaLink="false">https://theguitarchannel.biz/?p=44786</guid>
+		<description>Met via Clubhouse, Victor Lee (victorleemusic.com) is a Korean born musician who came to the US at the age of 16. His instrumental music is awesome, he plays great and the production is very well done. In addition Victor plays on the great American guitars from Suhr and Tom Anderson so he has obviously very</description>
+		<enclosure url="https://traffic.libsyn.com/secure/lachaineguitare/Victor_Lee_interview.mp3" length="48000940" type="audio/mpeg" />
+		<itunes:episodeType>full</itunes:episodeType>
+		<itunes:duration>50:00</itunes:duration>
+<post-id xmlns="com-wordpress:feed-additions:1">44786</post-id>	</item>
+	<item>
+		<title>Victor Pitoiset &#038; Melissa Lesnie play Les Paul &#038; Mary Ford &#8211; Showroom concert</title>
+		<link>https://theguitarchannel.biz/2021/06/victor-pitoiset-melissa-lesnie-play-les-paul-mary-ford/</link>
+		<pubDate>Wed, 23 Jun 2021 09:00:00 +0000</pubDate>
+		<guid isPermaLink="false">https://theguitarchannel.biz/?p=44713</guid>
+		<description>On Thursday, May 20, 2021, singer Melissa Lesnie and guitarist Victor Pitoiset came to give a live concert in the showroom to (re)discover the wonderful music of Les Paul &amp; Mary Ford. Victor Pitoiset &amp; Melissa Lesnie concert Page Facebook - Page Band Camp Audio of the concert available in the podcast The audio version</description>
+		<enclosure url="https://traffic.libsyn.com/secure/lachaineguitare/Concert_Victor_Melissa_200521.mp3" length="24335255" type="audio/mpeg" />
+		<itunes:episodeType>full</itunes:episodeType>
+		<itunes:duration>25:21</itunes:duration>
+<post-id xmlns="com-wordpress:feed-additions:1">44713</post-id>	</item>
+	<item>
+		<title>Andy Wood, guitar in hand interview with the musician who came from the mandolin</title>
+		<link>https://theguitarchannel.biz/2021/06/andy-wood-guitar-in-hand-interview/</link>
+		<pubDate>Wed, 16 Jun 2021 08:05:00 +0000</pubDate>
+		<guid isPermaLink="false">https://theguitarchannel.biz/?p=44698</guid>
+		<description>Thanks to Mark Lettieri I was able to get in touch with Andy Wood, this American musician is incredibly good at the guitar and started at the mandolin. His Junktown album of instrumental music is a treat with a melodic sense worthy of his idols Eric Johnson or Eddie Van Halen. Andy Wood interview The</description>
+		<enclosure url="https://traffic.libsyn.com/secure/lachaineguitare/Interview_Andy_Wood.mp3" length="41728626" type="audio/mpeg" />
+		<itunes:episodeType>full</itunes:episodeType>
+		<itunes:duration>43:28</itunes:duration>
+<post-id xmlns="com-wordpress:feed-additions:1">44698</post-id>	</item>
+	<item>
+		<title>Yeore Kim and Antoine Boyer Showroom Concert</title>
+		<link>https://theguitarchannel.biz/2021/06/yeore-kim-and-antoine-boyer-showroom-concert/</link>
+		<pubDate>Sun, 13 Jun 2021 09:00:00 +0000</pubDate>
+		<guid isPermaLink="false">https://theguitarchannel.biz/?p=44707</guid>
+		<description>On Thursday, June 10, 2021 the talented duo composed of Korean Yeore Kim on harmonica and Antoine Boyer (antoineboyermusic.com) on guitar came to give a live concert from the showroom of The Guitar Channel in Paris. Here is the full replay below. Yeore Kim and Antoine Boyer concert The Guitar Channel podcast The audio version</description>
+		<enclosure url="https://traffic.libsyn.com/secure/lachaineguitare/Concert_Yeore_Antoine.mp3" length="17627846" type="audio/mpeg" />
+		<itunes:episodeType>full</itunes:episodeType>
+		<itunes:duration>18:22</itunes:duration>
+<post-id xmlns="com-wordpress:feed-additions:1">44707</post-id>	</item>
+	<item>
+		<title>Sean Ashe guitar in hand interview with the talented musician</title>
+		<link>https://theguitarchannel.biz/2021/05/sean-ashe-guitar-in-hand-interview/</link>
+		<pubDate>Mon, 17 May 2021 08:35:00 +0000</pubDate>
+		<guid isPermaLink="false">https://theguitarchannel.biz/?p=44490</guid>
+		<description>First met in 2018 at NAMM, Sean Ashe (seanashemusic.com) is an American musician with a strong melodic sense. He has released a new single called Ocean on May 15, 2021, 5 years after his album Flux. It is guitar in hand (a Tom Anderson of course!) that he answered all my questions from his home</description>
+		<enclosure url="https://traffic.libsyn.com/secure/lachaineguitare/Sean_Ashe_interview_2021.mp3" length="84416888" type="audio/mpeg" />
+		<itunes:episodeType>full</itunes:episodeType>
+		<itunes:duration>1:27:56</itunes:duration>
+<post-id xmlns="com-wordpress:feed-additions:1">44490</post-id>	</item>
+	<item>
+		<title>Janek Gwizdala bass in hand interview with a super creative musician</title>
+		<link>https://theguitarchannel.biz/2021/05/janek-gwizdala-bass-in-hand-interview/</link>
+		<pubDate>Mon, 10 May 2021 08:45:00 +0000</pubDate>
+		<guid isPermaLink="false">https://theguitarchannel.biz/?p=44462</guid>
+		<description>Janek Gwizdala (janekgwizdala.com) is a world class bass player who has played with many musicians from John Mayer to Mike Stern. It was Mark Lettieri who recommended him to me and put me in touch with Janek. I didn&#039;t know before this London-born musician who is now based in Los Angeles. The 40min interview with</description>
+		<enclosure url="https://traffic.libsyn.com/secure/lachaineguitare/Janek_Gwizdala_interview.mp3" length="39067898" type="audio/mpeg" />
+		<itunes:episodeType>full</itunes:episodeType>
+		<itunes:duration>40:42</itunes:duration>
+<post-id xmlns="com-wordpress:feed-additions:1">44462</post-id>	</item>
+	<item>
+		<title>Classic S Suhr, the Best American Super Strat Today</title>
+		<link>https://theguitarchannel.biz/2021/04/classic-s-suhr-review-the-best-american-super-strat/</link>
+		<pubDate>Fri, 30 Apr 2021 08:30:00 +0000</pubDate>
+		<guid isPermaLink="false">https://theguitarchannel.biz/?p=44451</guid>
+		<description>&quot;Classic S Suhr, the best American Super Strat today?&quot; Come on! Let&#039;s assume the bold statement that the Classic S from Suhr Guitars (suhr.com) represents the best of the modern Super Strat in the production guitar segment. Big fan of John Suhr (whom I hope to interview one of these days!!) and his work in</description>
+		<enclosure url="https://theguitarchannel.biz/wp-content/uploads/2021/04/Review-Suhr-Classic-S.mp3" length="8150204" type="audio/mpeg" />
+		<itunes:episodeType>full</itunes:episodeType>
+		<itunes:duration>8:29</itunes:duration>
+<post-id xmlns="com-wordpress:feed-additions:1">44451</post-id>	</item>
+	<item>
+		<title>Ben Eunson, guitar in hand interview with the Australian musician based in NYC</title>
+		<link>https://theguitarchannel.biz/2021/04/ben-eunson-interview/</link>
+		<pubDate>Mon, 26 Apr 2021 09:00:00 +0000</pubDate>
+		<guid isPermaLink="false">https://theguitarchannel.biz/?p=43852</guid>
+		<description>Through Jeff McErlain (whom I would like to thank in passing) I did the interview of Ben Eunson (beneunson.com) below guitar in hand with this young Australian guitarist based in New York City. It was a blast to to record this video with this amazing musician. Ben Eunson interview The Guitar Channel podcast The audio</description>
+		<enclosure url="https://traffic.libsyn.com/secure/lachaineguitare/Interview_Ben_Eunson.mp3" length="33054302" type="audio/mpeg" />
+		<itunes:episodeType>full</itunes:episodeType>
+		<itunes:duration>34:26</itunes:duration>
+<post-id xmlns="com-wordpress:feed-additions:1">43852</post-id>	</item>
+	<item>
+		<title>Cory Wong, guitar in hand interview with the Funk musician from Vulfpeck</title>
+		<link>https://theguitarchannel.biz/2021/04/cory-wong-guitar-in-hand-interview-vulfpeck/</link>
+		<pubDate>Mon, 19 Apr 2021 08:20:00 +0000</pubDate>
+		<guid isPermaLink="false">https://theguitarchannel.biz/?p=44344</guid>
+		<description>Cory Wong (corywongmusic.com) is one of those guitarists who make you tap your foot immediately because of his incredible sense of groove. Whether it&#039;s through his solo albums or with Vulfpeck or Fearless Flyers, this guitar Funk master takes you in an irresistible whirlwind. Here he is in an interview with his guitar in hand</description>
+		<enclosure url="https://traffic.libsyn.com/secure/lachaineguitare/Cory_Wong_interview.mp3" length="37999595" type="audio/mpeg" />
+		<itunes:episodeType>full</itunes:episodeType>
+		<itunes:duration>39:35</itunes:duration>
+<post-id xmlns="com-wordpress:feed-additions:1">44344</post-id>	</item>
+	<item>
+		<title>Greg Howe guitar in hand interview from Shrapnel to Michael Jackson and more</title>
+		<link>https://theguitarchannel.biz/2021/04/greg-howe-guitar-in-hand-interview/</link>
+		<pubDate>Mon, 12 Apr 2021 08:30:00 +0000</pubDate>
+		<guid isPermaLink="false">https://theguitarchannel.biz/?p=44218</guid>
+		<description>The American guitar player Greg Howe has played with huge pop stars from Michael Jackson to Justin Timberlake, Enrique Iglesias and more. His career as a solo artist or within a band has also been very rich. Here is a guitar in hand interview from his home in Oklahoma. The two other interviews with Greg</description>
+		<enclosure url="https://traffic.libsyn.com/secure/lachaineguitare/Greg_Howe_interview.mp3" length="58204160" type="audio/mpeg" />
+		<itunes:episodeType>full</itunes:episodeType>
+		<itunes:duration>1:00:38</itunes:duration>
+<post-id xmlns="com-wordpress:feed-additions:1">44218</post-id>	</item>
+	<item>
+		<title>Snarky Puppy Mark Lettieri interview about The Baritone Sessions Vol.2</title>
+		<link>https://theguitarchannel.biz/2021/04/mark-lettieri-interview-baritone-sessions/</link>
+		<pubDate>Mon, 05 Apr 2021 09:00:00 +0000</pubDate>
+		<guid isPermaLink="false">https://theguitarchannel.biz/?p=44156</guid>
+		<description>The Texas based guitar player Mark Lettieri (marklettieri.com) who plays with Snarky Puppy among many projects is the guest of this guitar in hand interview recorded from his home studio. The occasion was the release of his new solo album The Baritone Sessions Vol.2. Mark goes through his composition process and walks through the conception</description>
+		<enclosure url="https://traffic.libsyn.com/secure/lachaineguitare/Mark_Lettieri_interview.mp3" length="36092447" type="audio/mpeg" />
+		<itunes:episodeType>full</itunes:episodeType>
+		<itunes:duration>37:36</itunes:duration>
+<post-id xmlns="com-wordpress:feed-additions:1">44156</post-id>	</item>
+	<item>
+		<title>Zane Carney, guitar in hand presents Alter Ego, the album of his quartet</title>
+		<link>https://theguitarchannel.biz/2021/03/zane-carney-interview-alter-ego/</link>
+		<pubDate>Mon, 22 Mar 2021 15:30:00 +0000</pubDate>
+		<guid isPermaLink="false">https://theguitarchannel.biz/?p=44088</guid>
+		<description>Zane Carney (zanecarney.com) is an American guitar player who accompanied people like John Mayer or Jonny Lang on tour. He is now moving more and more toward working on his own music. Alter Ego is the album of his quartet. It is full of ferocious Jazz as Zane puts it himself. Here is a guitar</description>
+		<enclosure url="https://traffic.libsyn.com/secure/lachaineguitare/Zane_Carney_interview.mp3" length="51987017" type="audio/mpeg" />
+		<itunes:episodeType>full</itunes:episodeType>
+		<itunes:duration>54:09</itunes:duration>
+<post-id xmlns="com-wordpress:feed-additions:1">44088</post-id>	</item>
+	<item>
+		<title>Rainer Tausch interview with the German boutique guitar builder</title>
+		<link>https://theguitarchannel.biz/2021/03/rainer-tausch-interview-german-boutique-guitar-builder/</link>
+		<pubDate>Thu, 18 Mar 2021 08:50:00 +0000</pubDate>
+		<guid isPermaLink="false">https://theguitarchannel.biz/?p=44270</guid>
+		<description>Rainer Tausch is the German guitar maker behind Tausch Guitars (tausch-guitars.de). He was the guest of a live interview on The Guitar Channel. In this video he talks about his training as a luthier, his 665 Raw Deluxe model and his philosophy of electric guitar building. Rainer Tausch interview Rainer Tausch interviews from the archives</description>
+		<enclosure url="https://traffic.libsyn.com/secure/lachaineguitare/Rainer_Tausch_interview.mp3" length="20278543" type="audio/mpeg" />
+		<itunes:episodeType>full</itunes:episodeType>
+		<itunes:duration>21:07</itunes:duration>
+<post-id xmlns="com-wordpress:feed-additions:1">44270</post-id>	</item>
+	<item>
+		<title>Popa Chubby interview guitar in hand about his album Tinfoil Hat</title>
+		<link>https://theguitarchannel.biz/2021/03/popa-chubby-interview-album-tinfoil-hat/</link>
+		<pubDate>Wed, 17 Mar 2021 09:00:00 +0000</pubDate>
+		<guid isPermaLink="false">https://theguitarchannel.biz/?p=44128</guid>
+		<description>Here is a guitar in hand video interview with the American musicien Popa Chubby well known to usually 200 shows per year. He presents his latest album Tinfoil Hat and how he has adapted to the pandemic situation. Take a listen to the album as I think it is one of the best Popa Chubby</description>
+		<enclosure url="https://traffic.libsyn.com/secure/lachaineguitare/Popa_Chubby_interview_2021.mp3" length="32921391" type="audio/mpeg" />
+		<itunes:episodeType>full</itunes:episodeType>
+		<itunes:duration>34:18</itunes:duration>
+<post-id xmlns="com-wordpress:feed-additions:1">44128</post-id>	</item>
+	<item>
+		<title>Verso Instruments, interview with the German luthier Robin Stummvoll</title>
+		<link>https://theguitarchannel.biz/2021/03/verso-instruments-interview-luthier-robin-stummvoll/</link>
+		<pubDate>Thu, 11 Mar 2021 10:00:00 +0000</pubDate>
+		<guid isPermaLink="false">https://theguitarchannel.biz/?p=44231</guid>
+		<description>The German guitar builder Robin Stummvoll from Verso Instruments (versoinstruments.com) has a very original approach to what is an electric guitar. In this live interview the luthier presents his Cosmo model which is built around a neck and a bent sheet of metal. Check-out his work, it&#039;s very refreshing to see an out-of-the-box design in</description>
+		<enclosure url="https://traffic.libsyn.com/secure/lachaineguitare/Robin_Stummvoll_live_interview.mp3" length="26756075" type="audio/mpeg" />
+		<itunes:episodeType>full</itunes:episodeType>
+		<itunes:duration>27:52</itunes:duration>
+<post-id xmlns="com-wordpress:feed-additions:1">44231</post-id>	</item>
+	<item>
+		<title>Tausch Guitars 665 Raw Deluxe review, a great German boutique guitar</title>
+		<link>https://theguitarchannel.biz/2021/03/tausch-guitars-665-raw-deluxe-review/</link>
+		<pubDate>Fri, 05 Mar 2021 09:40:00 +0000</pubDate>
+		<guid isPermaLink="false">https://theguitarchannel.biz/?p=43903</guid>
+		<description>The German luthier Rainer Tausch (tausch-guitars.de) makes guitars that have a very classic appearance but are in fact completely revisited instruments. In the case of the 665 Raw Deluxe model, it is clearly Telecaster inspired. And yet this luthier guitar is a hollow-body with a glued neck, so it&#039;s far from the Esquire. Tausch 665</description>
+		<enclosure url="https://traffic.libsyn.com/secure/lachaineguitare/Guitar_Review_Tausch_665_Raw_Deluxe.mp3" length="11523552" type="audio/mpeg" />
+		<itunes:episodeType>full</itunes:episodeType>
+		<itunes:duration>12:00</itunes:duration>
+<post-id xmlns="com-wordpress:feed-additions:1">43903</post-id>	</item>
+	<item>
+		<title>Gus G talks about his Blackfire pickups and let you win a set of humbuckers!</title>
+		<link>https://theguitarchannel.biz/2021/03/gus-g-blackfire-pickups-interview/</link>
+		<pubDate>Mon, 01 Mar 2021 08:45:00 +0000</pubDate>
+		<guid isPermaLink="false">https://theguitarchannel.biz/?p=44037</guid>
+		<description>The Greek guitar player Gus G who played with Ozzy Osbourne and now leads his own band Firewind launches his brand of guitar pickups, Blackfire (blackfirepickups.com). In this guitar in hand interview he demonstrates the two types of models, the Immortal (passive) and the Proteus (active) and talks about his current projects. Win a pair</description>
+		<enclosure url="https://traffic.libsyn.com/secure/lachaineguitare/Gus_G_interview_BlackFire_Pickups.mp3" length="21887686" type="audio/mpeg" />
+		<itunes:episodeType>full</itunes:episodeType>
+		<itunes:duration>22:48</itunes:duration>
+<post-id xmlns="com-wordpress:feed-additions:1">44037</post-id>	</item>
+	<item>
+		<title>Ariel Posen guitar in hand interview about his album &#8220;Headway&#8221;</title>
+		<link>https://theguitarchannel.biz/2021/02/ariel-posen-interview/</link>
+		<pubDate>Fri, 26 Feb 2021 09:10:00 +0000</pubDate>
+		<guid isPermaLink="false">https://theguitarchannel.biz/?p=44016</guid>
+		<description>It was a blast to record this interview with the Canadian musician Ariel Posen (arielposen.com). His new album Headway is will be released on March 5th 2021. It is full of great songs with some awesome guitar playing. During this guitar in hand interview, Ariel Posen speaks about his composition process, how he records, how</description>
+		<enclosure url="https://traffic.libsyn.com/secure/lachaineguitare/Ariel_Posen_interview.mp3" length="41253825" type="audio/mpeg" />
+		<itunes:episodeType>full</itunes:episodeType>
+		<itunes:duration>42:58</itunes:duration>
+<post-id xmlns="com-wordpress:feed-additions:1">44016</post-id>	</item>
+	<item>
+		<title>Adam Levy, guitar in hand interview from Brooklyn, New-York</title>
+		<link>https://theguitarchannel.biz/2021/02/adam-levy-guitar-in-hand-interview/</link>
+		<pubDate>Thu, 25 Feb 2021 15:40:00 +0000</pubDate>
+		<guid isPermaLink="false">https://theguitarchannel.biz/?p=44121</guid>
+		<description>The great American guitar player Adam Levy (adamlevy.com) was the guest of this guitar in hand live interview recorded via Zoom. He showcases a gorgeous archtop Gibson L-7 from 1945 and talk about his latest projects. Adam Levy interview The Guitar Channel podcast The audio version of the video is available in the podcast on</description>
+		<enclosure url="https://lachaineguitare.com/wp-content/uploads/2021/02/Adam-Levy-interview-2021.mp3" length="40711314" type="audio/mpeg" />
+		<itunes:episodeType>full</itunes:episodeType>
+		<itunes:duration>42:24</itunes:duration>
+<post-id xmlns="com-wordpress:feed-additions:1">44121</post-id>	</item>
+	<item>
+		<title>Mike Campbell of The Dirty Knobs, Tom Petty&#8217;s alter ego in interview</title>
+		<link>https://theguitarchannel.biz/2021/02/mike-campbell-dirty-knobs-interview/</link>
+		<pubDate>Mon, 15 Feb 2021 09:15:00 +0000</pubDate>
+		<guid isPermaLink="false">https://theguitarchannel.biz/?p=43688</guid>
+		<description>Mike Campbell is the American guitarist who accompanied Tom Petty for decades. He has just released an excellent album called Wreckless Abandon with his band The Dirty Knobs (thedirtyknobs.com). The second guitarist of the band, Jason Sinay, was also interviewed. At 70 years old Mike Campbell still has the drive to release an incandescent Rock</description>
+		<enclosure url="https://traffic.libsyn.com/secure/lachaineguitare/Mike_Campbell_interview.mp3" length="19755258" type="audio/mpeg" />
+		<itunes:episodeType>full</itunes:episodeType>
+		<itunes:duration>20:35</itunes:duration>
+<post-id xmlns="com-wordpress:feed-additions:1">43688</post-id>	</item>
+	<item>
+		<title>Franfret luthier&#8217;s guitar model #1, a Strat with a Mahogany body</title>
+		<link>https://theguitarchannel.biz/2021/02/franfret-model-strat-mahogany-body/</link>
+		<pubDate>Fri, 12 Feb 2021 09:10:00 +0000</pubDate>
+		<guid isPermaLink="false">https://theguitarchannel.biz/?p=43677</guid>
+		<description>The Spanish luthier Francisco Rodriguez is the craftsman behind the Franfret brand (franfret.net). Already interviewed several times, he sent to the showroom of The Guitar Channel a Strat like no other. Indeed, not only is the inspiration clearly David Gilmour&#039;s vintage guitar #00001 but its body is made of Mahogany. On this kind of guitar</description>
+		<enclosure url="https://traffic.libsyn.com/secure/lachaineguitare/Guitar_review_Franfret_1.mp3" length="14047190" type="audio/mpeg" />
+		<itunes:episodeType>full</itunes:episodeType>
+		<itunes:duration>14:38</itunes:duration>
+<post-id xmlns="com-wordpress:feed-additions:1">43677</post-id>	</item>
+</channel>
+</rss>
