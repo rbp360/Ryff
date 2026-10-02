@@ -6,6 +6,7 @@ import { z } from 'zod';
 const updatePreferencesSchema = z.object({
   favoritePlayers: z.array(z.string()).optional(),
   followedBrands: z.array(z.string()).optional(),
+  reverbRegion: z.enum(['UK_ONLY', 'SHIPS_TO_UK', 'US_ONLY', 'WORLDWIDE']).optional(),
 });
 
 export async function GET() {

@@ -7,8 +7,12 @@ export interface ReverbListing {
   url: string;
   title: string;
   priceAmount: number | null;
+  originalPriceAmount?: number | null;
   priceCurrency: string;
   condition: string;
+  publishedAt?: string | null;
+  daysOnMarket?: number | null;
+  priceDropText?: string | null;
 }
 
 export function wantKey(brand?: string | null, model?: string | null): string {
@@ -18,15 +22,30 @@ export function wantKey(brand?: string | null, model?: string | null): string {
   return parts.join(' ').replace(/\s+/g, ' ');
 }
 
+export interface ReverbSearchOptions {
+  condition?: string;
+  limit?: number;
+  timeoutMs?: number;
+  itemRegion?: string; // e.g. 'GB', 'US'
+  shipsTo?: string;    // e.g. 'GB', 'US'
+}
+
 export async function searchListings(
   query: string,
-  options: { condition?: string; limit?: number; timeoutMs?: number } = {}
+  options: ReverbSearchOptions = {}
 ): Promise<ReverbListing[]> {
   const condition = options.condition || 'used';
   const limit = options.limit || 24;
   const timeoutMs = options.timeoutMs || 5000;
 
-  const url = `https://api.reverb.com/api/listings?query=${encodeURIComponent(query)}&condition=${encodeURIComponent(condition)}&per_page=${Math.min(limit, 50)}`;
+  let url = `https://api.reverb.com/api/listings?query=${encodeURIComponent(query)}&condition=${encodeURIComponent(condition)}&per_page=${Math.min(limit, 50)}`;
+
+  if (options.itemRegion) {
+    url += `&item_region=${encodeURIComponent(options.itemRegion)}`;
+  }
+  if (options.shipsTo) {
+    url += `&ships_to=${encodeURIComponent(options.shipsTo)}`;
+  }
 
   try {
     const controller = new AbortController();
@@ -61,9 +80,22 @@ interface RawReverbListing {
   title?: string;
   price?: { amount?: string | number; currency?: string };
   buyer_price?: { amount?: string | number; currency?: string };
+  original_price?: { amount?: string | number; currency?: string };
+  ribbon?: { display?: string; reason?: string };
+  created_at?: string;
+  published_at?: string;
   condition?: { display_name?: string; slug?: string } | string;
   _links?: { web?: { href?: string } };
   slug?: string;
+}
+
+function calculateDaysOnMarket(publishedAtStr?: string | null): number | null {
+  if (!publishedAtStr) return null;
+  const publishedDate = new Date(publishedAtStr);
+  if (isNaN(publishedDate.getTime())) return null;
+  const diffMs = Date.now() - publishedDate.getTime();
+  const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+  return days >= 0 ? days : 0;
 }
 
 function parseReverbResponse(data: { listings?: RawReverbListing[] }, limit: number): ReverbListing[] {
@@ -85,13 +117,25 @@ function parseReverbResponse(data: { listings?: RawReverbListing[] }, limit: num
       ? item.condition.display_name || item.condition.slug || 'Used'
       : (typeof item.condition === 'string' ? item.condition : 'Used');
 
+    const originalPriceAmount = item.original_price?.amount
+      ? parseFloat(String(item.original_price.amount))
+      : null;
+
+    const priceDropText = item.ribbon?.display || null;
+    const publishedAt = item.published_at || item.created_at || null;
+    const daysOnMarket = calculateDaysOnMarket(publishedAt);
+
     results.push({
       listingId,
       url,
       title: item.title,
       priceAmount,
+      originalPriceAmount,
       priceCurrency,
       condition,
+      publishedAt,
+      daysOnMarket,
+      priceDropText,
     });
   }
 

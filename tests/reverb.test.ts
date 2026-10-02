@@ -20,5 +20,9 @@ describe('Reverb Integration & Want Keys', () => {
     expect(first).toHaveProperty('condition');
     expect(first.priceAmount).toBeGreaterThan(0);
     expect(first.priceCurrency).toBeDefined();
+
+    // Check newly added fields
+    expect(first.publishedAt).toBeDefined();
+    expect(typeof first.daysOnMarket).toBe('number');
   });
 });

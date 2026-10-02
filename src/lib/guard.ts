@@ -9,7 +9,11 @@ export interface DealContext {
   listingUrl: string;
   title: string;
   priceAmount?: number | null;
+  originalPriceAmount?: number | null;
   priceCurrency?: string | null;
+  priceDropText?: string | null;
+  publishedAt?: string | null;
+  daysOnMarket?: number | null;
 }
 
 export interface RenderContext {
@@ -90,7 +94,22 @@ export function renderTokens(text: string, context: RenderContext): string {
       const bot = context.bot ? `&b=${encodeURIComponent(context.bot)}` : '';
       const ep = context.episodeId ? `&e=${encodeURIComponent(context.episodeId)}` : '';
       const outUrl = `/api/out?u=${encodeURIComponent(deal.listingUrl)}&type=deal&id=${encodeURIComponent(id)}${bot}${ep}`;
-      const priceText = deal.priceAmount ? ` (${deal.priceCurrency || '$'}${deal.priceAmount})` : '';
+      
+      let priceText = '';
+      const curr = deal.priceCurrency || '$';
+      if (deal.priceAmount) {
+        priceText = ` (${curr}${deal.priceAmount}`;
+        if (deal.originalPriceAmount && deal.originalPriceAmount > deal.priceAmount) {
+          priceText += ` · was ${curr}${deal.originalPriceAmount}`;
+        }
+        if (deal.daysOnMarket !== undefined && deal.daysOnMarket !== null) {
+          priceText += ` · ${deal.daysOnMarket}d on Reverb`;
+        }
+        priceText += `)`;
+      } else if (deal.daysOnMarket !== undefined && deal.daysOnMarket !== null) {
+        priceText = ` (${deal.daysOnMarket}d on Reverb)`;
+      }
+
       return `[${deal.title || 'Reverb Deal'}${priceText}](${outUrl})`;
     }
     return ''; // Remove if deal ID not in context

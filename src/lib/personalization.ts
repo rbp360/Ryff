@@ -3,6 +3,7 @@ import { db } from './db';
 export interface UserPreferences {
   favoritePlayers: string[];
   followedBrands: string[];
+  reverbRegion: 'UK_ONLY' | 'SHIPS_TO_UK' | 'US_ONLY' | 'WORLDWIDE';
 }
 
 export interface FeedItemCard {
@@ -34,19 +35,20 @@ export interface FeedItemCard {
  */
 export async function getUserPreferences(userId: string): Promise<UserPreferences> {
   const rows = await db`
-    select favorite_players, followed_brands
+    select favorite_players, followed_brands, reverb_region
     from users
     where id = ${userId}
     limit 1
   `;
 
   if (rows.length === 0) {
-    return { favoritePlayers: [], followedBrands: [] };
+    return { favoritePlayers: [], followedBrands: [], reverbRegion: 'SHIPS_TO_UK' };
   }
 
   return {
     favoritePlayers: rows[0].favorite_players || [],
     followedBrands: rows[0].followed_brands || [],
+    reverbRegion: (rows[0].reverb_region as any) || 'SHIPS_TO_UK',
   };
 }
 
@@ -55,7 +57,7 @@ export async function getUserPreferences(userId: string): Promise<UserPreference
  */
 export async function updateUserPreferences(
   userId: string,
-  prefs: { favoritePlayers?: string[]; followedBrands?: string[] }
+  prefs: { favoritePlayers?: string[]; followedBrands?: string[]; reverbRegion?: 'UK_ONLY' | 'SHIPS_TO_UK' | 'US_ONLY' | 'WORLDWIDE' }
 ): Promise<UserPreferences> {
   const current = await getUserPreferences(userId);
 
@@ -67,17 +69,23 @@ export async function updateUserPreferences(
     ? Array.from(new Set(prefs.followedBrands.map(b => b.trim()).filter(Boolean)))
     : current.followedBrands;
 
+  const newRegion = prefs.reverbRegion !== undefined
+    ? prefs.reverbRegion
+    : current.reverbRegion;
+
   await db`
     update users
     set 
       favorite_players = ${newPlayers},
-      followed_brands = ${newBrands}
+      followed_brands = ${newBrands},
+      reverb_region = ${newRegion}
     where id = ${userId}
   `;
 
   return {
     favoritePlayers: newPlayers,
     followedBrands: newBrands,
+    reverbRegion: newRegion,
   };
 }
 

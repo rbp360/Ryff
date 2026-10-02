@@ -94,20 +94,35 @@ export async function retrieveChatContext(userId: string, userMessage: string): 
   let deals: DealContext[] = [];
   if (userWantKeys.length > 0) {
     const matchedDeals = await db`
-      select id, listing_url, title, price_amount, price_currency, condition
+      select id, listing_url, title, price_amount, original_price_amount, price_currency, condition, published_at, price_drop_text
       from deals
       where want_key = any(${userWantKeys})
       order by seen_at desc
       limit 5
     `;
 
-    deals = matchedDeals.map((d) => ({
-      id: Number(d.id),
-      listingUrl: d.listing_url,
-      title: d.title,
-      priceAmount: d.price_amount ? Number(d.price_amount) : null,
-      priceCurrency: d.price_currency,
-    }));
+    deals = matchedDeals.map((d) => {
+      let daysOnMarket: number | null = null;
+      if (d.published_at) {
+        const pubDate = new Date(d.published_at as string);
+        if (!isNaN(pubDate.getTime())) {
+          const diffMs = Date.now() - pubDate.getTime();
+          daysOnMarket = Math.max(0, Math.floor(diffMs / (1000 * 60 * 60 * 24)));
+        }
+      }
+
+      return {
+        id: Number(d.id),
+        listingUrl: d.listing_url,
+        title: d.title,
+        priceAmount: d.price_amount ? Number(d.price_amount) : null,
+        originalPriceAmount: d.original_price_amount ? Number(d.original_price_amount) : null,
+        priceCurrency: d.price_currency,
+        priceDropText: d.price_drop_text,
+        publishedAt: d.published_at ? String(d.published_at) : null,
+        daysOnMarket,
+      };
+    });
   }
 
   // 4. Retrieve matching news items from the last 14 days

@@ -16,12 +16,16 @@ export interface DealsStageResult {
 export async function runDealsPipeline(): Promise<DealsStageResult> {
   console.log('[Pipeline: Deals] Starting Reverb deal matcher...');
 
-  // 1. Get distinct want_keys with any associated maximum budget
+  // 1. Get distinct want_keys with any associated maximum budget & user region preference
   const distinctWants = await db`
-    select want_key, max(budget_gbp) as max_budget
-    from rig_items
-    where kind = 'want' and want_key is not null and want_key != ''
-    group by want_key
+    select 
+      r.want_key, 
+      max(r.budget_gbp) as max_budget,
+      coalesce(max(u.reverb_region), 'SHIPS_TO_UK') as reverb_region
+    from rig_items r
+    left join users u on u.id = r.user_id
+    where r.kind = 'want' and r.want_key is not null and r.want_key != ''
+    group by r.want_key
   `;
 
   console.log(`[Pipeline: Deals] Found ${distinctWants.length} distinct want targets.`);
@@ -32,12 +36,29 @@ export async function runDealsPipeline(): Promise<DealsStageResult> {
   for (const want of distinctWants) {
     const key = want.want_key as string;
     const maxBudget = want.max_budget ? Number(want.max_budget) : null;
+    const regionPref = (want.reverb_region as string) || 'SHIPS_TO_UK';
+
+    let itemRegion: string | undefined;
+    let shipsTo: string | undefined;
+
+    if (regionPref === 'UK_ONLY') {
+      itemRegion = 'GB';
+    } else if (regionPref === 'SHIPS_TO_UK') {
+      shipsTo = 'GB';
+    } else if (regionPref === 'US_ONLY') {
+      itemRegion = 'US';
+    }
 
     try {
       // Respect 1 req/sec politeness limit
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      const listings = await searchListings(key, { condition: 'used', limit: 24 });
+      const listings = await searchListings(key, { 
+        condition: 'used', 
+        limit: 24,
+        itemRegion,
+        shipsTo,
+      });
       totalDealsFound += listings.length;
 
       // Filter by budget if specified
@@ -55,7 +76,7 @@ export async function runDealsPipeline(): Promise<DealsStageResult> {
       for (const deal of top3) {
         await db`
           insert into deals (
-            want_key, listing_id, listing_url, title, price_amount, price_currency, condition, seen_at
+            want_key, listing_id, listing_url, title, price_amount, original_price_amount, price_currency, condition, published_at, price_drop_text, seen_at
           )
           values (
             ${key},
@@ -63,15 +84,21 @@ export async function runDealsPipeline(): Promise<DealsStageResult> {
             ${deal.url},
             ${deal.title},
             ${deal.priceAmount},
+            ${deal.originalPriceAmount || null},
             ${deal.priceCurrency},
             ${deal.condition},
+            ${deal.publishedAt ? new Date(deal.publishedAt) : null},
+            ${deal.priceDropText || null},
             now()
           )
           on conflict (want_key, listing_id) do update set
             title = excluded.title,
             price_amount = excluded.price_amount,
+            original_price_amount = coalesce(excluded.original_price_amount, deals.original_price_amount),
             price_currency = excluded.price_currency,
             condition = excluded.condition,
+            published_at = coalesce(excluded.published_at, deals.published_at),
+            price_drop_text = excluded.price_drop_text,
             seen_at = now()
         `;
         totalDealsUpserted++;
