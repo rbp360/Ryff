@@ -94,7 +94,7 @@ interface CandidateItem {
   // Turn 1: Hank Opener
   console.log('\n[Debate] Turn 1: Hank Opening...');
   const turn1 = await complete({
-    model: env.MODEL_SMART || 'gemini-pro-latest',
+    model: env.MODEL_SMART || 'gemini-2.5-pro',
     system: hankPersona,
     messages: [
       { role: 'user', content: `${openerPrompt}\n\n${contextBlock}` }
@@ -108,7 +108,7 @@ interface CandidateItem {
   // Turn 2: Vee Response
   console.log('[Debate] Turn 2: Vee Responding...');
   const turn2 = await complete({
-    model: env.MODEL_SMART || 'gemini-pro-latest',
+    model: env.MODEL_SMART || 'gemini-2.5-pro',
     system: veePersona,
     messages: [
       { role: 'user', content: `${contextBlock}\n\n${replyPrompt}\n\nHank argues:\n"${turn1.text}"` }
@@ -122,7 +122,7 @@ interface CandidateItem {
   // Turn 3: Hank Rebuttal
   console.log('[Debate] Turn 3: Hank Rebuttal...');
   const turn3 = await complete({
-    model: env.MODEL_SMART || 'gemini-pro-latest',
+    model: env.MODEL_SMART || 'gemini-2.5-pro',
     system: hankPersona,
     messages: [
       { 
@@ -139,7 +139,7 @@ interface CandidateItem {
   // Turn 4: Vee Closing
   console.log('[Debate] Turn 4: Vee Closing...');
   const turn4 = await complete({
-    model: env.MODEL_SMART || 'gemini-pro-latest',
+    model: env.MODEL_SMART || 'gemini-2.5-pro',
     system: veePersona,
     messages: [
       { 
@@ -158,7 +158,7 @@ interface CandidateItem {
   const fullTranscriptText = transcript.map(t => `${t.speaker} (Turn ${t.turn}):\n${t.text}`).join('\n\n');
 
   const formatRes = await complete({
-    model: env.MODEL_FAST || 'gemini-3.5-flash-lite',
+    model: env.MODEL_FAST || 'gemini-2.5-flash',
     system: formatPrompt,
     messages: [
       { role: 'user', content: `Here is the debate transcript to structure into JSON:\n\n${fullTranscriptText}` }

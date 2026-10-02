@@ -69,17 +69,18 @@ export async function runPipeline(options: PipelineOptions = {}): Promise<Pipeli
   const startTime = Date.now();
   let totalCostUsd = 0;
 
-  // 1. Initialize pipeline_runs record
-  const runRecord = await db`
-    INSERT INTO pipeline_runs (status)
-    VALUES ('running')
-    RETURNING id
-  `;
-  const runId = Number(runRecord[0]?.id);
-
   const stageStats: PipelineResult['stageStats'] = {};
+  let runId = 0;
 
   try {
+    // 1. Initialize pipeline_runs record
+    const runRecord = await db`
+      INSERT INTO pipeline_runs (status)
+      VALUES ('running')
+      RETURNING id
+    `;
+    runId = Number(runRecord[0]?.id);
+
     // Stage 1: Ingest active feeds
     console.log(`\n--- [Pipeline Run #${runId}] Stage 1: Ingest Feeds ---`);
     const ingestStats = await ingestAllFeeds();
