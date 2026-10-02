@@ -123,4 +123,15 @@
   - Implemented story cards with 16:9 thumbnails, sources, relative timestamps, `Matches: <gear>` tags, Hank's editorial takes with 28px avatars, and interactive feedback.
   - Implemented `/trader` (`src/app/(app)/trader/page.tsx`): Displays tracked wants chip summary with link to Rig room, used deal cards matching wants and budget from `deals` table, price-drop badges, and days-on-market tracking.
   - Verified with 0 TypeScript errors, successful Next.js build, and live browser testing.
-- Next: Stage 3 — Rig Room (Gear Grid, Voice Logging, Item Detail, Central Log & Wants).
+- Next: Stage 4 — Rig Room (Gear Grid, Voice Logging, Item Detail, Central Log & Wants).
+
+## UX Restructure — Stage 4: Rig Room & Item Detail [COMPLETED]
+- Finished: 2026-10-02
+- Delivered:
+  - Rebuilt `/rig` with the 3 top segments: **Gear**, **Log**, and **Wants**.
+  - Gear segment: 2-column photo grid, live string health indicators, and sticky bottom input bar with **quick-mic audio logging** (`🎙️`).
+  - Log segment: Chronological maintenance timeline across the whole rig with inline "+ Add entry" form.
+  - Wants segment: 2-column dashed wants tracking grid with "+ Add Want" action.
+  - Rebuilt Item Detail (`/rig/[id]`): 4:3 hero media card, status indicator, 1-tap audio voice memo logger (Gemini Flash multimodal extraction), specs breakdown, and history timeline.
+  - Verified with 0 TypeScript errors, successful Next.js build, and live browser testing.
+- Next: Stage 5 — Setup Screen, Clean-up & Hero Plan.
