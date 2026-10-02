@@ -104,4 +104,14 @@
   - Read-only audit written to `AUDIT.md` (39 lines).
   - Incorporated user directions: Today's Gear Radar separated into dedicated Digest page, 1-v-1 bot interaction, voice logging retained, admin/login unlinked from consumer shell.
   - Zero application code changed.
-- Next: Phase 1 — Plan (`PLAN.md` & `GAPS.md`).
+- Next: Stage 1 — Foundation, App Shell & Home Screen.
+
+## UX Restructure — Stage 1: Foundation, App Shell & Home Screen [COMPLETED]
+- Finished: 2026-10-02
+- Delivered:
+  - Created `PLAN.md` and `GAPS.md` documenting architecture, phases, and model deviations.
+  - Linked `tokens.css`, `ryff.css`, and Google Font Montserrat into root layout.
+  - Created persistent mobile-first `#stage` and `#app` layout with 5-tab bottom navigation (`Home`, `Digest`, `Backstage`, `Trader`, `Rig room`).
+  - Rebuilt Home screen (`src/app/(app)/page.tsx`): Header with setup gear, real activity metrics (47 sources, 81 new stories), Hank's takeaway card, real overdue gear in "Needs attention", 4 Explore tiles, and subtle legal footer.
+  - Verified with 0 TypeScript errors, successful Next.js production build (`next build`), and browser inspection.
+- Next: Stage 2 — Digest ("Today's Gear Radar") & Trader.
