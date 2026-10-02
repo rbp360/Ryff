@@ -135,3 +135,13 @@
   - Rebuilt Item Detail (`/rig/[id]`): 4:3 hero media card, status indicator, 1-tap audio voice memo logger (Gemini Flash multimodal extraction), specs breakdown, and history timeline.
   - Verified with 0 TypeScript errors, successful Next.js build, and live browser testing.
 - Next: Stage 5 — Setup Screen, Clean-up & Hero Plan.
+
+## UX Restructure — Stage 5: Setup Screen, Clean-up & Hero Plan [COMPLETED]
+- Finished: 2026-10-02
+- Delivered:
+  - Built Setup screen at `/setup` (`src/app/(app)/setup/page.tsx` & `SetupClient.tsx`) accessible via the `⚙` icon on Home and other screens.
+  - Interactive bot personality selector (Dry / Blunt / Chatty), brand and player interest chips, feed ingestion toggles, trader region preferences, and clean account management.
+  - Authored marketing strategy and wireframe document `HERO_PLAN.md` adhering to SongDeck branding.
+  - Cleaned up obsolete Tailwind container styles, verified responsive behavior on desktop and mobile.
+  - Verified 0 TypeScript errors and full production Next.js build compilation across all routes.
+- Status: UX Restructure Complete.
