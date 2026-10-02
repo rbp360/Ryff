@@ -80,3 +80,21 @@
     - Graceful fallback for non-captioned or instrumental playthrough videos.
   - **Unit Tests** ([`tests/youtube.test.ts`](file:///c:/Users/rob_b/Ryff/tests/youtube.test.ts)):
     - 9 dedicated unit tests passing; 36/36 total Vitest suite tests passing.
+
+## M6 — Gear Detail Pages, Voice Logging & Maintenance Tracking [COMPLETED]
+- Finished: 2026-10-02
+- Delivered:
+  - **Database Migration** ([`db/migrations/0008_rig_item_logs_and_details.sql`](file:///c:/Users/rob_b/Ryff/db/migrations/0008_rig_item_logs_and_details.sql)):
+    - Added structured columns (`serial_number`, `purchase_date`, `current_strings`, `last_restrung_at`, `pickups_summary`, `modifications_summary`, `valves_summary`, `last_valves_changed_at`) to `rig_items`.
+    - Created `rig_item_logs` table for tracking maintenance, string changes, valve replacements, component modifications, and notes.
+  - **Multimodal AI & Voice Parser** ([`src/lib/gear-parser.ts`](file:///c:/Users/rob_b/Ryff/src/lib/gear-parser.ts), [`src/app/api/rig/[id]/log/route.ts`](file:///c:/Users/rob_b/Ryff/src/app/api/rig/[id]/log/route.ts)):
+    - Real-time Gemini Flash extraction for audio voice memos (15s recording cap) and natural language text logs.
+    - Intelligently extracts component changes (*e.g., Elixir 9-46 restring, Lavarack ~9k bridge pickup swap, R2 resistor 280k sweep mod*), original parts retained in cases/boxes, and auto-updates the parent gear spec sheet.
+  - **Individual Gear Page UI** ([`src/app/rig/[id]/page.tsx`](file:///c:/Users/rob_b/Ryff/src/app/rig/[id]/page.tsx)):
+    - Dedicated gear detail card with serial number, purchase date, pickup breakdown, and mod notes.
+    - Built-in 15s audio recorder with live countdown timer + quick text log bar.
+    - Visual string health indicators with color-coded alerts (*Restrung 4d ago* vs *⚠️ Restrung 6mo ago*).
+    - Chronological event timeline of all repairs, setups, string changes, and mods.
+    - Updated [`/rig`](file:///c:/Users/rob_b/Ryff/src/app/rig/page.tsx) overview to make all gear items clickable with live string age badges.
+  - **Tests**: 39/39 passing in Vitest ([`tests/gear-parser.test.ts`](file:///c:/Users/rob_b/Ryff/tests/gear-parser.test.ts)).
+

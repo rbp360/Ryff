@@ -12,6 +12,25 @@ interface RigItem {
   kind: 'own' | 'want';
   budget_gbp: number | null;
   want_key: string | null;
+  current_strings?: string | null;
+  last_restrung_at?: string | null;
+  serial_number?: string | null;
+  purchase_date?: string | null;
+  modifications_summary?: string | null;
+}
+
+function getStringAgeLabel(dateStr?: string | null): { label: string; isWarning: boolean } | null {
+  if (!dateStr) return null;
+  const d = new Date(dateStr);
+  if (isNaN(d.getTime())) return null;
+
+  const now = new Date();
+  const diffDays = Math.floor((now.getTime() - d.getTime()) / (1000 * 60 * 60 * 24));
+
+  if (diffDays < 30) return { label: `${diffDays}d ago`, isWarning: false };
+  const months = Math.floor(diffDays / 30);
+  if (months < 6) return { label: `${months}mo ago`, isWarning: false };
+  return { label: `${months}mo ago (due)`, isWarning: true };
 }
 
 export default function RigPage() {
@@ -186,6 +205,7 @@ export default function RigPage() {
                   <span className="text-emerald-400 text-sm">🎸</span>
                   <h2 className="text-sm font-semibold text-white uppercase tracking-wider">Gear in Your Rig ({ownedItems.length})</h2>
                 </div>
+                <span className="text-[10px] text-cyan-400 font-mono">Tap item for specs & logs</span>
               </div>
 
               {loading ? (
@@ -194,31 +214,67 @@ export default function RigPage() {
                 <p className="text-xs text-slate-500 py-4 text-center italic">No owned gear logged yet. Add your guitar, amp, or pedals on the left.</p>
               ) : (
                 <ul className="space-y-2.5">
-                  {ownedItems.map((item) => (
-                    <li
-                      key={item.id}
-                      className="flex items-center justify-between p-3 bg-slate-950 border border-slate-800/80 rounded-lg text-xs"
-                    >
-                      <div className="space-y-0.5">
-                        <div className="font-semibold text-slate-200">
-                          {item.brand ? <span className="text-cyan-400 mr-1.5">{item.brand}</span> : null}
-                          {item.model || item.raw_text}
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <span className="bg-slate-900 text-slate-400 px-2 py-0.5 rounded text-[10px] uppercase font-mono">
-                            {item.category}
-                          </span>
-                        </div>
-                      </div>
-                      <button
-                        onClick={() => handleDelete(item.id)}
-                        className="text-slate-500 hover:text-red-400 p-1 transition"
-                        title="Delete"
+                  {ownedItems.map((item) => {
+                    const stringAge = getStringAgeLabel(item.last_restrung_at);
+                    return (
+                      <li
+                        key={item.id}
+                        className="flex items-center justify-between p-3 bg-slate-950 hover:bg-slate-950/80 border border-slate-800/80 hover:border-cyan-800/60 rounded-lg text-xs transition group"
                       >
-                        ✕
-                      </button>
-                    </li>
-                  ))}
+                        <Link
+                          href={`/rig/${item.id}`}
+                          className="flex-1 space-y-1 block cursor-pointer"
+                        >
+                          <div className="font-semibold text-slate-200 group-hover:text-cyan-300 transition flex items-center gap-1.5">
+                            {item.brand ? <span className="text-cyan-400 mr-0.5">{item.brand}</span> : null}
+                            <span>{item.model || item.raw_text}</span>
+                            <span className="text-slate-500 text-[10px] opacity-0 group-hover:opacity-100 transition">→</span>
+                          </div>
+
+                          <div className="flex flex-wrap items-center gap-2">
+                            <span className="bg-slate-900 text-slate-400 px-2 py-0.5 rounded text-[10px] uppercase font-mono">
+                              {item.category}
+                            </span>
+
+                            {item.current_strings && (
+                              <span className="bg-slate-900 text-slate-300 px-2 py-0.5 rounded text-[10px]">
+                                🧵 {item.current_strings}
+                              </span>
+                            )}
+
+                            {stringAge && (
+                              <span
+                                className={`px-2 py-0.5 rounded text-[10px] font-mono ${
+                                  stringAge.isWarning
+                                    ? 'bg-amber-950/80 text-amber-300 border border-amber-800/60'
+                                    : 'bg-emerald-950/60 text-emerald-400 border border-emerald-900/60'
+                                }`}
+                              >
+                                {stringAge.isWarning ? '⚠️ ' : '⏱️ '}Restrung {stringAge.label}
+                              </span>
+                            )}
+
+                            {item.serial_number && (
+                              <span className="text-slate-500 text-[10px] font-mono">
+                                #{item.serial_number}
+                              </span>
+                            )}
+                          </div>
+                        </Link>
+
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDelete(item.id);
+                          }}
+                          className="text-slate-500 hover:text-red-400 p-1.5 transition ml-2"
+                          title="Delete"
+                        >
+                          ✕
+                        </button>
+                      </li>
+                    );
+                  })}
                 </ul>
               )}
             </div>

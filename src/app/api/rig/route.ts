@@ -94,7 +94,8 @@ export async function GET() {
   `;
 
   const items = await db`
-    select id, raw_text, brand, model, category, kind, budget_gbp, want_key, created_at
+    select id, raw_text, brand, model, category, kind, budget_gbp, want_key,
+           current_strings, last_restrung_at, serial_number, purchase_date, modifications_summary, created_at
     from rig_items
     where user_id = ${session.userId}
     order by kind asc, created_at asc
@@ -172,7 +173,8 @@ export async function POST(request: NextRequest) {
     await logEvent('rig_saved', { count: parsedItems.length }, session.userId);
 
     const updated = await db`
-      select id, raw_text, brand, model, category, kind, budget_gbp, want_key, created_at
+      select id, raw_text, brand, model, category, kind, budget_gbp, want_key,
+             current_strings, last_restrung_at, serial_number, purchase_date, modifications_summary, created_at
       from rig_items
       where user_id = ${session.userId}
       order by kind asc, created_at asc
