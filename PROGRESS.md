@@ -98,3 +98,10 @@
     - Updated [`/rig`](file:///c:/Users/rob_b/Ryff/src/app/rig/page.tsx) overview to make all gear items clickable with live string age badges.
   - **Tests**: 39/39 passing in Vitest ([`tests/gear-parser.test.ts`](file:///c:/Users/rob_b/Ryff/tests/gear-parser.test.ts)).
 
+## UX Restructure — Phase 0: Audit [COMPLETED]
+- Finished: 2026-10-02
+- Delivered:
+  - Read-only audit written to `AUDIT.md` (39 lines).
+  - Incorporated user directions: Today's Gear Radar separated into dedicated Digest page, 1-v-1 bot interaction, voice logging retained, admin/login unlinked from consumer shell.
+  - Zero application code changed.
+- Next: Phase 1 — Plan (`PLAN.md` & `GAPS.md`).
