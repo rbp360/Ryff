@@ -41,16 +41,18 @@ export async function ingestAllFeeds(): Promise<IngestStats> {
 
     for (const item of items) {
       const result = await db`
-        INSERT INTO items (source_id, url_hash, url, title, snippet, published_at)
+        INSERT INTO items (source_id, url_hash, url, title, snippet, image_url, published_at)
         VALUES (
           ${src.id},
           ${item.urlHash},
           ${item.url},
           ${item.title},
           ${item.snippet},
+          ${item.imageUrl || null},
           ${item.publishedAt || db`NOW()`}
         )
-        ON CONFLICT (url_hash) DO NOTHING
+        ON CONFLICT (url_hash) DO UPDATE SET
+          image_url = COALESCE(EXCLUDED.image_url, items.image_url)
       `;
       if (result.count > 0) {
         itemsIngested++;

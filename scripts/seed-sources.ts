@@ -95,6 +95,27 @@ async function seedSources() {
       }
     }
 
+    const activeUrls: string[] = [];
+    if (config.rss) {
+      for (const src of config.rss) {
+        if (src.url) activeUrls.push(src.url);
+      }
+    }
+    if (config.youtube) {
+      for (const src of config.youtube) {
+        if (src.channel_id && !src.channel_id.includes('___')) {
+          activeUrls.push(`https://www.youtube.com/feeds/videos.xml?channel_id=${src.channel_id}`);
+        }
+      }
+    }
+
+    if (activeUrls.length > 0) {
+      const deactivated = await sql`
+        update sources set active = false where url not in ${sql(activeUrls)} and active = true
+      `;
+      console.log(`Deactivated ${deactivated.count} removed/stale sources.`);
+    }
+
     console.log(`Seeded ${insertedCount} active sources successfully.`);
   } catch (err) {
     console.error('Failed to seed sources:', err);

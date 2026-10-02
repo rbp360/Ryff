@@ -1,0 +1,16 @@
+/* RYFF design tokens. Change values here, not in ryff.css. */
+:root{
+  /* colour */
+  --bg:#000;          /* app background */
+  --sf:#121212;       /* cards, inputs, bubbles */
+  --ln:#242424;       /* hairlines, borders */
+  --tx:#fff;          /* primary text */
+  --mu:#8d8d8d;       /* secondary text */
+  --ac:#22c55e;       /* SongDeck green: primary action, active state */
+  --ac2:#38bdf8;      /* SongDeck blue: links, highlights */
+  /* shape */
+  --r:12px;           /* card radius. Keep modest, nothing bubbly */
+  /* type: swap Lemon Milk in once the font files are available */
+  --font-display:'Lemon Milk','Montserrat',system-ui,sans-serif;
+  --font-body:'Montserrat',system-ui,sans-serif;
+}

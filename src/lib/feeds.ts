@@ -1,14 +1,77 @@
 import Parser from 'rss-parser';
 import crypto from 'crypto';
 
-const parser = new Parser();
+const parser = new Parser({
+  customFields: {
+    item: [
+      ['media:content', 'mediaContent', { keepArray: true }],
+      ['media:thumbnail', 'mediaThumbnail', { keepArray: true }],
+      ['content:encoded', 'contentEncoded'],
+      ['enclosure', 'enclosure'],
+    ],
+  },
+});
 
 export interface ParsedFeedItem {
   url: string;
   urlHash: string;
   title: string;
   snippet: string;
+  imageUrl: string | null;
   publishedAt: Date | null;
+}
+
+export function extractImageUrl(item: any): string | null {
+  // 1. YouTube watch link thumbnail
+  const rawUrl = item.link || item.guid || '';
+  if (rawUrl && (rawUrl.includes('youtube.com/watch') || rawUrl.includes('youtu.be/'))) {
+    const vMatch = rawUrl.match(/(?:v=|\/)([a-zA-Z0-9_-]{11})/);
+    if (vMatch && vMatch[1]) {
+      return `https://i.ytimg.com/vi/${vMatch[1]}/hqdefault.jpg`;
+    }
+  }
+
+  // 2. Media:content tags
+  if (item.mediaContent) {
+    const list = Array.isArray(item.mediaContent) ? item.mediaContent : [item.mediaContent];
+    for (const mc of list) {
+      if (mc?.$?.url) return mc.$.url;
+      if (mc?.url) return mc.url;
+    }
+  }
+
+  // 3. Media:thumbnail tags
+  if (item.mediaThumbnail) {
+    const list = Array.isArray(item.mediaThumbnail) ? item.mediaThumbnail : [item.mediaThumbnail];
+    for (const mt of list) {
+      if (mt?.$?.url) return mt.$.url;
+      if (mt?.url) return mt.url;
+    }
+  }
+
+  // 4. Enclosure tags (image types)
+  if (item.enclosure && item.enclosure.url) {
+    const type = item.enclosure.type || '';
+    if (type.startsWith('image/') || /\.(jpg|jpeg|png|gif|webp|svg)/i.test(item.enclosure.url)) {
+      return item.enclosure.url;
+    }
+  }
+
+  // 5. HTML img tags in content or description
+  const htmlCandidates = [item.contentEncoded, item.content, item.description, item.summary];
+  for (const html of htmlCandidates) {
+    if (typeof html === 'string') {
+      const imgMatch = html.match(/<img[^>]+src=["']([^"']+)["']/i);
+      if (imgMatch && imgMatch[1]) {
+        const src = imgMatch[1];
+        if (!src.includes('feedburner') && !src.includes('statcounter') && !src.includes('pixel')) {
+          return src;
+        }
+      }
+    }
+  }
+
+  return null;
 }
 
 export function canonicaliseUrl(rawUrl: string): string {
@@ -72,12 +135,14 @@ export async function fetchFeed(feedUrl: string, keywordPrefilter: string[] | nu
 
       const snippet = (entry.contentSnippet || entry.summary || title).slice(0, 500).trim();
       const pubDate = entry.isoDate || entry.pubDate ? new Date(entry.isoDate || entry.pubDate!) : null;
+      const imageUrl = extractImageUrl(entry);
 
       items.push({
         url,
         urlHash: computeUrlHash(url),
         title,
         snippet,
+        imageUrl,
         publishedAt: pubDate && !isNaN(pubDate.getTime()) ? pubDate : null,
       });
     }

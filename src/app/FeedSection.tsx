@@ -20,6 +20,57 @@ const CATEGORIES = [
   { id: 'deal', label: '💰 Deals' },
 ];
 
+function getCategoryFallbackImage(category?: string): string {
+  const cat = (category || '').toLowerCase();
+  if (cat === 'guitar' || cat === 'bass' || cat === 'artist') {
+    return '/images/Bass gear brand default.png';
+  }
+  if (cat === 'amp') {
+    return '/images/Logo 1 landscape.jpg';
+  }
+  if (cat === 'pedal') {
+    return '/images/Effects brand default.jpg';
+  }
+  if (cat === 'modeller' || cat === 'tech' || cat === 'studio') {
+    return '/images/Studio gear brand default.png';
+  }
+  // Default / drums / deals / industry / other
+  return '/images/Drum gear brand default.png';
+}
+
+function FeedCardImage({
+  imageUrl,
+  category,
+  title,
+}: {
+  imageUrl?: string | null;
+  category?: string;
+  title: string;
+}) {
+  const fallback = getCategoryFallbackImage(category);
+  const [src, setSrc] = useState<string>(imageUrl || fallback);
+  const [hasError, setHasError] = useState(false);
+
+  return (
+    <div className="relative w-full h-44 rounded-lg overflow-hidden bg-slate-950/80 border border-slate-800/80 group-hover:border-slate-700/80 transition my-2">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={src}
+        alt={title}
+        loading="lazy"
+        onError={() => {
+          if (!hasError) {
+            setHasError(true);
+            setSrc(fallback);
+          }
+        }}
+        className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
+      />
+      <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/20 to-transparent pointer-events-none" />
+    </div>
+  );
+}
+
 export function FeedSection({
   initialPersonalized,
   initialGlobal,
@@ -286,6 +337,13 @@ export function FeedSection({
                     ))}
                   </div>
                 </div>
+
+                {/* Story / Video Image Preview with Brand Default Fallback */}
+                <FeedCardImage
+                  imageUrl={item.image_url}
+                  category={item.category}
+                  title={item.title}
+                />
 
                 {/* Article / Video Headline & Title */}
                 <div>

@@ -10,6 +10,7 @@ export interface FeedItemCard {
   title: string;
   headline?: string;
   url: string;
+  image_url?: string | null;
   source_id: number;
   source_name: string;
   summary: string;
@@ -122,15 +123,6 @@ export interface FeedQueryOptions {
 
 /**
  * Computes the personalized Top Feed for a user using pure SQL scoring.
- * Formula:
- * Score = (Cluster Buzz * 1.5)
- *       + Player Match (+6)
- *       + Wanted Gear Brand Match (+5)
- *       + Followed Brand Match (+4)
- *       + Owned Gear Brand Match (+2)
- *       + Thumbs Up (+3)
- *       - Thumbs Down Soft Dampener (-1.5)
- *       + Freshness Decay Bonus (up to +5 for recent items)
  */
 export async function getPersonalizedFeed(
   userId: string,
@@ -167,6 +159,7 @@ export async function getPersonalizedFeed(
       i.title,
       i.headline,
       i.url,
+      i.image_url,
       i.source_id,
       s.name as source_name,
       i.summary,
@@ -245,6 +238,7 @@ export async function getPersonalizedFeed(
       title: row.title,
       headline: row.headline || undefined,
       url: row.url,
+      image_url: row.image_url || null,
       source_id: row.source_id,
       source_name: row.source_name || 'News',
       summary: row.summary || row.title,
@@ -281,6 +275,7 @@ export async function getGlobalTopFeed(
       i.title,
       i.headline,
       i.url,
+      i.image_url,
       i.source_id,
       s.name as source_name,
       i.summary,
@@ -324,6 +319,7 @@ export async function getGlobalTopFeed(
       title: row.title,
       headline: row.headline || undefined,
       url: row.url,
+      image_url: row.image_url || null,
       source_id: row.source_id,
       source_name: row.source_name || 'News',
       summary: row.summary || row.title,
@@ -341,5 +337,4 @@ export async function getGlobalTopFeed(
       match_badges: badges,
     };
   });
-
 }
