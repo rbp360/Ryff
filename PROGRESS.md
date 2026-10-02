@@ -41,7 +41,29 @@
   - Admin command centre enhanced with flagged message triage queue, user feedback & survey logs, cohort metrics, and >50% daily spend alert banner.
   - Cohort tagging (`cadre`/`public`) and UK residency collection in auth.
   - Typecheck (0 errors), Lint (0 errors/warnings), and 18/18 Vitest unit tests passing.
-- LLM spend (M4 live red-team security testing): $0.001230 across 15 attack vectors (100% pass rate).
-- Total LLM spend to date (M0 + M1 + M2 + M3 + M4 Security): ~$0.085 (Well within $500 budget cap).
+## M5 — Feed Intelligence, Hype Clustering & Personalization [COMPLETED]
+- Finished: 2026-10-02
+- Delivered:
+  - **Topic Clustering & Multi-Source Buzz Engine** (`src/lib/clustering.ts`):
+    - Replaced blind 24-item timestamp digest with multi-source topic clustering.
+    - Automatic entity extraction for notable players (*Impellitteri, Slash, Clapton, Mayer, etc.*) and Rigistry brand catalog.
+    - Grouped cross-outlet articles into `story_clusters` and computed multi-source `buzz_count`.
+  - **Conversational 35-50 Word Editorial TLDR** (`src/pipeline/digest.ts`, `prompts/digest.system.md`):
+    - Upgraded digest prompt to write natural editorial lead-ins explaining what the gear is and why it matters.
+    - Extracted category, products, players, hype (0-5), and controversy (0-5).
+  - **Personalization Engine & Feedback APIs** (`src/lib/personalization.ts`, `/api/preferences`, `/api/reactions`, `/api/feed`):
+    - SQL-based personalized affinity scoring combining cluster buzz, player matches (+6), wanted gear (+5), followed brands (+4), owned gear (+2), and freshness bonus.
+    - Thumbs Up (+3) and Thumbs Down (-1.5 soft dampener) interactive feedback without blacklisting.
+  - **Redesigned Today's Gear Radar UI** (`src/app/FeedSection.tsx`, `src/app/page.tsx`):
+    - Tabbed navigation: "For Your Rig & Tastes" vs "Global Gear Buzz".
+    - Category pills: Guitars, Amps, Pedals, Modellers, Artists, Deals.
+    - Match badges: `🎯 Wanted`, `🎸 Artist Match`, `🏷️ Followed Brand`, `🔥 Outlets Buzz`, `⚡ High Debate`.
+    - Modal to easily customize followed brands and favorite players.
+    - Interactive 👍/👎 buttons and quick "Ask Hosts" deep-link into `/chat`.
+  - **2-Act Daily Debate Restructure** (`src/pipeline/debate.ts`, `prompts/debate.opener.md`, `prompts/debate.reply.md`, `prompts/format.system.md`):
+    - Restructured debate into Act 1 (The Main Event industry consensus) and Act 2 (Community Wildcard & Deal Debate).
+    - Upgraded `/chat` retrieval context to incorporate user tastes and personalized feed items.
+  - Tests: 27/27 Vitest unit tests passing. Full Next.js production build succeeded with zero errors.
+
 
 

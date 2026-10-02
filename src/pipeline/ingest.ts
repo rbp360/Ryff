@@ -1,10 +1,13 @@
 import { db } from '@/lib/db';
 import { fetchFeed } from '@/lib/feeds';
+import { clusterAndScoreRecentItems } from '@/lib/clustering';
 
 export interface IngestStats {
   sourcesProcessed: number;
   itemsIngested: number;
   errors: number;
+  clustersCount?: number;
+  multiSourceClusters?: number;
 }
 
 export async function ingestAllFeeds(): Promise<IngestStats> {
@@ -56,9 +59,15 @@ export async function ingestAllFeeds(): Promise<IngestStats> {
   }
 
   console.log(`[Ingest Complete] Sources: ${activeSources.length} | New Items Stored: ${itemsIngested} | Errors: ${errors}`);
+
+  // Run entity tagging, topic clustering, and buzz calculation
+  const clusterStats = await clusterAndScoreRecentItems(72);
+
   return {
     sourcesProcessed: activeSources.length,
     itemsIngested,
     errors,
+    clustersCount: clusterStats.clustersCount,
+    multiSourceClusters: clusterStats.multiSourceClusters,
   };
 }

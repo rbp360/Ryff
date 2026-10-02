@@ -88,8 +88,8 @@ export async function runPipeline(options: PipelineOptions = {}): Promise<Pipeli
 
     // Stage 2: Batch digest pending items
     console.log(`\n--- [Pipeline Run #${runId}] Stage 2: Batch Digest Items ---`);
-    const maxDigest = options.maxDigestItems ?? 24;
-    const batchSize = options.digestBatchSize ?? 8;
+    const maxDigest = options.maxDigestItems ?? 50;
+    const batchSize = options.digestBatchSize ?? 10;
     const digestStats = await digestPendingItems(batchSize, maxDigest);
     stageStats.digest = digestStats;
     totalCostUsd += digestStats.totalCostUsd;

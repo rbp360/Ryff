@@ -10,20 +10,24 @@ const digestOutputSchema = z.array(
     id: z.number(),
     relevant: z.boolean(),
     summary: z.string(),
-    item_type: z.enum(['launch', 'review', 'deal', 'rumour', 'opinion', 'news', 'other']),
-    brands: z.array(z.string()),
-    products: z.array(z.string()),
-    hype: z.number().min(0).max(5),
+    item_type: z.enum(['launch', 'review', 'deal', 'rumour', 'opinion', 'news', 'other']).default('news'),
+    category: z.enum(['guitar', 'bass', 'amp', 'pedal', 'modeller', 'artist', 'deal', 'industry', 'other']).default('other'),
+    brands: z.array(z.string()).default([]),
+    products: z.array(z.string()).default([]),
+    players: z.array(z.string()).default([]),
+    hype: z.number().min(0).max(5).default(2),
+    controversy: z.number().min(0).max(5).default(0),
   })
 );
 
-export async function digestPendingItems(batchSize: number = 8, maxTotal: number = 80) {
-  console.log(`[Digest Pipeline] Querying up to ${maxTotal} undigested items...`);
+export async function digestPendingItems(batchSize: number = 10, maxTotal: number = 60) {
+  console.log(`[Digest Pipeline] Querying up to ${maxTotal} high-priority undigested items...`);
 
+  // Prioritize items with multi-source buzz, then recency
   const pendingItems = await db`
-    SELECT id, title, snippet FROM items 
+    SELECT id, title, snippet, brands, players, buzz_count FROM items 
     WHERE digested_at IS NULL
-    ORDER BY published_at DESC NULLS LAST, id DESC
+    ORDER BY buzz_count DESC, published_at DESC NULLS LAST, id DESC
     LIMIT ${maxTotal}
   `;
 
@@ -68,6 +72,10 @@ export async function digestPendingItems(batchSize: number = 8, maxTotal: number
 
       if (validated.success) {
         for (const itemResult of validated.data) {
+          const originalItem = chunk.find(it => Number(it.id) === Number(itemResult.id));
+          const combinedBrands = Array.from(new Set([...(originalItem?.brands || []), ...itemResult.brands]));
+          const combinedPlayers = Array.from(new Set([...(originalItem?.players || []), ...itemResult.players]));
+
           await db`
             UPDATE items 
             SET 
@@ -75,15 +83,18 @@ export async function digestPendingItems(batchSize: number = 8, maxTotal: number
               relevant = ${itemResult.relevant},
               summary = ${itemResult.summary},
               item_type = ${itemResult.item_type},
-              brands = ${itemResult.brands},
+              category = ${itemResult.category || 'other'},
+              brands = ${combinedBrands},
               products = ${itemResult.products},
-              hype = ${itemResult.hype}
+              players = ${combinedPlayers},
+              hype = ${itemResult.hype},
+              controversy = ${itemResult.controversy || 0}
             WHERE id = ${itemResult.id}
           `;
           digestedCount++;
         }
       } else {
-        console.warn(`[Digest Batch Warn] Zod validation failed for batch starting at item ${chunk[0]?.id}. Marking items fallback.`);
+        console.warn(`[Digest Batch Warn] Zod validation failed for batch starting at item ${chunk[0]?.id}:`, validated.error?.format());
         for (const item of chunk) {
           await db`
             UPDATE items 
@@ -92,9 +103,9 @@ export async function digestPendingItems(batchSize: number = 8, maxTotal: number
               relevant = true,
               summary = ${item.snippet?.slice(0, 150) || item.title},
               item_type = 'news',
-              brands = '{}',
-              products = '{}',
-              hype = 2
+              category = 'other',
+              hype = 2,
+              controversy = 0
             WHERE id = ${item.id}
           `;
           digestedCount++;

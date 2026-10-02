@@ -1,5 +1,6 @@
 import { db } from './db';
 import { DealContext } from './guard';
+import { getUserPreferences, getPersonalizedFeed } from './personalization';
 
 export interface RetrievedContext {
   episode: {
@@ -33,6 +34,10 @@ export interface RetrievedContext {
     want_key: string | null;
   }>;
   deals: DealContext[];
+  userPreferences: {
+    favoritePlayers: string[];
+    followedBrands: string[];
+  };
 }
 
 /**
@@ -143,21 +148,24 @@ export async function retrieveChatContext(userId: string, userMessage: string): 
     `;
   }
 
-  // If no items matched by query, grab the 6 most recent digested items as baseline
+  // If no items matched by specific keyword query, grab top items from user's personalized feed
   if (relevantItems.length === 0) {
-    relevantItems = await db`
-      select distinct i.id, i.title, i.snippet, i.summary, i.brands, i.products, i.url, s.name as source_name
-      from items i
-      left join sources s on s.id = i.source_id
-      where (
-        i.published_at >= now() - interval '14 days'
-        or i.fetched_at >= now() - interval '14 days'
-      )
-      and i.summary is not null
-      order by i.id desc
-      limit 6
-    `;
+    const pFeed = await getPersonalizedFeed(userId, { limit: 6 });
+    for (const pf of pFeed) {
+      relevantItems.push({
+        id: pf.id,
+        title: pf.title,
+        snippet: pf.summary,
+        summary: pf.summary,
+        brands: pf.brands,
+        products: pf.products,
+        url: pf.url,
+        source_name: pf.source_name,
+      });
+    }
   }
+
+  const userPreferences = await getUserPreferences(userId);
 
   const items = relevantItems.map((item) => ({
     id: Number(item.id),
@@ -189,5 +197,6 @@ export async function retrieveChatContext(userId: string, userMessage: string): 
       want_key: r.want_key,
     })),
     deals,
+    userPreferences,
   };
 }

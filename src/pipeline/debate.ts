@@ -58,14 +58,48 @@ interface CandidateItem {
     const rawFixture = JSON.parse(fs.readFileSync(fixturePath, 'utf8'));
     candidateItems = rawFixture.slice(0, limitItems);
   } else {
-    console.log(`[Debate Pipeline] Selecting top ${limitItems} relevant digested items from the last 48 hours...`);
-    candidateItems = await db`
-      SELECT id, title, summary, brands, products, hype, item_type 
+    console.log(`[Debate Pipeline] Selecting Act 1 Main Event and Act 2 Wildcard items...`);
+
+    // Act 1: The Main Event (Highest buzz cluster & hype)
+    const act1Rows = await db`
+      SELECT id, title, summary, brands, products, hype, item_type, buzz_count, controversy
       FROM items 
       WHERE digested_at IS NOT NULL AND relevant = true
-      ORDER BY hype DESC, published_at DESC NULLS LAST, id DESC 
-      LIMIT ${limitItems}
+      ORDER BY buzz_count DESC, hype DESC, published_at DESC NULLS LAST, id DESC 
+      LIMIT 1
     `;
+
+    const act1Item = act1Rows[0];
+    const excludeIds = act1Item ? [Number(act1Item.id)] : [0];
+
+    // Act 2: Community Wildcard (Highest controversy or spicy debate)
+    const act2Rows = await db`
+      SELECT id, title, summary, brands, products, hype, item_type, buzz_count, controversy
+      FROM items 
+      WHERE digested_at IS NOT NULL AND relevant = true
+        AND id != ALL(${excludeIds}::bigint[])
+      ORDER BY controversy DESC, hype DESC, published_at DESC NULLS LAST, id DESC 
+      LIMIT 1
+    `;
+
+    const act2Item = act2Rows[0];
+    if (act2Item) excludeIds.push(Number(act2Item.id));
+
+    // Supporting items
+    const supportingRows = await db`
+      SELECT id, title, summary, brands, products, hype, item_type, buzz_count, controversy
+      FROM items 
+      WHERE digested_at IS NOT NULL AND relevant = true
+        AND id != ALL(${excludeIds}::bigint[])
+      ORDER BY buzz_count DESC, published_at DESC NULLS LAST, id DESC 
+      LIMIT ${Math.max(1, limitItems - 2)}
+    `;
+
+    candidateItems = [
+      ...(act1Item ? [act1Item] : []),
+      ...(act2Item ? [act2Item] : []),
+      ...supportingRows
+    ] as CandidateItem[];
   }
 
   if (candidateItems.length === 0) {
@@ -83,10 +117,19 @@ interface CandidateItem {
   const replyPrompt = getPrompt('debate.reply.md');
   const formatPrompt = getPrompt('format.system.md');
 
-  const contextItems = candidateItems
-    .map(it => `<item id="${it.id}" brands="${(it.brands || []).join(',')}">${it.title}: ${it.summary}</item>`)
-    .join('\n');
-  const contextBlock = `<context>\n${contextItems}\n</context>`;
+  const act1 = candidateItems[0];
+  const act2 = candidateItems[1] || candidateItems[0];
+  const supporting = candidateItems.slice(2);
+
+  const contextBlock = `<context>
+  <act1_main_event>
+    <item id="${act1.id}" brands="${(act1.brands || []).join(',')}">${act1.title}: ${act1.summary}</item>
+  </act1_main_event>
+  <act2_community_wildcard>
+    <item id="${act2.id}" brands="${(act2.brands || []).join(',')}">${act2.title}: ${act2.summary}</item>
+  </act2_community_wildcard>
+  ${supporting.length > 0 ? `<supporting_news>\n${supporting.map(it => `    <item id="${it.id}" brands="${(it.brands || []).join(',')}">${it.title}: ${it.summary}</item>`).join('\n')}\n  </supporting_news>` : ''}
+</context>`;
 
   let totalCostUsd = 0;
   const transcript: Array<{ speaker: 'Hank' | 'Vee'; text: string; turn: number }> = [];

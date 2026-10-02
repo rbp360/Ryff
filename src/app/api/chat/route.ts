@@ -158,6 +158,20 @@ export async function POST(request: NextRequest) {
       contextXml += `  </available_reverb_deals>\n`;
     }
 
+    // User Preferences (Favorite Players & Followed Brands)
+    if (context.userPreferences) {
+      if (context.userPreferences.favoritePlayers.length > 0 || context.userPreferences.followedBrands.length > 0) {
+        contextXml += `  <user_tastes>\n`;
+        if (context.userPreferences.favoritePlayers.length > 0) {
+          contextXml += `    <favorite_players>${sanitiseUntrusted(context.userPreferences.favoritePlayers.join(', '), 150)}</favorite_players>\n`;
+        }
+        if (context.userPreferences.followedBrands.length > 0) {
+          contextXml += `    <followed_brands>${sanitiseUntrusted(context.userPreferences.followedBrands.join(', '), 150)}</followed_brands>\n`;
+        }
+        contextXml += `  </user_tastes>\n`;
+      }
+    }
+
     contextXml += `</context>`;
 
     // 5. Fetch previous conversation history turns

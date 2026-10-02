@@ -1,6 +1,9 @@
 import Link from 'next/link';
 import postgres from 'postgres';
 import { env } from '@/lib/env';
+import { getSession } from '@/lib/session';
+import { getPersonalizedFeed, getGlobalTopFeed, getUserPreferences } from '@/lib/personalization';
+import { FeedSection } from './FeedSection';
 
 export const revalidate = 0; // Dynamic server component
 
@@ -17,17 +20,6 @@ interface CitedItem {
   title: string;
   url: string;
   source_name: string;
-}
-
-interface SourceItem {
-  id: number;
-  title: string;
-  url: string;
-  source_name: string;
-  summary: string;
-  item_type: string;
-  hype: number;
-  brands: string[];
 }
 
 interface ArchiveEpisode {
@@ -55,16 +47,6 @@ async function getLatestEpisodeData() {
       FROM episodes
       ORDER BY id DESC
       LIMIT 6
-    `;
-
-    // 3. Get recently digested news items
-    const recentItems = await sql<SourceItem[]>`
-      SELECT i.id, i.title, i.url, s.name as source_name, i.summary, i.item_type, i.hype, i.brands
-      FROM items i
-      JOIN sources s ON i.source_id = s.id
-      WHERE i.digested_at IS NOT NULL
-      ORDER BY i.published_at DESC NULLS LAST, i.id DESC
-      LIMIT 12
     `;
 
     const latestEpisode = episodes[0] || null;
@@ -98,7 +80,6 @@ async function getLatestEpisodeData() {
       topics,
       citedItemsMap: new Map(citedItems.map((item) => [item.id, item])),
       pastEpisodes,
-      recentItems,
     };
   } catch (err) {
     console.error('Failed to load home page data:', err);
@@ -107,13 +88,25 @@ async function getLatestEpisodeData() {
       topics: [],
       citedItemsMap: new Map<number, CitedItem>(),
       pastEpisodes: [],
-      recentItems: [],
     };
   }
 }
 
 export default async function HomePage() {
-  const { episode, topics, citedItemsMap, pastEpisodes, recentItems } = await getLatestEpisodeData();
+  const session = await getSession();
+  const userId = session?.userId || '00000000-0000-0000-0000-000000000001';
+
+  const [
+    { episode, topics, citedItemsMap, pastEpisodes },
+    personalizedFeed,
+    globalFeed,
+    userPreferences,
+  ] = await Promise.all([
+    getLatestEpisodeData(),
+    getPersonalizedFeed(userId, { limit: 12 }),
+    getGlobalTopFeed({ limit: 12 }),
+    getUserPreferences(userId),
+  ]);
 
   return (
     <main className="min-h-screen bg-slate-950 text-slate-100 font-sans pb-16">
@@ -333,60 +326,12 @@ export default async function HomePage() {
           </section>
         )}
 
-        {/* Digested News Stories Feed */}
-        <section className="space-y-6 pt-4">
-          <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-            <h2 className="text-xl font-bold text-white flex items-center gap-2">
-              <span>📰</span> Today&apos;s Digested Gear Feed
-            </h2>
-            <span className="text-xs text-slate-400 font-mono">
-              Categorized & Summarized by Gemini
-            </span>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {recentItems.map((item) => (
-              <div 
-                key={item.id} 
-                className="bg-slate-900/60 border border-slate-800 rounded-xl p-4 flex flex-col justify-between space-y-3 hover:border-slate-700 hover:bg-slate-900 transition"
-              >
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between gap-2">
-                    <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-slate-800 text-slate-300 font-medium">
-                      {item.source_name}
-                    </span>
-                    <span className="text-[11px] font-mono px-2 py-0.5 rounded uppercase font-bold tracking-wider bg-cyan-950 text-cyan-400 border border-cyan-800/50">
-                      {item.item_type || 'news'}
-                    </span>
-                  </div>
-
-                  <a
-                    href={item.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-sm font-semibold text-slate-100 hover:text-cyan-400 transition line-clamp-2"
-                  >
-                    {item.title}
-                  </a>
-
-                  <p className="text-xs text-slate-400 leading-relaxed">
-                    {item.summary || 'Summary pending digest processing.'}
-                  </p>
-                </div>
-
-                {item.brands && item.brands.length > 0 && (
-                  <div className="pt-2 border-t border-slate-800/40 flex items-center gap-1.5 flex-wrap">
-                    {item.brands.map((b) => (
-                      <span key={b} className="text-[10px] px-1.5 py-0.5 rounded bg-slate-800/80 text-amber-300/90 font-mono">
-                        #{b}
-                      </span>
-                    ))}
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-        </section>
+        {/* Today's Curated & Personalized Gear Radar */}
+        <FeedSection
+          initialPersonalized={personalizedFeed}
+          initialGlobal={globalFeed}
+          initialPreferences={userPreferences}
+        />
 
         {/* Disclaimer & Legal Footer */}
         <footer className="pt-8 border-t border-slate-800/80 text-center text-xs text-slate-500 space-y-3">
