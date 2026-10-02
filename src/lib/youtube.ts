@@ -120,6 +120,7 @@ export async function fetchYouTubeTranscript(
         const tracks = JSON.parse(match[1]);
         const track =
           tracks.find(
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             (t: any) =>
               t.languageCode === (options.lang || 'en') ||
               t.vssId?.includes(`.${options.lang || 'en'}`)

@@ -7,37 +7,48 @@
 <link rel="stylesheet" href="ryff.css"></head><body>
 <div id="stage"><div id="app"></div></div>
 <script>
-const S={bl:[],s:'home',tone:1,int:['Marshall','Loud','Tube amps'],src:[1,1,0,1],log:[]};
+const S={rt:'gear',item:null,fo:false,ft:'String change',bl:[],s:'home',tone:1,int:['Marshall','Loud','Tube amps'],src:[1,1,0,1],log:[]};
 const NAV=[['home','◐','Home'],['digest','☰','Digest'],['backstage','♫','Backstage'],['trader','◎','Trader'],['rig','◈','Rig room']];
 const ph=(w,h,t,c='')=>`<div class="ph ${c}" ${w?`style="width:${w}px;height:${h}px"`:''}>${t}</div>`;
 const H=(n=28)=>`<div class="ph round" style="width:${n}px;height:${n}px">Hank<br>${n}px</div>`;
 const V=(n=28)=>`<div class="ph round" style="width:${n}px;height:${n}px">Vee<br>${n}px</div>`;
 const hdr=()=>`<div class="top"><div class="logo"><i></i>RYFF</div><button class="gearbtn" onclick="go('setup')" aria-label="Setup">⚙</button></div>`;
-const story=(t,src,who,say)=>`<div class="story"><div class="ph">▨ Story image · 16:9</div><div class="b"><small>${src}</small><h3>${t}</h3><div class="say">${who=='H'?H():V()}<span>${say}</span></div></div></div>`;
+const story=(t,src,who,say,why)=>`<div class="story"><div class="ph">▨ Story image · 16:9</div><div class="b"><small>${src}</small><h3>${t}</h3>${why?`<span class="why">Matches: ${why}</span>`:''}<div class="say">${who=='H'?H():V()}<span>${say}</span></div></div></div>`;
 const deal=(n,p,was,meta,tag)=>`<div class="deal"><div class="ph">▨ Item<br>96×96</div><div><h3>${n}</h3><small>${meta}</small><div class="price">${p}<s>${was}</s></div><span class="go">View listing</span>${tag?`<span class="tag">${tag}</span>`:''}</div></div>`;
-const gc=(n,k,w)=>`<div class="gc ${w?'want':''}"><div class="ph">▨ Gear photo · 4:3</div><div class="b"><b>${n}</b><small>${k}</small></div></div>`;
+const gc=(n,k,w,s,i)=>`<button class="gc ${w?'want':''}" ${i!==undefined?`onclick="openItem(${i})"`:'disabled'}><div class="ph">▨ Gear photo · 4:3</div><div class="b"><b>${n}</b><small>${k}</small>${s?`<small class="${s[1]}" style="display:block;margin-top:3px">${s[0]}</small>`:''}</div></button>`;
 const msg=(b,t,txt,me)=>`<div class="msg ${me?'me':''}">${me?'':b=='H'?H(36):V(36)}<div><div class="who">${me?'You':b=='H'?'Hank':'Vee'}<small>${t}</small></div><div class="txt">${txt}</div></div></div>`;
+
+const GEAR=[{n:'PRS CU24',k:'Guitar',w:12},{n:'Boss Katana 50w',k:'Amp',w:null},{n:'Ibanez Tubescreamer',k:'Pedal',w:null},{n:'Charvel CX692',k:'Guitar',w:14},{n:'Marshall DSL50',k:'Amp',w:null}];
+const LOGS=[{i:0,t:'String change',n:'10s',d:'3 Jul'},{i:3,t:'String change',n:'',d:'27 Jun'},{i:4,t:'Valves',n:'Retubed power section',d:'12 May'},{i:0,t:'Setup',n:'Truss rod tweak',d:'2 Apr'}];
+const NEWS={0:['PRS announces a new CU24 finish'],3:['Charvel 750XL listed used for £549'],4:['DSL50 mod thread hits page three']};
+const strTxt=g=>g.w===null?'Not logged':g.w===0?'Today':g.w+' weeks ago';
+const lastTxt=i=>{const g=GEAR[i];if(g.k=='Guitar')return 'Strings: '+strTxt(g);const l=LOGS.find(x=>x.i==i);return l?l.t+' · '+l.d:'Nothing logged yet'};
+const need=()=>{const a=GEAR.map((g,i)=>[g,i]).filter(x=>x[0].w>=12);return a.length?`<h2>Needs attention</h2>`+a.map(([g,i])=>`<button class="need" onclick="openItem(${i})">${ph(44,44,'▨')}<div><b>${g.n}</b><small>Strings changed ${g.w} weeks ago</small></div><span>›</span></button>`).join(''):''};
 const SC={
-home:()=>hdr()+`<h1>Morning.</h1><p class="sub">Your digest is ready and Hank &amp; Vee have <b>3 takeaways</b> from last night.</p>
-<div class="pair">${H(56)}${V(56)}</div>
-<div class="tiles">
+home:()=>hdr()+`<h1>Morning.</h1>
+<div class="act"><button class="stats" onclick="go('digest')"><div><b>14</b><span>sources checked</span></div><div><b>12</b><span>new stories</span></div><div><b>3</b><span>about your gear</span></div></button><button class="actf" onclick="go('backstage')">Backstage debate ready ›</button></div>
+<div class="upd"><i class="dot"></i>Up to date · updated 7:02</div>
+<div class="take tk">${H(40)}<div><small>Hank’s takeaway today</small><p>Pedals into a clean tube amp beat a bigger amp. Your rig already does this.</p></div></div>
+${need()}
+<h2>Explore</h2><div class="tiles">
 <button class="tile" onclick="go('digest')"><em>12 NEW</em><div><strong>Digest</strong><span>Today’s news, short.</span></div></button>
 <button class="tile" onclick="go('backstage')"><em>3 TAKEAWAYS</em><div><strong>Backstage</strong><span>Your bot debates other bots.</span></div></button>
 <button class="tile" onclick="go('trader')"><em>2 MATCHES</em><div><strong>Trader</strong><span>Used gear on your wants list.</span></div></button>
-<button class="tile" onclick="go('rig')"><em>5 PIECES</em><div><strong>Rig room</strong><span>Your gear and quick questions.</span></div></button></div>
-<div class="take"><small>Today’s takeaway</small><p>Pedals into a clean tube amp beat a bigger amp. Your rig already does this.</p></div>`,
-digest:()=>`<h1>Digest</h1><p class="sub">The guitar world today, in your tone.</p><h2>Today</h2>`+story('Fender cuts Player II prices by £80','Guitar news · 2h','H','Good news if you were eyeing a Strat.')+story('A 50W head review says what everyone thinks','YouTube · 5h','V','Loud isn’t the same as good.')+story('DSL50 mod thread hits page three','Forum · 8h','H','Your amp. People are split on the gain staging.'),
+<button class="tile" onclick="go('rig')"><em>5 PIECES</em><div><strong>Rig room</strong><span>Gear, log and wants.</span></div></button></div>`,
+digest:()=>`<h1>Digest</h1><div class="upd"><i class="dot"></i>Updated 7:02 · 14 sources · 12 new</div><h2>Today</h2>`+story('Fender cuts Player II prices by £80','Guitar news · 2h','H','Good news if you were eyeing a Strat.','')+story('A 50W head review says what everyone thinks','YouTube · 5h','V','Loud isn’t the same as good.','Marshall DSL50')+story('DSL50 mod thread hits page three','Forum · 8h','H','Your amp. People are split on the gain staging.','Marshall DSL50'),
 backstage:()=>`<h1>Backstage</h1><p class="sub">Last night’s debate, with a takeaway for you.</p>
 <div class="bhead">${H(48)}${V(48)}<div><b>Hank vs Vee</b><small>Vee belongs to another player</small></div></div>
 <div class="thread">${msg('H','Last night','Vee, you’ll call a Katana a practice amp. It’s a gigging amp.')}${msg('V','Last night','A good one. Just not a tone-chaser. Tubes win on feel.')}${msg('H','Last night','Fair. Pedals into a clean tube amp still beat any modeller.')}${S.bl.map(m=>msg(m[0],'now',m[1],m[0]=='U')).join('')}</div>
 <div class="take"><small>Your takeaway</small><p>Your Tubescreamer and DSL50 are a safer bet than a bigger amp.</p></div>
 <div class="comp"><input id="in" placeholder="Reply to the debate" onkeydown="if(event.key=='Enter')sendB()"><button onclick="sendB()">Send</button></div>`,
 trader:()=>`<h1>Trader</h1><p class="sub">Used deals matched to your wants and budget.</p><h2>Matches</h2>`+deal('Charvel 750XL','£549','£629','Used · Very good · 12 miles','PRICE DROP')+deal('Soldano SLO-30 head','£2,450','','Used · Good · Delivery','')+`<p class="sub" style="margin-top:6px">Nothing under budget for the Soldano this week. I’ll keep looking.</p>`,
-rig:()=>`<h1>Rig room</h1><p class="sub">Your gear and wants. Add something or ask a question below.</p><h2>In your rig · 5</h2>
-<div class="grid">${gc('PRS CU24','Guitar')}${gc('Boss Katana 50w','Amp')}${gc('Ibanez Tubescreamer','Pedal')}${gc('Charvel CX692','Guitar')}${gc('Marshall DSL50','Amp')}</div>
-<h2>Wants · 2</h2><div class="grid">${gc('Charvel 750XL','Guitar · tracking',1)}${gc('Soldano','Amp · tracking',1)}</div>
-${S.log.length?`<h2>Latest</h2><div class="thread">${S.log.map(m=>msg(m[0],'now',m[1],m[0]=='U')).join('')}</div>`:''}
-<div class="comp"><input id="in" placeholder="Add gear or ask a question" onkeydown="if(event.key=='Enter')send()"><button onclick="send()">Send</button></div>`,
+rig:()=>{const seg=`<div class="seg segw">${[['gear','Gear'],['log','Log'],['wants','Wants']].map(t=>`<button class="${S.rt==t[0]?'on':''}" onclick="S.rt='${t[0]}';draw()">${t[1]}</button>`).join('')}</div>`;
+if(S.item!==null){const i=S.item,g=GEAR[i],ls=LOGS.filter(l=>l.i==i),nw=NEWS[i]||[];return `<button class="back" onclick="S.item=null;draw()">‹ Rig room</button><div class="ph hero">▨ Gear photo · 4:3</div><h1 style="margin-top:14px">${g.n}</h1><p class="sub">${g.k}</p><div class="status"><small>${g.k=='Guitar'?'Last string change':'Last logged'}</small><b>${g.k=='Guitar'?strTxt(g):lastTxt(i)}</b></div><h2>Log something</h2><div class="qgrid">${['String change','Clean','Setup','Note'].map(t=>`<button class="q" onclick="ql('${t}')">+ ${t}</button>`).join('')}</div><h2>History</h2>${ls.length?`<div class="tl">${ls.map(l=>`<div><b>${l.t}</b><small>${l.d}${l.n?' · '+l.n:''}</small></div>`).join('')}</div>`:'<p class="sub">Nothing logged yet.</p>'}${nw.length?`<h2>In the news</h2>${nw.map(n=>`<div class="nrow">${ph(44,44,'▨')}<span>${n}</span></div>`).join('')}`:''}`}
+let body='';
+if(S.rt=='gear')body=`<div class="grid">${GEAR.map((g,i)=>gc(g.n,g.k,0,g.k=='Guitar'?['Strings: '+strTxt(g),g.w>=12?'warn':'ok']:null,i)).join('')}</div>${S.log.length?`<h2>Latest</h2><div class="thread">${S.log.map(m=>msg(m[0],'now',m[1],m[0]=='U')).join('')}</div>`:''}<div class="comp"><input id="in" placeholder="Add gear or ask a question" onkeydown="if(event.key=='Enter')send()"><button onclick="send()">Send</button></div>`;
+if(S.rt=='wants')body=`<div class="grid">${gc('Charvel 750XL','Guitar · tracking',1)}${gc('Soldano','Amp · tracking',1)}</div>`;
+if(S.rt=='log')body=(S.fo?`<div class="card form"><h3>New entry</h3><p>Defaults to today.</p><select id="fi">${GEAR.map((g,i)=>`<option value="${i}">${g.n}</option>`).join('')}</select><div class="chips">${['String change','Clean','Setup','Note'].map(t=>`<button class="chip ${S.ft==t?'on':''}" onclick="S.ft='${t}';draw()">${t}</button>`).join('')}</div><input id="fn" placeholder="Note (optional)"><div class="acts"><button onclick="S.fo=false;draw()">Cancel</button><button class="pri" onclick="addEntry()">Save</button></div></div>`:`<button class="addb" onclick="S.fo=true;draw()">+ Add entry</button>`)+`<h2>All entries</h2><div class="tl">${LOGS.map(l=>`<div><b>${GEAR[l.i].n}<span class="ltag">${l.t}</span></b><small>${l.d}${l.n?' · '+l.n:''}</small></div>`).join('')}</div>`;
+return `<h1>Rig room</h1>${seg}${body}`},
 setup:()=>`<button class="back" onclick="go('home')">‹ Home</button><h1 style="margin-top:14px">Setup</h1><p class="sub">Shape what Ryff looks for and how it talks.</p>
 <div class="card"><h3>Personality</h3><p>How your bot argues backstage.</p><div class="seg">${['Dry','Blunt','Chatty'].map((t,i)=>`<button class="${S.tone==i?'on':''}" onclick="S.tone=${i};draw()">${t}</button>`).join('')}</div></div>
 <div class="card"><h3>You like</h3><p>Tap to add or remove.</p><div class="chips">${['Marshall','Loud','Tube amps','Vintage','Budget','Pedals','Boutique','Modelling'].map(t=>`<button class="chip ${S.int.includes(t)?'on':''}" onclick="tint('${t}')">${t}</button>`).join('')}</div></div>
@@ -45,8 +56,11 @@ setup:()=>`<button class="back" onclick="go('home')">‹ Home</button><h1 style=
 <div class="card"><h3>Trader alerts</h3><p>Used gear matching your wants.</p><div class="row">Budget cap<b>£300</b></div><div class="row">Notify me<b>Daily 7:00</b></div></div>`};
 function draw(){const m=document.querySelector('main'),y=m?m.scrollTop:0,sc=S.s;
 root.innerHTML=`<main>${SC[sc]()}</main><nav>${NAV.map(n=>`<button class="${sc==n[0]?'on':''}" onclick="go('${n[0]}')"><span>${n[1]}</span><span>${n[2]}</span></button>`).join('')}</nav>`;
-const nm=document.querySelector('main');nm.scrollTop=(sc=='rig'&&S.log.length)||(sc=='backstage'&&S.bl.length)?nm.scrollHeight:y}
-function go(s){S.s=s;draw();document.querySelector('main').scrollTop=0}
+const nm=document.querySelector('main');nm.scrollTop=(sc=='rig'&&S.rt=='gear'&&S.item===null&&S.log.length)||(sc=='backstage'&&S.bl.length)?nm.scrollHeight:y}
+function openItem(i){S.s='rig';S.rt='gear';S.item=i;draw();document.querySelector('main').scrollTop=0}
+function ql(t){LOGS.unshift({i:S.item,t,n:'',d:'Today'});if(t=='String change')GEAR[S.item].w=0;draw()}
+function addEntry(){const i=+document.getElementById('fi').value,n=document.getElementById('fn').value.replace(/</g,'&lt;');LOGS.unshift({i,t:S.ft,n,d:'Today'});if(S.ft=='String change')GEAR[i].w=0;S.fo=false;draw()}
+function go(s){S.s=s;S.item=null;draw();document.querySelector('main').scrollTop=0}
 function tint(t){const i=S.int.indexOf(t);i<0?S.int.push(t):S.int.splice(i,1);draw()}
 function send(){const i=document.getElementById('in'),v=i.value.trim();if(!v)return;
 S.log.push(['U',v.replace(/</g,'&lt;')]);S.log.push(['H',/^want/i.test(v)?'Added to your wants. I’ll flag any listing under budget.':v.endsWith('?')?'Depends on your amp. Tell me which one and I’ll narrow it down.':'Added to your rig.']);draw();document.getElementById('in').focus()}

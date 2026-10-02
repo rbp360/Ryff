@@ -58,6 +58,9 @@ export async function ingestAllFeeds(): Promise<IngestStats> {
         itemsIngested++;
       }
     }
+
+    // Polite delay between sources to respect rate limits
+    await new Promise((resolve) => setTimeout(resolve, 800));
   }
 
   console.log(`[Ingest Complete] Sources: ${activeSources.length} | New Items Stored: ${itemsIngested} | Errors: ${errors}`);

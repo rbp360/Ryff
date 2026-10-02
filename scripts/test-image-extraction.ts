@@ -20,6 +20,7 @@ interface SourceJsonItem {
   tier: string;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function extractImageUrlFromItem(item: any): string | null {
   // 1. Check YouTube thumbnail
   if (item.link && item.link.includes('youtube.com/watch')) {
@@ -138,8 +139,9 @@ async function testAllSources() {
       } else {
         console.log(`⚠️ [NO IMAGES FOUND] ${src.name} (checked ${Math.min(5, items.length)} items)`);
       }
-    } catch (err: any) {
-      console.log(`❌ [Error: ${err.message}] ${src.name}`);
+    } catch (err: unknown) {
+      const errMsg = err instanceof Error ? err.message : String(err);
+      console.log(`❌ [Error: ${errMsg}] ${src.name}`);
       rssFailedFetch++;
     }
   }
@@ -167,8 +169,9 @@ async function testAllSources() {
       } else {
         console.log(`⚠️ [NO IMAGES] YouTube: ${src.name}`);
       }
-    } catch (err: any) {
-      console.log(`❌ [YT Error: ${err.message}] ${src.name}`);
+    } catch (err: unknown) {
+      const errMsg = err instanceof Error ? err.message : String(err);
+      console.log(`❌ [YT Error: ${errMsg}] ${src.name}`);
     }
   }
 

@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import postgres from 'postgres';
 import Parser from 'rss-parser';
+import { fetchFeed } from '../src/lib/feeds';
 
 function loadEnv() {
   if (process.env.DATABASE_URL) return;
@@ -29,14 +30,7 @@ loadEnv();
 
 const dbUrl = process.env.DATABASE_URL;
 const contactEmail = process.env.CONTACT_EMAIL || 'founder@example.com';
-const userAgent = `GuitarBot/0.1 (contact: ${contactEmail})`;
-
-const parser = new Parser({
-  headers: {
-    'User-Agent': userAgent,
-  },
-});
-
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function slugify(text: string): string {
   return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
 }
@@ -94,50 +88,26 @@ async function checkFeeds() {
 
   for (const src of sourcesList) {
     const targetUrl = src.kind === 'youtube' ? await resolveYouTubeUrl(src.url) : src.url;
-    const slug = slugify(src.name);
     console.log(`\nFetching [${src.kind.toUpperCase()}] ${src.name} (${targetUrl})...`);
 
-    try {
-      const res = await fetch(targetUrl, {
-        headers: {
-          'User-Agent': userAgent,
-          'Accept': 'application/rss+xml, application/xml, application/atom+xml, text/xml',
-        },
-      });
+    const { items, status } = await fetchFeed(targetUrl);
+    console.log(`  Result: ${status} | Items: ${items.length}`);
 
-      const httpStatus = res.status;
-      console.log(`  HTTP Status: ${httpStatus}`);
-
-      if (!res.ok) {
-        console.error(`  Failed to fetch: ${res.statusText}`);
-        if (sql && src.id) {
-          await sql`update sources set last_fetched_at = now(), last_status = ${`HTTP ${httpStatus}`} where id = ${src.id}`;
-        }
-        continue;
-      }
-
-      const xmlText = await res.text();
-      const fixturePath = path.join(fixturesDir, `feed-${slug}.xml`);
-      fs.writeFileSync(fixturePath, xmlText, 'utf8');
-      console.log(`  Saved fixture to: ${path.relative(process.cwd(), fixturePath)} (${xmlText.length} bytes)`);
-
-      const feed = await parser.parseString(xmlText);
-      const itemCount = feed.items.length;
-      const newestItem = feed.items[0];
-      const newestDate = newestItem?.pubDate || newestItem?.isoDate || 'Unknown';
-
+    if (status === 'ok') {
+      const itemCount = items.length;
+      const newestDate = items[0]?.publishedAt ? items[0].publishedAt.toISOString() : 'Unknown';
       console.log(`  Parse Result: OK | Items: ${itemCount} | Newest Date: ${newestDate}`);
-
       if (sql && src.id) {
         await sql`update sources set last_fetched_at = now(), last_status = ${`OK (${itemCount} items)`} where id = ${src.id}`;
       }
-    } catch (err: unknown) {
-      const errMsg = err instanceof Error ? err.message : String(err);
-      console.error(`  Error checking feed: ${errMsg}`);
+    } else {
+      console.error(`  Fetch/Parse Status: ${status}`);
       if (sql && src.id) {
-        await sql`update sources set last_fetched_at = now(), last_status = ${`ERROR: ${errMsg.slice(0, 50)}`} where id = ${src.id}`;
+        await sql`update sources set last_fetched_at = now(), last_status = ${status.slice(0, 50)} where id = ${src.id}`;
       }
     }
+
+    await new Promise((resolve) => setTimeout(resolve, 800));
   }
 
   // Fetch Reverb sample fixture
