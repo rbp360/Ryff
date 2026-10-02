@@ -16,10 +16,13 @@ export interface ReverbListing {
 }
 
 export function wantKey(brand?: string | null, model?: string | null): string {
-  const parts = [brand || '', model || '']
-    .map(s => s.trim().toLowerCase())
-    .filter(Boolean);
-  return parts.join(' ').replace(/\s+/g, ' ');
+  const b = (brand || '').trim().toLowerCase();
+  const m = (model || '').trim().toLowerCase().replace(/^[:\s-]+/, '').trim();
+  if (!b) return m;
+  if (!m) return b;
+  if (m === b) return b;
+  if (m.startsWith(b)) return m;
+  return `${b} ${m}`.replace(/\s+/g, ' ');
 }
 
 export interface ReverbSearchOptions {

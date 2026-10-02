@@ -53,7 +53,8 @@ export async function runDealsPipeline(): Promise<DealsStageResult> {
       // Respect 1 req/sec politeness limit
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      const listings = await searchListings(key, { 
+      const cleanQuery = key.replace(/^[:\s–—•·\-,;]+/, '').trim();
+      const listings = await searchListings(cleanQuery, { 
         condition: 'used', 
         limit: 24,
         itemRegion,

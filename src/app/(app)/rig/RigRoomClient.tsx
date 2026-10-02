@@ -2,6 +2,7 @@
 
 import { useState, useRef } from 'react';
 import Link from 'next/link';
+import { formatGearTitle } from '@/lib/rigistry-parser';
 
 export interface RigItemData {
   id: number | string;
@@ -159,7 +160,7 @@ export function RigRoomClient({ initialItems, initialLogs }: RigRoomClientProps)
       const res = await fetch('/api/rig', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ textLines: text }),
+        body: JSON.stringify({ textLines: text, mode: 'append' }),
       });
       if (res.ok) {
         const data = await res.json();
@@ -210,8 +211,11 @@ export function RigRoomClient({ initialItems, initialLogs }: RigRoomClientProps)
   }
 
   async function handleAddWant() {
-    const text = wantText.trim();
+    let text = wantText.trim();
     if (!text) return;
+
+    // Clean any leading Want: or colons if the user already typed them
+    text = text.replace(/^(want|wtb|iso)\s*[:–—-]*/i, '').replace(/^[:\s–—-]+/, '').trim();
 
     const budgetNum = wantBudget ? parseInt(wantBudget, 10) : null;
     const formatted = `Want: ${text}${budgetNum ? ` under £${budgetNum}` : ''}`;
@@ -221,7 +225,7 @@ export function RigRoomClient({ initialItems, initialLogs }: RigRoomClientProps)
       const res = await fetch('/api/rig', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ textLines: formatted }),
+        body: JSON.stringify({ textLines: formatted, mode: 'append' }),
       });
       if (res.ok) {
         setShowWantForm(false);
@@ -299,7 +303,7 @@ export function RigRoomClient({ initialItems, initialLogs }: RigRoomClientProps)
                   >
                     <div className="ph">▨ 4:3 Photo</div>
                     <div className="b">
-                      <b>{item.brand ? `${item.brand} ` : ''}{item.model || item.raw_text}</b>
+                      <b>{formatGearTitle(item.brand, item.model, item.raw_text)}</b>
                       <small>{item.category || 'Gear'}</small>
                       {isGuitar && weeks !== null && (
                         <small
@@ -412,7 +416,7 @@ export function RigRoomClient({ initialItems, initialLogs }: RigRoomClientProps)
               >
                 {ownedItems.map((g) => (
                   <option key={g.id} value={g.id}>
-                    {g.brand ? `${g.brand} ` : ''}{g.model || g.raw_text}
+                    {formatGearTitle(g.brand, g.model, g.raw_text)}
                   </option>
                 ))}
               </select>
@@ -547,7 +551,7 @@ export function RigRoomClient({ initialItems, initialLogs }: RigRoomClientProps)
                 <div key={want.id} className="gc want">
                   <div className="ph">▨ 4:3 Photo</div>
                   <div className="b">
-                    <b>{want.brand ? `${want.brand} ` : ''}{want.model || want.raw_text}</b>
+                    <b>{formatGearTitle(want.brand, want.model, want.raw_text)}</b>
                     <small>
                       {want.category || 'Gear'} · {want.budget_gbp ? `under £${want.budget_gbp}` : 'Tracking'}
                     </small>

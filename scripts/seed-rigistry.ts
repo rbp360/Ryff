@@ -137,7 +137,8 @@ async function seed() {
     const canonicalBrandsList = [
       'Paul Reed Smith', 'Fender', 'Gibson', 'Ibanez', 'Yamaha', 'Marshall',
       'Mesa Boogie', 'Orange', 'Line 6', 'Boss', 'Electro-Harmonix', 'Roland',
-      'Korg', 'Moog', 'Novation', 'Taylor', 'Martin', 'Gretsch', 'Rickenbacker'
+      'Korg', 'Moog', 'Novation', 'Taylor', 'Martin', 'Gretsch', 'Rickenbacker',
+      'Soldano', 'Charvel', 'Soldano Custom Amplification'
     ];
     const canonicalSet = new Set(canonicalBrandsList.map(b => normalizeBrandKey(b)));
 

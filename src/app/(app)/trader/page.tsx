@@ -1,6 +1,9 @@
 import Link from 'next/link';
 import { db } from '@/lib/db';
 import { getSession, DEV_ADMIN_USER } from '@/lib/session';
+import { formatGearTitle } from '@/lib/rigistry-parser';
+import { syncDealsForWants } from '@/lib/deal-sync';
+import { TraderScanButton } from './TraderClientControls';
 
 export const revalidate = 0; // Dynamic server component
 
@@ -57,6 +60,27 @@ export default async function TraderPage() {
       ORDER BY seen_at DESC
       LIMIT 20
     `.catch(() => []);
+
+    // If no deals in DB yet for these wants, auto-sync from Reverb on load!
+    if (deals.length === 0) {
+      const userRow = await db`select reverb_region from users where id = ${userId} limit 1`.catch(() => []);
+      const region = userRow[0]?.reverb_region || 'UK_ONLY';
+      await syncDealsForWants(
+        userWants.map((w) => ({
+          want_key: w.want_key,
+          budget_gbp: w.budget_gbp,
+          reverb_region: region,
+        }))
+      ).catch((err) => console.warn('[Trader] Auto-sync error:', err));
+
+      deals = await db<DealRow[]>`
+        SELECT id, want_key, title, price_amount, original_price_amount, price_drop_text, condition, listing_url, seen_at, published_at
+        FROM deals
+        WHERE want_key = ANY(${wantKeys})
+        ORDER BY seen_at DESC
+        LIMIT 20
+      `.catch(() => []);
+    }
   }
 
   // If no specific want matches, get recent marketplace finds
@@ -76,9 +100,12 @@ export default async function TraderPage() {
     <>
       <div className="top" style={{ marginBottom: '10px' }}>
         <h1 style={{ marginBottom: 0 }}>Trader</h1>
-        <Link href="/setup" className="gearbtn" aria-label="Setup">
-          ⚙
-        </Link>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <TraderScanButton />
+          <Link href="/setup" className="gearbtn" aria-label="Setup">
+            ⚙
+          </Link>
+        </div>
       </div>
 
       <p className="sub">
@@ -99,7 +126,7 @@ export default async function TraderPage() {
           <div className="chips" style={{ marginTop: '10px' }}>
             {userWants.map((w, idx) => (
               <span key={idx} className="chip on" style={{ fontSize: '11px' }}>
-                {w.brand ? `${w.brand} ` : ''}{w.model || w.raw_text}
+                {formatGearTitle(w.brand, w.model, w.raw_text)}
                 {w.budget_gbp ? ` (under £${w.budget_gbp})` : ''}
               </span>
             ))}
@@ -123,14 +150,18 @@ export default async function TraderPage() {
         </div>
       )}
 
-      <h2>{deals.length > 0 ? 'Matches' : 'Marketplace Finds'}</h2>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '20px', marginBottom: '10px' }}>
+        <h2 style={{ margin: 0 }}>{deals.length > 0 ? 'Matches' : 'Marketplace Finds'}</h2>
+        {userWants.length > 0 && <TraderScanButton />}
+      </div>
 
       {/* Deals List */}
       {displayDeals.length === 0 ? (
         <div className="card" style={{ textAlign: 'center', padding: '32px 16px' }}>
-          <p style={{ color: 'var(--mu)', fontSize: '13px' }}>
-            No marketplace deals recorded yet. Run the deals ingestion pipeline to scan Reverb.
+          <p style={{ color: 'var(--mu)', fontSize: '13px', marginBottom: '12px' }}>
+            No marketplace deals recorded yet for your tracked wants.
           </p>
+          <TraderScanButton />
         </div>
       ) : (
         displayDeals.map((deal) => {
