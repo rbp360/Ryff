@@ -287,21 +287,46 @@ export function FeedSection({
                   </div>
                 </div>
 
-                {/* Article Title */}
-                <a
-                  href={item.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-sm font-semibold text-slate-100 hover:text-cyan-400 transition line-clamp-2 block leading-snug group-hover:text-cyan-300"
-                >
-                  {item.title}
-                </a>
+                {/* Article / Video Headline & Title */}
+                <div>
+                  {item.headline && (
+                    <div className="text-xs font-bold text-amber-400 font-mono tracking-wide mb-1 uppercase">
+                      ⚡ {item.headline}
+                    </div>
+                  )}
+                  <a
+                    href={item.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm font-semibold text-slate-100 hover:text-cyan-400 transition line-clamp-2 block leading-snug group-hover:text-cyan-300"
+                  >
+                    {item.title}
+                  </a>
+                </div>
 
-                {/* Conversational 35-50 Word Editorial TLDR */}
-                <p className="text-xs text-slate-300/90 leading-relaxed italic border-l-2 border-slate-700 pl-3">
-                  &ldquo;{item.summary}&rdquo;
+                {/* Editorial Summary */}
+                <p className="text-xs text-slate-300/90 leading-relaxed border-l-2 border-cyan-700/60 pl-3">
+                  {item.summary}
                 </p>
+
+                {/* Key Takeaways Bullets (if available) */}
+                {item.key_takeaways && item.key_takeaways.length > 0 && (
+                  <div className="space-y-1 pt-1 bg-slate-950/40 rounded-lg p-2.5 border border-slate-800/60">
+                    <div className="text-[10px] font-mono uppercase tracking-wider text-slate-400 font-semibold mb-1">
+                      Key Takeaways:
+                    </div>
+                    <ul className="space-y-1">
+                      {item.key_takeaways.map((takeaway, tIdx) => (
+                        <li key={tIdx} className="text-[11px] text-slate-300 flex items-start gap-1.5 leading-tight">
+                          <span className="text-cyan-400 mt-0.5">•</span>
+                          <span>{takeaway}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
               </div>
+
 
               {/* Card Footer: Entities & Interactive Actions */}
               <div className="pt-3 border-t border-slate-800/60 flex items-center justify-between gap-2">

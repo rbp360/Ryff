@@ -8,10 +8,12 @@ export interface UserPreferences {
 export interface FeedItemCard {
   id: number;
   title: string;
+  headline?: string;
   url: string;
   source_id: number;
   source_name: string;
   summary: string;
+  key_takeaways?: string[];
   category: string;
   item_type: string;
   brands: string[];
@@ -163,10 +165,12 @@ export async function getPersonalizedFeed(
     select 
       i.id,
       i.title,
+      i.headline,
       i.url,
       i.source_id,
       s.name as source_name,
       i.summary,
+      i.key_takeaways,
       i.category,
       i.item_type,
       i.brands,
@@ -239,10 +243,12 @@ export async function getPersonalizedFeed(
     return {
       id,
       title: row.title,
+      headline: row.headline || undefined,
       url: row.url,
       source_id: row.source_id,
       source_name: row.source_name || 'News',
       summary: row.summary || row.title,
+      key_takeaways: row.key_takeaways || [],
       category: row.category || 'other',
       item_type: row.item_type || 'news',
       brands: itemBrands,
@@ -273,10 +279,12 @@ export async function getGlobalTopFeed(
     select 
       i.id,
       i.title,
+      i.headline,
       i.url,
       i.source_id,
       s.name as source_name,
       i.summary,
+      i.key_takeaways,
       i.category,
       i.item_type,
       i.brands,
@@ -314,10 +322,12 @@ export async function getGlobalTopFeed(
     return {
       id: Number(row.id),
       title: row.title,
+      headline: row.headline || undefined,
       url: row.url,
       source_id: row.source_id,
       source_name: row.source_name || 'News',
       summary: row.summary || row.title,
+      key_takeaways: row.key_takeaways || [],
       category: row.category || 'other',
       item_type: row.item_type || 'news',
       brands: row.brands || [],
@@ -331,4 +341,5 @@ export async function getGlobalTopFeed(
       match_badges: badges,
     };
   });
+
 }

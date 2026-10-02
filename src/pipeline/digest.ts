@@ -10,7 +10,9 @@ const digestOutputSchema = z.array(
   z.object({
     id: z.number(),
     relevant: z.boolean(),
+    headline: z.string().optional(),
     summary: z.string(),
+    key_takeaways: z.array(z.string()).default([]),
     item_type: z.enum(['launch', 'review', 'deal', 'rumour', 'opinion', 'news', 'other']).default('news'),
     category: z.enum(['guitar', 'bass', 'amp', 'pedal', 'modeller', 'artist', 'deal', 'industry', 'other']).default('other'),
     brands: z.array(z.string()).default([]),
@@ -132,7 +134,9 @@ export async function digestPendingItems(batchSize: number = 10, maxTotal: numbe
             SET 
               digested_at = NOW(),
               relevant = ${itemResult.relevant},
+              headline = ${itemResult.headline || originalItem?.title || null},
               summary = ${itemResult.summary},
+              key_takeaways = ${itemResult.key_takeaways || []},
               item_type = ${itemResult.item_type},
               category = ${itemResult.category || 'other'},
               brands = ${combinedBrands},
@@ -152,7 +156,9 @@ export async function digestPendingItems(batchSize: number = 10, maxTotal: numbe
             SET 
               digested_at = NOW(),
               relevant = true,
+              headline = ${item.title},
               summary = ${item.snippet?.slice(0, 150) || item.title},
+              key_takeaways = '{}',
               item_type = 'news',
               category = 'other',
               hype = 2,
