@@ -214,7 +214,9 @@ export default async function HomePage() {
 
       {/* Minimal Footer */}
       <footer style={{ marginTop: '36px', paddingTop: '16px', borderTop: '1px solid var(--ln)', textAlign: 'center' }}>
-        <div style={{ display: 'flex', justifyContent: 'center', gap: '14px', fontSize: '11px', color: 'var(--mu)' }}>
+        <div style={{ display: 'flex', justifyContent: 'center', gap: '14px', fontSize: '11px', color: 'var(--mu)', flexWrap: 'wrap' }}>
+          <Link href="/welcome" style={{ textDecoration: 'underline', color: 'var(--ac)' }}>About Ryff</Link>
+          <span>•</span>
           <Link href="/legal/privacy" style={{ textDecoration: 'underline' }}>Privacy</Link>
           <span>•</span>
           <Link href="/legal/terms" style={{ textDecoration: 'underline' }}>Terms</Link>

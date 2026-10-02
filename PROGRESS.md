@@ -145,3 +145,14 @@
   - Cleaned up obsolete Tailwind container styles, verified responsive behavior on desktop and mobile.
   - Verified 0 TypeScript errors and full production Next.js build compilation across all routes.
 - Status: UX Restructure Complete.
+
+## Public Marketing Landing Page (`/welcome`) [COMPLETED]
+- Finished: 2026-10-02
+- Delivered:
+  - Built public marketing hero page at `/welcome` (`src/app/welcome/page.tsx`) based on `HERO_PLAN.md` and `Ryff_features.md`.
+  - Implemented high-converting SongDeck brand narrative: *"YOUR RIG. YOUR NEWS. A BOT WITH AN OPINION."*
+  - Interactive live pipeline card showcasing real-time counts (47 sources, 81 new stories, 3 rig matches) and Hank's takeaway verdict.
+  - 3-step value proposition breakdown: (1) 2-tap rig logging with voice memos, (2) Smart radar feed matching, (3) 1-on-1 bot debates.
+  - Reverb marketplace intelligence callout (price drop history, days on market, geo-filtered shipping).
+  - Linked to in-app footer as "About Ryff" and verified 0 TypeScript errors with full static prerendering (`○ /welcome`).
+  - Updated `Ryff_features.md`. Left all changes uncommitted for manual user commit.
