@@ -1,6 +1,7 @@
 import { db } from '@/lib/db';
 import { complete } from '@/lib/llm';
 import { env } from '@/lib/env';
+import { fetchYouTubeTranscript, politeDelay } from '@/lib/youtube';
 import fs from 'fs';
 import path from 'path';
 import { z } from 'zod';
@@ -25,9 +26,21 @@ export async function digestPendingItems(batchSize: number = 10, maxTotal: numbe
 
   // Prioritize items with multi-source buzz, then recency
   const pendingItems = await db`
-    SELECT id, title, snippet, brands, players, buzz_count FROM items 
-    WHERE digested_at IS NULL
-    ORDER BY buzz_count DESC, published_at DESC NULLS LAST, id DESC
+    SELECT 
+      i.id, 
+      i.title, 
+      i.snippet, 
+      i.url,
+      i.transcript,
+      i.brands, 
+      i.players, 
+      i.buzz_count,
+      s.kind as source_kind,
+      s.name as source_name
+    FROM items i
+    JOIN sources s ON i.source_id = s.id
+    WHERE i.digested_at IS NULL
+    ORDER BY i.buzz_count DESC, i.published_at DESC NULLS LAST, i.id DESC
     LIMIT ${maxTotal}
   `;
 
@@ -45,9 +58,47 @@ export async function digestPendingItems(batchSize: number = 10, maxTotal: numbe
 
   for (let i = 0; i < pendingItems.length; i += batchSize) {
     const chunk = pendingItems.slice(i, i + batchSize);
-    const userContent = chunk
-      .map(it => `<item id="${it.id}"><title>${it.title}</title><snippet>${it.snippet}</snippet></item>`)
-      .join('\n');
+
+    // Pre-fetch transcripts for YouTube items in this chunk if not already present
+    const itemXmlBlocks: string[] = [];
+
+    for (const it of chunk) {
+      const isYoutube = it.source_kind === 'youtube' || it.url.includes('youtube.com') || it.url.includes('youtu.be');
+      let transcriptText = it.transcript;
+
+      if (isYoutube && !transcriptText) {
+        // Fetch transcript with polite delay
+        transcriptText = await fetchYouTubeTranscript(it.url);
+        if (transcriptText) {
+          // Cache transcript in database
+          try {
+            await db`UPDATE items SET transcript = ${transcriptText} WHERE id = ${it.id}`;
+            it.transcript = transcriptText;
+          } catch (err) {
+            console.warn(`[Digest Warn] Could not save transcript for item #${it.id}:`, err);
+          }
+        }
+        await politeDelay(500);
+      }
+
+      if (isYoutube) {
+        if (transcriptText) {
+          itemXmlBlocks.push(
+            `<item id="${it.id}" type="youtube">\n<title>${it.title}</title>\n<channel>${it.source_name}</channel>\n<snippet>${it.snippet}</snippet>\n<transcript>\n${transcriptText}\n</transcript>\n</item>`
+          );
+        } else {
+          itemXmlBlocks.push(
+            `<item id="${it.id}" type="youtube">\n<title>${it.title}</title>\n<channel>${it.source_name}</channel>\n<snippet>${it.snippet}</snippet>\n</item>`
+          );
+        }
+      } else {
+        itemXmlBlocks.push(
+          `<item id="${it.id}" type="article">\n<title>${it.title}</title>\n<source>${it.source_name}</source>\n<snippet>${it.snippet}</snippet>\n</item>`
+        );
+      }
+    }
+
+    const userContent = itemXmlBlocks.join('\n\n');
 
     try {
       const llmResult = await complete({

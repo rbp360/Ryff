@@ -63,7 +63,20 @@
   - **2-Act Daily Debate Restructure** (`src/pipeline/debate.ts`, `prompts/debate.opener.md`, `prompts/debate.reply.md`, `prompts/format.system.md`):
     - Restructured debate into Act 1 (The Main Event industry consensus) and Act 2 (Community Wildcard & Deal Debate).
     - Upgraded `/chat` retrieval context to incorporate user tastes and personalized feed items.
-  - Tests: 27/27 Vitest unit tests passing. Full Next.js production build succeeded with zero errors.
+  - Tests: 36/36 Vitest unit tests passing. Full Next.js production build succeeded with zero errors.
 
-
-
+## M5.1 — YouTube CC & Transcript Parsing Pipeline [COMPLETED]
+- Finished: 2026-10-02
+- Delivered:
+  - **YouTube CC Extraction Engine** ([`src/lib/youtube.ts`](file:///c:/Users/rob_b/Ryff/src/lib/youtube.ts)):
+    - Lightweight, zero-cost public caption parsing with primary InnerTube and secondary watch-page XML/JSON3 fallbacks.
+    - URL parsing across standard `watch?v=`, `youtu.be/`, `shorts/`, and `embed/` formats.
+    - HTML entity decoding and polite 1-second rate-limiting delays.
+  - **Database Migration** ([`db/migrations/0005_item_transcripts.sql`](file:///c:/Users/rob_b/Ryff/db/migrations/0005_item_transcripts.sql)):
+    - Added `transcript text` column with index to cache extracted closed captions.
+  - **Digest Pipeline & Prompt Engineering** ([`src/pipeline/digest.ts`](file:///c:/Users/rob_b/Ryff/src/pipeline/digest.ts), [`prompts/digest.system.md`](file:///c:/Users/rob_b/Ryff/prompts/digest.system.md)):
+    - Automatically attaches `<transcript>` context to `<item>` blocks when `kind === 'youtube'`.
+    - Editorial prompt filters sponsor spots (e.g. Ridge Wallet, BetterHelp) and intro banter, distilling host verdict and gear pros/cons into a 35-50 word editorial summary.
+    - Graceful fallback for non-captioned or instrumental playthrough videos.
+  - **Unit Tests** ([`tests/youtube.test.ts`](file:///c:/Users/rob_b/Ryff/tests/youtube.test.ts)):
+    - 9 dedicated unit tests passing; 36/36 total Vitest suite tests passing.

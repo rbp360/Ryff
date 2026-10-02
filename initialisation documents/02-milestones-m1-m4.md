@@ -190,12 +190,12 @@
 **Goal:** Upgrade YouTube feed digestion from description snippets to full spoken closed-caption transcripts, allowing the Fast AI to capture objective video conclusions and host verdicts.
 
 **Tasks**
-- [ ] Create YouTube transcript extraction module [`src/lib/youtube.ts`](file:///c:/Users/rob_b/Ryff/src/lib/youtube.ts) using lightweight, zero-cost public caption parsing (`youtube-transcript`).
-- [ ] Add 1-second polite rate-limiting delay between transcript fetches to avoid IP throttle.
-- [ ] Implement graceful fallback to RSS title + description snippet when no speech track is present (e.g., playthrough/jam demos or disabled CC).
-- [ ] Update `digestPendingItems` in [`src/pipeline/digest.ts`](file:///c:/Users/rob_b/Ryff/src/pipeline/digest.ts) to attach transcript context to `<item>` blocks when `source_type === 'youtube'`.
-- [ ] Update [`prompts/digest.system.md`](file:///c:/Users/rob_b/Ryff/prompts/digest.system.md) to instruct the model to filter sponsor/intro fluff and isolate gear takeaways and final verdicts.
-- [ ] Add unit tests in [`tests/youtube.test.ts`](file:///c:/Users/rob_b/Ryff/tests/youtube.test.ts) with caption XML/JSON fixtures.
+- [x] Create YouTube transcript extraction module [`src/lib/youtube.ts`](file:///c:/Users/rob_b/Ryff/src/lib/youtube.ts) using lightweight, zero-cost public caption parsing (`youtube-transcript`).
+- [x] Add 1-second polite rate-limiting delay between transcript fetches to avoid IP throttle.
+- [x] Implement graceful fallback to RSS title + description snippet when no speech track is present (e.g., playthrough/jam demos or disabled CC).
+- [x] Update `digestPendingItems` in [`src/pipeline/digest.ts`](file:///c:/Users/rob_b/Ryff/src/pipeline/digest.ts) to attach transcript context to `<item>` blocks when `source_type === 'youtube'`.
+- [x] Update [`prompts/digest.system.md`](file:///c:/Users/rob_b/Ryff/prompts/digest.system.md) to instruct the model to filter sponsor/intro fluff and isolate gear takeaways and final verdicts.
+- [x] Add unit tests in [`tests/youtube.test.ts`](file:///c:/Users/rob_b/Ryff/tests/youtube.test.ts) with caption XML/JSON fixtures.
 
 **Done when** YouTube feed items digest with full spoken conclusions in dry-run tests without throwing rate limits or increasing LLM spend beyond ~$0.0005 per video.
 
