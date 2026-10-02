@@ -115,3 +115,12 @@
   - Rebuilt Home screen (`src/app/(app)/page.tsx`): Header with setup gear, real activity metrics (47 sources, 81 new stories), Hank's takeaway card, real overdue gear in "Needs attention", 4 Explore tiles, and subtle legal footer.
   - Verified with 0 TypeScript errors, successful Next.js production build (`next build`), and browser inspection.
 - Next: Stage 2 — Digest ("Today's Gear Radar") & Trader.
+
+## UX Restructure — Stage 2: Digest & Trader Screens [COMPLETED]
+- Finished: 2026-10-02
+- Delivered:
+  - Elevated "Today's Gear Radar" to dedicated screen at `/digest` (`src/app/(app)/digest/page.tsx` & `DigestFeed.tsx`).
+  - Implemented story cards with 16:9 thumbnails, sources, relative timestamps, `Matches: <gear>` tags, Hank's editorial takes with 28px avatars, and interactive feedback.
+  - Implemented `/trader` (`src/app/(app)/trader/page.tsx`): Displays tracked wants chip summary with link to Rig room, used deal cards matching wants and budget from `deals` table, price-drop badges, and days-on-market tracking.
+  - Verified with 0 TypeScript errors, successful Next.js build, and live browser testing.
+- Next: Stage 3 — Rig Room (Gear Grid, Voice Logging, Item Detail, Central Log & Wants).
