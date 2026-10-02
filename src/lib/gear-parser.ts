@@ -94,20 +94,38 @@ Respond with ONLY a raw JSON object (no markdown, no backticks, no codeblocks):
         throw new Error('Either text or audioBase64 must be provided');
       }
 
-      const response = await ai.models.generateContent({
-        model: modelName,
-        contents: [
-          {
-            role: 'user',
-            parts,
-          },
-        ],
-        config: {
-          systemInstruction: systemPrompt,
-          temperature: 0.1,
-          responseMimeType: 'application/json',
-        },
-      });
+      let response: { text?: string | null } | null = null;
+      let attempts = 0;
+      const maxAttempts = 3;
+
+      while (attempts < maxAttempts) {
+        try {
+          attempts++;
+          response = await ai.models.generateContent({
+            model: modelName,
+            contents: [
+              {
+                role: 'user',
+                parts,
+              },
+            ],
+            config: {
+              systemInstruction: systemPrompt,
+              temperature: 0.1,
+              responseMimeType: 'application/json',
+            },
+          });
+          break;
+        } catch (callErr: unknown) {
+          const msg = callErr instanceof Error ? callErr.message : String(callErr);
+          if ((msg.includes('503') || msg.includes('UNAVAILABLE') || msg.includes('429')) && attempts < maxAttempts) {
+            console.warn(`[gear-parser] Demand spike (${msg.slice(0, 50)}...). Retrying in 1.5s (${attempts}/${maxAttempts})...`);
+            await new Promise((resolve) => setTimeout(resolve, 1500));
+          } else {
+            throw callErr;
+          }
+        }
+      }
 
       const rawJson = (response?.text || '').trim();
       if (rawJson) {

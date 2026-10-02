@@ -16,7 +16,7 @@ describe('gear-parser', () => {
     expect(result.title.toLowerCase()).toContain('elixir 9-46');
     expect(result.component?.toLowerCase()).toContain('string');
     expect(result.gear_updates.current_strings).toBeDefined();
-  });
+  }, 30000);
 
   it('parses hardware pickup swap and retains original part note', async () => {
     const result = await parseGearVoiceOrText({
@@ -30,7 +30,7 @@ describe('gear-parser', () => {
 
     expect(result.event_type).toBe('modification');
     expect(result.component?.toLowerCase()).toContain('pickup');
-  });
+  }, 30000);
 
   it('parses pedal resistor modifications', async () => {
     const result = await parseGearVoiceOrText({
@@ -44,5 +44,5 @@ describe('gear-parser', () => {
 
     expect(result.event_type).toBe('modification');
     expect(result.title.toLowerCase()).toContain('mod');
-  });
+  }, 30000);
 });

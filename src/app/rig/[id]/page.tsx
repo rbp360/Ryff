@@ -247,6 +247,44 @@ export default function GearDetailPage({ params }: { params: Promise<{ id: strin
     }
   }
 
+  // Direct Inline Field Editing
+  const [inlineEditingField, setInlineEditingField] = useState<string | null>(null);
+  const [inlineFieldValue, setInlineFieldValue] = useState<string>('');
+  const [isSavingInline, setIsSavingInline] = useState(false);
+
+  function startInlineEdit(field: string, initialValue: string | null | undefined) {
+    setInlineEditingField(field);
+    setInlineFieldValue(initialValue || '');
+  }
+
+  async function saveInlineField(field: string, value: string) {
+    setIsSavingInline(true);
+    setError(null);
+    try {
+      const payload: Record<string, unknown> = {
+        [field]: value.trim() ? value.trim() : null,
+      };
+
+      const res = await fetch(`/api/rig/${itemId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed to update');
+
+      setItem(data.item);
+      setEditForm(data.item);
+      setInlineEditingField(null);
+      showToast('Updated successfully');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to save');
+    } finally {
+      setIsSavingInline(false);
+    }
+  }
+
   async function handleSaveEdit(e: React.FormEvent) {
     e.preventDefault();
     setIsSavingEdit(true);
@@ -528,69 +566,431 @@ export default function GearDetailPage({ params }: { params: Promise<{ id: strin
           </div>
         )}
 
-        {/* Quick Specs Overview Grid */}
+        {/* Quick Specs Overview Grid (with Direct Inline Click-to-Edit) */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          <div className="bg-slate-900 border border-slate-800/80 rounded-xl p-4">
-            <div className="text-[11px] uppercase tracking-wider text-slate-500 font-mono">Serial No.</div>
-            <div className="text-sm font-semibold text-slate-200 mt-1 font-mono">
-              {item.serial_number || '—'}
+          {/* Serial Number */}
+          <div
+            onClick={() => {
+              if (inlineEditingField !== 'serial_number') {
+                startInlineEdit('serial_number', item.serial_number);
+              }
+            }}
+            className="bg-slate-900 hover:bg-slate-900/90 border border-slate-800/80 hover:border-cyan-800/60 rounded-xl p-4 transition cursor-pointer relative group"
+          >
+            <div className="flex items-center justify-between">
+              <div className="text-[11px] uppercase tracking-wider text-slate-500 font-mono">Serial No.</div>
+              <span className="text-[10px] text-slate-500 opacity-0 group-hover:opacity-100 transition">✏️ Edit</span>
             </div>
+            {inlineEditingField === 'serial_number' ? (
+              <div className="mt-1.5 flex items-center gap-1.5" onClick={(e) => e.stopPropagation()}>
+                <input
+                  type="text"
+                  autoFocus
+                  value={inlineFieldValue}
+                  onChange={(e) => setInlineFieldValue(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') saveInlineField('serial_number', inlineFieldValue);
+                    if (e.key === 'Escape') setInlineEditingField(null);
+                  }}
+                  className="w-full bg-slate-950 border border-cyan-500 rounded px-2 py-1 text-xs text-white font-mono"
+                />
+                <button
+                  type="button"
+                  disabled={isSavingInline}
+                  onClick={() => saveInlineField('serial_number', inlineFieldValue)}
+                  className="bg-cyan-600 hover:bg-cyan-500 text-white px-2 py-1 rounded text-xs"
+                >
+                  ✓
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setInlineEditingField(null)}
+                  className="bg-slate-800 hover:bg-slate-700 text-slate-300 px-2 py-1 rounded text-xs"
+                >
+                  ✕
+                </button>
+              </div>
+            ) : (
+              <div className="text-sm font-semibold text-slate-200 mt-1 font-mono">
+                {item.serial_number || <span className="text-slate-600 font-normal">Add Serial...</span>}
+              </div>
+            )}
           </div>
 
-          <div className="bg-slate-900 border border-slate-800/80 rounded-xl p-4">
-            <div className="text-[11px] uppercase tracking-wider text-slate-500 font-mono">Purchased</div>
-            <div className="text-sm font-semibold text-slate-200 mt-1">
-              {item.purchase_date || '—'}
+          {/* Purchased Date */}
+          <div
+            onClick={() => {
+              if (inlineEditingField !== 'purchase_date') {
+                startInlineEdit('purchase_date', item.purchase_date);
+              }
+            }}
+            className="bg-slate-900 hover:bg-slate-900/90 border border-slate-800/80 hover:border-cyan-800/60 rounded-xl p-4 transition cursor-pointer relative group"
+          >
+            <div className="flex items-center justify-between">
+              <div className="text-[11px] uppercase tracking-wider text-slate-500 font-mono">Purchased</div>
+              <span className="text-[10px] text-slate-500 opacity-0 group-hover:opacity-100 transition">✏️ Edit</span>
             </div>
+            {inlineEditingField === 'purchase_date' ? (
+              <div className="mt-1.5 flex items-center gap-1.5" onClick={(e) => e.stopPropagation()}>
+                <input
+                  type="text"
+                  autoFocus
+                  placeholder="e.g. August 2017"
+                  value={inlineFieldValue}
+                  onChange={(e) => setInlineFieldValue(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') saveInlineField('purchase_date', inlineFieldValue);
+                    if (e.key === 'Escape') setInlineEditingField(null);
+                  }}
+                  className="w-full bg-slate-950 border border-cyan-500 rounded px-2 py-1 text-xs text-white"
+                />
+                <button
+                  type="button"
+                  disabled={isSavingInline}
+                  onClick={() => saveInlineField('purchase_date', inlineFieldValue)}
+                  className="bg-cyan-600 hover:bg-cyan-500 text-white px-2 py-1 rounded text-xs"
+                >
+                  ✓
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setInlineEditingField(null)}
+                  className="bg-slate-800 hover:bg-slate-700 text-slate-300 px-2 py-1 rounded text-xs"
+                >
+                  ✕
+                </button>
+              </div>
+            ) : (
+              <div className="text-sm font-semibold text-slate-200 mt-1">
+                {item.purchase_date || <span className="text-slate-600 font-normal">Add Date...</span>}
+              </div>
+            )}
           </div>
 
-          <div className="bg-slate-900 border border-slate-800/80 rounded-xl p-4">
-            <div className="text-[11px] uppercase tracking-wider text-slate-500 font-mono">Strings / Gauge</div>
-            <div className="text-sm font-semibold text-slate-200 mt-1">
-              {item.current_strings || '—'}
+          {/* Strings / Gauge */}
+          <div
+            onClick={() => {
+              if (inlineEditingField !== 'current_strings') {
+                startInlineEdit('current_strings', item.current_strings);
+              }
+            }}
+            className="bg-slate-900 hover:bg-slate-900/90 border border-slate-800/80 hover:border-cyan-800/60 rounded-xl p-4 transition cursor-pointer relative group"
+          >
+            <div className="flex items-center justify-between">
+              <div className="text-[11px] uppercase tracking-wider text-slate-500 font-mono">Strings / Gauge</div>
+              <span className="text-[10px] text-slate-500 opacity-0 group-hover:opacity-100 transition">✏️ Edit</span>
             </div>
+            {inlineEditingField === 'current_strings' ? (
+              <div className="mt-1.5 flex items-center gap-1.5" onClick={(e) => e.stopPropagation()}>
+                <input
+                  type="text"
+                  autoFocus
+                  placeholder="e.g. Elixir 9-42"
+                  value={inlineFieldValue}
+                  onChange={(e) => setInlineFieldValue(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') saveInlineField('current_strings', inlineFieldValue);
+                    if (e.key === 'Escape') setInlineEditingField(null);
+                  }}
+                  className="w-full bg-slate-950 border border-cyan-500 rounded px-2 py-1 text-xs text-white"
+                />
+                <button
+                  type="button"
+                  disabled={isSavingInline}
+                  onClick={() => saveInlineField('current_strings', inlineFieldValue)}
+                  className="bg-cyan-600 hover:bg-cyan-500 text-white px-2 py-1 rounded text-xs"
+                >
+                  ✓
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setInlineEditingField(null)}
+                  className="bg-slate-800 hover:bg-slate-700 text-slate-300 px-2 py-1 rounded text-xs"
+                >
+                  ✕
+                </button>
+              </div>
+            ) : (
+              <div className="text-sm font-semibold text-slate-200 mt-1">
+                {item.current_strings || <span className="text-slate-600 font-normal">Add Strings...</span>}
+              </div>
+            )}
           </div>
 
-          <div className="bg-slate-900 border border-slate-800/80 rounded-xl p-4">
-            <div className="text-[11px] uppercase tracking-wider text-slate-500 font-mono">Last Restrung</div>
-            <div className="text-sm font-semibold text-slate-200 mt-1">
-              {stringRel.text}
+          {/* Last Restrung Date */}
+          <div
+            onClick={() => {
+              if (inlineEditingField !== 'last_restrung_at') {
+                startInlineEdit(
+                  'last_restrung_at',
+                  item.last_restrung_at ? item.last_restrung_at.split('T')[0] : ''
+                );
+              }
+            }}
+            className="bg-slate-900 hover:bg-slate-900/90 border border-slate-800/80 hover:border-cyan-800/60 rounded-xl p-4 transition cursor-pointer relative group"
+          >
+            <div className="flex items-center justify-between">
+              <div className="text-[11px] uppercase tracking-wider text-slate-500 font-mono">Last Restrung</div>
+              <span className="text-[10px] text-slate-500 opacity-0 group-hover:opacity-100 transition">✏️ Edit</span>
             </div>
+            {inlineEditingField === 'last_restrung_at' ? (
+              <div className="mt-1.5 flex items-center gap-1.5" onClick={(e) => e.stopPropagation()}>
+                <input
+                  type="date"
+                  autoFocus
+                  value={inlineFieldValue}
+                  onChange={(e) => setInlineFieldValue(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      saveInlineField(
+                        'last_restrung_at',
+                        inlineFieldValue ? new Date(inlineFieldValue).toISOString() : ''
+                      );
+                    }
+                    if (e.key === 'Escape') setInlineEditingField(null);
+                  }}
+                  className="w-full bg-slate-950 border border-cyan-500 rounded px-2 py-1 text-xs text-white"
+                />
+                <button
+                  type="button"
+                  disabled={isSavingInline}
+                  onClick={() =>
+                    saveInlineField(
+                      'last_restrung_at',
+                      inlineFieldValue ? new Date(inlineFieldValue).toISOString() : ''
+                    )
+                  }
+                  className="bg-cyan-600 hover:bg-cyan-500 text-white px-2 py-1 rounded text-xs"
+                >
+                  ✓
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setInlineEditingField(null)}
+                  className="bg-slate-800 hover:bg-slate-700 text-slate-300 px-2 py-1 rounded text-xs"
+                >
+                  ✕
+                </button>
+              </div>
+            ) : (
+              <div className="text-sm font-semibold text-slate-200 mt-1">
+                {stringRel.text}
+              </div>
+            )}
           </div>
         </div>
 
-        {/* Hardware & Modifications Highlights */}
-        {(item.pickups_summary || item.modifications_summary || item.valves_summary || item.notes) && (
-          <div className="bg-slate-900/70 border border-slate-800 rounded-xl p-5 space-y-3">
-            <h2 className="text-xs font-semibold text-white uppercase tracking-wider">Hardware & Modifications</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-              {item.pickups_summary && (
-                <div className="p-3 bg-slate-950 border border-slate-800/70 rounded-lg">
-                  <span className="text-cyan-400 font-semibold block mb-0.5">Pickups:</span>
-                  <span className="text-slate-300">{item.pickups_summary}</span>
+        {/* Hardware & Modifications Highlights (with Click-to-Edit on every card) */}
+        <div className="bg-slate-900/70 border border-slate-800 rounded-xl p-5 space-y-3">
+          <div className="flex items-center justify-between">
+            <h2 className="text-xs font-semibold text-white uppercase tracking-wider">
+              Hardware & Modifications
+            </h2>
+            <span className="text-[10px] text-cyan-400 font-mono">Click card to edit text</span>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+            {/* Pickups Card */}
+            <div
+              onClick={() => {
+                if (inlineEditingField !== 'pickups_summary') {
+                  startInlineEdit('pickups_summary', item.pickups_summary);
+                }
+              }}
+              className="p-3.5 bg-slate-950 hover:bg-slate-950/90 border border-slate-800/70 hover:border-cyan-700/60 rounded-lg transition cursor-pointer relative group"
+            >
+              <div className="flex items-center justify-between mb-1">
+                <span className="text-cyan-400 font-semibold">Pickups / Electronics</span>
+                <span className="text-[10px] text-slate-500 opacity-0 group-hover:opacity-100 transition">✏️ Edit</span>
+              </div>
+              {inlineEditingField === 'pickups_summary' ? (
+                <div className="space-y-2 pt-1" onClick={(e) => e.stopPropagation()}>
+                  <textarea
+                    rows={3}
+                    autoFocus
+                    value={inlineFieldValue}
+                    onChange={(e) => setInlineFieldValue(e.target.value)}
+                    placeholder="e.g. Lavarack Custom bridge (~9.8k, Jackson J90 style), stock neck"
+                    className="w-full bg-slate-900 border border-cyan-500 rounded p-2 text-xs text-slate-200 focus:outline-none"
+                  />
+                  <div className="flex justify-end gap-1.5">
+                    <button
+                      type="button"
+                      onClick={() => setInlineEditingField(null)}
+                      className="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded text-xs"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="button"
+                      disabled={isSavingInline}
+                      onClick={() => saveInlineField('pickups_summary', inlineFieldValue)}
+                      className="px-3 py-1 bg-cyan-600 hover:bg-cyan-500 text-white rounded font-medium text-xs"
+                    >
+                      {isSavingInline ? 'Saving...' : 'Save'}
+                    </button>
+                  </div>
                 </div>
-              )}
-              {item.modifications_summary && (
-                <div className="p-3 bg-slate-950 border border-slate-800/70 rounded-lg">
-                  <span className="text-amber-400 font-semibold block mb-0.5">Modifications:</span>
-                  <span className="text-slate-300">{item.modifications_summary}</span>
-                </div>
-              )}
-              {item.valves_summary && (
-                <div className="p-3 bg-slate-950 border border-slate-800/70 rounded-lg">
-                  <span className="text-purple-400 font-semibold block mb-0.5">Valves / Tubes:</span>
-                  <span className="text-slate-300">{item.valves_summary}</span>
-                </div>
-              )}
-              {item.notes && (
-                <div className="p-3 bg-slate-950 border border-slate-800/70 rounded-lg">
-                  <span className="text-slate-400 font-semibold block mb-0.5">Notes:</span>
-                  <span className="text-slate-300">{item.notes}</span>
-                </div>
+              ) : (
+                <p className="text-slate-300 leading-relaxed">
+                  {item.pickups_summary || (
+                    <span className="text-slate-600 italic">No pickups noted yet. Click to add.</span>
+                  )}
+                </p>
               )}
             </div>
+
+            {/* Modifications Card */}
+            <div
+              onClick={() => {
+                if (inlineEditingField !== 'modifications_summary') {
+                  startInlineEdit('modifications_summary', item.modifications_summary);
+                }
+              }}
+              className="p-3.5 bg-slate-950 hover:bg-slate-950/90 border border-slate-800/70 hover:border-amber-700/60 rounded-lg transition cursor-pointer relative group"
+            >
+              <div className="flex items-center justify-between mb-1">
+                <span className="text-amber-400 font-semibold">Modifications & Circuit</span>
+                <span className="text-[10px] text-slate-500 opacity-0 group-hover:opacity-100 transition">✏️ Edit</span>
+              </div>
+              {inlineEditingField === 'modifications_summary' ? (
+                <div className="space-y-2 pt-1" onClick={(e) => e.stopPropagation()}>
+                  <textarea
+                    rows={3}
+                    autoFocus
+                    value={inlineFieldValue}
+                    onChange={(e) => setInlineFieldValue(e.target.value)}
+                    placeholder="e.g. Replaced bridge pickup with Lavarack Custom humbucker; R2 resistor swapped for 280k"
+                    className="w-full bg-slate-900 border border-amber-500 rounded p-2 text-xs text-slate-200 focus:outline-none"
+                  />
+                  <div className="flex justify-end gap-1.5">
+                    <button
+                      type="button"
+                      onClick={() => setInlineEditingField(null)}
+                      className="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded text-xs"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="button"
+                      disabled={isSavingInline}
+                      onClick={() => saveInlineField('modifications_summary', inlineFieldValue)}
+                      className="px-3 py-1 bg-amber-600 hover:bg-amber-500 text-white rounded font-medium text-xs"
+                    >
+                      {isSavingInline ? 'Saving...' : 'Save'}
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <p className="text-slate-300 leading-relaxed">
+                  {item.modifications_summary || (
+                    <span className="text-slate-600 italic">No modifications noted. Click to add.</span>
+                  )}
+                </p>
+              )}
+            </div>
+
+            {/* Valves / Tubes Card (Amps or on demand) */}
+            {(item.category === 'amp' || item.valves_summary) && (
+              <div
+                onClick={() => {
+                  if (inlineEditingField !== 'valves_summary') {
+                    startInlineEdit('valves_summary', item.valves_summary);
+                  }
+                }}
+                className="p-3.5 bg-slate-950 hover:bg-slate-950/90 border border-slate-800/70 hover:border-purple-700/60 rounded-lg transition cursor-pointer relative group"
+              >
+                <div className="flex items-center justify-between mb-1">
+                  <span className="text-purple-400 font-semibold">Valves / Tubes</span>
+                  <span className="text-[10px] text-slate-500 opacity-0 group-hover:opacity-100 transition">✏️ Edit</span>
+                </div>
+                {inlineEditingField === 'valves_summary' ? (
+                  <div className="space-y-2 pt-1" onClick={(e) => e.stopPropagation()}>
+                    <textarea
+                      rows={2}
+                      autoFocus
+                      value={inlineFieldValue}
+                      onChange={(e) => setInlineFieldValue(e.target.value)}
+                      placeholder="e.g. JJ EL34 power tubes fitted, bias set at 36mA"
+                      className="w-full bg-slate-900 border border-purple-500 rounded p-2 text-xs text-slate-200 focus:outline-none"
+                    />
+                    <div className="flex justify-end gap-1.5">
+                      <button
+                        type="button"
+                        onClick={() => setInlineEditingField(null)}
+                        className="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded text-xs"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        type="button"
+                        disabled={isSavingInline}
+                        onClick={() => saveInlineField('valves_summary', inlineFieldValue)}
+                        className="px-3 py-1 bg-purple-600 hover:bg-purple-500 text-white rounded font-medium text-xs"
+                      >
+                        {isSavingInline ? 'Saving...' : 'Save'}
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <p className="text-slate-300 leading-relaxed">
+                    {item.valves_summary || (
+                      <span className="text-slate-600 italic">No tube details logged. Click to add.</span>
+                    )}
+                  </p>
+                )}
+              </div>
+            )}
+
+            {/* General Notes Card */}
+            {(item.notes || inlineEditingField === 'notes') && (
+              <div
+                onClick={() => {
+                  if (inlineEditingField !== 'notes') {
+                    startInlineEdit('notes', item.notes);
+                  }
+                }}
+                className="p-3.5 bg-slate-950 hover:bg-slate-950/90 border border-slate-800/70 hover:border-slate-700 rounded-lg transition cursor-pointer relative group"
+              >
+                <div className="flex items-center justify-between mb-1">
+                  <span className="text-slate-400 font-semibold">Notes</span>
+                  <span className="text-[10px] text-slate-500 opacity-0 group-hover:opacity-100 transition">✏️ Edit</span>
+                </div>
+                {inlineEditingField === 'notes' ? (
+                  <div className="space-y-2 pt-1" onClick={(e) => e.stopPropagation()}>
+                    <textarea
+                      rows={2}
+                      autoFocus
+                      value={inlineFieldValue}
+                      onChange={(e) => setInlineFieldValue(e.target.value)}
+                      placeholder="e.g. Action setup at 1.5mm, 10-way switch mod"
+                      className="w-full bg-slate-900 border border-slate-500 rounded p-2 text-xs text-slate-200 focus:outline-none"
+                    />
+                    <div className="flex justify-end gap-1.5">
+                      <button
+                        type="button"
+                        onClick={() => setInlineEditingField(null)}
+                        className="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded text-xs"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        type="button"
+                        disabled={isSavingInline}
+                        onClick={() => saveInlineField('notes', inlineFieldValue)}
+                        className="px-3 py-1 bg-slate-700 hover:bg-slate-600 text-white rounded font-medium text-xs"
+                      >
+                        {isSavingInline ? 'Saving...' : 'Save'}
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <p className="text-slate-300 leading-relaxed">{item.notes}</p>
+                )}
+              </div>
+            )}
           </div>
-        )}
+        </div>
 
         {/* Voice & Quick Log Section */}
         <div className="bg-gradient-to-br from-slate-900 via-slate-900 to-cyan-950/30 border border-cyan-900/50 rounded-2xl p-6 sm:p-7 space-y-4">
