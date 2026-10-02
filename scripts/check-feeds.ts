@@ -30,6 +30,7 @@ loadEnv();
 
 const dbUrl = process.env.DATABASE_URL;
 const contactEmail = process.env.CONTACT_EMAIL || 'founder@example.com';
+const userAgent = `GuitarBot/0.1 (contact: ${contactEmail})`;
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function slugify(text: string): string {
   return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
