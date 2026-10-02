@@ -1,0 +1,1127 @@
+Media player
+Decks
+Turntable
+Controller
+Headphones
+Bass drum (Kick drum)
+Snare drum
+Hi-hat
+Rack tom
+Floor tom
+Tom-tom
+Rototom
+Ride cymbal
+Crash cymbal
+Splash cymbal
+China cymbal
+Cowbell
+Tambourine
+Shaker
+Wood block
+Claves
+Conga
+Bongo
+Timbale
+Gong
+Triangle
+Cajón
+Vibra-slap
+Bell tree
+Drum Module
+Drum rack
+Hit-hat stand
+Cymbal
+Effect pedal (singular)
+Effect pedal(multi)
+Amplifier head
+Amplifier (combo)
+Amplifier cabinet
+FRFR cabinet
+Moddler
+IR unit
+Other pedal
+Pedal board
+Floor board
+Power amplifier
+Pre-amplifier
+Rack unit
+Capture unit
+Attenuator
+Other
+accordina
+accordion
+algozey
+alphorn
+alto clarinet
+alto flute
+alto saxophone
+Anglo concertina
+antara
+arghul
+bagpipe
+bandoneón
+bansuri
+baritone horn
+baritone saxophone
+baroque rackett
+baroque trumpet
+barrel organ
+bass clarinet
+bass flute
+bass harmonica
+bass oboe
+bass recorder
+bass saxophone
+bass trombone
+bass trumpet
+basset clarinet
+basset horn
+bassoon
+bawu
+bayan
+bazooka
+bellowed reed
+biniou
+birbynė
+birch lur
+boatswain's pipe
+bombarde
+brass
+bronze lur
+bugle
+buisine
+button accordion
+cabrette
+calliope
+Cembalet
+Harpsichord
+chalumeau
+charumera
+shawm
+chamber organ
+chirimía
+chromatic button accordion
+chromatic harmonica
+cimbasso
+cimpoi
+clarinet
+claviola
+concertina
+conch
+contrabass clarinet
+contrabass flute
+contrabass recorder
+contrabass saxophone
+tubax
+contrabassoon
+cor anglais
+cornamuse
+cornemuse du centre
+cornemuse du Centre
+cornet
+cornett
+crumhorn
+daegeum
+danso
+diatonic button accordion
+reed organ
+melodica
+didgeridoo
+đing buốt
+đing năm
+ding tac ta
+dizi
+double reed
+duck call
+dūdmaišis
+duduk
+dudy
+dudy podhalanskie
+dudy wielkopolskie
+dulcian
+dulzaina
+E-flat clarinet
+end-blown flute
+English concertina
+English flageolet
+euphonium
+fife
+fipple flute
+fiscorn
+flugelhorn
+flabiol
+flageolet
+flumpet
+flute
+flûte d'amour
+flutina
+diatonic accordion
+footbass
+free reed
+French horn
+fujara
+gaida
+gaita asturiana
+gaita de boto
+gaita gallega
+gaita sanabresa
+gajdy
+garklein recorder
+garmon
+gemshorn
+German concertina
+gralla
+great bass recorder / c-bass recorder
+Great Highland bagpipe
+guan
+härjedalspipa
+harmonica
+harmonium
+heckelphone
+helicon
+hichiriki
+hmông flute
+horn
+hotchiku
+hue puruhau
+hulusi
+hümmelchen
+Irish flute
+jug
+k'lông pút
+kagurabue
+kaval
+kèn bầu
+kèn lá
+keyed brass instruments
+khèn Mèo
+khene
+khlui
+ki pah
+kōauau
+kōauau ponga ihu
+kortholt
+launeddas
+limbe
+low whistle
+Magyar duda
+mashak
+matstsyanka
+mellophone
+melophone
+mezwed
+mijwiz
+mirliton
+mouth organ
+musette de cour
+suona
+piccolo oboe
+nabal
+nadaswaram
+shahnai
+nagak
+nai
+natural brass instruments
+natural horn
+natural trumpet
+ney
+neyanban
+nguru
+nohkan
+Northumbrian pipes
+nose flute
+nose whistle
+oboe
+oboe d'amore
+oboe da caccia
+ocarina
+olifant
+ophicleide
+organ
+pan flute
+pang gu ly hu hmông
+parkapzuk
+pedal accordion
+pi nai
+pí thiu
+piano accordion
+piccolo
+piccolo trumpet
+piffero
+pipe organ
+piri
+piva
+pocket trumpet
+poi āwhiowhio
+porotiti
+portative
+pōrutu
+post horn
+practice chanter
+pūkaea
+pūmotomoto
+pūpakapaka
+pūtātara
+pūtōrino
+quadruple reed
+quena
+rauschpfeife
+reclam de xeremies
+xeremies
+recorder
+reeds
+regal
+rehu
+renaissance rackett
+rondador
+ryuteki
+sac de gemecs
+sackbut
+säckpipa
+saduk
+saluang
+samba whistle
+sáo meò
+sáo trúc
+sarrusophone
+saxophone
+Schwyzerörgeli
+Scottish smallpipes
+serpent
+shakuhachi
+tible
+shehnai
+sheng
+shinobue
+sho
+shofar
+shruti box
+siku
+zampogna
+single reed
+slide brass instruments
+slide whistle
+somu dūdas
+sopilka
+sopranino recorder
+sopranino saxophone
+soprano clarinet
+soprano flute
+soprano recorder
+soprano saxophone
+sordellina
+sousaphone
+spilåpipa
+subcontrabass recorder
+suling
+syrinx
+taepyeongso
+taragot
+tarota
+tenor horn / alto horn
+tenor recorder
+tenor saxophone
+tenor trombone
+tenora
+theatre organ
+three-hole pipe
+tiêu
+tin whistle
+Tonette
+torupill
+tràm plè
+trắng jâu
+trắng lu
+transverse flute
+treble flute
+treble recorder / alto recorder
+trikiti
+trombone
+trumpet
+tsampouna
+tuba
+tulum
+tungso
+txistu
+uilleann pipes
+valve trombone
+valved brass instruments
+venu
+vessel flute
+veuze
+vibrandoneon
+vuvuzela
+Wagner tuba
+whistle
+Wiener Horn
+willow flute
+wind instruments
+woodwind
+wot
+Xaphoon
+xiao
+xun
+żaqq
+zhaleika
+zurna
+12 string guitar
+17-string bass koto
+acoustic bass guitar
+acoustic fretless guitar
+acoustic guitar
+aeolian harp
+ajaeng
+akkordolia
+alto viol
+Appalachian dulcimer
+archlute
+archtop guitar
+arpeggione
+autoharp
+bağlama
+baglamas
+bajo sexto
+balalaika
+bandora
+bandura
+bandurria
+banhu
+banjitar
+banjo
+banjo-ukulele
+banjolin
+barbat
+baritone guitar
+baroque guitar
+baryton
+bass guitar
+electric bass guitar
+bass viol
+bass violin
+berda
+berimbau
+bhapang
+bin-sitar
+bisernica
+biwa
+Blaster Beam
+bolon
+bouzar / gouzouki
+bouzouki
+bowed lute
+bowed lyre
+bowed piano
+bowed psaltery
+bowed string instruments
+brač
+bugarija
+bulbul tarang
+taishogoto
+buzuq
+cavaquinho
+cello
+čelo
+chakhe
+chanzy
+Chapman stick
+charango
+chikuzen biwa
+chitarra battente
+chitra veena
+vichitra veena
+rudra veena
+Saraswati veena
+chuurqin
+cimbalom
+citole
+cittern
+cizhonghu
+classical guitar
+classical kemençe
+clavichord
+clavinet
+cò ke
+concert harp
+craviola
+Cretan lyra
+crwth
+cuatro
+cümbüş
+đàn bầu
+đàn nguyệt
+đàn nhị
+đàn tam
+đàn tam thập lục
+đàn tranh
+đàn tứ
+đàn tứ dây
+đàn tỳ bà
+daruan
+diddley bow
+dilruba
+diyingehu
+djoza
+dolceola
+dombra
+domra
+donso ngɔni
+doshpuluur
+double bass
+dramyin
+dulce melos
+dutar
+duxianqin
+electric cello
+electric fretless guitar
+electric grand piano
+electric guitar
+electric harp
+electric lap steel guitar
+electric sitar
+electric upright bass
+electric viola
+electric violin
+erhu
+esraj
+five-string banjo
+flamenco guitar
+folk harp
+fortepiano
+four-string banjo
+fretless bass
+gadulka
+gaohu
+gayageum
+gehu
+geomungo
+German harp
+ghaychak
+ghijak
+ģīga
+gittern
+gopichant
+tumbi
+grand piano
+Gravikord
+gudok
+guitalele
+guitar
+guitarrón chileno
+guitarrón mexicano
+gumbri
+guqin
+gusli
+guzheng
+haegeum
+hammered dulcimer
+hardingfele
+harp
+harp guitar
+harpejji
+harpsichord
+Hawaiian guitar
+heike biwa
+hummel
+hurdy gurdy
+igil
+Indonesian rebab
+Irish bouzouki
+Irish harp / clàrsach
+jantar
+jeli ngɔni
+jing'erhu
+jinghu
+jouhikko
+kacapi
+kacapi indung
+kacapi rincik
+kacapi siter
+kachva sitar
+kamale ngɔni
+kamancheh
+kanklės
+kannel
+kantele
+kanun
+kemençe of the Black Sea
+kemenche
+keyed box zither
+khamak
+gopiyantra/gopichan
+tuntuna
+khim
+kinnari vina
+kinnor
+kithara
+kokle
+kokyu
+komuz
+kora
+koto
+krar
+langeleik
+laouto
+lap harp
+lap steel guitar
+laúd
+lautenwerck
+lavta
+lira da braccio
+hurdy-gurdy
+lyre
+lyra
+lirone
+liuqin
+lute
+lute family
+luthéal
+lyra viol
+mandocello
+mandoguitar
+mandola
+mandolin
+mandolute
+mandora / gallichon
+Marxophone
+Mexican vihuela
+minipiano
+morin khuur
+musical bow
+ngɔni
+njarka
+nyatiti
+nyckelharpa
+octave mandolin
+octavilla
+octavina
+octobass
+oktawka
+orpharion
+orphica
+oud
+oval spinet
+Paraguayan harp
+pardessus de viole
+pedal piano
+pedal steel guitar
+piano
+piano spinet
+pipa
+plucked string instruments
+pluriarc
+Portuguese guitar
+prepared piano
+psaltery
+Radhika's Mohan veena
+Bhatt's Mohan veena
+ravanahatta
+rebab
+Ghijak
+Ghaychak
+rubab
+Seni rebab
+rebec
+resonator guitar
+ronroco
+ruan
+samica
+sanshin
+santoor
+santur
+sanxian
+sarangi
+šargija
+sarod
+sasando
+satsuma biwa
+saw duang
+saw sam sai
+saw u
+saz
+seni rebab
+setar
+shamisen
+shichepshin
+shudraga
+sitar
+slide guitar
+soprano violin
+spike-fiddle
+spinet
+spinettone
+steel guitar
+steel-string acoustic guitar
+stick zither
+strings
+Stroh violin
+struck string instruments
+suka
+surbahar
+sursingar
+swaragat
+swarmandal
+table steel guitar
+tack piano
+talharpa
+tambura
+tanbur
+tangent piano
+tanpura
+tar
+te kū
+tenor banjo
+tenor guitar
+tenor viol
+tenor violin
+theorbo
+tiple
+tololoche
+tonkori
+topshuur
+toy piano
+treble viol
+treble violin
+tres
+tritantri veena
+tromba marina
+tube zither
+tun tuna
+tzoura
+ukeke
+ukulele
+upright piano
+ütőgardon
+valiha
+vertical viola
+vielle
+Vietnamese guitar
+vihuela
+viola
+viola caipira
+viola d'amore
+viola da gamba
+viola organista
+violin
+violino piccolo
+viololyra
+violoncello piccolo
+violone
+violotta
+virginal
+VM Bhatt's Mohan veena
+walaycho
+Warr guitar
+washtub bass
+wire-strung harp
+xalam
+yangqin
+yatga
+yaylı tanbur
+yazh
+yehu
+yoochin
+yueqin
+zhonghu
+zhongruan
+zhuihu
+zither
+afoxé
+agogô
+akete
+baandu
+funde
+kete
+alfaia
+amadinda
+aman khuur
+angklung
+ankle rattlers
+anvil
+arrabel
+ashiko
+atabaque
+atarigane
+balafon
+bangu
+barrel drum
+bass drum
+Batá drum
+bedug
+bell
+bell plate
+bell tree
+bendir
+bicycle bell
+bin-sasara
+bodhrán
+body percussion
+bombo legüero
+bonang
+bonang barung
+panerus
+bonang panembung
+bonang panerus
+bones
+bongos
+boobam
+boomwhacker
+brushes
+buk
+cabasa
+caixa
+cajón
+calabash
+calung
+jublag
+carillon
+glockenspiel
+music box
+castanets
+caxixi
+celesta
+çevgen
+chacha
+chande
+chap
+chau gong
+chime bar
+chimes
+tubular bells
+ching
+clapper
+clapstick
+claves
+concussion idiophone
+congas
+cowbell
+Cristal Baschet
+crotales
+cuíca
+cylindrical drum
+cymbal
+daf
+daire
+daluo
+darbuka
+davul
+dhol
+dholak
+djembe
+dohol
+doyra
+drums (drum set)
+duggi
+dulcitone
+dunun
+electronic drum set
+finger cymbals
+finger snaps
+foot stomps
+frame drum
+friction drum
+friction idiophone
+frottoir
+fundeh
+gambang
+gankogui
+ganzá
+garifuna drum
+gendèr barung
+gendèr panerus
+gendèr wayang
+ghatam
+glass harmonica
+glass harp
+goblet drum
+gong
+gong bass drum
+gong-chime
+gramorimba
+güira
+güiro
+handbell
+handclaps
+handpan
+hi-hat
+hourglass drum
+hue puruwai
+hyoshigi
+idiophone
+janggu
+jegogan
+jing
+junjung
+kanjira
+kantilan
+kartal
+kecer
+kemanak
+kempli
+kempul
+kempyang
+kendang
+kendang lanang
+kendang wadon
+kendhang batangan
+kendhang gendhing
+kendhang indung
+kendhang ketipung
+gendhing
+kendhang kulanter
+indung
+kendhang wayangan
+kenong
+kepyak
+kethuk
+kettle drum
+khong wong
+khong wong lek
+khong wong yai
+khulsan khuur
+kkwaenggwari
+klong khaek
+klong song na
+klong that
+klong yao
+kös
+kotsuzumi
+krakebs
+krap khū
+krap phuang
+krap sēphā
+kudüm
+lamellaphone
+lithophone
+madal
+maddale
+maracas
+marimba
+marímbula
+Mark tree
+mbira
+membranophone
+monkey stick
+morsing
+mouth harp
+mridangam
+mukkuri
+musical box
+nagadou-daiko
+naobo
+ocean drum
+octoban
+ōtsuzumi
+pahū
+pahū pounamu
+paiban
+pakhawaj
+pākuru
+pātē
+pemade
+percussion
+percussion idiophone
+phách
+pkhachich
+plucked idiophone
+poi
+primero
+qilaut
+quijada
+quinto
+rainstick
+rammana
+ranat ek
+ranat kaeo
+ranat thum
+ratchet
+reco-reco
+repeater
+repinique
+reyong
+Rhodes piano
+rhythm sticks
+riq
+rōria
+rototom
+sabar
+saron barung
+saron demung
+saron family
+saron panerus
+saron peking
+saron wayang
+scraped idiophone
+segunda
+sênh tiền
+shaken idiophone
+shakers
+shekere
+shime-daiko
+singing bowl
+sistrum
+slapstick
+slenthem
+slentho
+slit drum
+snare drum
+song loan
+spoons
+steelpan
+struck idiophone
+surdo
+t'rưng
+tabla
+tabor
+tambourine
+tamborim
+taiko
+talking drum
+tanbou ka
+tap dance
+taphon
+tef
+temple blocks
+temür khuur
+thavil
+The Great Stalacpipe Organ
+thon
+ti bwa
+timbales
+timpani
+tinya
+tōkere
+tom-tom
+triangle
+trống bông
+tubulum
+tumutumu
+txalaparta
+typewriter
+udu
+ugal
+vibraphone
+vibraslap
+washboard
+water drum
+waterphone
+wind chime
+wood block
+wooden fish
+Wurlitzer electric piano
+xiaoluo
+xylophone
+xylorimba
+yonggo
+yu
+zabumba
+żafżafa
+zarb
+zill
+analog synthesizer
+bass pedals
+bass synthesizer
+chamberlin
+clavioline
+continuum
+Denis d'or
+disk drive
+drum machine
+Dubreq Stylophone
+ebow
+electronic instruments
+electronic organ
+electronic shruti box
+elektronium
+EWI
+farfisa
+floppy disk drive
+game console sound chip
+guitar synthesizer
+Guitaret
+guitorgan
+Hammond organ
+hard disk drive
+keyboard
+keyboard bass
+keytar
+laser harp
+Lyricon
+marimba lumina
+mellotron
+Minimoog
+Moog
+omnichord
+ondes Martenot
+ondioline
+Otamatone
+Pianet
+Reactable
+sampler
+string synthesizer
+synclavier
+synthesizer
+telharmonium
+theremin
+trautonium
+tubon
+vocoder
+voice synthesizer
+wavedrum
+wind synthesizer
+bass
+bullroarer
+effects
+electric piano
+gizmo
+hydraulophone
+kazoo
+lasso d'amore
+musical saw
+pūrerehua
+suikinkutsu
+talkbox
+tape
+turntable
+vacuum cleaner
+żummara
+chirimía and drum
+cobla
+cobla de tres quartans
+gamelan
+guban
+piano duo
+piano four hands
+piano quartet
+piano trio
+pipe and tabor
+taonga pūoro
+viol consort
+violin octet
+bağlama (saz) family
+Baltic psalteries
+bīn
+concert flute
+fiddle
+gendèr
+guitar family
+huqin
+krap
+metallophone
+pi
+trumpet family
+veena
+viol family
+Viola da Gamba
+violin family
+claviorganum
+these instructions
+soprano recorder (descant)
+alto recorder (treble)
+great bass recorder (c-bass)
+saluang darek "inland" 4 holes
+saluang pauh/padang 6 holes
+saluang sungai pagu 3 holes
+Violin (little viola)
+Viola
+Violoncello (small big viola)
+Double Bass
