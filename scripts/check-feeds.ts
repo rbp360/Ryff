@@ -1,7 +1,6 @@
 import fs from 'fs';
 import path from 'path';
 import postgres from 'postgres';
-import Parser from 'rss-parser';
 import { fetchFeed } from '../src/lib/feeds';
 
 function loadEnv() {

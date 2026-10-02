@@ -48,7 +48,7 @@ export async function getUserPreferences(userId: string): Promise<UserPreference
   return {
     favoritePlayers: rows[0].favorite_players || [],
     followedBrands: rows[0].followed_brands || [],
-    reverbRegion: (rows[0].reverb_region as any) || 'SHIPS_TO_UK',
+    reverbRegion: (rows[0].reverb_region as UserPreferences['reverbRegion']) || 'SHIPS_TO_UK',
   };
 }
 

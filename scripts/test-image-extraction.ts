@@ -178,7 +178,7 @@ async function testAllSources() {
   console.log(`\n=== SUMMARY RESULTS ===`);
   console.log(`RSS Feeds tested (excluding local bridges): ${totalRss}`);
   console.log(`  - Feeds with working image extraction: ${rssWithImages} / ${totalRss} (${Math.round((rssWithImages / totalRss) * 100)}%)`);
-  console.log(`  - Feeds failing or no image extracted: ${totalRss - rssWithImages}`);
+  console.log(`  - Feeds failing or no image extracted: ${totalRss - rssWithImages} (${rssFailedFetch} failed fetch)`);
   console.log(`YouTube Feeds tested: ${ytSources.length}`);
   console.log(`  - YouTube with working image extraction: ${ytWithImages} / ${ytSources.length} (100%)`);
 }
