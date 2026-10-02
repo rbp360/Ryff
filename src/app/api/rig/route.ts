@@ -101,7 +101,15 @@ export async function GET() {
     order by kind asc, created_at asc
   `;
 
-  return NextResponse.json({ items });
+  const logs = await db`
+    select l.*, coalesce(r.model, r.raw_text) as item_name, r.brand as item_brand
+    from rig_item_logs l
+    join rig_items r on r.id = l.rig_item_id
+    where l.user_id = ${session.userId}
+    order by l.event_date desc, l.created_at desc
+  `.catch(() => []);
+
+  return NextResponse.json({ items, logs });
 }
 
 export async function POST(request: NextRequest) {
