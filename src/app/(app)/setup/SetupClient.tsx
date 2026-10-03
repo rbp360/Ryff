@@ -36,9 +36,12 @@ const SOURCES_LIST = [
 
 export function SetupClient({ initialEmail, initialPreferences }: SetupClientProps) {
   const [tone, setTone] = useState<'Dry' | 'Blunt' | 'Chatty'>('Dry');
-  const [interests, setInterests] = useState<string[]>(
+  const [players, setPlayers] = useState<string[]>(initialPreferences.favoritePlayers || []);
+  const [playerInput, setPlayerInput] = useState('');
+  const [brands, setBrands] = useState<string[]>(
     initialPreferences.followedBrands.length > 0 ? initialPreferences.followedBrands : ['Marshall', 'Tube amps', 'Pedals']
   );
+  const [brandInput, setBrandInput] = useState('');
   const [sources, setSources] = useState<Record<string, boolean>>({
     news: true,
     youtube: true,
@@ -74,12 +77,44 @@ export function SetupClient({ initialEmail, initialPreferences }: SetupClientPro
     flashNotice();
   }
 
-  function toggleInterest(item: string) {
-    const next = interests.includes(item)
-      ? interests.filter((x) => x !== item)
-      : [...interests, item];
-    setInterests(next);
-    syncPreferences(next, region);
+  function addPlayer() {
+    const trimmed = playerInput.trim();
+    if (trimmed && !players.includes(trimmed)) {
+      const next = [...players, trimmed];
+      setPlayers(next);
+      setPlayerInput('');
+      syncPreferences(next, brands, region);
+    }
+  }
+
+  function removePlayer(name: string) {
+    const next = players.filter((p) => p !== name);
+    setPlayers(next);
+    syncPreferences(next, brands, region);
+  }
+
+  function togglePresetBrand(item: string) {
+    const next = brands.includes(item)
+      ? brands.filter((x) => x !== item)
+      : [...brands, item];
+    setBrands(next);
+    syncPreferences(players, next, region);
+  }
+
+  function addBrand() {
+    const trimmed = brandInput.trim();
+    if (trimmed && !brands.includes(trimmed)) {
+      const next = [...brands, trimmed];
+      setBrands(next);
+      setBrandInput('');
+      syncPreferences(players, next, region);
+    }
+  }
+
+  function removeBrand(name: string) {
+    const next = brands.filter((b) => b !== name);
+    setBrands(next);
+    syncPreferences(players, next, region);
   }
 
   function toggleSource(id: string) {
@@ -95,16 +130,21 @@ export function SetupClient({ initialEmail, initialPreferences }: SetupClientPro
 
   async function handleRegionChange(newRegion: 'UK_ONLY' | 'SHIPS_TO_UK' | 'US_ONLY' | 'WORLDWIDE') {
     setRegion(newRegion);
-    syncPreferences(interests, newRegion);
+    syncPreferences(players, brands, newRegion);
   }
 
-  async function syncPreferences(newInterests: string[], newRegion: 'UK_ONLY' | 'SHIPS_TO_UK' | 'US_ONLY' | 'WORLDWIDE') {
+  async function syncPreferences(
+    newPlayers: string[],
+    newBrands: string[],
+    newRegion: 'UK_ONLY' | 'SHIPS_TO_UK' | 'US_ONLY' | 'WORLDWIDE'
+  ) {
     try {
       await fetch('/api/preferences', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          followedBrands: newInterests,
+          favoritePlayers: newPlayers,
+          followedBrands: newBrands,
           reverbRegion: newRegion,
         }),
       });
@@ -151,22 +191,167 @@ export function SetupClient({ initialEmail, initialPreferences }: SetupClientPro
         </div>
       </div>
 
-      {/* 2. Interests & Brands */}
+      {/* 2. Favorite Artists & Guitarists */}
       <div className="card">
-        <h3>You like</h3>
-        <p>Tap to shape what stories and gear Ryff prioritizes.</p>
-        <div className="chips">
+        <h3>Favorite Artists & Guitarists</h3>
+        <p style={{ marginBottom: '12px' }}>
+          Add musicians or artists you follow (e.g. Chris Impellitteri, Nita Strauss, Slash). News mentioning them gets boosted.
+        </p>
+        <div style={{ display: 'flex', gap: '8px', marginBottom: '12px' }}>
+          <input
+            type="text"
+            value={playerInput}
+            onChange={(e) => setPlayerInput(e.target.value)}
+            onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), addPlayer())}
+            placeholder="e.g. Chris Impellitteri, Slash..."
+            style={{
+              flex: 1,
+              background: '#0a0a0a',
+              border: '1px solid var(--ln)',
+              color: 'var(--tx)',
+              padding: '8px 12px',
+              borderRadius: '8px',
+              fontSize: '13px',
+              outline: 'none',
+            }}
+          />
+          <button
+            type="button"
+            onClick={addPlayer}
+            style={{
+              background: 'var(--ac)',
+              color: '#000',
+              fontWeight: 800,
+              padding: '8px 14px',
+              borderRadius: '8px',
+              border: 'none',
+              cursor: 'pointer',
+              fontSize: '12px',
+            }}
+          >
+            Add
+          </button>
+        </div>
+        {players.length > 0 ? (
+          <div className="chips">
+            {players.map((p) => (
+              <span
+                key={p}
+                className="chip on"
+                style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}
+              >
+                <span>{p}</span>
+                <button
+                  type="button"
+                  onClick={() => removePlayer(p)}
+                  style={{
+                    background: 'none',
+                    border: 'none',
+                    color: 'var(--tx)',
+                    cursor: 'pointer',
+                    fontSize: '13px',
+                    lineHeight: 1,
+                    padding: 0,
+                  }}
+                  aria-label={`Remove ${p}`}
+                >
+                  ✕
+                </button>
+              </span>
+            ))}
+          </div>
+        ) : (
+          <small style={{ color: 'var(--mu)', fontStyle: 'italic' }}>
+            No custom artists added yet. Type an artist name above to track news about them!
+          </small>
+        )}
+      </div>
+
+      {/* 3. Followed Brands & Topics */}
+      <div className="card">
+        <h3>Followed Brands & Topics</h3>
+        <p style={{ marginBottom: '12px' }}>Tap presets or add custom brands to shape what stories Ryff prioritizes.</p>
+
+        <div className="chips" style={{ marginBottom: '12px' }}>
           {DEFAULT_INTERESTS.map((item) => (
             <button
               key={item}
               type="button"
-              className={`chip ${interests.includes(item) ? 'on' : ''}`}
-              onClick={() => toggleInterest(item)}
+              className={`chip ${brands.includes(item) ? 'on' : ''}`}
+              onClick={() => togglePresetBrand(item)}
             >
               {item}
             </button>
           ))}
         </div>
+
+        <div style={{ display: 'flex', gap: '8px', marginBottom: '12px' }}>
+          <input
+            type="text"
+            value={brandInput}
+            onChange={(e) => setBrandInput(e.target.value)}
+            onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), addBrand())}
+            placeholder="Add custom brand or topic..."
+            style={{
+              flex: 1,
+              background: '#0a0a0a',
+              border: '1px solid var(--ln)',
+              color: 'var(--tx)',
+              padding: '8px 12px',
+              borderRadius: '8px',
+              fontSize: '13px',
+              outline: 'none',
+            }}
+          />
+          <button
+            type="button"
+            onClick={addBrand}
+            style={{
+              background: 'var(--ac)',
+              color: '#000',
+              fontWeight: 800,
+              padding: '8px 14px',
+              borderRadius: '8px',
+              border: 'none',
+              cursor: 'pointer',
+              fontSize: '12px',
+            }}
+          >
+            Add
+          </button>
+        </div>
+
+        {brands.filter((b) => !DEFAULT_INTERESTS.includes(b)).length > 0 && (
+          <div className="chips">
+            {brands
+              .filter((b) => !DEFAULT_INTERESTS.includes(b))
+              .map((b) => (
+                <span
+                  key={b}
+                  className="chip on"
+                  style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}
+                >
+                  <span>{b}</span>
+                  <button
+                    type="button"
+                    onClick={() => removeBrand(b)}
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      color: 'var(--tx)',
+                      cursor: 'pointer',
+                      fontSize: '13px',
+                      lineHeight: 1,
+                      padding: 0,
+                    }}
+                    aria-label={`Remove ${b}`}
+                  >
+                    ✕
+                  </button>
+                </span>
+              ))}
+          </div>
+        )}
       </div>
 
       {/* 3. Ingestion Sources */}

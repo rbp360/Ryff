@@ -2,13 +2,14 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { FeedItemCard } from '@/lib/personalization';
+import { FeedItemCard, UserPreferences } from '@/lib/personalization';
 import { BackButton } from '@/components/BackButton';
 
 
 interface DigestFeedProps {
   initialPersonalized: FeedItemCard[];
   initialGlobal: FeedItemCard[];
+  initialPreferences?: UserPreferences;
   sourcesCount: number;
   newCount: number;
   updatedTime: string;
@@ -95,6 +96,7 @@ function FeedImage({ src, alt, category }: { src?: string | null; alt: string; c
 export function DigestFeed({
   initialPersonalized,
   initialGlobal,
+  initialPreferences,
   sourcesCount,
   newCount,
   updatedTime,
@@ -131,6 +133,9 @@ export function DigestFeed({
     }
   }
 
+  const favoritePlayers = initialPreferences?.favoritePlayers || [];
+  const followedBrands = initialPreferences?.followedBrands || [];
+
   return (
     <>
       <div className="top" style={{ marginBottom: '10px' }}>
@@ -165,6 +170,78 @@ export function DigestFeed({
           Global Gear Buzz
         </button>
       </div>
+
+      {/* Tracking Bar Banner */}
+      {tab === 'personalized' && (
+        <div
+          style={{
+            background: 'var(--sf)',
+            border: '1px solid var(--ln)',
+            borderRadius: '10px',
+            padding: '8px 12px',
+            marginBottom: '14px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            fontSize: '12px',
+            flexWrap: 'wrap',
+            gap: '8px',
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
+            <span style={{ color: 'var(--mu)', fontWeight: 700 }}>Tracking:</span>
+            {favoritePlayers.map((p) => (
+              <span
+                key={p}
+                style={{
+                  color: 'var(--ac)',
+                  background: '#0a1f13',
+                  padding: '2px 8px',
+                  borderRadius: '12px',
+                  fontSize: '11px',
+                  fontWeight: 800,
+                  border: '1px solid var(--ac)',
+                }}
+              >
+                {p}
+              </span>
+            ))}
+            {followedBrands.slice(0, 3).map((b) => (
+              <span
+                key={b}
+                style={{
+                  color: '#f59e0b',
+                  background: '#261b07',
+                  padding: '2px 8px',
+                  borderRadius: '12px',
+                  fontSize: '11px',
+                  fontWeight: 800,
+                  border: '1px solid #f59e0b',
+                }}
+              >
+                #{b}
+              </span>
+            ))}
+            {favoritePlayers.length === 0 && followedBrands.length === 0 && (
+              <span style={{ color: 'var(--mu)', fontStyle: 'italic' }}>
+                No custom artists or brands set yet.
+              </span>
+            )}
+          </div>
+          <Link
+            href="/setup"
+            style={{
+              color: 'var(--ac)',
+              textDecoration: 'underline',
+              fontWeight: 700,
+              fontSize: '11px',
+              marginLeft: 'auto',
+            }}
+          >
+            Edit Artists & Brands →
+          </Link>
+        </div>
+      )}
 
       {/* Category Filter Chips */}
       <div className="chips" style={{ marginBottom: '20px' }}>

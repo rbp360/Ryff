@@ -1,6 +1,6 @@
 import { db } from '@/lib/db';
 import { getSession, DEV_ADMIN_USER } from '@/lib/session';
-import { getPersonalizedFeed, getGlobalTopFeed } from '@/lib/personalization';
+import { getPersonalizedFeed, getGlobalTopFeed, getUserPreferences } from '@/lib/personalization';
 import { DigestFeed } from './DigestFeed';
 
 export const revalidate = 0; // Dynamic server component
@@ -14,11 +14,13 @@ export default async function DigestPage() {
     globalFeed,
     sourcesResult,
     storiesResult,
+    userPreferences,
   ] = await Promise.all([
     getPersonalizedFeed(userId, { limit: 25 }),
     getGlobalTopFeed({ limit: 25 }),
     db`SELECT count(*)::int as count FROM sources WHERE active = true`.catch(() => [{ count: 14 }]),
     db`SELECT count(*)::int as count FROM items WHERE published_at >= now() - interval '24 hours'`.catch(() => [{ count: 0 }]),
+    getUserPreferences(userId),
   ]);
 
   const sourcesCount = sourcesResult[0]?.count || 14;
@@ -34,6 +36,7 @@ export default async function DigestPage() {
     <DigestFeed
       initialPersonalized={personalizedFeed}
       initialGlobal={globalFeed}
+      initialPreferences={userPreferences}
       sourcesCount={sourcesCount}
       newCount={newCount}
       updatedTime={updatedTime}

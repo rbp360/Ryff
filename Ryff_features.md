@@ -122,3 +122,36 @@ Ryff now includes a dedicated public-facing marketing landing page at [`/welcome
   - ⌚ **Luxury Watches:** Collection maintenance timeline, auction house news clustering, and grey-market price drop alerts.
   - 🏡 **Real Estate / Rentals:** Automated neighborhood market scanner, renovation log tracking, and property value negotiation bot.
 
+---
+
+## Feature: Dedicated Setup UI for Favorite Artists & Followed Brands Tracking
+- **Date:** October 3, 2026
+- **Category:** News Personalization / Entity Tracking / Preference Management
+
+### 1. User & Marketing Overview
+Users can now easily manage and edit their favorite musicians, guitarists, and brands directly within the **Setup Hub** (`/setup`) and view active tracking badges on the **Digest** screen:
+- **Favorite Artists & Guitarists Input:** Dedicated card in Setup allowing users to type and add any artist/player (e.g. *Chris Impellitteri*, *Nita Strauss*, *Slash*) or remove existing ones with 1-tap `✕` chips.
+- **Custom Brands & Topics Manager:** Flexible topic manager combining preset popular brands (*Marshall*, *Fender*, *Gibson*, etc.) with a custom text entry for niche builders or technologies (*Soldano*, *KSR*, *Modelling*).
+- **Digest Active Tracking Banner:** Real-time indicator bar on the **Digest** screen ("For Your Rig & Tastes") displaying all currently tracked artists and followed brands with a direct link to edit them in Setup (`⚙`).
+
+---
+
+### 2. Technical Details (For Developers)
+- **Setup Component ([`src/app/(app)/setup/SetupClient.tsx`](file:///c:/Users/rob_b/Ryff/src/app/(app)/setup/SetupClient.tsx)):**
+  - Integrated `favoritePlayers` state alongside `followedBrands` and initialized from `initialPreferences`.
+  - Created text input controls with `onKeyDown` Enter listeners for instant addition.
+  - Updated `syncPreferences()` to send both `favoritePlayers` and `followedBrands` arrays to `/api/preferences`.
+- **Digest Integration ([`src/app/(app)/digest/page.tsx`](file:///c:/Users/rob_b/Ryff/src/app/(app)/digest/page.tsx) & [`DigestFeed.tsx`](file:///c:/Users/rob_b/Ryff/src/app/(app)/digest/DigestFeed.tsx)):**
+  - Added parallel `getUserPreferences(userId)` call to `DigestPage` and passed `initialPreferences` down to `DigestFeed`.
+  - Added sticky "Tracking: <Artists> <#Brands>" banner to the personalized Digest view.
+
+---
+
+### 3. White-Label & Domain-Agnostic Utility
+- **Cross-Domain Application:** Generic **Entity Interest & Keyword Subscription Engine**.
+- **Use Cases for Other Verticals:**
+  - 🏎️ **Automotive:** Track specific race drivers, car designers (e.g., Gordon Murray, Adrian Newey), or niche tuner brands in the news feed.
+  - ⌚ **Luxury Watches:** Track independent watchmakers (e.g., Philippe Dufour, F.P. Journe) or specific complications (e.g., Tourbillon, Perpetual Calendar).
+  - 🏃 **Athletics & Running:** Track specific marathon runners, shoe technologies (e.g., Pebax foam, Carbon plates), or brand lines.
+
+
