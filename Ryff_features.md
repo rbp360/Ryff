@@ -154,4 +154,186 @@ Users can now easily manage and edit their favorite musicians, guitarists, and b
   - ⌚ **Luxury Watches:** Track independent watchmakers (e.g., Philippe Dufour, F.P. Journe) or specific complications (e.g., Tourbillon, Perpetual Calendar).
   - 🏃 **Athletics & Running:** Track specific marathon runners, shoe technologies (e.g., Pebax foam, Carbon plates), or brand lines.
 
+---
 
+## Feature: Reverb Marketplace Watchlist & Saved Deals System
+- **Date:** October 3, 2026
+- **Category:** Marketplace Intelligence / User Personalization / Saved Items
+
+### 1. User & Marketing Overview
+Users can now bookmark, track, and manage their favorite used gear listings in a dedicated **Watchlist (`★`)** on the **Trader** hub:
+- **Interactive Star Toggling:** Save or un-save any deal listing with 1 tap (`★` / `☆`) directly from deal cards.
+- **Trader Tabbed View:** Seamlessly toggle between **Live Deals** and **Saved Watchlist** tab to monitor price drops and listing availability.
+- **Listing Thumbnail Previews:** Enhanced visual cards featuring listing photos (`image_url`), price, condition, original price drop badges, and days on market.
+- **Persistent User State:** Watchlist state persists across sessions and syncs across devices.
+
+---
+
+### 2. Technical Details (For Developers)
+- **Database Schema ([`db/migrations/0011_deals_image_and_watchlist.sql`](file:///c:/Users/rob_b/Ryff/db/migrations/0011_deals_image_and_watchlist.sql)):**
+  - Added `image_url` text column to `deals` table.
+  - Created `watchlist` table with `id` (bigserial primary key), `user_id` (uuid references users), `deal_id` (bigint references deals), `listing_id` (text not null), `created_at` (timestamptz), and unique constraint `(user_id, listing_id)`.
+- **API Endpoint ([`src/app/api/watchlist/route.ts`](file:///c:/Users/rob_b/Ryff/src/app/api/watchlist/route.ts)):**
+  - `GET /api/watchlist`: Returns array of `watchlistListingIds` for the authenticated user session.
+  - `POST /api/watchlist`: Toggles item inclusion in `watchlist` (adds if absent, removes if present) with optimistic client state support.
+- **Reverb Parser ([`src/lib/reverb.ts`](file:///c:/Users/rob_b/Ryff/src/lib/reverb.ts)):**
+  - Updated `ReverbListing` schema and `parseReverbResponse` to extract listing thumbnail images (`photos[0]._links.thumbnail.href`).
+- **Trader Hub UI ([`src/app/(app)/trader/TraderClient.tsx`](file:///c:/Users/rob_b/Ryff/src/app/(app)/trader/TraderClient.tsx)):**
+  - Added tab bar state (`'all'` vs `'watchlist'`), visual listing cards with fallback badges, and interactive star toggle button.
+
+---
+
+### 3. White-Label & Domain-Agnostic Utility
+- **Cross-Domain Application:** General-purpose **Saved Listings & Inventory Watchlist Module**.
+- **Use Cases for Other Verticals:**
+  - ⌚ **Luxury Watches:** Track targeted listings across Chrono24 / eBay with price drop notifications.
+  - 🏎️ **Classic Cars:** Bookmark target auctions on Bring a Trailer or AutoTrader and track price reductions.
+  - 👟 **Footwear & Collectibles:** Save target shoe listings on StockX or GOAT and monitor price changes over time.
+
+---
+
+## Feature: Universal Sub-Page Back Navigation & Sticky Header System
+- **Date:** October 3, 2026
+- **Category:** Navigation Architecture / UX Depth / Mobile-First UX
+
+### 1. User & Marketing Overview
+Ryff's navigation depth has been enhanced with a universal top navigation bar featuring explicit back buttons (`← Back`) across detail views and setup screens:
+- **Intuitive Touch Target Back Navigation:** Users can effortlessly return to parent views (e.g. back to Rig Room from a specific gear detail sheet, or back to Home from Setup) without relying on browser navigation buttons.
+- **Sticky Glass Backdrop Header:** Low-contrast hairline border with frosted glass blur, preserving screen real estate while remaining accessible at all scroll positions.
+
+---
+
+### 2. Technical Details (For Developers)
+- **UI Header Integration ([`src/app/(app)/rig/[id]/page.tsx`](file:///c:/Users/rob_b/Ryff/src/app/(app)/rig/[id]/page.tsx), [`src/app/(app)/setup/SetupClient.tsx`](file:///c:/Users/rob_b/Ryff/src/app/(app)/setup/SetupClient.tsx)):**
+  - Implemented client header bar utilizing Next.js `useRouter().back()` with fallback fallback navigation paths (`/rig` or `/`).
+  - Added CSS classes `.back-btn` with high touch padding (12px 16px) and SongDeck token styling (`--sf`, `--ln`, `--tx`).
+
+---
+
+### 3. White-Label & Domain-Agnostic Utility
+- **Cross-Domain Application:** Mobile-First **Nested Route Navigation Template**.
+- **Use Cases for Other Verticals:** Any multi-level vertical mobile application requiring clean drill-down state preservation (e.g., viewing shoe wear metrics -> fleet list, viewing politician statement -> timeline).
+
+---
+
+## Feature: Rigistry Gear Catalog Auto-Matching Engine & Canonical Brand Aliasing
+- **Date:** October 3, 2026
+- **Category:** Data Normalization / Catalog Alignment / Multimodal Auto-Categorization
+
+### 1. User & Marketing Overview
+Ryff's gear catalog matching engine now automatically resolves brand nicknames, typos, and common aliases into canonical database records:
+- **Intelligent Brand Alias Resolution:** Commands like *"Added a Soldano SLO100 head"* or *"Tubescreamer pedal"* automatically resolve to canonical brand records (*Soldano Custom Amplification*, *Ibanez*) and proper category classification (`amplifiers-effects`).
+- **Seamless Voice & Text Logging:** Users can speak naturally into the quick-mic logger without needing exact catalog spelling.
+
+---
+
+### 2. Technical Details (For Developers)
+- **Database Schema ([`db/migrations/0010_rigistry_enhancements.sql`](file:///c:/Users/rob_b/Ryff/db/migrations/0010_rigistry_enhancements.sql)):**
+  - Updated `brands` and `brand_aliases` tables to include canonical aliases (`soldano`, `charvel`, `tubescreamer`) and default category mappings (`amplifiers-effects`).
+- **Parsing Engine ([`src/lib/rigistry-parser.ts`](file:///c:/Users/rob_b/Ryff/src/lib/rigistry-parser.ts) & [`src/lib/gear-parser.ts`](file:///c:/Users/rob_b/Ryff/src/lib/gear-parser.ts)):**
+  - Implemented normalized fuzzy string comparison against catalog records (`rigistry_items`), brand alias lookup, and automated extraction of specs, year, and model from unstructured voice/text logs.
+
+---
+
+### 3. White-Label & Domain-Agnostic Utility
+- **Cross-Domain Application:** Domain-agnostic **Catalog Brand Alias & Taxonomy Resolution Engine**.
+- **Use Cases for Other Verticals:**
+  - 👟 **Footwear:** Automatically match voice logs like *"Added Hoka Clifton 9s"* or *"Brooks Ghost"* to canonical shoe brand catalogs.
+  - 🏎️ **Automotive:** Resolve tuner aliases (e.g. *"AMG"*, *"M Division"*, *"Porsche 911GT3"*) to canonical vehicle registries.
+
+---
+
+# White-Label Product Strategy & Domain-Agnostic Architectural Blueprint
+
+This section details the overarching strategic and technical blueprint for re-issuing the Ryff architecture across alternative domains and commercial verticals. The platform is architected around **Three White-Label Product Angles**:
+
+---
+
+## Angle 1: Pre-Built Version (Turnkey Scoped Vertical Deployment)
+
+### 1. Concept & Commercial Model
+The **Pre-Built Version** is a done-for-you, turnkey vertical application deployment. Following a client scoping call, the Ryff engineering team replaces domain-specific data sources, marketplace APIs, news feeds, RSS channels, entity keywords, and AI persona profiles with the client's requested vertical domain (e.g. Runners/Running Shoes, Luxury Horology, Classic Automotive, Cycling Fleet).
+
+Once configured, the platform runs 100% identically to Ryff's core engine: executing background RSS ingestion, vector/LLM clustering, persona debates, marketplace deal tracking, and asset logging out of the box.
+
+### 2. Domain Data Source Mapping Table
+
+| Domain / Vertical | Core Data Swap (RSS / Feeds) | Marketplace Ingest API | Asset Logger Focus | AI Personas (Backstage) |
+| :--- | :--- | :--- | :--- | :--- |
+| **Guitars (Current)** | Premier Guitar, Guitar World, RSS, YouTube | Reverb API | Guitars, Amps, Pedals, Strings | **Hank** (Vintage Luthier) vs **Vee** (Digital Modeller) |
+| **Running & Footwear** | Runner’s World, Strava blog, Trail Runner RSS, YouTube | StockX, GOAT, eBay Footwear API | Running Shoes, Mileage, Foam Wear, Price | **Doc** (Podiatrist/Biomechanics) vs **Swift** (Ultra-Marathoner) |
+| **Luxury Horology** | Hodinkee, Fratello Watches, Revolution, YouTube | Chrono24, eBay Watches API | Watch Collection, Service History, Timekeeping | **Horace** (Master Watchmaker) vs **Julian** (Independent Collector) |
+| **Motorsport & Track Cars** | PistonHeads, Speedhunters, Motorsport RSS, YouTube | AutoTrader, Bring a Trailer API | Garage Vehicles, Track Days, Oil/Tire Wear | **Mac** (Wrench Mechanic) vs **Apex** (Telemetry Engineer) |
+| **Specialty Coffee** | James Hoffmann RSS, Perfect Daily Grind, Barista Hustle | Coffee Shrub, Prima Coffee API | Grinders, Machines, Water Recipes, Beans | **Barista Ben** (Traditional Espresso) vs **Science Sam** (Extraction Specialist) |
+
+### 3. Technical Implementation
+- **Domain Config Blueprint (`config/domain.config.ts`):** Single declarative configuration file defining feed URLs, marketplace search parameters, brand catalog schemas, and persona system prompts.
+- **Pluggable API Adapters (`src/lib/marketplace/adapter.ts`):** Interface for third-party marketplace search, standardizing results into `{ title, price, original_price, days_on_market, image_url, location, url }`.
+
+---
+
+## Angle 2: Builder Version (Self-Serve N8n-Style Dynamic Pipeline & Custom Automation Engine)
+
+### 1. Concept & Commercial Model
+The **Builder Version** is a self-serve visual pipeline generator (similar to N8n, Zapier, or Make). Instead of hardcoding vertical sources, end-users input their own tracking variables, RSS feed URLs, social targets, and entity monitor lists via an intuitive UI. 
+
+Our backend automates the orchestration: dynamically spinning up RSS pollers, diyGod / RSSHub bridges, web scrapers, Hansard parliamentary monitors, and Gemini Flash LLM extraction pipelines without requiring manual code changes.
+
+### 2. Primary Example: Political & PR Intelligence ("Restore Britain & MPs")
+- **User Input Variables:**
+  - **Entities to Monitor:** *Restore Britain*, *Politician X*, *Politician Y*, *Policy Z*.
+  - **Data Feeds & Sources:** Hansard Parliamentary Transcripts, BBC News RSS, Guardian Politics RSS, diyGod Twitter/X & Bluesky bridges, YouTube political debate transcripts.
+  - **Extraction Schema:** `[Date, Speaker Name, Party/Affiliation, Topic, Direct Quote, Sentiment, Policy Impact]`.
+- **Automated Backend Orchestration:**
+  1. **Dynamic Poller:** Cron daemon regularly polls registered RSS/API endpoints.
+  2. **LLM Extraction Pipeline:** Feeds incoming text to Gemini Flash with user-defined JSON schema to extract quotes, dates, and sentiment.
+  3. **Vector Embeddings & Clustering:** Stores quotes in PostgreSQL vector table (`pgvector`), grouping related statements into daily digest clusters.
+  4. **Searchable Dataset & Alert Engine:** Enables users to query *"What did Politician X state about energy policy in Q3 2026?"* and pushes daily digest summary alerts.
+
+### 3. Technical Architecture Blueprint
+- **Dynamic Source Registry (`sources` table):** Stores user-defined feeds with custom extraction rules, headers, and refresh frequencies.
+- **Zero-Code Schema Transformer (`src/lib/builder/transformer.ts`):** Uses structured LLM outputs to transform raw feed items into custom user-defined entity tables.
+- **N8n-Style Webhook & Worker Pool:** Asynchronous background worker fleet processing ingested items in real time.
+
+---
+
+## Angle 3: Lightweight Asset-Logger / Maintenance / Spec Tool (Standalone or Embedded Micro-App)
+
+### 1. Concept & Commercial Model
+A decoupled, lightweight asset and event logging micro-app that operates either as a standalone tool or embedded within parent application wrappers. It provides structured asset tracking, maintenance alerts, wear calculations, and event logging across two primary sub-types:
+
+---
+
+### Variant 3.i: Footwear & Hard Goods Wear/Usage Logger (Quantitative Tracking)
+Designed for physical assets subject to physical wear, usage accumulation, and periodic maintenance.
+
+#### Key Metrics & Features:
+- **Asset Profile:** Name, brand, model, acquisition date, initial purchase price (£/$).
+- **Usage Telemetry:** Total distance logged (miles/km), total hours in service, usage frequency.
+- **Cost-per-Use Analytics:** Real-time calculation of cost-per-mile (`Purchase Price / Total Miles Logged`) to quantify asset value over time.
+- **Wear Degradation & Maintenance Alerts:** Automated alerts based on cumulative usage thresholds:
+  - *Example (Footwear):* *"Shoe Foam Alert: Hoka Clifton 9 has reached 385 / 400 miles. Midsole cushioning degradation expected."*
+  - *Example (Cycling):* *"Chain Wear Alert: 250 km logged since last chain lubrication."*
+- **1-Tap Quick-Mic Voice Logger:** Speak voice memos (e.g. *"Ran 8 miles in the Clifton 9s on wet trail"*), parsed automatically by Gemini Flash to increment mileage and record terrain/wear notes.
+
+---
+
+### Variant 3.ii: Definable Structured Event & Statement Logger (Qualitative & Fact-Checking Dataset)
+Designed for qualitative event logging, political statement tracking, public record archiving, and quote indexing.
+
+#### Key Metrics & Features:
+- **Definable Event Data Schema:** Captures structured records of *"Entity X said/acted Y on Z date"*.
+- **Database Fields:**
+  - `entity_name`: Name of politician, public figure, or brand.
+  - `event_date`: Date statement was made or action occurred.
+  - `verbatim_statement`: Full quote or action transcript.
+  - `topic_category`: Categorized policy topic or topic tag.
+  - `source_url`: Verifiable reference link (Hansard, video transcript, news article).
+  - `searchable_vector`: Embeddings for semantic natural language queries.
+- **Searchable Query Interface:** Allows users to query complex historical datasets (e.g. *"Show all quotes by Politician X regarding taxation between 2024 and 2026"*).
+
+---
+
+### 2. White-Label Embedding Options
+- **Standalone Micro-App:** Lightweight PWA / Web App focused exclusively on asset logging and maintenance.
+- **Embedded iFrame / Component Wrapper:** React / Web Component embeddable inside partner platforms, mobile apps, or enterprise dashboards.
