@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { FeedItemCard, UserPreferences } from '@/lib/personalization';
 import { BackButton } from '@/components/BackButton';
@@ -62,6 +62,11 @@ function FeedImage({ src, alt, category }: { src?: string | null; alt: string; c
   const fallback = getCategoryFallbackImage(category);
   const [imgSrc, setImgSrc] = useState<string>(src || fallback);
   const [hasFailed, setHasFailed] = useState(false);
+
+  useEffect(() => {
+    setImgSrc(src || fallback);
+    setHasFailed(false);
+  }, [src, fallback]);
 
   if (hasFailed) {
     return (

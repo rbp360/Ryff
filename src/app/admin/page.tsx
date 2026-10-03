@@ -61,11 +61,12 @@ async function getAdminData() {
   try {
     const sql = postgres(env.DATABASE_URL);
 
-    // 1. Sources health
+    // 1. Sources health (active feeds only)
     const sources = await sql<SourceRow[]>`
       SELECT id, kind, name, url, tier, active, last_fetched_at, last_status
       FROM sources
-      ORDER BY active DESC, kind ASC, name ASC
+      WHERE active = true
+      ORDER BY kind ASC, name ASC
     `;
 
     // 2. Last 20 Pipeline Runs
