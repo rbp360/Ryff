@@ -12,12 +12,12 @@ interface FeedSectionProps {
 
 const CATEGORIES = [
   { id: 'all', label: 'All Gear' },
-  { id: 'guitar', label: '🎸 Guitars' },
-  { id: 'amp', label: '🔊 Amps & Tubes' },
-  { id: 'pedal', label: '🎛️ Pedals & FX' },
-  { id: 'modeller', label: '💻 Modellers & Tech' },
-  { id: 'artist', label: '⭐ Artists' },
-  { id: 'deal', label: '💰 Deals' },
+  { id: 'guitar', label: 'Guitars' },
+  { id: 'amp', label: 'Amps & Tubes' },
+  { id: 'pedal', label: 'Pedals & FX' },
+  { id: 'modeller', label: 'Modellers & Tech' },
+  { id: 'artist', label: 'Artists' },
+  { id: 'deal', label: 'Deals' },
 ];
 
 function getCategoryFallbackImage(category?: string): string {
@@ -213,7 +213,6 @@ export function FeedSection({
                   : 'text-slate-400 hover:text-slate-200'
               }`}
             >
-              <span>🎯</span>
               <span>For Your Rig</span>
             </button>
             <button
@@ -224,7 +223,6 @@ export function FeedSection({
                   : 'text-slate-400 hover:text-slate-200'
               }`}
             >
-              <span>🔥</span>
               <span>Global Buzz</span>
             </button>
           </div>
@@ -235,7 +233,6 @@ export function FeedSection({
             className="text-xs px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition flex items-center gap-1.5"
             title="Customise followed brands & favourite players"
           >
-            <span>⚙️</span>
             <span className="hidden sm:inline">Preferences</span>
           </button>
         </div>
@@ -265,13 +262,13 @@ export function FeedSection({
             <span className="text-slate-400 font-medium">Tracking for you:</span>
             {preferences.favoritePlayers.length > 0 && (
               <span className="text-cyan-300 bg-cyan-950/60 border border-cyan-800/50 px-2 py-0.5 rounded font-mono text-[11px]">
-                🎸 {preferences.favoritePlayers.slice(0, 3).join(', ')}
+                {preferences.favoritePlayers.slice(0, 3).join(', ')}
                 {preferences.favoritePlayers.length > 3 ? ` +${preferences.favoritePlayers.length - 3}` : ''}
               </span>
             )}
             {preferences.followedBrands.length > 0 && (
               <span className="text-amber-300 bg-amber-950/60 border border-amber-800/50 px-2 py-0.5 rounded font-mono text-[11px]">
-                🏷️ {preferences.followedBrands.slice(0, 3).join(', ')}
+                {preferences.followedBrands.slice(0, 3).join(', ')}
                 {preferences.followedBrands.length > 3 ? ` +${preferences.followedBrands.length - 3}` : ''}
               </span>
             )}
@@ -392,7 +389,7 @@ export function FeedSection({
                 <div className="flex items-center gap-1.5 flex-wrap overflow-hidden max-w-[65%]">
                   {item.players.map((p) => (
                     <span key={p} className="text-[10px] px-1.5 py-0.5 rounded bg-cyan-950/40 text-cyan-300 font-mono">
-                      🎸 {p}
+                      {p}
                     </span>
                   ))}
                   {item.brands.map((b) => (
@@ -406,33 +403,32 @@ export function FeedSection({
                 <div className="flex items-center gap-1.5 shrink-0">
                   <button
                     onClick={() => handleReaction(item.id, 'like')}
-                    className={`p-1.5 rounded-lg border text-xs transition ${
+                    className={`px-2 py-1 rounded-lg border text-xs transition ${
                       item.user_reaction === 'like'
                         ? 'bg-cyan-950 text-cyan-400 border-cyan-700'
                         : 'bg-slate-800/70 text-slate-400 border-slate-700/60 hover:text-slate-200'
                     }`}
-                    title="Thumbs up: boost similar gear"
+                    title="Boost similar gear"
                   >
-                    👍
+                    ▲ Relevant
                   </button>
                   <button
                     onClick={() => handleReaction(item.id, 'dislike')}
-                    className={`p-1.5 rounded-lg border text-xs transition ${
+                    className={`px-2 py-1 rounded-lg border text-xs transition ${
                       item.user_reaction === 'dislike'
                         ? 'bg-red-950/60 text-red-400 border-red-800'
                         : 'bg-slate-800/70 text-slate-400 border-slate-700/60 hover:text-slate-200'
                     }`}
-                    title="Thumbs down: soft-dampen this topic"
+                    title="Soft-dampen this topic"
                   >
-                    👎
+                    ▼ Hide
                   </button>
                   <Link
                     href={`/chat?q=${encodeURIComponent(`What do you think about: "${item.title}"?`)}`}
-                    className="text-[11px] px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-slate-700 transition flex items-center gap-1 font-medium"
-                    title="Ask Hank & Vee about this story"
+                    className="text-[11px] px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-slate-700 transition flex items-center gap-1 font-medium"
+                    title="Ask Hosts about this story"
                   >
-                    <span>💬</span>
-                    <span className="hidden sm:inline">Ask Hosts</span>
+                    <span>Ask Hosts</span>
                   </Link>
                 </div>
               </div>
@@ -447,7 +443,7 @@ export function FeedSection({
           <div className="bg-slate-900 border border-slate-800 rounded-2xl max-w-lg w-full p-6 space-y-5 shadow-2xl animate-in fade-in">
             <div className="flex items-center justify-between border-b border-slate-800 pb-3">
               <h3 className="text-base font-bold text-white flex items-center gap-2">
-                <span>⚙️</span> Personalise Your Gear Feed
+                Personalise Your Gear Feed
               </h3>
               <button
                 onClick={() => setShowPreferencesModal(false)}
@@ -464,7 +460,7 @@ export function FeedSection({
             {/* Favourite Players Input */}
             <div className="space-y-2">
               <label className="text-xs font-semibold text-slate-300 uppercase tracking-wider font-mono">
-                🎸 Favourite Guitarists / Players
+                Favourite Guitarists / Players
               </label>
               <div className="flex gap-2">
                 <input
@@ -507,7 +503,7 @@ export function FeedSection({
             {/* Followed Brands Input */}
             <div className="space-y-2">
               <label className="text-xs font-semibold text-slate-300 uppercase tracking-wider font-mono">
-                🏷️ Followed Brands & Builders
+                Followed Brands & Builders
               </label>
               <div className="flex gap-2">
                 <input

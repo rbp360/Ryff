@@ -66,7 +66,7 @@ export default function LoginPage() {
       <div className="w-full max-w-md bg-slate-900 border border-slate-800 rounded-xl p-8 space-y-6 shadow-2xl">
         <div className="text-center space-y-2">
           <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 font-black text-xl mb-2">
-            🎸
+            R
           </div>
           <h1 className="text-2xl font-bold text-white tracking-tight">Sign In to GuitarBot</h1>
           <p className="text-sm text-slate-400">Enter your private invite code to access Hank & Vee</p>

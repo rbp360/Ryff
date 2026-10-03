@@ -215,30 +215,30 @@ export async function getPersonalizedFeed(
     // Check matches for badges
     const matchedPlayer = itemPlayers.find((p: string) => userPrefs.favoritePlayers.includes(p));
     if (matchedPlayer) {
-      badges.push(`🎸 ${matchedPlayer}`);
+      badges.push(matchedPlayer);
     }
 
     const matchedWanted = itemBrands.find((b: string) => wantedBrands.includes(b));
     if (matchedWanted) {
-      badges.push(`🎯 Wanted: ${matchedWanted}`);
+      badges.push(`Wanted: ${matchedWanted}`);
     }
 
     const matchedFollowed = itemBrands.find((b: string) => userPrefs.followedBrands.includes(b));
     if (matchedFollowed && !matchedWanted) {
-      badges.push(`🏷️ Followed: ${matchedFollowed}`);
+      badges.push(`Followed: ${matchedFollowed}`);
     }
 
     const matchedOwned = itemBrands.find((b: string) => ownedBrands.includes(b));
     if (matchedOwned && !matchedWanted && !matchedFollowed) {
-      badges.push(`🔌 In Your Rig: ${matchedOwned}`);
+      badges.push(`In Your Rig: ${matchedOwned}`);
     }
 
     if (row.buzz_count && row.buzz_count >= 2) {
-      badges.push(`🔥 ${row.buzz_count} Outlets`);
+      badges.push(`${row.buzz_count} Outlets`);
     }
 
     if (row.controversy && row.controversy >= 3) {
-      badges.push(`⚡ High Debate`);
+      badges.push(`High Debate`);
     }
 
     return {
@@ -313,13 +313,13 @@ export async function getGlobalTopFeed(
   return items.map((row) => {
     const badges: string[] = [];
     if (row.buzz_count && row.buzz_count >= 2) {
-      badges.push(`🔥 ${row.buzz_count} Outlets`);
+      badges.push(`${row.buzz_count} Outlets`);
     }
     if (row.controversy && row.controversy >= 3) {
-      badges.push(`⚡ High Debate`);
+      badges.push(`High Debate`);
     }
     if (row.players && row.players.length > 0) {
-      badges.push(`🎸 ${row.players[0]}`);
+      badges.push(`${row.players[0]}`);
     }
 
     return {

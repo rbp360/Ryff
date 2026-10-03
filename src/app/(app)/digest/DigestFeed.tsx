@@ -30,6 +30,66 @@ function getTimeAgo(dateStr?: string | null): string {
   return `${diffDays}d ago`;
 }
 
+function stripEmojis(text?: string | null): string {
+  if (!text) return '';
+  return text
+    .replace(/[\u{1F300}-\u{1F9FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]|[\u{1F600}-\u{1F64F}]|[\u{1F680}-\u{1F6FF}]|[\u{1F900}-\u{1F9FF}]|[\u{1F1E6}-\u{1F1FF}]/gu, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function getCategoryFallbackImage(category?: string): string {
+  const cat = (category || '').toLowerCase();
+  if (cat === 'guitar' || cat === 'bass' || cat === 'artist') {
+    return '/images/Bass gear brand default.png';
+  }
+  if (cat === 'amp') {
+    return '/images/Logo 1 landscape.jpg';
+  }
+  if (cat === 'pedal') {
+    return '/images/Effects brand default.jpg';
+  }
+  if (cat === 'modeller' || cat === 'tech' || cat === 'studio') {
+    return '/images/Studio gear brand default.png';
+  }
+  return '/images/Drum gear brand default.png';
+}
+
+function FeedImage({ src, alt, category }: { src?: string | null; alt: string; category?: string }) {
+  const fallback = getCategoryFallbackImage(category);
+  const [imgSrc, setImgSrc] = useState<string>(src || fallback);
+  const [hasFailed, setHasFailed] = useState(false);
+
+  if (hasFailed) {
+    return (
+      <div className="story-thumb-container">
+        <div className="story-thumb-placeholder">
+          <span style={{ fontSize: '11px', fontWeight: 800, color: 'var(--mu)', letterSpacing: '0.05em' }}>RYFF</span>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="story-thumb-container">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={imgSrc}
+        alt={alt}
+        loading="lazy"
+        onError={() => {
+          if (imgSrc !== fallback) {
+            setImgSrc(fallback);
+          } else {
+            setHasFailed(true);
+          }
+        }}
+        className="story-thumb-img"
+      />
+    </div>
+  );
+}
+
 export function DigestFeed({
   initialPersonalized,
   initialGlobal,
@@ -126,124 +186,79 @@ export function DigestFeed({
 
       {/* Story Cards */}
       {filteredItems.map((item) => {
-        const primaryMatch = item.match_badges?.[0]?.replace(/^(🎯 Wanted:|🏷️ Followed:|🔌 In Your Rig:|🎸)\s*/i, '');
-        const botTake = item.key_takeaways?.[0] || item.summary || 'Worth keeping an eye on this week.';
+        const primaryMatch = stripEmojis(item.match_badges?.[0]?.replace(/^(Wanted:|Followed:|In Your Rig:)\s*/i, ''));
+        const headlineText = stripEmojis(item.headline || item.title);
+        const botTake = stripEmojis(item.key_takeaways?.[0] || item.summary || 'Worth keeping an eye on this week.');
         const timeAgo = getTimeAgo(item.published_at);
 
         return (
           <div key={item.id} className="story">
-            {/* 16:9 Thumbnail Slot */}
-            {item.image_url ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
+            <div className="story-main">
+              <div className="story-content">
+                <div className="story-meta">
+                  <small>
+                    {item.source_name} · {timeAgo}
+                  </small>
+                  {item.buzz_count && item.buzz_count > 1 ? (
+                    <span className="buzz-badge">
+                      {item.buzz_count} OUTLETS
+                    </span>
+                  ) : null}
+                </div>
+
+                <h3 className="story-headline">
+                  <a
+                    href={item.url}
+                    target="_blank"
+                    rel="noopener nofollow"
+                  >
+                    {headlineText}
+                  </a>
+                </h3>
+
+                {primaryMatch && (
+                  <span className="why">Matches: {primaryMatch}</span>
+                )}
+              </div>
+
+              {/* Compact Thumbnail */}
+              <FeedImage
                 src={item.image_url}
-                alt={item.headline || item.title}
-                loading="lazy"
-                style={{
-                  width: '100%',
-                  aspectRatio: '16/9',
-                  objectFit: 'cover',
-                  display: 'block',
-                  borderBottom: '1px solid var(--ln)',
-                }}
+                alt={headlineText}
+                category={item.category}
               />
-            ) : (
-              <div className="ph" style={{ borderBottom: '1px solid var(--ln)' }}>
-                ▨ {item.source_name} · 16:9
-              </div>
-            )}
+            </div>
 
-            <div className="b">
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <small>
-                  {item.source_name} · {timeAgo}
-                </small>
-                {item.buzz_count && item.buzz_count > 1 ? (
-                  <span style={{ fontSize: '10px', color: 'var(--ac)', fontWeight: 800 }}>
-                    {item.buzz_count} OUTLETS
-                  </span>
-                ) : null}
+            {/* Hank editorial take */}
+            <div className="say">
+              <div className="ph round hank-avatar">
+                Hank
               </div>
+              <span>{botTake}</span>
+            </div>
 
-              <h3>
-                <a
-                  href={item.url}
-                  target="_blank"
-                  rel="noopener nofollow"
-                  style={{ color: 'inherit', textDecoration: 'none' }}
+            {/* Actions */}
+            <div className="story-actions">
+              <div className="story-reactions">
+                <button
+                  type="button"
+                  onClick={() => handleReaction(item.id, 'like')}
+                  className={`reaction-btn ${item.user_reaction === 'like' ? 'like-active' : ''}`}
                 >
-                  {item.headline || item.title}
-                </a>
-              </h3>
-
-              {primaryMatch && (
-                <span className="why">Matches: {primaryMatch}</span>
-              )}
-
-              {/* Bot editorial take with 28px avatar */}
-              <div className="say" style={{ marginTop: '8px' }}>
-                <div
-                  className="ph round"
-                  style={{ width: 28, height: 28, minWidth: 28, fontSize: '9px' }}
+                  <span>▲</span> Relevant
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleReaction(item.id, 'dislike')}
+                  className={`reaction-btn ${item.user_reaction === 'dislike' ? 'dislike-active' : ''}`}
                 >
-                  Hank
-                </div>
-                <span>{botTake}</span>
+                  <span>▼</span> Hide
+                </button>
               </div>
 
-              {/* Actions: Thumbs Up/Down and Debate Deep Link */}
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  marginTop: '12px',
-                  paddingTop: '10px',
-                  borderTop: '1px solid var(--ln)',
-                }}
-              >
-                <div style={{ display: 'flex', gap: '8px' }}>
-                  <button
-                    type="button"
-                    onClick={() => handleReaction(item.id, 'like')}
-                    style={{
-                      fontSize: '12px',
-                      color: item.user_reaction === 'like' ? 'var(--ac)' : 'var(--mu)',
-                      fontWeight: 700,
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '4px',
-                    }}
-                  >
-                    <span>▲</span> Relevant
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handleReaction(item.id, 'dislike')}
-                    style={{
-                      fontSize: '12px',
-                      color: item.user_reaction === 'dislike' ? '#ef4444' : 'var(--mu)',
-                      fontWeight: 700,
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '4px',
-                    }}
-                  >
-                    <span>▼</span> Hide
-                  </button>
-                </div>
-
-                <Link
-                  href="/backstage"
-                  style={{
-                    fontSize: '11px',
-                    fontWeight: 700,
-                    color: 'var(--ac2)',
-                  }}
-                >
-                  Ask Hank about this ›
-                </Link>
-              </div>
+              <Link href="/backstage" className="ask-hank-link">
+                Ask Hank about this ›
+              </Link>
             </div>
           </div>
         );
