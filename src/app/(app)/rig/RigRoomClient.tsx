@@ -2,7 +2,7 @@
 
 import { useState, useRef } from 'react';
 import Link from 'next/link';
-import { formatGearTitle } from '@/lib/rigistry-parser';
+import { formatGearTitle } from '@/lib/gear-utils';
 
 export interface RigItemData {
   id: number | string;

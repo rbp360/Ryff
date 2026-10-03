@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { db } from '@/lib/db';
 import { getSession, DEV_ADMIN_USER } from '@/lib/session';
-import { formatGearTitle } from '@/lib/rigistry-parser';
+import { formatGearTitle } from '@/lib/gear-utils';
 
 export const revalidate = 0; // Dynamic server component
 
