@@ -24,9 +24,11 @@
   - Direct unsigned POST requests to Cloudinary (`https://api.cloudinary.com/v1_1/${cloudName}/auto/upload`) using `unsigned-rigistry` preset.
   - Persists resulting CDN URL directly to PostgreSQL via `PATCH /api/rig/[id]` (`image_url`) and triggers `router.refresh()`.
 - **Thumbnail Component ([`src/components/GearThumbnail.tsx`](file:///c:/Users/rob_b/Ryff/src/components/GearThumbnail.tsx)):**
-  - Responsive 4:3 thumbnail component with smooth skeleton shimmer and fade-in transitions, eliminating abrupt thumbnail swapping flashes.
-- **Rig State Synchronization ([`src/app/(app)/rig/RigRoomClient.tsx`](file:///c:/Users/rob_b/Ryff/src/app/%28app%29/rig/RigRoomClient.tsx)):**
+  - Responsive 4:3 thumbnail component with smooth skeleton shimmer and fade-in transitions.
+  - Includes SSR hydration and cached image completion detection (`imgRef.current.complete`) to prevent preloaded custom images from remaining invisible (`opacity: 0`).
+- **Rig State Synchronization ([`src/app/(app)/rig/RigRoomClient.tsx`](file:///c:/Users/rob_b/Ryff/src/app/%28app%29/rig/RigRoomClient.tsx)) & API ([`src/app/api/rig/route.ts`](file:///c:/Users/rob_b/Ryff/src/app/api/rig/route.ts)):**
   - Added window focus listener and prop sync effect to ensure custom uploaded photos on `/rig/[id]` immediately appear on `/rig` grid cards.
+  - Ensured `image_url` is consistently selected in both `GET` and `POST /api/rig` endpoints.
 
 ---
 

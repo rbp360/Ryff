@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { getCategoryFallbackImage } from '@/lib/gear-images';
 
 interface GearThumbnailProps {
@@ -25,6 +25,7 @@ export function GearThumbnail({
   const fallback = getCategoryFallbackImage(category);
   const [src, setSrc] = useState<string | null>(imageUrl || null);
   const [isLoaded, setIsLoaded] = useState(false);
+  const imgRef = useRef<HTMLImageElement | null>(null);
 
   useEffect(() => {
     let ignore = false;
@@ -67,6 +68,13 @@ export function GearThumbnail({
     };
   }, [imageUrl, brand, model, category, rawText, fallback]);
 
+  // Sync isLoaded when src changes or if already cached/completed by browser
+  useEffect(() => {
+    if (imgRef.current && imgRef.current.complete && imgRef.current.naturalWidth > 0) {
+      setIsLoaded(true);
+    }
+  }, [src]);
+
   const isCustom = Boolean(imageUrl);
 
   return (
@@ -86,6 +94,12 @@ export function GearThumbnail({
       {src && (
         // eslint-disable-next-line @next/next/no-img-element
         <img
+          ref={(el) => {
+            imgRef.current = el;
+            if (el && el.complete && el.naturalWidth > 0) {
+              setIsLoaded(true);
+            }
+          }}
           src={src}
           alt={alt || `${brand || ''} ${model || rawText || 'Gear'}`.trim()}
           loading="lazy"
@@ -93,6 +107,7 @@ export function GearThumbnail({
           onError={() => {
             if (src !== fallback) {
               setSrc(fallback);
+              setIsLoaded(true);
             }
           }}
           style={{
