@@ -212,8 +212,8 @@ describe('src/lib/personalization.ts', () => {
     expect(first).toHaveProperty('summary');
     expect(first).toHaveProperty('score');
     expect(Array.isArray(first.match_badges)).toBe(true);
-    expect(first.match_badges).toContain('🎸 Slash');
-    expect(first.match_badges).toContain('🎯 Wanted: B.C. Rich');
+    expect(first.match_badges).toContain('Slash');
+    expect(first.match_badges).toContain('Wanted: B.C. Rich');
   });
 
   it('queries global top feed ordered by global score', async () => {
