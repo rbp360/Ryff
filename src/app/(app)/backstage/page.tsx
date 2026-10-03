@@ -1,6 +1,9 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import Link from 'next/link';
+import { BackButton } from '@/components/BackButton';
+
 
 interface ChatMessage {
   id?: string | number;
@@ -108,7 +111,15 @@ export default function BackstagePage() {
 
   return (
     <>
-      <h1>Backstage</h1>
+      <div className="top" style={{ marginBottom: '10px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <BackButton fallbackHref="/" />
+          <h1 style={{ marginBottom: 0 }}>Backstage</h1>
+        </div>
+        <Link href="/setup" className="gearbtn" aria-label="Setup">
+          ⚙
+        </Link>
+      </div>
       <p className="sub">
         1-on-1 private debate and rig advice. <b>{bot === 'hank' ? 'Hank' : 'Vee'}</b> is active.
       </p>

@@ -3,6 +3,8 @@
 import { useState, useRef } from 'react';
 import Link from 'next/link';
 import { formatGearTitle } from '@/lib/gear-utils';
+import { BackButton } from '@/components/BackButton';
+
 
 export interface RigItemData {
   id: number | string;
@@ -242,7 +244,10 @@ export function RigRoomClient({ initialItems, initialLogs }: RigRoomClientProps)
   return (
     <>
       <div className="top" style={{ marginBottom: '10px' }}>
-        <h1 style={{ marginBottom: 0 }}>Rig room</h1>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <BackButton fallbackHref="/" />
+          <h1 style={{ marginBottom: 0 }}>Rig room</h1>
+        </div>
         <Link href="/setup" className="gearbtn" aria-label="Setup">
           ⚙
         </Link>

@@ -77,7 +77,7 @@ export async function runDealsPipeline(): Promise<DealsStageResult> {
       for (const deal of top3) {
         await db`
           insert into deals (
-            want_key, listing_id, listing_url, title, price_amount, original_price_amount, price_currency, condition, published_at, price_drop_text, seen_at
+            want_key, listing_id, listing_url, title, price_amount, original_price_amount, price_currency, condition, published_at, price_drop_text, image_url, seen_at
           )
           values (
             ${key},
@@ -90,6 +90,7 @@ export async function runDealsPipeline(): Promise<DealsStageResult> {
             ${deal.condition},
             ${deal.publishedAt ? new Date(deal.publishedAt) : null},
             ${deal.priceDropText || null},
+            ${deal.imageUrl || null},
             now()
           )
           on conflict (want_key, listing_id) do update set
@@ -100,6 +101,7 @@ export async function runDealsPipeline(): Promise<DealsStageResult> {
             condition = excluded.condition,
             published_at = coalesce(excluded.published_at, deals.published_at),
             price_drop_text = excluded.price_drop_text,
+            image_url = coalesce(excluded.image_url, deals.image_url),
             seen_at = now()
         `;
         totalDealsUpserted++;

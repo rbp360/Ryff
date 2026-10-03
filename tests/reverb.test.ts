@@ -22,6 +22,7 @@ describe('Reverb Integration & Want Keys', () => {
     expect(first.priceCurrency).toBeDefined();
 
     // Check newly added fields
+    expect(first).toHaveProperty('imageUrl');
     expect(first.publishedAt).toBeDefined();
     expect(typeof first.daysOnMarket).toBe('number');
   });

@@ -2,6 +2,8 @@
 
 import { use, useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
+import { BackButton } from '@/components/BackButton';
+
 
 interface RigItem {
   id: number;
@@ -240,9 +242,8 @@ export default function GearDetailPage({ params }: { params: Promise<{ id: strin
 
   return (
     <>
-      <Link href="/rig" className="back">
-        ‹ Rig room
-      </Link>
+      <BackButton fallbackHref="/rig" label="Rig room" />
+
 
       {/* 4:3 Hero Photo */}
       <div className="ph hero">

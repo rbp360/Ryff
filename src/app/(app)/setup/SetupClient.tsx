@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { BackButton } from '@/components/BackButton';
+
 
 interface SetupClientProps {
   initialEmail: string;
@@ -120,9 +122,7 @@ export function SetupClient({ initialEmail, initialPreferences }: SetupClientPro
   return (
     <>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <Link href="/" className="back">
-          ‹ Home
-        </Link>
+        <BackButton fallbackHref="/" label="Home" />
         {savedNotice && (
           <span style={{ fontSize: '11px', color: 'var(--ac)', fontWeight: 800 }}>
             ✓ Preferences saved

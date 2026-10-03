@@ -3,6 +3,8 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { FeedItemCard } from '@/lib/personalization';
+import { BackButton } from '@/components/BackButton';
+
 
 interface DigestFeedProps {
   initialPersonalized: FeedItemCard[];
@@ -132,7 +134,10 @@ export function DigestFeed({
   return (
     <>
       <div className="top" style={{ marginBottom: '10px' }}>
-        <h1 style={{ marginBottom: 0 }}>Digest</h1>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <BackButton fallbackHref="/" />
+          <h1 style={{ marginBottom: 0 }}>Digest</h1>
+        </div>
         <Link href="/setup" className="gearbtn" aria-label="Setup">
           ⚙
         </Link>

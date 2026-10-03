@@ -94,7 +94,7 @@ export async function retrieveChatContext(userId: string, userMessage: string): 
   let deals: DealContext[] = [];
   if (userWantKeys.length > 0) {
     const matchedDeals = await db`
-      select id, listing_url, title, price_amount, original_price_amount, price_currency, condition, published_at, price_drop_text
+      select id, listing_url, title, price_amount, original_price_amount, price_currency, condition, published_at, price_drop_text, image_url
       from deals
       where want_key = any(${userWantKeys})
       order by seen_at desc

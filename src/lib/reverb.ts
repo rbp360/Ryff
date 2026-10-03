@@ -13,6 +13,7 @@ export interface ReverbListing {
   publishedAt?: string | null;
   daysOnMarket?: number | null;
   priceDropText?: string | null;
+  imageUrl?: string | null;
 }
 
 export function wantKey(brand?: string | null, model?: string | null): string {
@@ -88,7 +89,18 @@ interface RawReverbListing {
   created_at?: string;
   published_at?: string;
   condition?: { display_name?: string; slug?: string } | string;
-  _links?: { web?: { href?: string } };
+  _links?: { 
+    web?: { href?: string };
+    photo?: { href?: string };
+  };
+  photos?: Array<{
+    _links?: {
+      large_crop?: { href?: string };
+      small_crop?: { href?: string };
+      thumbnail?: { href?: string };
+      full?: { href?: string };
+    };
+  }>;
   slug?: string;
 }
 
@@ -128,6 +140,12 @@ function parseReverbResponse(data: { listings?: RawReverbListing[] }, limit: num
     const publishedAt = item.published_at || item.created_at || null;
     const daysOnMarket = calculateDaysOnMarket(publishedAt);
 
+    const imageUrl = item._links?.photo?.href ||
+      item.photos?.[0]?._links?.large_crop?.href ||
+      item.photos?.[0]?._links?.thumbnail?.href ||
+      item.photos?.[0]?._links?.full?.href ||
+      null;
+
     results.push({
       listingId,
       url,
@@ -139,6 +157,7 @@ function parseReverbResponse(data: { listings?: RawReverbListing[] }, limit: num
       publishedAt,
       daysOnMarket,
       priceDropText,
+      imageUrl,
     });
   }
 
