@@ -3,7 +3,6 @@ import { db } from '../../../lib/db';
 import { getSession } from '../../../lib/session';
 import { logEvent } from '../../../lib/events';
 import { parseGearLineWithRigistry, ParsedRigLine } from '../../../lib/rigistry-parser';
-import { syncDealsForWants } from '../../../lib/deal-sync';
 
 export async function GET() {
   const session = await getSession();
@@ -113,21 +112,6 @@ export async function POST(request: NextRequest) {
     });
 
     await logEvent('rig_saved', { count: parsedItems.length, mode: shouldAppend ? 'append' : 'replace' }, session.userId);
-
-    // If new wants were added, trigger Reverb deal sync in background
-    const newWants = parsedItems.filter((i) => i.kind === 'want' && i.want_key);
-    if (newWants.length > 0) {
-      const userRow = await db`select reverb_region from users where id = ${session.userId} limit 1`;
-      const region = userRow[0]?.reverb_region || 'UK_ONLY';
-      // Asynchronously sync deals without blocking response
-      syncDealsForWants(
-        newWants.map((w) => ({
-          want_key: w.want_key!,
-          budget_gbp: w.budget_gbp,
-          reverb_region: region,
-        }))
-      ).catch((err) => console.error('[api/rig] Background deal sync error:', err));
-    }
 
     const updated = await db`
       select id, raw_text, brand, model, category, kind, budget_gbp, want_key,

@@ -333,9 +333,8 @@ export async function parseGearLineWithRigistry(line: string): Promise<ParsedRig
   // Infer category
   const category = inferCategory(cleaned, model, matchedBrand?.categories || []);
 
-  // Compute clean want_key without colons
-  const computedWantKey =
-    kind === 'want' ? wantKey(brandName, model || cleaned).replace(/^[:\s-]+/, '').trim() : null;
+  // The search term for Reverb is directly the cleaned string entered by the user
+  const computedWantKey = kind === 'want' ? cleaned.toLowerCase() : null;
 
   return {
     raw_text: cleaned,

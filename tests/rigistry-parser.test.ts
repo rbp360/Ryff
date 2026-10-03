@@ -41,5 +41,11 @@ describe('Rigistry Gear Parser', () => {
     const tubescreamer = await parseGearLineWithRigistry('Ibanez Tubescreamer');
     expect(tubescreamer.brand).toBe('Ibanez');
     expect(tubescreamer.category).toBe('pedal');
-  });
+
+    const arbitrary = await parseGearLineWithRigistry('Want: cockwomble2000');
+    expect(arbitrary.brand).toBeNull();
+    expect(arbitrary.category).toBe('other');
+    expect(arbitrary.kind).toBe('want');
+    expect(arbitrary.want_key).toBe('cockwomble2000');
+  }, 30000);
 });
