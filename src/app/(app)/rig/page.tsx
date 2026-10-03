@@ -10,7 +10,7 @@ export default async function RigPage() {
 
   const [itemsResult, logsResult] = await Promise.all([
     db<RigItemData[]>`
-      SELECT id, raw_text, brand, model, category, kind, budget_gbp, current_strings, last_restrung_at
+      SELECT id, raw_text, brand, model, category, kind, budget_gbp, current_strings, last_restrung_at, image_url
       FROM rig_items
       WHERE user_id = ${userId}
       ORDER BY kind ASC, created_at ASC

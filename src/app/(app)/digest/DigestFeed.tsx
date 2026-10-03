@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { FeedItemCard, UserPreferences } from '@/lib/personalization';
 import { BackButton } from '@/components/BackButton';
-
+import { getCategoryFallbackImage } from '@/lib/gear-images';
 
 interface DigestFeedProps {
   initialPersonalized: FeedItemCard[];
@@ -39,23 +39,6 @@ function stripEmojis(text?: string | null): string {
     .replace(/[\u{1F300}-\u{1F9FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]|[\u{1F600}-\u{1F64F}]|[\u{1F680}-\u{1F6FF}]|[\u{1F900}-\u{1F9FF}]|[\u{1F1E6}-\u{1F1FF}]/gu, '')
     .replace(/\s+/g, ' ')
     .trim();
-}
-
-function getCategoryFallbackImage(category?: string): string {
-  const cat = (category || '').toLowerCase();
-  if (cat === 'guitar' || cat === 'bass' || cat === 'artist') {
-    return '/images/Bass gear brand default.png';
-  }
-  if (cat === 'amp') {
-    return '/images/Logo 1 landscape.jpg';
-  }
-  if (cat === 'pedal') {
-    return '/images/Effects brand default.jpg';
-  }
-  if (cat === 'modeller' || cat === 'tech' || cat === 'studio') {
-    return '/images/Studio gear brand default.png';
-  }
-  return '/images/Drum gear brand default.png';
 }
 
 function FeedImage({ src, alt, category }: { src?: string | null; alt: string; category?: string }) {

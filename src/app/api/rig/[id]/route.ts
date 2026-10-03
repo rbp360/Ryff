@@ -76,6 +76,7 @@ export async function PATCH(
       'model',
       'category',
       'specs',
+      'image_url',
     ];
 
     const updates: Record<string, unknown> = {};
@@ -110,6 +111,7 @@ export async function PATCH(
         brand = coalesce(${updates.brand !== undefined ? (updates.brand as string) : null}, brand),
         model = coalesce(${updates.model !== undefined ? (updates.model as string) : null}, model),
         category = coalesce(${updates.category !== undefined ? (updates.category as string) : null}, category),
+        image_url = CASE WHEN ${updates.image_url !== undefined} THEN ${updates.image_url !== undefined ? (updates.image_url as string | null) : null} ELSE image_url END,
         updated_at = now()
       where id = ${itemId} and user_id = ${session.userId}
       returning *

@@ -3,7 +3,7 @@
 import { use, useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { BackButton } from '@/components/BackButton';
-
+import { GearHeroPhoto } from '@/components/GearHeroPhoto';
 
 interface RigItem {
   id: number;
@@ -11,6 +11,7 @@ interface RigItem {
   brand: string | null;
   model: string | null;
   category: string;
+  image_url?: string | null;
   serial_number?: string | null;
   purchase_date?: string | null;
   purchase_price?: string | null;
@@ -245,10 +246,18 @@ export default function GearDetailPage({ params }: { params: Promise<{ id: strin
       <BackButton fallbackHref="/rig" label="Rig room" />
 
 
-      {/* 4:3 Hero Photo */}
-      <div className="ph hero">
-        ▨ {item.brand ? `${item.brand} ` : ''}{item.model || item.raw_text} · 4:3
-      </div>
+      {/* 4:3 Hero Photo with Drag & Drop & Stock Fallback */}
+      <GearHeroPhoto
+        itemId={item.id}
+        initialImageUrl={item.image_url}
+        brand={item.brand}
+        model={item.model}
+        category={item.category}
+        rawText={item.raw_text}
+        onImageUpdated={(newUrl) => {
+          setItem((prev) => (prev ? { ...prev, image_url: newUrl } : null));
+        }}
+      />
 
       <h1 style={{ marginTop: '16px' }}>
         {item.brand ? `${item.brand} ` : ''}{item.model || item.raw_text}

@@ -1,5 +1,44 @@
 # Ryff Feature Log
 
+## Feature: Multi-Tier Gear Photo Pipeline & Drag-and-Drop Image Uploader
+- **Date:** October 3, 2026
+- **Category:** Rig Management / Asset Pipeline / UI Excellence
+
+### 1. User & Marketing Overview
+- **Zero-Effort Gear Imagery (Reverb Stock Photos & Logos):** Adding gear to your Rig or Wants list automatically retrieves crisp, accurate stock photos from Reverb marketplace listings without requiring manual photo search. If exact models are rare, it gracefully falls back to verified manufacturer logos or curated instrument category artwork.
+- **Smart Model Synonym Normalization & Broadening:** Intelligently handles colloquial model names (e.g., *"5150mk2 modded"* automatically matches the *Peavey 5150* amp family, and *"tubescreamer"* maps to *Ibanez Tube Screamer*), preventing obscure search failures.
+- **Strict Accessory Disqualification Guard:** Disqualifies parts, pickups, covers, cables, and packaging from instrument/amp searches (e.g. searching for an obscure *Charvel CX692* or *Marshall DSL50* will never show a standalone pickup or dust cover; it falls back to the brand logo or guitar artwork instead).
+- **Drag-and-Drop 4:3 Gear Photo Uploads:** Users can customize any owned instrument by dragging and dropping photos directly from their desktop or tapping the hero zone on mobile. Images are processed and stored securely via Cloudinary's global media CDN with zero database storage overhead.
+- **Instant Multi-View Sync & Flash-Free Visuals:** Grid thumbnails in `/rig` sync immediately with uploaded custom photos upon navigation with zero flash or layout shift.
+
+---
+
+### 2. Technical Details (For Developers)
+- **Gear Image Utility ([`src/lib/gear-images.ts`](file:///c:/Users/rob_b/Ryff/src/lib/gear-images.ts)):**
+  - Multi-tier query cascading: Exact model -> Synonyms & noise-stripped core model (`cleanCoreQuery`, `normalizeSynonyms`) -> Brand + Category -> Brand logo CDN -> Local category artwork (`/images/`).
+  - Strict disqualification engine (`DISQUALIFIED_ACCESSORIES_REGEX`) filters out covers, pickups, cases, knobs, tubes, and cables.
+- **Stock Image API ([`src/app/api/stock-image/route.ts`](file:///c:/Users/rob_b/Ryff/src/app/api/stock-image/route.ts)):**
+  - GET endpoint querying Reverb with category scoring, query cascading, pagination & `pickIndex` selection.
+- **Interactive Hero & Drag-and-Drop Component ([`src/components/GearHeroPhoto.tsx`](file:///c:/Users/rob_b/Ryff/src/components/GearHeroPhoto.tsx)):**
+  - Native HTML5 Drag & Drop (`onDragOver`, `onDragLeave`, `onDrop`) and click-to-upload file picker.
+  - Direct unsigned POST requests to Cloudinary (`https://api.cloudinary.com/v1_1/${cloudName}/auto/upload`) using `unsigned-rigistry` preset.
+  - Persists resulting CDN URL directly to PostgreSQL via `PATCH /api/rig/[id]` (`image_url`) and triggers `router.refresh()`.
+- **Thumbnail Component ([`src/components/GearThumbnail.tsx`](file:///c:/Users/rob_b/Ryff/src/components/GearThumbnail.tsx)):**
+  - Responsive 4:3 thumbnail component with smooth skeleton shimmer and fade-in transitions, eliminating abrupt thumbnail swapping flashes.
+- **Rig State Synchronization ([`src/app/(app)/rig/RigRoomClient.tsx`](file:///c:/Users/rob_b/Ryff/src/app/%28app%29/rig/RigRoomClient.tsx)):**
+  - Added window focus listener and prop sync effect to ensure custom uploaded photos on `/rig/[id]` immediately appear on `/rig` grid cards.
+
+---
+
+### 3. White-Label & Domain-Agnostic Utility
+- **Cross-Domain Application:** This feature represents a **Universal Domain-Agnostic Asset Fallback & Direct Media Uploader Pipeline**.
+- **Use Cases for Other Verticals:**
+  - 👟 **Sneakers / Running Gear:** Automatically pull stock images of shoes by brand and model from retail APIs (StockX/Amazon), with drag-and-drop user uploads for worn condition photos.
+  - 🚗 **Vehicle & Garage Logs:** Auto-fetch manufacturer vehicle stock photos and brand badges by make/model, while allowing owners to drag-and-drop pictures of their specific builds and modifications.
+  - ⌚ **Luxury Goods & Watches:** Instant stock photo matching for reference numbers and brands, paired with zero-storage high-res macro upload hosting.
+
+---
+
 ## Feature: Verified Feed Health Diagnostics & Canonical YouTube Channel Resolution
 - **Date:** October 3, 2026
 - **Category:** Ingestion Pipeline / Feed Health / Admin Intelligence

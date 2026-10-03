@@ -1,10 +1,10 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { formatGearTitle } from '@/lib/gear-utils';
 import { BackButton } from '@/components/BackButton';
-
+import { GearThumbnail } from '@/components/GearThumbnail';
 
 export interface RigItemData {
   id: number | string;
@@ -16,6 +16,7 @@ export interface RigItemData {
   budget_gbp: number | null;
   current_strings?: string | null;
   last_restrung_at?: string | null;
+  image_url?: string | null;
 }
 
 export interface RigLogData {
@@ -47,6 +48,31 @@ export function RigRoomClient({ initialItems, initialLogs }: RigRoomClientProps)
   const [segment, setSegment] = useState<'gear' | 'log' | 'wants'>('gear');
   const [items, setItems] = useState<RigItemData[]>(initialItems);
   const [logs, setLogs] = useState<RigLogData[]>(initialLogs);
+
+  // Sync state if initialItems changes
+  useEffect(() => {
+    setItems(initialItems);
+  }, [initialItems]);
+
+  // Refresh items on window focus or mount to pick up edits from /rig/[id]
+  useEffect(() => {
+    async function syncItems() {
+      try {
+        const res = await fetch('/api/rig');
+        if (res.ok) {
+          const data = await res.json();
+          if (data.items) setItems(data.items);
+          if (data.logs) setLogs(data.logs);
+        }
+      } catch {
+        // ignore background sync errors
+      }
+    }
+
+    syncItems();
+    window.addEventListener('focus', syncItems);
+    return () => window.removeEventListener('focus', syncItems);
+  }, []);
 
   // Bottom Input & Voice Memo State
   const [inputText, setInputText] = useState('');
@@ -306,7 +332,14 @@ export function RigRoomClient({ initialItems, initialLogs }: RigRoomClientProps)
                     className="gc"
                     style={{ textDecoration: 'none' }}
                   >
-                    <div className="ph">▨ 4:3 Photo</div>
+                    <GearThumbnail
+                      imageUrl={item.image_url}
+                      brand={item.brand}
+                      model={item.model}
+                      category={item.category}
+                      rawText={item.raw_text}
+                      alt={formatGearTitle(item.brand, item.model, item.raw_text)}
+                    />
                     <div className="b">
                       <b>{formatGearTitle(item.brand, item.model, item.raw_text)}</b>
                       <small>{item.category || 'Gear'}</small>
@@ -554,7 +587,14 @@ export function RigRoomClient({ initialItems, initialLogs }: RigRoomClientProps)
             <div className="grid">
               {wantedItems.map((want) => (
                 <div key={want.id} className="gc want">
-                  <div className="ph">▨ 4:3 Photo</div>
+                  <GearThumbnail
+                    imageUrl={want.image_url}
+                    brand={want.brand}
+                    model={want.model}
+                    category={want.category}
+                    rawText={want.raw_text}
+                    alt={formatGearTitle(want.brand, want.model, want.raw_text)}
+                  />
                   <div className="b">
                     <b>{formatGearTitle(want.brand, want.model, want.raw_text)}</b>
                     <small>
