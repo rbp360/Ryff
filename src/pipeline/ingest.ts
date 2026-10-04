@@ -23,7 +23,9 @@ export async function ingestAllFeeds(): Promise<IngestStats> {
   let itemsIngested = 0;
   let errors = 0;
 
-  for (const src of activeSources) {
+  for (let i = 0; i < activeSources.length; i++) {
+    const src = activeSources[i];
+    console.log(`[Ingest Progress] (${i + 1}/${activeSources.length}) Fetching ${src.name}...`);
     const { items, status } = await fetchFeed(src.url, src.keyword_prefilter);
 
     // Update source fetch status timestamp
@@ -60,7 +62,7 @@ export async function ingestAllFeeds(): Promise<IngestStats> {
     }
 
     // Polite delay between sources to respect rate limits
-    await new Promise((resolve) => setTimeout(resolve, 800));
+    await new Promise((resolve) => setTimeout(resolve, 150));
   }
 
   console.log(`[Ingest Complete] Sources: ${activeSources.length} | New Items Stored: ${itemsIngested} | Errors: ${errors}`);

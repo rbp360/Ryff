@@ -1,5 +1,36 @@
 # Ryff Feature Log
 
+## Feature: Automated CI Pipeline Execution Fix & Ingestion Performance Optimization
+- **Date:** October 4, 2026
+- **Category:** Infrastructure / Automated Scheduler / Feed Ingestion
+
+### 1. User & Marketing Overview
+- **Resilient Twice-Daily Automated Digest & Episode Generation:** Restored GitHub Actions automated pipeline execution for twice-daily news ingestion, topic clustering, debate episode generation, and deal matching.
+- **High-Performance Ingestion:** Optimized feed polling and OpenGraph image extraction, drastically reducing pipeline execution time across 44 active media sources.
+- **Real-Time Progress & Observability:** Enhanced pipeline stage logging to provide transparent real-time feedback in both CLI runs and the Admin Command Centre (`/admin`).
+
+---
+
+### 2. Technical Details (For Developers)
+- **pnpm v10/v12 Reserved Command Conflict Resolution:**
+  - Fixed GitHub Actions workflow ([`.github/workflows/pipeline.yml`](file:///c:/Users/rob_b/Ryff/.github/workflows/pipeline.yml)) failing with `ERR_PNPM_NO_PIPELINES` by updating the workflow step from `pnpm pipeline` to `pnpm run pipeline`.
+  - Added `"pipeline:run"` alias in [`package.json`](file:///c:/Users/rob_b/Ryff/package.json) to prevent collisions with pnpm's native workspace pipeline engine.
+- **Feed Ingestion & OG Image Optimization ([`src/lib/feeds.ts`](file:///c:/Users/rob_b/Ryff/src/lib/feeds.ts), [`src/pipeline/ingest.ts`](file:///c:/Users/rob_b/Ryff/src/pipeline/ingest.ts)):**
+  - Converted sequential OpenGraph meta image fetching into a parallel `Promise.all` batch capped at 5 recent items per feed.
+  - Reduced `fetchOgImage` network timeout to 1500ms and wrapped with a hard 2000ms `Promise.race` safety timeout to prevent Node socket/DNS stalls.
+  - Restricted OG image scraping strictly to items published within the last 7 days or missing publication dates.
+  - Reduced feed fetch timeout to 5000ms with max 2 retry attempts and reduced inter-source delay to 150ms.
+- **Admin Dashboard Integration:**
+  - Standardized pipeline run status reporting so `pipeline_runs` table accurately captures execution status, stage stats, and costs.
+
+---
+
+### 3. White-Label & Domain-Agnostic Utility
+- **Automated Multi-Source Content Aggregation Pipeline:** Suitable for any domain-specific aggregator (e.g. car enthusiast feeds, horology news, tech hardware updates) requiring reliable scheduled multi-source ingestion without process stalls.
+
+---
+
+
 ## Feature: Napkin Ingester, Onboarding Import, Date Ambiguity Resolution & 1-Tap Undo (Step 6)
 - **Date:** October 4, 2026
 - **Category:** Command Layer / Onboarding Ingestion / Multi-Source Maintenance Import

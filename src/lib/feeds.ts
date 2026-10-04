@@ -100,44 +100,49 @@ export async function fetchOgImage(url: string): Promise<string | null> {
     }
   }
 
-  try {
-    const res = await fetch(url, {
-      headers: {
-        'User-Agent': USER_AGENTS[0],
-        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-      },
-      signal: AbortSignal.timeout(4000),
-    });
+  const fetchPromise = (async (): Promise<string | null> => {
+    try {
+      const res = await fetch(url, {
+        headers: {
+          'User-Agent': USER_AGENTS[0],
+          'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+        },
+        signal: AbortSignal.timeout(1500),
+      });
 
-    if (!res.ok) return null;
-    const html = await res.text();
+      if (!res.ok) return null;
+      const html = await res.text();
 
-    const ogMatch =
-      html.match(/<meta[^>]+property=["']og:image(?::url)?["'][^>]+content=["']([^"']+)["']/i) ||
-      html.match(/<meta[^>]+content=["']([^"']+)["'][^>]+property=["']og:image(?::url)?["']/i) ||
-      html.match(/<meta[^>]+name=["']twitter:image(?::src)?["'][^>]+content=["']([^"']+)["']/i) ||
-      html.match(/<meta[^>]+content=["']([^"']+)["'][^>]+name=["']twitter:image(?::src)?["']/i) ||
-      html.match(/<link[^>]+rel=["']image_src["'][^>]+href=["']([^"']+)["']/i);
+      const ogMatch =
+        html.match(/<meta[^>]+property=["']og:image(?::url)?["'][^>]+content=["']([^"']+)["']/i) ||
+        html.match(/<meta[^>]+content=["']([^"']+)["'][^>]+property=["']og:image(?::url)?["']/i) ||
+        html.match(/<meta[^>]+name=["']twitter:image(?::src)?["'][^>]+content=["']([^"']+)["']/i) ||
+        html.match(/<meta[^>]+content=["']([^"']+)["'][^>]+name=["']twitter:image(?::src)?["']/i) ||
+        html.match(/<link[^>]+rel=["']image_src["'][^>]+href=["']([^"']+)["']/i);
 
-    if (ogMatch && ogMatch[1]) {
-      let img = ogMatch[1].trim().replace(/&amp;/g, '&');
-      if (img.startsWith('//')) {
-        img = 'https:' + img;
-      } else if (img.startsWith('/')) {
-        try {
-          const parsed = new URL(url);
-          img = `${parsed.protocol}//${parsed.host}${img}`;
-        } catch {
-          // ignore
+      if (ogMatch && ogMatch[1]) {
+        let img = ogMatch[1].trim().replace(/&amp;/g, '&');
+        if (img.startsWith('//')) {
+          img = 'https:' + img;
+        } else if (img.startsWith('/')) {
+          try {
+            const parsed = new URL(url);
+            img = `${parsed.protocol}//${parsed.host}${img}`;
+          } catch {
+            // ignore
+          }
         }
+        return img;
       }
-      return img;
+    } catch {
+      // Ignore fetch errors
     }
-  } catch {
-    // Ignore fetch errors
-  }
+    return null;
+  })();
 
-  return null;
+  const timeoutPromise = new Promise<null>((resolve) => setTimeout(() => resolve(null), 2000));
+
+  return Promise.race([fetchPromise, timeoutPromise]);
 }
 
 export function canonicaliseUrl(rawUrl: string): string {
@@ -170,7 +175,7 @@ const USER_AGENTS = [
 export async function fetchFeed(feedUrl: string, keywordPrefilter: string[] | null = null): Promise<{ items: ParsedFeedItem[]; status: string }> {
   let lastErrorStatus = '';
 
-  for (let attempt = 1; attempt <= 3; attempt++) {
+  for (let attempt = 1; attempt <= 2; attempt++) {
     try {
       const ua = USER_AGENTS[(attempt - 1) % USER_AGENTS.length];
       const res = await fetch(feedUrl, {
@@ -179,13 +184,13 @@ export async function fetchFeed(feedUrl: string, keywordPrefilter: string[] | nu
           'Accept': 'application/rss+xml, application/xml, text/xml, application/atom+xml, */*;q=0.8',
           'Accept-Language': 'en-US,en;q=0.9',
         },
-        signal: AbortSignal.timeout(25000),
+        signal: AbortSignal.timeout(5000),
       });
 
       if (!res.ok) {
         lastErrorStatus = `error: HTTP ${res.status} (${res.statusText || 'Fetch failed'})`;
-        if (attempt < 3 && (res.status === 404 || res.status === 500 || res.status === 429 || res.status === 409)) {
-          await new Promise(r => setTimeout(r, 1500 * attempt));
+        if (attempt < 2 && (res.status === 404 || res.status === 500 || res.status === 429 || res.status === 409)) {
+          await new Promise(r => setTimeout(r, 500));
           continue;
         }
         return { items: [], status: lastErrorStatus };
@@ -198,6 +203,7 @@ export async function fetchFeed(feedUrl: string, keywordPrefilter: string[] | nu
 
       const feed = await parser.parseString(xmlText);
       const items: ParsedFeedItem[] = [];
+      const itemsNeedingOgImage: { itemIndex: number; url: string }[] = [];
 
       for (const entry of feed.items || []) {
         const rawUrl = entry.link || entry.guid || '';
@@ -216,12 +222,9 @@ export async function fetchFeed(feedUrl: string, keywordPrefilter: string[] | nu
 
         const snippet = (entry.contentSnippet || entry.summary || title).slice(0, 500).trim();
         const pubDate = entry.isoDate || entry.pubDate ? new Date(entry.isoDate || entry.pubDate!) : null;
-        let imageUrl = extractImageUrl(entry);
+        const imageUrl = extractImageUrl(entry);
 
-        if (!imageUrl) {
-          imageUrl = await fetchOgImage(url);
-        }
-
+        const itemIdx = items.length;
         items.push({
           url,
           urlHash: computeUrlHash(url),
@@ -230,14 +233,32 @@ export async function fetchFeed(feedUrl: string, keywordPrefilter: string[] | nu
           imageUrl,
           publishedAt: pubDate && !isNaN(pubDate.getTime()) ? pubDate : null,
         });
+
+        if (!imageUrl && (!pubDate || (Date.now() - pubDate.getTime()) < 7 * 24 * 60 * 60 * 1000)) {
+          itemsNeedingOgImage.push({ itemIndex: itemIdx, url });
+        }
+      }
+
+      if (itemsNeedingOgImage.length > 0) {
+        const ogResults = await Promise.all(
+          itemsNeedingOgImage.slice(0, 5).map(async (target) => {
+            const og = await fetchOgImage(target.url);
+            return { itemIndex: target.itemIndex, og };
+          })
+        );
+        for (const r of ogResults) {
+          if (r.og) {
+            items[r.itemIndex].imageUrl = r.og;
+          }
+        }
       }
 
       return { items, status: 'ok' };
     } catch (err: unknown) {
       const errMsg = err instanceof Error ? err.message : String(err);
       lastErrorStatus = `error: ${errMsg.slice(0, 100)}`;
-      if (attempt < 3) {
-        await new Promise(r => setTimeout(r, 1500 * attempt));
+      if (attempt < 2) {
+        await new Promise(r => setTimeout(r, 500));
         continue;
       }
     }

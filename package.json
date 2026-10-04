@@ -15,6 +15,7 @@
     "check:feeds": "tsx scripts/check-feeds.ts",
     "invites": "tsx scripts/create-invites.ts --count 100",
     "pipeline": "tsx scripts/run-pipeline.ts",
+    "pipeline:run": "tsx scripts/run-pipeline.ts",
     "episode": "tsx scripts/print-episode.ts",
     "evals": "tsx evals/run-evals.ts",
     "redteam": "tsx evals/run-redteam.ts"
