@@ -39,10 +39,10 @@ export async function POST(req: NextRequest) {
     });
 
     return NextResponse.json({ ok: true, ...summary });
-  } catch (err: any) {
+  } catch (err) {
     console.error('[API Import Error]:', err);
     return NextResponse.json(
-      { error: err?.message || 'Failed to process notes import' },
+      { error: err instanceof Error ? err.message : 'Failed to process notes import' },
       { status: 400 }
     );
   }

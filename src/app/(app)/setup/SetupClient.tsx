@@ -35,19 +35,55 @@ const SOURCES_LIST = [
   { id: 'forums', label: 'Discussion & forums (The Gear Page)' },
 ];
 
+interface ActivityLogItem {
+  id: number;
+  source_text: string;
+  tool_name: string;
+  status: string;
+  created_at: string;
+  result?: {
+    summary?: string;
+    title?: string;
+  };
+}
+
 export function SetupClient({ initialEmail, initialPreferences }: SetupClientProps) {
-  const [tone, setTone] = useState<'Dry' | 'Blunt' | 'Chatty'>('Dry');
+  const [tone, setTone] = useState<'Dry' | 'Blunt' | 'Chatty'>(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const savedTone = localStorage.getItem('ryff_tone');
+        if (savedTone === 'Dry' || savedTone === 'Blunt' || savedTone === 'Chatty') {
+          return savedTone;
+        }
+      } catch {
+        // ignore
+      }
+    }
+    return 'Dry';
+  });
   const [players, setPlayers] = useState<string[]>(initialPreferences.favoritePlayers || []);
   const [playerInput, setPlayerInput] = useState('');
   const [brands, setBrands] = useState<string[]>(
     initialPreferences.followedBrands.length > 0 ? initialPreferences.followedBrands : ['Marshall', 'Tube amps', 'Pedals']
   );
   const [brandInput, setBrandInput] = useState('');
-  const [sources, setSources] = useState<Record<string, boolean>>({
-    news: true,
-    youtube: true,
-    deals: true,
-    forums: true,
+  const [sources, setSources] = useState<Record<string, boolean>>(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const savedSources = localStorage.getItem('ryff_sources');
+        if (savedSources) {
+          return JSON.parse(savedSources);
+        }
+      } catch {
+        // ignore
+      }
+    }
+    return {
+      news: true,
+      youtube: true,
+      deals: true,
+      forums: true,
+    };
   });
   const [region, setRegion] = useState(initialPreferences.reverbRegion || 'SHIPS_TO_UK');
   const [commandMode, setCommandMode] = useState<'text_and_voice' | 'text_only' | 'off'>(
@@ -56,7 +92,7 @@ export function SetupClient({ initialEmail, initialPreferences }: SetupClientPro
   const [savedNotice, setSavedNotice] = useState(false);
 
   // Assistant activity state (Step 3)
-  const [activity, setActivity] = useState<any[]>([]);
+  const [activity, setActivity] = useState<ActivityLogItem[]>([]);
   const [loadingActivity, setLoadingActivity] = useState(false);
   const [undoingId, setUndoingId] = useState<number | null>(null);
 
@@ -99,22 +135,6 @@ export function SetupClient({ initialEmail, initialPreferences }: SetupClientPro
       setUndoingId(null);
     }
   }
-
-  // Load local tone & sources
-  useEffect(() => {
-    try {
-      const savedTone = localStorage.getItem('ryff_tone');
-      if (savedTone === 'Dry' || savedTone === 'Blunt' || savedTone === 'Chatty') {
-        setTone(savedTone);
-      }
-      const savedSources = localStorage.getItem('ryff_sources');
-      if (savedSources) {
-        setSources(JSON.parse(savedSources));
-      }
-    } catch {
-      // Local storage unavailable
-    }
-  }, []);
 
   function handleToneChange(newTone: 'Dry' | 'Blunt' | 'Chatty') {
     setTone(newTone);

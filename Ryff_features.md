@@ -1,5 +1,34 @@
 # Ryff Feature Log
 
+## Feature: Visual Branding Assets & OpenGraph Integration (ryff_main.jpg & ryff_pick.jpg)
+- **Date:** October 4, 2026
+- **Category:** Design System / Branding / Metadata & OpenGraph
+
+### 1. User & Marketing Overview
+- **Distinctive Guitar Pick Identity (`ryff_pick.jpg`):** Integrated the custom RYFF guitar pick mark across all application touchpoints—including browser favicons, mobile home screen shortcuts, site apple-touch-icons, top dashboard headers, and login screens.
+- **Hero Showcase Banner (`ryff_main.jpg`):** Embedded the main RYFF branding artwork in the Hero section of the Welcome landing page (`/welcome`), featuring styled ambient glowing borders and responsive image presentation.
+- **Rich OpenGraph & Twitter Link Previews:** Configured social metadata in the root layout so link shares on Discord, iMessage, Twitter, and Facebook display the high-resolution RYFF branding banner.
+
+---
+
+### 2. Technical Details (For Developers)
+- **Metadata Icon & OpenGraph Configuration ([`src/app/layout.tsx`](file:///c:/Users/rob_b/Ryff/src/app/layout.tsx)):**
+  - Updated `icons` metadata to map `icon`, `shortcut`, and `apple` touch icons to `/ryff_pick.jpg`.
+  - Added `openGraph` and `twitter` card metadata referencing `/ryff_main.jpg` (1200x630 format) for rich link preview generation.
+- **Hero Image Showcase ([`src/app/welcome/page.tsx`](file:///c:/Users/rob_b/Ryff/src/app/welcome/page.tsx)):**
+  - Updated the top marketing header logo to render `ryff_pick.jpg`.
+  - Added responsive showcase container displaying `ryff_main.jpg` with `box-shadow` ambient glow and border styling.
+- **Dashboard & Login Header Styling ([`src/app/(app)/page.tsx`](file:///c:/Users/rob_b/Ryff/src/app/(app)/page.tsx), [`src/app/login/page.tsx`](file:///c:/Users/rob_b/Ryff/src/app/login/page.tsx), [`src/app/ryff.css`](file:///c:/Users/rob_b/Ryff/src/app/ryff.css)):**
+  - Updated top `.logo` component to support inline image rendering with `.logo img`.
+  - Replaced temporary CSS square and generic fallback avatars with `ryff_pick.jpg`.
+
+---
+
+### 3. White-Label & Domain-Agnostic Utility
+- **Theme-Agnostic Asset Swap Architecture:** Centralized brand assets in the `/public` directory with declarative metadata references, making white-label re-branding for alternate domains (e.g., shoe/sneaker tracking, watch vault, vehicle maintenance) a seamless 2-file asset replacement.
+
+---
+
 ## Feature: Automated CI Pipeline Execution Fix & Ingestion Performance Optimization
 - **Date:** October 4, 2026
 - **Category:** Infrastructure / Automated Scheduler / Feed Ingestion

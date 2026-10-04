@@ -296,14 +296,25 @@ export async function queryDeals(input: QueryDealsInput): Promise<QueryDealsResu
   const apiKey = env.GEMINI_API_KEY || process.env.GEMINI_API_KEY;
   const modelName = env.MODEL_FAST || 'gemini-2.5-flash';
 
+  interface WantRow {
+    id: number;
+    brand: string | null;
+    model: string | null;
+    raw_text: string;
+    budget_gbp: number | null;
+    currency: string | null;
+    alert: boolean | null;
+    want_key: string | null;
+  }
+
   // 1. Fetch user's wants
-  const wantsRaw = await db<any[]>`
+  const wantsRaw = await db<WantRow[]>`
     select id, brand, model, raw_text, budget_gbp, currency, alert, want_key
     from rig_items
     where user_id = ${userId} and kind = 'want'
     order by id desc
   `;
-  let wants: any[] = [...wantsRaw];
+  let wants: WantRow[] = [...wantsRaw];
 
   if (wants.length === 0) {
     return {

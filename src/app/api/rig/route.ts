@@ -53,7 +53,7 @@ export async function POST(request: NextRequest) {
       on conflict (id) do nothing
     `;
 
-    let parsedItems: ParsedRigLine[] = [];
+    const parsedItems: ParsedRigLine[] = [];
 
     if (Array.isArray(rawItems) && rawItems.length > 0) {
       for (const item of rawItems.slice(0, 30)) {

@@ -35,10 +35,10 @@ export async function POST(req: NextRequest) {
     );
 
     return NextResponse.json(result);
-  } catch (err: any) {
+  } catch (err) {
     console.error('[API Import Confirm Error]:', err);
     return NextResponse.json(
-      { error: err?.message || 'Failed to confirm import batch' },
+      { error: err instanceof Error ? err.message : 'Failed to confirm import batch' },
       { status: 500 }
     );
   }

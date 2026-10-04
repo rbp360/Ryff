@@ -12,7 +12,7 @@ export interface ClassifyIntentResult {
  */
 export function classifyIntent(
   message: string,
-  context?: { screen?: string; gearId?: string }
+  _context?: { screen?: string; gearId?: string }
 ): ClassifyIntentResult {
   const clean = message.trim();
   const lower = clean.toLowerCase();

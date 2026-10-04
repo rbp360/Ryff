@@ -23,7 +23,8 @@ export function GearThumbnail({
   className = 'ph',
 }: GearThumbnailProps) {
   const fallback = getCategoryFallbackImage(category);
-  const [src, setSrc] = useState<string | null>(imageUrl || null);
+  const [stockSrc, setStockSrc] = useState<string | null>(null);
+  const [hasFailed, setHasFailed] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
   const imgRef = useRef<HTMLImageElement | null>(null);
 
@@ -31,13 +32,11 @@ export function GearThumbnail({
     let ignore = false;
 
     if (imageUrl) {
-      setSrc(imageUrl);
       return;
     }
 
     const gearQuery = (brand || model || rawText || '').trim();
     if (!gearQuery) {
-      setSrc(fallback);
       return;
     }
 
@@ -52,12 +51,10 @@ export function GearThumbnail({
         if (!res.ok) throw new Error();
         const data = await res.json();
         if (!ignore && data.imageUrl) {
-          setSrc(data.imageUrl);
-        } else if (!ignore) {
-          setSrc(fallback);
+          setStockSrc(data.imageUrl);
         }
       } catch {
-        if (!ignore) setSrc(fallback);
+        // fallback
       }
     }
 
@@ -66,14 +63,16 @@ export function GearThumbnail({
     return () => {
       ignore = true;
     };
-  }, [imageUrl, brand, model, category, rawText, fallback]);
+  }, [imageUrl, brand, model, category, rawText]);
 
-  // Sync isLoaded when src changes or if already cached/completed by browser
-  useEffect(() => {
-    if (imgRef.current && imgRef.current.complete && imgRef.current.naturalWidth > 0) {
-      setIsLoaded(true);
-    }
-  }, [src]);
+  const targetSrc = imageUrl || stockSrc || fallback;
+  const [prevTargetSrc, setPrevTargetSrc] = useState(targetSrc);
+  if (targetSrc !== prevTargetSrc) {
+    setPrevTargetSrc(targetSrc);
+    setHasFailed(false);
+  }
+
+  const src = hasFailed ? fallback : targetSrc;
 
   const isCustom = Boolean(imageUrl);
 
@@ -105,10 +104,8 @@ export function GearThumbnail({
           loading="lazy"
           onLoad={() => setIsLoaded(true)}
           onError={() => {
-            if (src !== fallback) {
-              setSrc(fallback);
-              setIsLoaded(true);
-            }
+            setHasFailed(true);
+            setIsLoaded(true);
           }}
           style={{
             width: '100%',

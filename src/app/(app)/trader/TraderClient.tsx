@@ -337,6 +337,7 @@ export default function TraderClient({
 
               {/* Listing Image from Reverb or fallback */}
               {deal.image_url ? (
+                // eslint-disable-next-line @next/next/no-img-element
                 <img
                   src={deal.image_url}
                   alt={deal.title}

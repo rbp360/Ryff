@@ -62,7 +62,7 @@ function cleanCoreQuery(text: string): string {
 /**
  * Common gear synonym dictionary for normalization
  */
-function normalizeSynonyms(brand: string, model: string, category: string): { brand: string; model: string } {
+function normalizeSynonyms(brand: string, model: string, _category?: string): { brand: string; model: string } {
   let b = brand;
   let m = model;
 

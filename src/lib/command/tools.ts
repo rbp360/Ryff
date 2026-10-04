@@ -67,7 +67,7 @@ export type CommandToolName = 'log_maintenance' | 'add_want' | 'set_preference' 
 export function validateAndNormalizePreference(
   key: string,
   value: string | string[]
-): { key: AllowedPreferenceKey; normalizedValue: any } {
+): { key: AllowedPreferenceKey; normalizedValue: string | string[] } {
   if (!ALLOWED_PREFERENCE_KEYS.includes(key as AllowedPreferenceKey)) {
     throw new Error(`Preference key '${key}' is not allowed. Allowed keys: ${ALLOWED_PREFERENCE_KEYS.join(', ')}`);
   }
@@ -116,7 +116,7 @@ export interface ProposedAction {
   tool: CommandToolName;
   title: string;
   summary: string;
-  arguments: any;
+  arguments: Record<string, string | number | boolean | string[] | null | undefined>;
   targetGear?: {
     id: number;
     name: string;

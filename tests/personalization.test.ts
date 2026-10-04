@@ -7,6 +7,8 @@ interface MockUser {
   favorite_players: string[];
   followed_brands: string[];
   reverb_region: string;
+  command_input_mode?: string;
+  personality?: string;
 }
 
 interface MockReaction {
@@ -102,8 +104,8 @@ vi.mock('../src/lib/db', () => {
       existing.favorite_players = players;
       existing.followed_brands = brands;
       existing.reverb_region = region;
-      (existing as any).command_input_mode = cmdMode;
-      (existing as any).personality = personality;
+      existing.command_input_mode = cmdMode;
+      existing.personality = personality;
       mockUsers.set(id, existing);
       return [];
     }

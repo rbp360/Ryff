@@ -5,7 +5,6 @@ import {
   formatCurrency,
   LogMaintenanceArgs,
   AddWantArgs,
-  SetPreferenceArgs,
   validateAndNormalizePreference,
 } from './tools';
 import { parseGearLineWithRigistry } from '../rigistry-parser';
@@ -35,11 +34,11 @@ export interface AssistantActivityItem {
   id: number;
   source_text: string;
   tool_name: string;
-  arguments: any;
-  result: any;
+  arguments: Record<string, unknown>;
+  result: Record<string, unknown> | null;
   status: 'proposed' | 'confirmed' | 'rejected' | 'undone';
   created_at: string;
-  undo_payload?: any;
+  undo_payload?: Record<string, unknown> | null;
 }
 
 /**
@@ -236,7 +235,7 @@ export async function confirmAssistantAction(
 
     if (validated.key === 'reverbRegion') {
       displayKey = 'Reverb Region';
-      displayVal = validated.normalizedValue.replace(/_/g, ' ');
+      displayVal = String(validated.normalizedValue).replace(/_/g, ' ');
     } else if (validated.key === 'personality') {
       displayKey = 'Assistant Personality';
     } else if (validated.key === 'followedBrands') {
@@ -427,14 +426,14 @@ export async function getAssistantActivity(userId: string, limit = 20): Promise<
     limit ${limit}
   `;
 
-  return rows.map((r: any) => ({
+  return rows.map((r: Record<string, unknown>) => ({
     id: Number(r.id),
-    source_text: r.source_text,
-    tool_name: r.tool_name,
-    arguments: typeof r.arguments === 'string' ? JSON.parse(r.arguments) : r.arguments,
-    result: typeof r.result === 'string' ? JSON.parse(r.result) : r.result,
-    status: r.status,
-    created_at: r.created_at,
-    undo_payload: r.undo_payload,
+    source_text: String(r.source_text),
+    tool_name: String(r.tool_name),
+    arguments: typeof r.arguments === 'string' ? JSON.parse(r.arguments) : (r.arguments as Record<string, unknown>),
+    result: typeof r.result === 'string' ? JSON.parse(r.result) : (r.result as Record<string, unknown> | null),
+    status: r.status as AssistantActivityItem['status'],
+    created_at: String(r.created_at),
+    undo_payload: r.undo_payload as Record<string, unknown> | null,
   }));
 }

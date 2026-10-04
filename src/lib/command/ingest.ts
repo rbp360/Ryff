@@ -1,7 +1,6 @@
 import { GoogleGenAI } from '@google/genai';
 import { env } from '../env';
 import { db } from '../db';
-import { resolveGearReference } from './resolve';
 import { formatGearTitle } from '../gear-utils';
 import { fetchReverbStockImage, getCategoryFallbackImage } from '../gear-images';
 import { computeAndUpdateRestringInterval } from './intervals';
@@ -174,7 +173,7 @@ export function sanitizeUntrustedNotes(rawText: string): string {
  */
 export function ruleBasedExtractNotes(
   lines: string[],
-  ukResident = true
+  _ukResident = true
 ): RawExtractedEntry[] {
   const entries: RawExtractedEntry[] = [];
 
@@ -195,9 +194,9 @@ export function ruleBasedExtractNotes(
         // Typical CSV format: Date, Instrument, Event/Type, Notes, Price
         let datePart = parts[0];
         let gearPart = parts[1];
-        let eventPart = parts[2] || '';
-        let notesPart = parts[3] || '';
-        let pricePart = parts[4] || '';
+        const eventPart = parts[2] || '';
+        const notesPart = parts[3] || '';
+        const pricePart = parts[4] || '';
 
         // If part[0] is instrument and part[1] is date
         if (!/\d/.test(datePart) && /\d/.test(gearPart)) {
@@ -503,7 +502,7 @@ export async function parseAndStageIngestNotes(
         ${userId},
         ${cand.raw_line},
         'import_notes',
-        ${cand as any},
+        ${db.json({ ...cand })},
         'proposed',
         ${batchId}
       )
@@ -552,7 +551,7 @@ export async function confirmIngestBatch(
   // 1. Fetch staged batch actions
   const staged = await db<{
     id: number;
-    arguments: IngestCandidate;
+    arguments: IngestCandidate | string;
     status: string;
   }[]>`
     select id, arguments, status
@@ -574,9 +573,10 @@ export async function confirmIngestBatch(
 
   await db.begin(async (sql) => {
     for (const row of staged) {
+      const rawArgs = (typeof row.arguments === 'string' ? JSON.parse(row.arguments) : row.arguments) as IngestCandidate;
       const cand: IngestCandidate = {
-        ...row.arguments,
-        ...(edits[row.arguments.id] || {}),
+        ...rawArgs,
+        ...(edits[rawArgs.id] || {}),
       };
 
       // Determine if should accept
@@ -735,10 +735,10 @@ export async function undoIngestBatch(
         : act.undo_payload;
 
     if (payload?.created_log_ids) {
-      payload.created_log_ids.forEach((id: any) => allLogIds.add(Number(id)));
+      payload.created_log_ids.forEach((id: unknown) => allLogIds.add(Number(id)));
     }
     if (payload?.created_gear_ids) {
-      payload.created_gear_ids.forEach((id: any) => allGearIds.add(Number(id)));
+      payload.created_gear_ids.forEach((id: unknown) => allGearIds.add(Number(id)));
     }
   }
 

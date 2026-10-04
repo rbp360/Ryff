@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 import { FeedItemCard, UserPreferences } from '@/lib/personalization';
 import { BackButton } from '@/components/BackButton';
@@ -43,15 +43,18 @@ function stripEmojis(text?: string | null): string {
 
 function FeedImage({ src, alt, category }: { src?: string | null; alt: string; category?: string }) {
   const fallback = getCategoryFallbackImage(category);
-  const [imgSrc, setImgSrc] = useState<string>(src || fallback);
-  const [hasFailed, setHasFailed] = useState(false);
+  const initialSrc = src || fallback;
+  const [failed, setFailed] = useState(false);
+  const [isUsingFallback, setIsUsingFallback] = useState(false);
+  const [prevSrc, setPrevSrc] = useState(initialSrc);
 
-  useEffect(() => {
-    setImgSrc(src || fallback);
-    setHasFailed(false);
-  }, [src, fallback]);
+  if (initialSrc !== prevSrc) {
+    setPrevSrc(initialSrc);
+    setIsUsingFallback(false);
+    setFailed(false);
+  }
 
-  if (hasFailed) {
+  if (failed) {
     return (
       <div className="story-thumb-container">
         <div className="story-thumb-placeholder">
@@ -61,18 +64,20 @@ function FeedImage({ src, alt, category }: { src?: string | null; alt: string; c
     );
   }
 
+  const currentSrc = isUsingFallback ? fallback : initialSrc;
+
   return (
     <div className="story-thumb-container">
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        src={imgSrc}
+        src={currentSrc}
         alt={alt}
         loading="lazy"
         onError={() => {
-          if (imgSrc !== fallback) {
-            setImgSrc(fallback);
+          if (!isUsingFallback && initialSrc !== fallback) {
+            setIsUsingFallback(true);
           } else {
-            setHasFailed(true);
+            setFailed(true);
           }
         }}
         className="story-thumb-img"

@@ -22,10 +22,10 @@ export async function POST(req: NextRequest) {
     await logEvent('import_undone', { batchId, ...result }, session.userId);
 
     return NextResponse.json(result);
-  } catch (err: any) {
+  } catch (err) {
     console.error('[API Import Undo Error]:', err);
     return NextResponse.json(
-      { error: err?.message || 'Failed to undo import batch' },
+      { error: err instanceof Error ? err.message : 'Failed to undo import batch' },
       { status: 500 }
     );
   }

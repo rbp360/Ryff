@@ -1,6 +1,4 @@
 import { db } from './db';
-import { sanitiseUntrusted } from './guard';
-import { wantKey } from './reverb';
 import { cleanGearText, formatGearTitle } from './gear-utils';
 
 export { cleanGearText, formatGearTitle };
@@ -187,7 +185,6 @@ export async function parseGearLineWithRigistry(line: string): Promise<ParsedRig
   const words = normalizedInput.split(' ').filter(Boolean);
 
   let matchedBrand: CachedBrand | null = null;
-  let matchedLength = 0;
 
   // 1. Check exact brand match first if the whole input is just a brand name (e.g. "Soldano", "Charvel", "PRS")
   if (lookup.brandMap.has(normalizedInput)) {
@@ -203,12 +200,10 @@ export async function parseGearLineWithRigistry(line: string): Promise<ParsedRig
 
       if (lookup.brandMap.has(candidate)) {
         matchedBrand = lookup.brandMap.get(candidate)!;
-        matchedLength = candidate.length;
         break;
       }
       if (lookup.aliasToBrand.has(candidate)) {
         matchedBrand = lookup.aliasToBrand.get(candidate)!;
-        matchedLength = candidate.length;
         break;
       }
     }
@@ -222,7 +217,6 @@ export async function parseGearLineWithRigistry(line: string): Promise<ParsedRig
       // Match whole word at beginning
       if (lowerClean === bLower || lowerClean.startsWith(bLower + ' ') || lowerClean.startsWith(bLower + '-')) {
         matchedBrand = b;
-        matchedLength = b.name.length;
         break;
       }
     }

@@ -9,10 +9,10 @@ describe('Step 0: Passport Schema & Groundwork', { timeout: 30000 }, () => {
       where table_name = 'rig_items' and column_name in ('serial_number', 'serial_visible', 'alert', 'currency')
     `;
 
-    const map = new Map(cols.map((c: any) => [c.column_name, c]));
+    const map = new Map(cols.map((c: Record<string, unknown>) => [c.column_name as string, c]));
     expect(map.has('serial_number')).toBe(true);
     expect(map.has('serial_visible')).toBe(true);
-    expect(map.get('serial_visible').column_default).toContain('false');
+    expect(String(map.get('serial_visible')?.column_default)).toContain('false');
     expect(map.has('alert')).toBe(true);
     expect(map.has('currency')).toBe(true);
   });
@@ -36,7 +36,7 @@ describe('Step 0: Passport Schema & Groundwork', { timeout: 30000 }, () => {
       where table_name = 'assistant_actions'
     `;
 
-    const colNames = new Set(cols.map((c: any) => c.column_name));
+    const colNames = new Set(cols.map((c: Record<string, unknown>) => c.column_name as string));
     expect(colNames.has('id')).toBe(true);
     expect(colNames.has('user_id')).toBe(true);
     expect(colNames.has('source_text')).toBe(true);
@@ -73,7 +73,7 @@ describe('Step 0: Passport Schema & Groundwork', { timeout: 30000 }, () => {
       from information_schema.columns
       where table_name = 'rig_items' and column_name in ('restring_interval_days', 'restring_interval_basis')
     `;
-    const names = rigCols.map((c: any) => c.column_name);
+    const names = rigCols.map((c: Record<string, unknown>) => c.column_name as string);
     expect(names).toContain('restring_interval_days');
     expect(names).toContain('restring_interval_basis');
   });

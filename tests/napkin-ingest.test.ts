@@ -9,8 +9,6 @@ import {
   undoIngestBatch,
 } from '../src/lib/command/ingest';
 import { POST as importRoute } from '../src/app/api/command/import/route';
-import { POST as confirmRoute } from '../src/app/api/command/import/confirm/route';
-import { POST as undoRoute } from '../src/app/api/command/import/undo/route';
 import { GET as templateRoute } from '../src/app/api/command/import/template/route';
 import { NextRequest } from 'next/server';
 
@@ -170,7 +168,7 @@ describe('Step 6: Napkin Ingester (Onboarding Import)', { timeout: 35000 }, () =
 
   describe('5. Confirmation, Trust Marking (source = "imported") & 1-Tap Undo', () => {
     let importBatchId: string;
-    let newGearName = 'Washburn N2 Electric Guitar';
+    const newGearName = 'Washburn N2 Electric Guitar';
 
     it('does not write to rig_items or rig_item_logs before confirmation', async () => {
       const text = `${newGearName} strings 15/04/26`;

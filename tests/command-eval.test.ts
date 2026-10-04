@@ -143,7 +143,7 @@ describe('Step 5: Command Evaluation Suite (Benchmark >= 90%)', { timeout: 90000
       if (tc.expected.tools && result.proposals) {
         const actualTools = result.proposals.map((p) => p.tool);
         for (const expectedTool of tc.expected.tools) {
-          if (!actualTools.includes(expectedTool as any)) {
+          if (!(actualTools as string[]).includes(expectedTool)) {
             passed = false;
             reasons.push(`tool '${expectedTool}' not in [${actualTools.join(', ')}]`);
           }

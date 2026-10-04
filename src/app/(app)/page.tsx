@@ -114,7 +114,8 @@ export default async function HomePage() {
       {/* Top Header */}
       <div className="top">
         <div className="logo">
-          <i />
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/ryff_pick.jpg" alt="RYFF Pick" />
           RYFF
         </div>
         <Link href="/setup" className="gearbtn" aria-label="Setup">

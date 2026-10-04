@@ -56,21 +56,21 @@ export async function resolveGearReference(
     order by id asc
   `;
 
-  const items: GearItem[] = rawItems.map((r: any) => ({
+  const items: GearItem[] = rawItems.map((r: Record<string, unknown>) => ({
     id: Number(r.id),
-    brand: r.brand,
-    model: r.model,
-    nickname: r.nickname,
-    category: r.category,
-    raw_text: r.raw_text,
-    tuning: r.tuning,
-    string_gauge: r.string_gauge,
-    string_manufacturer: r.string_manufacturer,
-    last_restrung_at: r.last_restrung_at,
-    pickup_bridge: r.pickup_bridge,
-    pickup_middle: r.pickup_middle,
-    pickup_neck: r.pickup_neck,
-    amp_settings: r.amp_settings,
+    brand: (r.brand as string) ?? null,
+    model: (r.model as string) ?? null,
+    nickname: (r.nickname as string) ?? null,
+    category: (r.category as string) || 'guitar',
+    raw_text: (r.raw_text as string) || '',
+    tuning: (r.tuning as string) ?? null,
+    string_gauge: (r.string_gauge as string) ?? null,
+    string_manufacturer: (r.string_manufacturer as string) ?? null,
+    last_restrung_at: (r.last_restrung_at as Date | string) ?? null,
+    pickup_bridge: (r.pickup_bridge as string) ?? null,
+    pickup_middle: (r.pickup_middle as string) ?? null,
+    pickup_neck: (r.pickup_neck as string) ?? null,
+    amp_settings: (r.amp_settings as string) ?? null,
   }));
 
   if (items.length === 0) {

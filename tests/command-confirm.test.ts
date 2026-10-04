@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeAll, afterAll, vi } from 'vitest';
 import { db } from '../src/lib/db';
-import { confirmAssistantAction, undoAssistantAction, getAssistantActivity } from '../src/lib/command/executor';
+import { confirmAssistantAction, undoAssistantAction } from '../src/lib/command/executor';
 import { POST as confirmRoute } from '../src/app/api/command/confirm/route';
 import { POST as undoRoute } from '../src/app/api/command/undo/route';
 import { GET as activityRoute } from '../src/app/api/command/activity/route';

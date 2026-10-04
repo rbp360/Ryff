@@ -5,7 +5,6 @@ import { resolveGearReference, GearItem } from './resolve';
 import {
   logMaintenanceSchema,
   addWantSchema,
-  setPreferenceSchema,
   validateAndNormalizePreference,
   normalizeRegion,
   formatCurrency,
@@ -440,7 +439,7 @@ Important instructions:
 
         if (key === 'reverbRegion') {
           displayKey = 'Reverb Region';
-          displayVal = normalizedValue.replace(/_/g, ' ');
+          displayVal = String(normalizedValue).replace(/_/g, ' ');
         } else if (key === 'personality') {
           displayKey = 'Assistant Personality';
         } else if (key === 'followedBrands') {

@@ -21,6 +21,22 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   title: "RYFF – Guitar Assistant & News Intelligence",
   description: "Reads the guitar world for you, knows your gear, and gives you a second opinion.",
+  icons: {
+    icon: "/ryff_pick.jpg",
+    shortcut: "/ryff_pick.jpg",
+    apple: "/ryff_pick.jpg",
+  },
+  openGraph: {
+    title: "RYFF – Guitar Assistant & News Intelligence",
+    description: "Reads the guitar world for you, knows your gear, and gives you a second opinion.",
+    images: [{ url: "/ryff_main.jpg", width: 1200, height: 630, alt: "RYFF Branding Banner" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "RYFF – Guitar Assistant & News Intelligence",
+    description: "Reads the guitar world for you, knows your gear, and gives you a second opinion.",
+    images: ["/ryff_main.jpg"],
+  },
 };
 
 export default function RootLayout({

@@ -31,7 +31,8 @@ export default function WelcomePage() {
           }}
         >
           <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '10px', textDecoration: 'none', color: 'inherit' }}>
-            <span style={{ width: '13px', height: '13px', background: 'var(--ac)', display: 'inline-block' }} />
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/ryff_pick.jpg" alt="RYFF Pick" style={{ width: '22px', height: '22px', borderRadius: '4px', objectFit: 'cover' }} />
             <span style={{ fontSize: '20px', fontWeight: 900, fontFamily: 'var(--font-display)', letterSpacing: '0.04em' }}>
               RYFF
             </span>
@@ -166,6 +167,16 @@ export default function WelcomePage() {
           <p style={{ fontSize: '13px', color: 'var(--mu)', fontWeight: 600 }}>
             <span style={{ color: 'var(--ac2)', fontWeight: 800 }}>+ TWO-TAP GEAR LOGGING:</span> Speak or type repairs, restrings, and parts swaps in seconds.
           </p>
+
+          {/* HERO BRANDING IMAGE */}
+          <div style={{ marginTop: '36px', overflow: 'hidden', borderRadius: '16px', border: '1px solid var(--ln)', boxShadow: '0 20px 40px rgba(0,0,0,0.6), 0 0 30px rgba(34,197,94,0.12)' }}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/ryff_main.jpg"
+              alt="RYFF Main Banner"
+              style={{ width: '100%', height: 'auto', display: 'block', objectFit: 'cover' }}
+            />
+          </div>
         </section>
 
         {/* HERO INTERACTIVE PREVIEW CARD */}

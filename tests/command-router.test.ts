@@ -203,8 +203,8 @@ describe('Step 2: Tool-Calling Backend & Router', { timeout: 30000 }, () => {
         expect(proposal.id).toBeDefined();
       }
 
-      const stringAction = result.proposals?.find((p) => (p.arguments as any).event_type === 'strings');
-      const springAction = result.proposals?.find((p) => ['hardware', 'setup'].includes((p.arguments as any).event_type));
+      const stringAction = result.proposals?.find((p) => (p.arguments as Record<string, unknown>).event_type === 'strings');
+      const springAction = result.proposals?.find((p) => ['hardware', 'setup'].includes((p.arguments as Record<string, unknown>).event_type as string));
       expect(stringAction).toBeDefined();
       expect(springAction).toBeDefined();
 
@@ -238,7 +238,7 @@ describe('Step 2: Tool-Calling Backend & Router', { timeout: 30000 }, () => {
       expect(wantProposal.tool).toBe('add_want');
       expect(wantProposal.status).toBe('proposed');
 
-      const args = wantProposal.arguments as any;
+      const args = wantProposal.arguments as { item_text: string; region: string; max_price: number; alert: boolean };
       expect(args.item_text.toLowerCase()).toContain('soldano');
       expect(args.region).toBe('UK_ONLY');
       expect(args.max_price).toBe(2000);

@@ -26,7 +26,7 @@ export function CommandSheet({ initialCommandMode = 'text_and_voice' }: CommandS
       tool: string;
       title: string;
       summary: string;
-      arguments?: any;
+      arguments?: Record<string, string | number | undefined>;
       targetGear?: { id: number; name: string };
     }>;
     ambiguous?: Array<{
@@ -44,7 +44,7 @@ export function CommandSheet({ initialCommandMode = 'text_and_voice' }: CommandS
   const [undoneActionIds, setUndoneActionIds] = useState<number[]>([]);
   const [skippedActionIds, setSkippedActionIds] = useState<number[]>([]);
   const [editingActionId, setEditingActionId] = useState<number | null>(null);
-  const [actionEdits, setActionEdits] = useState<Record<number, any>>({});
+  const [actionEdits, setActionEdits] = useState<Record<number, Record<string, string | number | undefined>>>({});
   const [undoToast, setUndoToast] = useState<{ actionId: number; title: string; visible: boolean } | null>(null);
 
   const textInputRef = useRef<HTMLInputElement>(null);
@@ -92,12 +92,21 @@ export function CommandSheet({ initialCommandMode = 'text_and_voice' }: CommandS
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [commandMode, isOpen]);
 
-  // Focus input when sheet opens
-  useEffect(() => {
+  // Adjust state when sheet opens
+  const [prevIsOpen, setPrevIsOpen] = useState(isOpen);
+  if (isOpen !== prevIsOpen) {
+    setPrevIsOpen(isOpen);
     if (isOpen) {
       setApiError(null);
       setCommandResult(null);
-      setTimeout(() => textInputRef.current?.focus(), 150);
+    }
+  }
+
+  // Focus input when sheet opens
+  useEffect(() => {
+    if (isOpen) {
+      const timer = setTimeout(() => textInputRef.current?.focus(), 150);
+      return () => clearTimeout(timer);
     } else {
       cancelRecording();
     }
@@ -304,7 +313,7 @@ export function CommandSheet({ initialCommandMode = 'text_and_voice' }: CommandS
     }
   }
 
-  function handleEditField(actionId: number, field: string, val: any) {
+  function handleEditField(actionId: number, field: string, val: string | number | undefined) {
     setActionEdits((prev) => ({
       ...prev,
       [actionId]: {
@@ -691,7 +700,7 @@ export function CommandSheet({ initialCommandMode = 'text_and_voice' }: CommandS
                         const isUndone = undoneActionIds.includes(actionId);
                         const isSkipped = skippedActionIds.includes(actionId);
                         const isEditing = editingActionId === actionId;
-                        const currentEdit = actionEdits[actionId] || {};
+                        const currentEdit: Record<string, string | number | undefined> = actionEdits[actionId] || {};
 
                         if (isSkipped) {
                           return (

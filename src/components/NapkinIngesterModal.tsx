@@ -73,8 +73,8 @@ export function NapkinIngesterModal({ isOpen, onClose, onImportComplete }: Napki
       });
       setSelectedIds(preselected);
       setStep('review');
-    } catch (err: any) {
-      setErrorMsg(err?.message || 'Error analyzing notes');
+    } catch (err) {
+      setErrorMsg(err instanceof Error ? err.message : 'Error analyzing notes');
       setStep('input');
     }
   }
@@ -111,8 +111,8 @@ export function NapkinIngesterModal({ isOpen, onClose, onImportComplete }: Napki
       setSuccessInfo({ items: data.importedItems, logs: data.importedLogs });
       setUndoBatchId(batchSummary.batchId);
       if (onImportComplete) onImportComplete();
-    } catch (err: any) {
-      setErrorMsg(err?.message || 'Failed to confirm import.');
+    } catch (err) {
+      setErrorMsg(err instanceof Error ? err.message : 'Failed to confirm import.');
       setStep('review');
     }
   }
@@ -145,7 +145,7 @@ export function NapkinIngesterModal({ isOpen, onClose, onImportComplete }: Napki
     });
   }
 
-  function updateCandidateField(id: string, field: keyof IngestCandidate, val: any) {
+  function updateCandidateField(id: string, field: keyof IngestCandidate, val: unknown) {
     setCandidateEdits((prev) => ({
       ...prev,
       [id]: {

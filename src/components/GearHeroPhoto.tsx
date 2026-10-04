@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useEffect, DragEvent, ChangeEvent } from 'react';
+import { useState, useRef, useEffect, useCallback, DragEvent, ChangeEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import { getCategoryFallbackImage } from '@/lib/gear-images';
 
@@ -28,7 +28,6 @@ export function GearHeroPhoto({
   const [isDragging, setIsDragging] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [isFetchingStock, setIsFetchingStock] = useState(false);
-  const [pickIndex, setPickIndex] = useState(0);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [stockSource, setStockSource] = useState<'custom' | 'reverb' | 'logo' | 'category'>(
     initialImageUrl ? 'custom' : 'category'
@@ -37,46 +36,7 @@ export function GearHeroPhoto({
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const fallback = getCategoryFallbackImage(category);
 
-  // If no initial custom image is saved, attempt to auto-fetch Reverb stock image on load
-  useEffect(() => {
-    if (!initialImageUrl && (brand || model || rawText)) {
-      fetchStock(0, false);
-    }
-  }, [initialImageUrl, brand, model, rawText]);
-
-  async function fetchStock(indexToFetch: number = 0, autoSave: boolean = false) {
-    setIsFetchingStock(true);
-    setErrorMsg(null);
-    try {
-      const params = new URLSearchParams({
-        brand: brand || '',
-        model: model || rawText || '',
-        category: category || '',
-        pickIndex: indexToFetch.toString(),
-      });
-      const res = await fetch(`/api/stock-image?${params.toString()}`);
-      const data = await res.json();
-      if (data.imageUrl) {
-        setCurrentUrl(data.imageUrl);
-        setStockSource(data.source || 'reverb');
-        setPickIndex(data.pickIndex ?? indexToFetch);
-
-        if (autoSave && data.source === 'reverb') {
-          await saveImageUrlToDatabase(data.imageUrl);
-        }
-      } else {
-        setCurrentUrl(fallback);
-        setStockSource('category');
-      }
-    } catch {
-      setCurrentUrl(fallback);
-      setStockSource('category');
-    } finally {
-      setIsFetchingStock(false);
-    }
-  }
-
-  async function saveImageUrlToDatabase(url: string | null) {
+  const saveImageUrlToDatabase = useCallback(async (url: string | null) => {
     try {
       const res = await fetch(`/api/rig/${itemId}`, {
         method: 'PATCH',
@@ -92,7 +52,74 @@ export function GearHeroPhoto({
     } catch (err) {
       console.error('Error saving image to DB:', err);
     }
-  }
+  }, [itemId, onImageUpdated, router]);
+
+  const fetchStock = useCallback(async (indexToFetch: number = 0, autoSave: boolean = false) => {
+    setIsFetchingStock(true);
+    setErrorMsg(null);
+    try {
+      const params = new URLSearchParams({
+        brand: brand || '',
+        model: model || rawText || '',
+        category: category || '',
+        pickIndex: indexToFetch.toString(),
+      });
+      const res = await fetch(`/api/stock-image?${params.toString()}`);
+      const data = await res.json();
+      if (data.imageUrl) {
+        setCurrentUrl(data.imageUrl);
+        setStockSource(data.source || 'reverb');
+
+        if (autoSave && data.source === 'reverb') {
+          await saveImageUrlToDatabase(data.imageUrl);
+        }
+      } else {
+        setCurrentUrl(fallback);
+        setStockSource('category');
+      }
+    } catch {
+      setCurrentUrl(fallback);
+      setStockSource('category');
+    } finally {
+      setIsFetchingStock(false);
+    }
+  }, [brand, model, rawText, category, fallback, saveImageUrlToDatabase]);
+
+  // If no initial custom image is saved, attempt to auto-fetch Reverb stock image on load
+  useEffect(() => {
+    let ignore = false;
+    if (!initialImageUrl && (brand || model || rawText)) {
+      const params = new URLSearchParams({
+        brand: brand || '',
+        model: model || rawText || '',
+        category: category || '',
+        pickIndex: '0',
+      });
+      fetch(`/api/stock-image?${params.toString()}`)
+        .then((res) => res.json())
+        .then((data) => {
+          if (!ignore) {
+            if (data.imageUrl) {
+              setCurrentUrl(data.imageUrl);
+              setStockSource(data.source || 'reverb');
+            } else {
+              setCurrentUrl(fallback);
+              setStockSource('category');
+            }
+          }
+        })
+        .catch(() => {
+          if (!ignore) {
+            setCurrentUrl(fallback);
+            setStockSource('category');
+          }
+        });
+    }
+    return () => {
+      ignore = true;
+    };
+  }, [initialImageUrl, brand, model, rawText, category, fallback]);
+
 
   async function uploadFileToCloudinary(file: File) {
     if (!file.type.startsWith('image/')) {

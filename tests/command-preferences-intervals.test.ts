@@ -1,7 +1,6 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import { db } from '../src/lib/db';
 import {
-  setPreferenceSchema,
   validateAndNormalizePreference,
   ALLOWED_PREFERENCE_KEYS,
 } from '../src/lib/command/tools';

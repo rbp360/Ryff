@@ -52,9 +52,11 @@ export function RigRoomClient({ initialItems, initialLogs }: RigRoomClientProps)
   const [showImportModal, setShowImportModal] = useState(false);
 
   // Sync state if initialItems changes
-  useEffect(() => {
+  const [prevInitialItems, setPrevInitialItems] = useState(initialItems);
+  if (initialItems !== prevInitialItems) {
+    setPrevInitialItems(initialItems);
     setItems(initialItems);
-  }, [initialItems]);
+  }
 
   // Refresh items on window focus or mount to pick up edits from /rig/[id]
   useEffect(() => {
