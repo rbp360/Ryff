@@ -7,7 +7,7 @@ import { db } from '../src/lib/db';
 
 vi.mock('../src/lib/session', () => ({
   getSession: vi.fn(async () => ({
-    userId: '00000000-0000-0000-0000-000000000001',
+    userId: '00000000-0000-0000-0000-000000000011',
     email: 'tester@ryff.local',
     cohort: 'cadre',
     isAdult: true,
@@ -15,7 +15,7 @@ vi.mock('../src/lib/session', () => ({
 }));
 
 describe('Step 1: Global Command Input & Endpoint', { timeout: 20000 }, () => {
-  const testUserId = '00000000-0000-0000-0000-000000000001';
+  const testUserId = '00000000-0000-0000-0000-000000000011';
 
   beforeAll(async () => {
     try {
