@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { formatGearTitle } from '@/lib/gear-utils';
 import { BackButton } from '@/components/BackButton';
 import { GearThumbnail } from '@/components/GearThumbnail';
+import { NapkinIngesterModal } from '@/components/NapkinIngesterModal';
 
 export interface RigItemData {
   id: number | string;
@@ -48,6 +49,7 @@ export function RigRoomClient({ initialItems, initialLogs }: RigRoomClientProps)
   const [segment, setSegment] = useState<'gear' | 'log' | 'wants'>('gear');
   const [items, setItems] = useState<RigItemData[]>(initialItems);
   const [logs, setLogs] = useState<RigLogData[]>(initialLogs);
+  const [showImportModal, setShowImportModal] = useState(false);
 
   // Sync state if initialItems changes
   useEffect(() => {
@@ -274,9 +276,30 @@ export function RigRoomClient({ initialItems, initialLogs }: RigRoomClientProps)
           <BackButton fallbackHref="/" />
           <h1 style={{ marginBottom: 0 }}>Rig Passport</h1>
         </div>
-        <Link href="/setup" className="gearbtn" aria-label="Setup">
-          ⚙
-        </Link>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <button
+            type="button"
+            onClick={() => setShowImportModal(true)}
+            style={{
+              padding: '6px 12px',
+              borderRadius: '8px',
+              border: '1px solid var(--ln)',
+              background: 'var(--sf)',
+              color: 'var(--tx)',
+              fontSize: '12px',
+              fontWeight: 700,
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+            }}
+          >
+            📥 Import Notes / CSV
+          </button>
+          <Link href="/setup" className="gearbtn" aria-label="Setup">
+            ⚙
+          </Link>
+        </div>
       </div>
 
       {/* Segmented Control: Gear | Log | Wants */}
@@ -312,9 +335,27 @@ export function RigRoomClient({ initialItems, initialLogs }: RigRoomClientProps)
               <p style={{ color: 'var(--tx)', fontWeight: 800, fontSize: '15px', marginBottom: '6px' }}>
                 Your Rig Passport is empty
               </p>
-              <p style={{ color: 'var(--mu)', fontSize: '13px', margin: 0 }}>
-                Speak or type your guitars, amps, and pedals below to get started.
+              <p style={{ color: 'var(--mu)', fontSize: '13px', margin: '0 0 16px' }}>
+                Speak or type your guitars, amps, and pedals below, or import existing notes.
               </p>
+              <div style={{ display: 'flex', justifyContent: 'center', gap: '10px' }}>
+                <button
+                  type="button"
+                  onClick={() => setShowImportModal(true)}
+                  style={{
+                    padding: '8px 16px',
+                    borderRadius: '8px',
+                    border: '1px solid var(--ac)',
+                    background: 'rgba(34, 197, 94, 0.12)',
+                    color: 'var(--ac)',
+                    fontSize: '13px',
+                    fontWeight: 800,
+                    cursor: 'pointer',
+                  }}
+                >
+                  📥 Import Notes or Spreadsheet
+                </button>
+              </div>
             </div>
           ) : (
             <div className="grid">
@@ -607,6 +648,12 @@ export function RigRoomClient({ initialItems, initialLogs }: RigRoomClientProps)
           )}
         </>
       )}
+
+      <NapkinIngesterModal
+        isOpen={showImportModal}
+        onClose={() => setShowImportModal(false)}
+        onImportComplete={refreshRig}
+      />
     </>
   );
 }

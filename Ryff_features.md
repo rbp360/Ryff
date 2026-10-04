@@ -1,5 +1,56 @@
 # Ryff Feature Log
 
+## Feature: Napkin Ingester, Onboarding Import, Date Ambiguity Resolution & 1-Tap Undo (Step 6)
+- **Date:** October 4, 2026
+- **Category:** Command Layer / Onboarding Ingestion / Multi-Source Maintenance Import
+
+### 1. User & Marketing Overview
+- **Napkin Ingester (Zero-Friction Maintenance & Gear Import):** Musicians can copy and paste messy maintenance notes from Apple Notes, text receipts, or upload legacy spreadsheets (CSV/TSV) directly into Ryff. The AI extraction engine accurately separates gear names, service types, event dates, prices, and notes without requiring rigid formatting.
+- **Instrument Resolution & Automatic New Gear Creation:** Mentions of existing instruments (e.g. *"PRS"*, *"Washburn"*, *"Katana"*) are automatically matched against the player's Rig. Unknown gear discovered in the notes is flagged as new items and seamlessly registered into their collection upon confirmation.
+- **Date Ambiguity Resolution (No Silent Guessing):** When encountering ambiguous dates (such as `03/04/26` where day and month are both $\le 12$), Ryff detects the ambiguity and offers clear interactive selector buttons (e.g., choice between `2026-04-03` [UK format] and `2026-03-04` [US format]) rather than making silent assumptions that pollute log histories.
+- **Review Screen with Confidence Breakdown:** An interactive candidate review modal (`NapkinIngesterModal`) presents extracted entries with confidence badges (High / Medium / Low), gear match previews, duplicate warnings, and inline editors for event type, date, price, and notes before anything is committed to the database.
+- **Bulk Confirmation & 1-Tap Reversible Undo:** Users can select candidates individually or click "Confirm All High-Confidence". Once confirmed, a 1-tap Undo banner allows instant batch reversal—deleting created gear items and maintenance logs atomically if the user changes their mind.
+- **Onboarding & Rig Room Integration:** Accessible right from the Rig Room navigation bar ("📥 Import Notes / CSV") or directly during first-time Onboarding ("Import notes or spreadsheet instead"), drastically lowering the barrier to transferring years of maintenance history into Ryff.
+- **Downloadable Sample CSV Template:** Provides a one-click downloadable sample CSV (`/api/command/import/template`) demonstrating standard column headers (`Date,Instrument,Event Type,Notes,Price`) for hassle-free bulk migration.
+
+---
+
+### 2. Technical Details (For Developers)
+- **Dual-Layer Extraction Engine ([`src/lib/command/ingest.ts`](file:///c:/Users/rob_b/Ryff/src/lib/command/ingest.ts)):**
+  - `parseAndStageIngestNotes`: Handles pasted text, CSV, and TSV formats up to 20,000 characters and 200 rows.
+  - LLM extraction via Google Gemini Flash (`env.MODEL_FAST || 'gemini-3.5-flash-lite'`) with strict JSON schema output and deterministic regex/CSV fallback parser when offline or without API keys.
+  - **Prompt Injection Defense:** Notes text is strictly wrapped in `<untrusted_notes>` framing with system instructions to treat all contained text solely as passive log data.
+  - **Date Normalization:** `normalizeIngestDate` parses ISO formats, slash dates (`DD/MM/YYYY`, `MM/DD/YYYY`), dot/dash formats, and relative expressions (`today`, `yesterday`, `N months ago`), detecting ambiguity when $D \le 12$ and $M \le 12$ and defaulting to UK preference while surfacing alternatives.
+  - **Event Normalization:** `normalizeIngestEventType` maps natural vocabulary (`restrung`, `intonation set`, `frets polished`, `pots replaced`, `sold`) into canonical `rig_item_logs` event types (`strings`, `setup`, `fret_work`, `electronics`, `hardware`, `repair`, `purchase`, `note`).
+- **Gear Resolution & Duplicate Detection:**
+  - Compares candidate gear names against the user's `rig_items` via case-insensitive inclusion and regex token matching.
+  - Checks existing `rig_item_logs` to flag duplicate events occurring on the same gear with identical event type and date.
+  - Infers instrument category (`guitar`, `amp`, `pedal`, `accessory`) for newly detected items using brand keywords.
+- **Batch Staging & Atomic Confirmation:**
+  - Ingestion batches are staged in `assistant_actions` with `status = 'proposed'`, preventing premature database writes.
+  - `confirmIngestBatch`: Atomically creates new `rig_items`, inserts `rig_item_logs` marked with `source = 'imported'`, updates `last_restrung_at` and triggers habit-based restring interval recalculation (`computeAndUpdateRestringInterval`), and records an atomic `undo_payload` containing all created item and log IDs.
+  - `undoIngestBatch`: Reverses the batch by deleting all inserted items and logs atomically.
+- **API Endpoints:**
+  - `POST /api/command/import` ([`src/app/api/command/import/route.ts`](file:///c:/Users/rob_b/Ryff/src/app/api/command/import/route.ts)): Accepts `multipart/form-data` file uploads or JSON raw text and returns staged candidate batches.
+  - `POST /api/command/import/confirm` ([`src/app/api/command/import/confirm/route.ts`](file:///c:/Users/rob_b/Ryff/src/app/api/command/import/confirm/route.ts)): Commits selected/all candidates and logs `import_confirmed` telemetry.
+  - `POST /api/command/import/undo` ([`src/app/api/command/import/undo/route.ts`](file:///c:/Users/rob_b/Ryff/src/app/api/command/import/undo/route.ts)): Atomically reverts the batch and logs `import_undone` telemetry.
+  - `GET /api/command/import/template` ([`src/app/api/command/import/template/route.ts`](file:///c:/Users/rob_b/Ryff/src/app/api/command/import/template/route.ts)): Serves downloadable sample CSV template.
+- **Client Components ([`src/components/NapkinIngesterModal.tsx`](file:///c:/Users/rob_b/Ryff/src/components/NapkinIngesterModal.tsx)):**
+  - Tabbed interface (Paste Notes vs CSV Upload), drag-and-drop file dropzone, stats bar (total, high/med confidence, duplicates, new gear), candidate cards with interactive date ambiguity resolution, inline editing, and 1-tap Undo banner.
+- **Automated Test Suite ([`tests/napkin-ingest.test.ts`](file:///c:/Users/rob_b/Ryff/tests/napkin-ingest.test.ts)):**
+  - 16 comprehensive unit and integration tests covering date ambiguity handling, event type normalization, pasted text / CSV parsing, existing gear matching vs new gear staging, duplicate detection, confirmation with `source = 'imported'`, 1-tap undo batch reversal, prompt injection neutralization, and API route execution.
+
+---
+
+### 3. White-Label & Domain-Agnostic Utility
+- **Automotive & Fleet Service History Migration:** Seamlessly ingests past paper invoices, garage receipts, or Excel spreadsheets into digital vehicle passports, extracting service dates, mileage, part replacements, and service costs.
+- **Horology & Luxury Watch Servicing Records:** Parses handwritten jeweler service cards, warranty papers, and auction receipts into verified digital maintenance passports.
+- **Athletic Gear & Equipment Logs:** Imports legacy running logs, cycling service spreadsheets, or shoe mileage tracking sheets from Strava/Garmin exports into equipment lifespans.
+- **Commercial Machinery & Tool Asset Management:** Enables industrial facilities to digitize decades of clipboard maintenance logs into structured maintenance schedules with zero manual data entry.
+
+---
+
+
 ## Feature: Natural Language Preferences, Habit-Based Restring Learning, Multi-Action Refinement & 60-Case Eval Benchmark (Step 5)
 - **Date:** October 4, 2026
 - **Category:** Command Layer / User Preferences / Predictive Maintenance & Evaluation

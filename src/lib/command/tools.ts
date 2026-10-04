@@ -51,7 +51,14 @@ export const setPreferenceSchema = z.object({
 
 export type SetPreferenceArgs = z.infer<typeof setPreferenceSchema>;
 
-export type CommandToolName = 'log_maintenance' | 'add_want' | 'set_preference';
+export const importNotesSchema = z.object({
+  text: z.string().min(1, 'Notes content is required').max(20000, 'Max 20,000 characters allowed'),
+  format: z.enum(['pasted_notes', 'csv', 'tsv']).optional().default('pasted_notes'),
+});
+
+export type ImportNotesArgs = z.infer<typeof importNotesSchema>;
+
+export type CommandToolName = 'log_maintenance' | 'add_want' | 'set_preference' | 'import_notes';
 
 /**
  * Validates and normalizes preference values against allow-list and schemas.

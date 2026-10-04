@@ -7,7 +7,9 @@ export type EventName =
   | 'episode_viewed'
   | 'deal_clicked'
   | 'survey_answered'
-  | 'presale_clicked';
+  | 'presale_clicked'
+  | 'import_confirmed'
+  | 'import_undone';
 
 export async function logEvent(name: EventName, props: Record<string, unknown> = {}, userId?: string | null): Promise<void> {
   try {

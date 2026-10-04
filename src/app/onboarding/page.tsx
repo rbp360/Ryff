@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { NapkinIngesterModal } from '@/components/NapkinIngesterModal';
 
 export default function OnboardingPage() {
   const router = useRouter();
@@ -16,6 +17,7 @@ export default function OnboardingPage() {
 
   const [saving, setSaving] = useState(false);
   const [selectedBot, setSelectedBot] = useState<'hank' | 'vee'>('hank');
+  const [showImportModal, setShowImportModal] = useState(false);
 
   const STARTER_PROMPTS = {
     hank: [
@@ -161,6 +163,18 @@ export default function OnboardingPage() {
             >
               {saving ? 'Saving Rig...' : 'Save & Continue →'}
             </button>
+
+            <div className="pt-2 text-center">
+              <span className="text-xs text-slate-500">or</span>
+              <button
+                type="button"
+                onClick={() => setShowImportModal(true)}
+                className="mt-2 w-full py-2.5 px-4 rounded-xl border border-slate-700 bg-slate-800/60 hover:bg-slate-800 text-xs font-semibold text-slate-300 hover:text-white transition flex items-center justify-center gap-2 cursor-pointer"
+              >
+                <span>📥</span>
+                <span>Import notes or spreadsheet instead</span>
+              </button>
+            </div>
           </form>
         ) : (
           <div className="space-y-5">
@@ -241,6 +255,12 @@ export default function OnboardingPage() {
           </Link>
         </div>
       </div>
+
+      <NapkinIngesterModal
+        isOpen={showImportModal}
+        onClose={() => setShowImportModal(false)}
+        onImportComplete={() => setStep('starter')}
+      />
     </main>
   );
 }
