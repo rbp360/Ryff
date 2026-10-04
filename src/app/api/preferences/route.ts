@@ -7,6 +7,7 @@ const updatePreferencesSchema = z.object({
   favoritePlayers: z.array(z.string()).optional(),
   followedBrands: z.array(z.string()).optional(),
   reverbRegion: z.enum(['UK_ONLY', 'SHIPS_TO_UK', 'US_ONLY', 'WORLDWIDE']).optional(),
+  commandInputMode: z.enum(['text_and_voice', 'text_only', 'off']).optional(),
 });
 
 export async function GET() {

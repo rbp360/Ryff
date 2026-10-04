@@ -209,7 +209,7 @@ export default function WelcomePage() {
             </div>
             <div>
               <div style={{ fontSize: '26px', fontWeight: 900, color: 'var(--ac)' }}>3</div>
-              <div style={{ fontSize: '11px', color: 'var(--mu)', fontWeight: 600 }}>Matched to your rig</div>
+              <div style={{ fontSize: '11px', color: 'var(--mu)', fontWeight: 600 }}>Matched to your Rig Passport</div>
             </div>
           </div>
 
@@ -293,7 +293,7 @@ export default function WelcomePage() {
               <div>
                 <span style={{ fontSize: '11px', fontWeight: 900, color: 'var(--ac)' }}>STEP 01</span>
                 <h4 style={{ fontSize: '18px', fontWeight: 900, margin: '8px 0 10px', textTransform: 'uppercase' }}>
-                  Log Your Rig in 2 Taps
+                  Build Your Rig Passport in 2 Taps
                 </h4>
                 <p style={{ fontSize: '13.5px', color: 'var(--mu)', lineHeight: 1.55 }}>
                   Speak or type your guitars, amps, pedals, and wants. Ryff monitors string age, valve maintenance, pickup swaps, and mod notes with 1-tap voice memos.
@@ -399,7 +399,7 @@ export default function WelcomePage() {
             Ready to Cut Through the Noise?
           </h3>
           <p style={{ fontSize: '14px', color: 'var(--mu)', maxWidth: '520px', margin: '0 auto 24px', lineHeight: 1.5 }}>
-            Join guitarist beta testers. Log your rig, read tailored gear intelligence, and debate with Hank and Vee.
+            Join guitarist beta testers. Build your Rig Passport, read tailored gear intelligence, and debate with Hank and Vee.
           </p>
           <Link
             href="/"

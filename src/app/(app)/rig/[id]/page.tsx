@@ -43,6 +43,7 @@ interface RigItem {
   nickname?: string | null;
   image_url?: string | null;
   serial_number?: string | null;
+  serial_visible?: boolean;
   purchase_date?: string | null;
   purchase_price?: string | null;
   condition?: string | null;
@@ -73,6 +74,8 @@ interface RigItem {
   drum_pieces?: Array<{ id: string; pieceType?: string; headDetails?: string; headTension?: string; headChangeDate?: string; body?: string; modsMuffles?: string }>;
   cymbal_pieces?: Array<{ id: string; cymbalType?: string; brandModel?: string; diameter?: string; changeDate?: string; notes?: string }>;
   snapshots?: GearSetupSnapshot[];
+  restring_interval_days?: number | null;
+  restring_interval_basis?: string | null;
 }
 
 interface RigItemLog {
@@ -93,18 +96,35 @@ interface MatchingNewsItem {
   url: string;
 }
 
-function getStringHealthText(dateStr?: string | null): { text: string; warn: boolean } {
+function getStringHealthText(
+  dateStr?: string | null,
+  intervalDays?: number | null,
+  basis?: string | null
+): { text: string; warn: boolean } {
   if (!dateStr) return { text: 'Not logged yet', warn: false };
   const d = new Date(dateStr);
   if (isNaN(d.getTime())) return { text: dateStr, warn: false };
 
   const diffDays = Math.floor((Date.now() - d.getTime()) / (1000 * 60 * 60 * 24));
+  const effectiveInterval = intervalDays && intervalDays > 0 ? intervalDays : 60;
+  const isOverdue = diffDays >= effectiveInterval;
+  const basisText = basis ? ` · ${basis}` : '';
+
   if (diffDays === 0) return { text: 'Today', warn: false };
   if (diffDays < 7) return { text: `${diffDays} days ago`, warn: false };
 
   const weeks = Math.floor(diffDays / 7);
-  if (weeks < 12) return { text: `${d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' })} (${weeks} weeks ago)`, warn: false };
-  return { text: `${d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' })} (${weeks} weeks ago - Restring due!)`, warn: true };
+  if (!isOverdue) {
+    return {
+      text: `${d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' })} (${weeks} wks ago${basisText})`,
+      warn: false,
+    };
+  }
+
+  return {
+    text: `${d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' })} (${diffDays} days ago · Restring due!${basisText})`,
+    warn: true,
+  };
 }
 
 export default function GearDetailPage({ params }: { params: Promise<{ id: string }> }) {
@@ -152,6 +172,7 @@ export default function GearDetailPage({ params }: { params: Promise<{ id: strin
   const [editModel, setEditModel] = useState('');
   const [editCategory, setEditCategory] = useState('');
   const [editSerial, setEditSerial] = useState('');
+  const [editSerialVisible, setEditSerialVisible] = useState(false);
   const [editYear, setEditYear] = useState('');
   const [editColor, setEditColor] = useState('');
   const [editPurchasePrice, setEditPurchasePrice] = useState('');
@@ -190,6 +211,7 @@ export default function GearDetailPage({ params }: { params: Promise<{ id: strin
           setEditModel(it.model || '');
           setEditCategory(it.category || 'guitar');
           setEditSerial(it.serial_number || '');
+          setEditSerialVisible(it.serial_visible ?? false);
           setEditYear(it.year_manufacture || '');
           setEditColor(it.color || '');
           setEditPurchasePrice(it.purchase_price || '');
@@ -259,6 +281,7 @@ export default function GearDetailPage({ params }: { params: Promise<{ id: strin
       setEditModel(item.model || '');
       setEditCategory(item.category || 'guitar');
       setEditSerial(item.serial_number || '');
+      setEditSerialVisible(item.serial_visible ?? false);
       setEditYear(item.year_manufacture || '');
       setEditColor(item.color || '');
       setEditPurchasePrice(item.purchase_price || '');
@@ -276,6 +299,7 @@ export default function GearDetailPage({ params }: { params: Promise<{ id: strin
       model: editModel || null,
       category: editCategory || 'guitar',
       serial_number: editSerial || null,
+      serial_visible: editSerialVisible,
       year_manufacture: editYear || null,
       color: editColor || null,
       purchase_price: editPurchasePrice || null,
@@ -458,7 +482,7 @@ export default function GearDetailPage({ params }: { params: Promise<{ id: strin
           {error || 'Gear item not found.'}
         </p>
         <Link href="/rig" className="back">
-          ‹ Back to Rig room
+          ‹ Back to Rig Passport
         </Link>
       </div>
     );
@@ -470,7 +494,11 @@ export default function GearDetailPage({ params }: { params: Promise<{ id: strin
   const isAmp = categoryLower === 'amp' || categoryLower === 'amps' || categoryLower === 'cab';
   const isPedal = categoryLower === 'pedal' || categoryLower === 'pedals' || categoryLower === 'effects' || categoryLower === 'amplifiers-effects';
   const isDrum = categoryLower === 'drums' || categoryLower === 'percussion';
-  const stringHealth = getStringHealthText(item.last_restrung_at);
+  const stringHealth = getStringHealthText(
+    item.last_restrung_at,
+    item.restring_interval_days,
+    item.restring_interval_basis
+  );
 
   const backdropSrc = getBackdropForCategory(item.category, item.room);
   const detectedPreset: DetectedProvider | null = item.settings_file_url ? detectSettingsProvider(item.settings_file_url) : null;
@@ -511,7 +539,7 @@ export default function GearDetailPage({ params }: { params: Promise<{ id: strin
 
       {/* Header Bar */}
       <div style={{ position: 'relative', zIndex: 10, display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px' }}>
-        <BackButton fallbackHref="/rig" label="Rig room" />
+        <BackButton fallbackHref="/rig" label="Rig Passport" />
         <button
           type="button"
           onClick={openSettingsModal}
@@ -561,6 +589,9 @@ export default function GearDetailPage({ params }: { params: Promise<{ id: strin
         <p className="sub" style={{ margin: '4px 0 0' }}>
           {item.category || 'Gear'}
           {item.serial_number ? ` · #${item.serial_number}` : ''}
+          {item.serial_number && item.serial_visible && (
+            <span style={{ marginLeft: '6px', fontSize: '10px', padding: '1px 6px', borderRadius: '4px', background: 'rgba(255,255,255,0.08)', color: 'var(--ac)' }}>Public</span>
+          )}
         </p>
       </div>
 
@@ -1110,7 +1141,7 @@ export default function GearDetailPage({ params }: { params: Promise<{ id: strin
 
       {/* History Timeline */}
       <div style={{ position: 'relative', zIndex: 2, marginTop: '24px' }}>
-        <h2>Maintenance & Setup History</h2>
+        <h2>Passport history</h2>
         {logs.length === 0 ? (
           <p className="sub">Nothing logged yet.</p>
         ) : (
@@ -1347,6 +1378,18 @@ export default function GearDetailPage({ params }: { params: Promise<{ id: strin
                   placeholder="Optional serial..."
                   style={{ background: '#0a0a0a', border: '1px solid var(--ln)', color: '#fff', padding: '8px 10px', borderRadius: '8px' }}
                 />
+                <span style={{ fontSize: '11px', color: 'var(--mu)', fontWeight: 400, marginTop: '2px' }}>
+                  Optional. Used to identify this instrument. Hidden from others unless you choose to share it.
+                </span>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '6px', fontSize: '12px', color: 'var(--tx)', cursor: 'pointer', fontWeight: 500 }}>
+                  <input
+                    type="checkbox"
+                    checked={editSerialVisible}
+                    onChange={(e) => setEditSerialVisible(e.target.checked)}
+                    style={{ accentColor: 'var(--ac)', width: '14px', height: '14px', cursor: 'pointer' }}
+                  />
+                  <span>Show serial number on public passport</span>
+                </label>
               </label>
             </div>
 

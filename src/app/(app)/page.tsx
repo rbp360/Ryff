@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { db } from '@/lib/db';
 import { getSession, DEV_ADMIN_USER } from '@/lib/session';
+import { getGearRestringHealth } from '@/lib/command/intervals';
 
 export const revalidate = 0; // Dynamic server component
 
@@ -8,6 +9,8 @@ interface NeedsItem {
   id: number | string;
   name: string;
   weeks: number;
+  days: number;
+  basis: string;
 }
 
 export default async function HomePage() {
@@ -29,7 +32,7 @@ export default async function HomePage() {
     db`SELECT count(*)::int as count FROM sources WHERE active = true`.catch(() => [{ count: 14 }]),
     db`SELECT count(*)::int as count FROM items WHERE published_at >= now() - interval '24 hours'`.catch(() => [{ count: 0 }]),
     db`SELECT id, headline, topics, published_at FROM episodes WHERE status = 'published' OR status = 'draft' ORDER BY id DESC LIMIT 1`.catch(() => []),
-    db`SELECT id, raw_text, brand, model, category, kind, last_restrung_at FROM rig_items WHERE user_id = ${userId}`.catch(() => []),
+    db`SELECT id, raw_text, brand, model, category, kind, last_restrung_at, restring_interval_days, restring_interval_basis FROM rig_items WHERE user_id = ${userId}`.catch(() => []),
     db`SELECT count(*)::int as count FROM deals`.catch(() => [{ count: 0 }]),
   ]);
 
@@ -76,19 +79,25 @@ export default async function HomePage() {
     }
   }
 
-  // 5. Needs attention: guitars overdue for restringing (>= 12 weeks)
+  // 5. Needs attention: guitars overdue for restringing based on habit-learned interval (or default 60 days)
   const needsAttentionItems: NeedsItem[] = [];
   for (const item of ownedItems) {
     const cat = item.category?.toLowerCase();
     if (cat === 'guitar' || cat === 'guitars' || !cat) {
       if (item.last_restrung_at) {
-        const diffMs = Date.now() - new Date(item.last_restrung_at).getTime();
-        const weeks = Math.floor(diffMs / (1000 * 60 * 60 * 24 * 7));
-        if (weeks >= 12) {
+        const health = getGearRestringHealth(
+          item.last_restrung_at,
+          item.restring_interval_days,
+          item.restring_interval_basis
+        );
+        if (health.isOverdue) {
+          const weeks = Math.floor((health.diffDays || 0) / 7);
           needsAttentionItems.push({
             id: item.id,
             name: `${item.brand ? item.brand + ' ' : ''}${item.model || item.raw_text}`,
             weeks,
+            days: health.diffDays || 0,
+            basis: health.basis,
           });
         }
       }
@@ -168,7 +177,7 @@ export default async function HomePage() {
               </div>
               <div>
                 <b>{item.name}</b>
-                <small>Strings changed {item.weeks} weeks ago</small>
+                <small>Restring due · {item.days} days ago ({item.basis})</small>
               </div>
               <span>›</span>
             </Link>
@@ -206,7 +215,7 @@ export default async function HomePage() {
         <Link href="/rig" className="tile">
           <em>{ownedItems.length} {ownedItems.length === 1 ? 'PIECE' : 'PIECES'}</em>
           <div>
-            <strong>Rig room</strong>
+            <strong>Rig Passport</strong>
             <span>Gear, log and wants.</span>
           </div>
         </Link>

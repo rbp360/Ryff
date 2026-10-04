@@ -95,11 +95,15 @@ vi.mock('../src/lib/db', () => {
       const players = values[0] as string[];
       const brands = values[1] as string[];
       const region = values[2] as string;
-      const id = String(values[3]);
-      const existing = mockUsers.get(id) || { id, email: 'test@ryff.local', favorite_players: [], followed_brands: [], reverb_region: 'SHIPS_TO_UK' };
+      const cmdMode = (values[3] as string) || 'text_and_voice';
+      const personality = (values[4] as string) || 'hank';
+      const id = String(values[values.length - 1]);
+      const existing = mockUsers.get(id) || { id, email: 'test@ryff.local', favorite_players: [], followed_brands: [], reverb_region: 'SHIPS_TO_UK', command_input_mode: 'text_and_voice', personality: 'hank' };
       existing.favorite_players = players;
       existing.followed_brands = brands;
       existing.reverb_region = region;
+      (existing as any).command_input_mode = cmdMode;
+      (existing as any).personality = personality;
       mockUsers.set(id, existing);
       return [];
     }

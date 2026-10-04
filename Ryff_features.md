@@ -1,5 +1,256 @@
 # Ryff Feature Log
 
+## Feature: Natural Language Preferences, Habit-Based Restring Learning, Multi-Action Refinement & 60-Case Eval Benchmark (Step 5)
+- **Date:** October 4, 2026
+- **Category:** Command Layer / User Preferences / Predictive Maintenance & Evaluation
+
+### 1. User & Marketing Overview
+- **Natural Language Preference Control (`set_preference`):** Users can adjust their app configuration simply by asking in the command bar (e.g. *"Set my Reverb region to UK"*, *"Switch persona to Vee"*, *"I prefer dry humor"*, *"I follow Fender and Gibson"*).
+- **Human-in-the-Loop Confirmation with 1-Tap Undo:** Preference updates follow the same safe confirmation workflow with plain-language cards (e.g. *"Set Reverb Region to UK"* or *"Change Assistant Persona to Vee"*). A 1-tap Undo toast instantly restores the user's previous preference value if they change their mind.
+- **Predictive Habit Learning for Restring Intervals:** The app learns how often you change strings based on real player habits. Once 3 or more string change logs exist for an instrument, Ryff automatically computes the median interval between restrings and updates the maintenance schedule.
+- **Transparent Basis Display & Manual Override:** Both the Home "Needs attention" feed and individual Gear Passports display the learned interval basis (e.g. *"60d (default)"* vs *"45d (learned from 4 restrings)"*). Musicians can manually override the interval at any time via the Gear Passport interface.
+- **Multi-Action Refinement & Fault-Tolerant Partial Success:** Batch command proposals are ordered sensibly and executed with per-proposal error isolation. If one action encounters an issue, companion actions still succeed seamlessly.
+- **100% Benchmark Accuracy on 60 Test Cases:** Comprehensive test suite in `tests/command-eval.json` validating multi-turn natural language commands, ambiguity resolution, prompt injection defenses, regional want parsing, and habit calculations.
+
+---
+
+### 2. Technical Details (For Developers)
+- **Database Architecture ([`db/migrations/0015_preferences_and_restring_intervals.sql`](file:///c:/Users/rob_b/Ryff/db/migrations/0015_preferences_and_restring_intervals.sql)):**
+  - Added `personality` column (`'hank' | 'vee' | 'dry' | 'blunt' | 'chatty'`) to `users`.
+  - Added `restring_interval_days` (integer) and `restring_interval_basis` (text) to `rig_items`.
+- **Preference Tool Schema & Validation ([`src/lib/command/tools.ts`](file:///c:/Users/rob_b/Ryff/src/lib/command/tools.ts)):**
+  - `ALLOWED_PREFERENCE_KEYS` allow-list (`reverbRegion`, `personality`, `followedBrands`, `favoritePlayers`).
+  - Strict validation rejects unrecognized keys and normalizes enum values.
+- **Habit Calculation Engine ([`src/lib/command/intervals.ts`](file:///c:/Users/rob_b/Ryff/src/lib/command/intervals.ts)):**
+  - `computeAndUpdateRestringInterval`: Retrieves historical `rig_item_logs` (`event_type = 'strings'`), computes delta days between chronologically sorted events, calculates the median delta when $\ge 3$ events exist, and updates `restring_interval_days` and `restring_interval_basis` (`learned from N restrings`).
+  - `overrideRestringInterval`: Allows manual override and marks basis as `manual override`.
+  - `getGearRestringHealth`: Calculates gear health, days since last restringing, and overdue status.
+- **Reversible Execution & Undo Engine ([`src/lib/command/executor.ts`](file:///c:/Users/rob_b/Ryff/src/lib/command/executor.ts)):**
+  - Handles `set_preference` in `confirmAssistantAction`, records previous value in `undo_payload`, and reverts to previous value in `undoAssistantAction`.
+  - Triggers `computeAndUpdateRestringInterval` when string maintenance is confirmed or undone.
+- **Fault-Tolerant Batch Confirmation ([`src/app/api/command/confirm/route.ts`](file:///c:/Users/rob_b/Ryff/src/app/api/command/confirm/route.ts)):**
+  - Isolates proposal confirmations in individual try/catch blocks to support partial success and returns `{ ok, partialSuccess, confirmed, failed }`.
+- **UI Surfacing ([`src/app/(app)/page.tsx`](file:///c:/Users/rob_b/Ryff/src/app/(app)/page.tsx), [`src/app/(app)/rig/[id]/page.tsx`](file:///c:/Users/rob_b/Ryff/src/app/(app)/rig/[id]/page.tsx), [`src/app/api/rig/[id]/route.ts`](file:///c:/Users/rob_b/Ryff/src/app/api/rig/[id]/route.ts)):**
+  - Integrated into Home "Needs attention" feed and Gear Passport maintenance card with manual interval editor.
+- **Benchmark Suite ([`tests/command-eval.json`](file:///c:/Users/rob_b/Ryff/tests/command-eval.json), [`tests/command-eval.test.ts`](file:///c:/Users/rob_b/Ryff/tests/command-eval.test.ts)):**
+  - 60 evaluation test cases executing against LLM / fallback router, passing with 100% accuracy (60/60).
+- **Integration Tests ([`tests/command-preferences-intervals.test.ts`](file:///c:/Users/rob_b/Ryff/tests/command-preferences-intervals.test.ts)):**
+  - 10 comprehensive tests covering preference updates, undo, median interval calculations, and manual overrides.
+
+---
+
+### 3. White-Label & Domain-Agnostic Utility
+- **Predictive Maintenance Across Asset Classes:** Restring interval habit learning directly maps to vehicle oil changes, tire rotations, aircraft inspections, or espresso machine descaling intervals based on actual operating frequency rather than static arbitrary calendars.
+- **Adaptive Athletic Equipment Lifespans:** In a runner or cyclist app, tracking running shoe replacements (e.g. every 350-500 miles) or chain replacements adapts automatically as the user logs activities.
+- **Natural Language User Settings & Onboarding:** Voice/chat preference updates with 1-tap Undo eliminate cumbersome settings navigation in any vertical (e.g. changing shipping region, notifications, language, or UI themes).
+
+---
+
+## Feature: Query Tools, App Help, Normalised Question Caching & Cost Control (Step 4)
+- **Date:** October 4, 2026
+- **Category:** Command Layer / Information Retrieval / Telemetry & Cost Control
+
+### 1. User & Marketing Overview
+- **Deterministic Instrument & Maintenance Queries:** Musicians can ask natural questions about their gear (e.g. *"When did I last change strings on the PRS?"* or *"What is the tuning on Blue Dream?"*) and receive instant, factual answers grounded directly in their historical database logs and spec records. The assistant never fabricates dates or maintenance events.
+- **Trader Marketplace & Deals Status:** Ask *"Any deals on my wants?"* or *"Show active wants"* directly in the global command bar to receive an instant digest of current tracked items and live Reverb marketplace listings with price drops and days on market.
+- **Grounded Application Help System (`explain_app`):** Instant, accurate guidance on how to use Ryff (e.g. *"How do I change my shipping region?"*, *"Who is Hank and how does he differ from Vee?"*, or *"Are serial numbers public?"*), answered strictly from the official, curated Ryff Help Guide (`src/lib/command/help.md`). If a question is not covered in the guide, the assistant politely redirects to Setup or Backstage rather than inventing nonexistent app mechanics.
+- **Normalised Question Caching (Zero-Cost Instant Answers):** Frequently asked questions (e.g. variations of *"How do I change my region?"*) are automatically cached by normalised text hash, delivering instant answers with 0 network latency and $0.00 LLM token spend.
+- **Transparent Daily Quotas & Cost Caps:** Protects users with a generous 50 requests/day allowance for structured queries and actions, paired with existing Backstage daily chat quotas, returning friendly in-character limit notices when daily thresholds are reached.
+- **Admin Telemetry & Live Cost Tracking:** The Ryff Admin Command Centre (`/admin`) features a dedicated live telemetry table displaying daily assistant usage per user, request breakdowns (Actions, Queries, Help, Chat), and estimated USD spend.
+
+---
+
+### 2. Technical Details (For Developers)
+- **Database Architecture ([`db/migrations/0014_assistant_cost_and_queries.sql`](file:///c:/Users/rob_b/Ryff/db/migrations/0014_assistant_cost_and_queries.sql)):**
+  - Created `assistant_cost_logs` table tracking `user_id`, `intent` (`'action' | 'query' | 'app_help' | 'chat'`), `tool_name`, `model`, `input_tokens`, `output_tokens`, `cost_usd`, and `created_at`.
+  - Added indexes `idx_assistant_cost_logs_user_date` and `idx_assistant_cost_logs_created_at` for high-speed admin querying.
+- **Cost Logger & Quota Engine ([`src/lib/command/cost-logger.ts`](file:///c:/Users/rob_b/Ryff/src/lib/command/cost-logger.ts)):**
+  - `recordAssistantCost`: Records request tokens, model, and calculated USD cost to `assistant_cost_logs` and syncs with `usage_daily` table for platform aggregate spend tracking.
+  - `checkAssistantQuota`: Enforces 50 requests/day for structured commands while delegating open chat to Backstage persona quotas in `src/lib/usage.ts`.
+  - `getDailyAssistantCostsByUser`: Aggregates today's usage by user for the Admin dashboard.
+- **Intent Classifier ([`src/lib/command/intent.ts`](file:///c:/Users/rob_b/Ryff/src/lib/command/intent.ts)):**
+  - Rules-first classifier (`classifyIntent`) categorizing user inputs into `action | query | app_help | chat` with 0 latency and 0 LLM cost.
+- **App Help & Caching Engine ([`src/lib/command/help.ts`](file:///c:/Users/rob_b/Ryff/src/lib/command/help.ts) & [`help.md`](file:///c:/Users/rob_b/Ryff/src/lib/command/help.md)):**
+  - Static help document covering navigation, Rig Passport, Trader wants, shipping regions, serial privacy, Undo, Hank vs. Vee, and feedback.
+  - In-memory `helpCache` (`Map<string, string>`) indexed by `normalizeHelpQuestion`.
+  - Fast rule-based static matcher for instant 0-cost answers on known topics plus Gemini 2.5 Flash synthesis constrained strictly to `help.md`.
+- **Query Tools ([`src/lib/command/query.ts`](file:///c:/Users/rob_b/Ryff/src/lib/command/query.ts)):**
+  - `queryRig`: Deterministic lookup against `rig_items` and `rig_item_logs` (`event_type`, `event_date`, `description`, `title`, `created_at`), with gear name auto-extraction and strict ambiguity handling.
+  - `queryDeals`: Deterministic lookup against `rig_items` (`kind = 'want'`) and `deals` table with calculated days on market.
+- **Admin Dashboard Integration ([`src/app/admin/page.tsx`](file:///c:/Users/rob_b/Ryff/src/app/admin/page.tsx)):**
+  - Added "⚡ Assistant Commands & Cost by User (Today)" table displaying live user counts, cohort badges, action/query/help/chat breakdowns, and USD spend.
+- **Client UI Integration ([`src/components/CommandSheet.tsx`](file:///c:/Users/rob_b/Ryff/src/components/CommandSheet.tsx)):**
+  - Read-only Answer Cards with custom iconography (📖 Help, 🎸 Rig, 🏷️ Deals, ⚡ Backstage), READ-ONLY status pills, formatted responses, and direct Backstage debate shortcuts.
+- **Automated Test Suite ([`tests/command-query.test.ts`](file:///c:/Users/rob_b/Ryff/tests/command-query.test.ts)):**
+  - 19 comprehensive tests validating intent classification, app help answering, normalized question caching, deterministic rig queries, deals queries, quota enforcement, cost telemetry, and router integration.
+
+---
+
+### 3. White-Label & Domain-Agnostic Utility
+- **Automotive / Fleet Telemetry Queries:** *"When was the last oil change on Truck #2?"* or *"What tire pressure should the rear axle be set to?"* Deterministic database queries answer vehicle maintenance questions from real service records without LLM hallucination.
+- **Luxury Goods & Horology Registry:** *"When was the Submariner last pressure tested?"* Answers watch servicing questions directly from verified digital passport logs.
+- **Curated Knowledge Base Grounding (`explain_app`):** Static help documentation grounding ensures white-label customers in medical devices, industrial equipment, or compliance domains receive answers strictly from approved manuals and SOPs, with 0-hallucination guarantees and instant caching.
+- **Predictable Commercial Cost Controls:** Multi-tier daily quotas, rules-first intent routing, and per-user cost analytics enable SaaS operators to maintain fixed, predictable LLM operational expenses across tens of thousands of active users.
+
+---
+
+## Feature: Confirmation Cards, Idempotent Execution, 1-Tap Undo & Assistant Activity History (Step 3)
+- **Date:** October 4, 2026
+- **Category:** Command Layer / Human-in-the-Loop UX / Transaction Safety & Auditability
+
+### 1. User & Marketing Overview
+- **Human-in-the-Loop Confirmation Cards:** Every assistant proposal is rendered as a plain-language card with clear details (e.g. *"Log: String change on PRS Custom 24, today"* or *"Add Want: Soldano SLO-100"*), giving users total control with **Save**, **Edit**, and **Skip** actions. Nothing is ever written to the user's permanent logs or wants without explicit confirmation.
+- **Batch "Save All" Workflow:** When complex spoken commands yield multiple actions (e.g. restring + spring adjustment + new want), users can inspect and commit all actions simultaneously with a single 1-tap **Save All** button.
+- **Inline Editing Mode:** If details need tweaking (such as adjusting the date, specific string gauge, notes, or maximum want budget), users can expand any proposal into an inline editor before saving, avoiding manual re-entry.
+- **Instant 1-Tap Undo Toast:** Upon confirming any action, an Undo toast banner immediately floats into view, letting musicians instantly reverse the action with a single tap if they made a mistake.
+- **Audit Trail & Activity History:** An Assistant Activity log in Setup tracks all historical commands with timestamps, tool badges, execution summaries, and persistent **Undo** buttons, making every assistant action fully transparent and reversible at any time.
+
+---
+
+### 2. Technical Details (For Developers)
+- **Execution Engine ([`src/lib/command/executor.ts`](file:///c:/Users/rob_b/Ryff/src/lib/command/executor.ts)):**
+  - `confirmAssistantAction`: Validates ownership, applies optional inline argument edits, inserts into `rig_item_logs` (with `source = 'assistant'`) or `rig_items` (with `kind = 'want'`), updates `rig_items.last_restrung_at` for string changes, generates reversible `undo_payload`, and updates `assistant_actions` status to `'confirmed'`.
+  - **Strict Idempotency:** Double-submitting confirmation checks existing status and returns `{ alreadyConfirmed: true }` without duplicate database writes.
+  - `undoAssistantAction`: Reads `undo_payload` (e.g. `created_log_id` or `created_item_id`), deletes the created rows from `rig_item_logs` or `rig_items`, restores previous gear state (such as `last_restrung_at`), and marks `assistant_actions` status as `'undone'`.
+  - `skipAssistantAction`: Marks proposed action status as `'rejected'`.
+  - `getAssistantActivity`: Fetches recent user action audit records with parsed JSON arguments and results.
+- **API Endpoints:**
+  - `POST /api/command/confirm` ([`src/app/api/command/confirm/route.ts`](file:///c:/Users/rob_b/Ryff/src/app/api/command/confirm/route.ts)): Batch and single-action confirmation endpoint with inline argument edit support.
+  - `POST /api/command/undo` ([`src/app/api/command/undo/route.ts`](file:///c:/Users/rob_b/Ryff/src/app/api/command/undo/route.ts)): Reversal endpoint with strict user ownership validation.
+  - `POST /api/command/skip` ([`src/app/api/command/skip/route.ts`](file:///c:/Users/rob_b/Ryff/src/app/api/command/skip/route.ts)): Proposal dismissal endpoint.
+  - `GET /api/command/activity` ([`src/app/api/command/activity/route.ts`](file:///c:/Users/rob_b/Ryff/src/app/api/command/activity/route.ts)): History retrieval endpoint with limit clamping.
+  - **Client UI Integration:**
+  - [`src/components/CommandSheet.tsx`](file:///c:/Users/rob_b/Ryff/src/components/CommandSheet.tsx): Proposal cards with Save/Edit/Skip, Save All batch trigger, inline input forms, and floating Undo toast banner.
+  - [`src/app/(app)/setup/SetupClient.tsx`](file:///c:/Users/rob_b/Ryff/src/app/(app)/setup/SetupClient.tsx): Assistant Activity card with live activity list, status pills (`CONFIRMED`, `UNDONE`, `PROPOSED`), and 1-tap Undo buttons.
+- **Automated Test Suite ([`tests/command-confirm.test.ts`](file:///c:/Users/rob_b/Ryff/tests/command-confirm.test.ts)):**
+  - 9 comprehensive tests validating log insertion with `source = 'assistant'`, want creation, idempotent double-confirms, full state reversals via undo, batch confirmation API, activity feed, and cross-user authorization enforcement.
+
+---
+
+### 3. White-Label & Domain-Agnostic Utility
+- **Automotive Fleet Maintenance:** Drivers log service notes (*"Changed oil and oil filter on Truck #4"*); the AI stages the proposals, and the shop manager or driver reviews and confirms them before the fleet maintenance records are committed. If an entry was made on the wrong vehicle, 1-tap Undo removes the log entry and restores the previous service odometer/date.
+- **Luxury Goods & Watches:** Reviewing proposed movement servicing or watch purchases before committing to the digital registry, with complete reversal capabilities if a transaction is cancelled.
+- **Medical / Regulated Asset Equipment:** Staged AI recommendations requiring human sign-off with permanent audit trails and reversible rollback for regulatory compliance.
+
+---
+
+## Feature: Tool-Calling Backend & Neutral Command Engine (Step 2)
+- **Date:** October 4, 2026
+- **Category:** Command Layer / AI Function Calling / Marketplace & Maintenance Routing
+
+### 1. User & Marketing Overview
+- **Natural Multi-Action Processing:** Musicians can speak or type complex, multi-event statements like *"Just put a new set of Elixir 9-42 on the PRS and adjusted the springs"*, and Ryff intelligently decomposes the input into separate, validated maintenance proposals (e.g. String change + Hardware/springs adjustment) mapped to the correct instrument.
+- **Marketplace Want & Deal Tracking:** Spoken gear search desires (e.g. *"I'm after a Soldano SLO-100 in England but I don't want to pay over two grand"*) are translated into structured want requests with normalized marketplace geographic regions (`UK_ONLY`, `US_ONLY`, `WORLDWIDE`), maximum price ceilings (`2,000 GBP`), and active alert toggles.
+- **Zero Guesswork / Explicit Ambiguity Disambiguation:** If a musician owns multiple instruments that match a colloquial reference (e.g. owning both an American Standard Strat and a Classic Vibe Strat and saying *"Restrung the Strat"*), Ryff **never guesses**. Instead, it presents an interactive instrument picker showing the exact candidate guitars and proposes zero writes until the user clarifies.
+- **Active Passport Context Preference:** When the command sheet is invoked from an individual Gear Passport screen (`/rig/[id]`), Ryff automatically prioritizes that active instrument for generic references (*"this guitar"*, *"restrung it"*, etc.).
+- **Safe Staged Proposals (Zero Premature Database Writes):** In Step 2, the assistant writes zero unconfirmed records to `rig_item_logs` or `rig_items`. Every parsed action is safely staged in the `assistant_actions` queue with `status = 'proposed'`, ready for user review and confirmation.
+
+---
+
+### 2. Technical Details (For Developers)
+- **Gear Resolver ([`src/lib/command/resolve.ts`](file:///c:/Users/rob_b/Ryff/src/lib/command/resolve.ts)):**
+  - Resolves colloquial names, models, nicknames, and brand aliases against the user's owned gear in `rig_items`.
+  - Context-aware preference for `activeGearId`.
+  - Deterministic ambiguity detection returning `{ status: 'ambiguous', candidates: [...] }` if multiple items match.
+  - Guarantees numeric `id` normalization across postgres bigint serials.
+- **Tool Schemas & Normalizers ([`src/lib/command/tools.ts`](file:///c:/Users/rob_b/Ryff/src/lib/command/tools.ts)):**
+  - `logMaintenanceSchema`: Zod schema validating `gear_ref`, `event_type` (`strings`, `setup`, `fret_work`, `electronics`, `pickups`, `hardware`, `repair`, `valve_change`, `other`), `event_date` (`YYYY-MM-DD`), `notes`, `component`, and `original_part`. Tolerates nulls from LLM outputs.
+  - `addWantSchema`: Zod schema validating `item_text`, `region`, positive `max_price`, default `currency` (`GBP`), and `alert` (default `true`).
+  - `normalizeRegion`: Normalizes colloquial regions ("England", "UK", "Britain", "US", "Worldwide") into Reverb region enums, accommodating underscores, hyphens, and whitespace.
+  - Clean formatting helpers: `formatCurrency` and `formatEventType`.
+- **Command Router ([`src/lib/command/router.ts`](file:///c:/Users/rob_b/Ryff/src/lib/command/router.ts)):**
+  - Neutral command persona prompt for Gemini 2.5 Flash (`temperature: 0.1`, `responseMimeType: 'application/json'`).
+  - Multi-action array parsing returning structured `ProposedAction` lists.
+  - Persists staged proposals to `assistant_actions` table with `status = 'proposed'` and UUID `batch_id`.
+  - Built-in rule-based fallback parser for offline/test resilience.
+- **API Route ([`src/app/api/command/route.ts`](file:///c:/Users/rob_b/Ryff/src/app/api/command/route.ts)):**
+  - Seamlessly routes text requests to `routeCommand` and returns `{ ok: true, status: 'proposed', proposals, ambiguous, unresolved }`.
+- **Interactive Candidate UI ([`src/components/CommandSheet.tsx`](file:///c:/Users/rob_b/Ryff/src/components/CommandSheet.tsx)):**
+  - Renders proposed maintenance and want cards with badges and formatted summaries.
+  - Displays interactive candidate instrument buttons when an ambiguous gear reference occurs, allowing 1-tap user selection.
+- **Automated Test Suite ([`tests/command-router.test.ts`](file:///c:/Users/rob_b/Ryff/tests/command-router.test.ts)):**
+  - 12 comprehensive unit and integration tests covering schemas, region normalizers, unambiguous/ambiguous gear resolution, multi-action decomposing, marketplace want parsing, context disambiguation, and API endpoint integration.
+
+---
+
+### 3. White-Label & Domain-Agnostic Utility
+- **Automotive / Fleet Maintenance:** Natural language command decomposing: *"Replaced front brake pads and rotated tires on the F-150, and I'm looking for a 2018 Tacoma TRD Pro under $35k in Texas."* Decomposes into vehicle maintenance log proposals and a marketplace vehicle search alert with price cap and geographic filtering. Ambiguous vehicle references (e.g. *"the truck"* when a fleet owner has 3 trucks) prompt candidate selection instead of corrupting service records.
+- **Luxury Goods & Watches:** *"Changed battery and pressure tested the Seamaster, and looking for a Rolex Explorer II under 8k in the UK."* Automatically parses watch servicing actions and marketplace procurement alerts.
+- **Athletic Equipment & Cycling:** *"Replaced chain and tuned rear derailleur on the gravel bike."* Multi-event maintenance logging with component attribution.
+
+---
+
+## Feature: Global Command Layer: Persistent Voice/Text Input & Transcription Engine (Step 1)
+- **Date:** October 4, 2026
+- **Category:** Command Layer / Voice Recognition / UX Architecture
+
+### 1. User & Marketing Overview
+- **Persistent Global Command Launcher ("Tell Ryff"):** A floating, high-utility command button (`⚡ Tell Ryff` or `⌘K`) accessible across every authenticated screen, giving musicians a 1-tap entry point to ask questions or record gear actions without leaving their current view.
+- **Hands-Free Speech Transcription:** High-accuracy voice capture powered by Gemini 2.5 Flash audio transcription that understands musical instrument models, brands, pickups, string gauges, and colloquial gear terminology. Transcribed speech is presented in the command sheet for instant review or manual editing before sending.
+- **Screen & Instrument Context Awareness:** When invoked from an individual Gear Passport (`/rig/[id]`), the command layer automatically attaches the active instrument context (`Target: Gear #ID`), making phrases like *"Changed strings yesterday"* or *"Swapped bridge pickup"* immediately resolvable.
+- **Customizable Command Input Modes:** Users can customize command input preferences under Setup: `Text and voice` (default), `Text only`, or `Off`, adapting to quiet studio environments or mobile convenience.
+
+---
+
+### 2. Technical Details (For Developers)
+- **Shared Audio Recording Hook ([`src/hooks/useAudioRecorder.ts`](file:///c:/Users/rob_b/Ryff/src/hooks/useAudioRecorder.ts)):**
+  - Unifies browser `MediaRecorder` audio capture with automatic MIME type negotiation (`audio/webm;codecs=opus` $\rightarrow$ `audio/webm` $\rightarrow$ `audio/mp4`), 30-second duration cutoff, live timer, and Base64 encoding.
+- **Audio Transcription Pipeline ([`src/lib/command/transcribe.ts`](file:///c:/Users/rob_b/Ryff/src/lib/command/transcribe.ts)):**
+  - Direct integration with Google GenAI SDK (`@google/genai`) using Gemini 2.5 Flash (`inlineData: { mimeType, data: audioBase64 }`) with music and gear transcription system prompts.
+- **Command Route & Rate Limiter ([`src/app/api/command/route.ts`](file:///c:/Users/rob_b/Ryff/src/app/api/command/route.ts)):**
+  - Authenticated `POST /api/command` endpoint handling both text and audio inputs with context resolution (`screen`, `gearId`, and gear entity lookup).
+  - Enforces sliding-window rate limits (30 reqs/min per user) and payload constraints (max 1000 chars text, max ~30s base64 audio).
+- **Command Sheet Component ([`src/components/CommandSheet.tsx`](file:///c:/Users/rob_b/Ryff/src/components/CommandSheet.tsx)):**
+  - Sliding modal with glassmorphic backdrop, keyboard shortcuts (`Cmd+K`/`Ctrl+K`, `Escape`), active gear context pill, real-time audio listening status, and instant echo card feedback.
+- **Setup Preference Integration:**
+  - Extended [`src/lib/personalization.ts`](file:///c:/Users/rob_b/Ryff/src/lib/personalization.ts), [`src/app/api/preferences/route.ts`](file:///c:/Users/rob_b/Ryff/src/app/api/preferences/route.ts), and [`src/app/(app)/setup/SetupClient.tsx`](file:///c:/Users/rob_b/Ryff/src/app/(app)/setup/SetupClient.tsx) with `commandInputMode` (`'text_and_voice' | 'text_only' | 'off'`).
+- **Automated Test Suite ([`tests/command-input.test.ts`](file:///c:/Users/rob_b/Ryff/tests/command-input.test.ts)):**
+  - 5 comprehensive tests validating preference persistence, text echo with context, audio transcription handling, size limits, and empty payload rejection.
+
+---
+
+### 3. White-Label & Domain-Agnostic Utility
+- **Omnipresent Voice/Text Command Bar for Any Domain:**
+  - 🚗 **Vehicle & Fleet Management:** Floating *"Log Maintenance"* bar allowing drivers or mechanics to record tire rotations or oil changes hands-free by speaking: *"Rotated front tires and checked brake pads on the F-150."*
+  - ⌚ **Luxury Goods / Watch Collectors:** Voice or quick text command to log accuracy tests or watch servicing: *"Regulated the Submariner to +2s/day."*
+  - 🏃 **Athletic / Fitness Gear:** Quick logging of shoe mileage or equipment swaps: *"Ran 10k in the Pegasus 40s today."*
+
+---
+
+## Feature: Rig Passport Rebrand, Serial Visibility Control & Assistant Schema Groundwork (Step 0)
+- **Date:** October 4, 2026
+- **Category:** Rig Management / Identity & Trust / Command Layer Architecture
+
+### 1. User & Marketing Overview
+- **Rig Passport Rebrand:** Elevated Ryff's gear collection and maintenance surfaces from casual "Rig room" nomenclature to an authoritative **Rig Passport** across bottom navigation, home dashboard tiles, empty states, marketplace trader links, and onboarding journeys.
+- **Passport History Timeline:** Re-anchored instrument maintenance, modifications, and servicing logs under **Passport history**, laying the groundwork for verifiable provenance records and prospective buyer verification.
+- **Serial Number Privacy & Visibility Toggle:** Added an optional, privacy-focused serial number control to the Gear Passport screen with explanatory helper guidance (*"Optional. Used to identify this instrument. Hidden from others unless you choose to share it."*), accompanied by a "Show serial number on public passport" toggle and an indicator badge.
+
+---
+
+### 2. Technical Details (For Developers)
+- **Database Migration ([`db/migrations/0013_passport_and_assistant.sql`](file:///c:/Users/rob_b/Ryff/db/migrations/0013_passport_and_assistant.sql)):**
+  - Extended `rig_items` with `serial_visible boolean not null default false`, `alert boolean not null default true`, and `currency text default 'GBP'`.
+  - Added `source text not null default 'live' check (source in ('live', 'voice', 'assistant', 'imported'))` to `rig_item_logs` and backfilled existing entries from `logged_via` (`'audio'` $\rightarrow$ `'voice'`, `'ai_import'` $\rightarrow$ `'imported'`, and others $\rightarrow$ `'live'`).
+  - Expanded `rig_item_logs` `event_type` check constraint to seamlessly permit granular types (`strings`, `fret_work`, `electronics`, `pickups`, `hardware`, `other`) alongside legacy types (`string_change`, `valve_change`, `modification`, `maintenance`, `note`, `general`).
+  - Created `assistant_actions` table for the upcoming Global Command Layer (supporting proposed, confirmed, rejected, and undone action states with `arguments`, `result`, and `undo_payload` JSONB storage).
+  - Added `command_input_mode` to `users` table defaulting to `'text_and_voice'`.
+- **API & UI Updates:**
+  - Updated [`src/app/api/rig/[id]/route.ts`](file:///c:/Users/rob_b/Ryff/src/app/api/rig/[id]/route.ts) to permit updating `serial_visible`.
+  - Updated [`src/app/api/rig/route.ts`](file:///c:/Users/rob_b/Ryff/src/app/api/rig/route.ts) to select `serial_visible` across `GET` and `POST` responses.
+  - Updated [`src/app/(app)/AppNav.tsx`](file:///c:/Users/rob_b/Ryff/src/app/(app)/AppNav.tsx), [`src/app/(app)/page.tsx`](file:///c:/Users/rob_b/Ryff/src/app/(app)/page.tsx), [`src/app/(app)/rig/RigRoomClient.tsx`](file:///c:/Users/rob_b/Ryff/src/app/(app)/rig/RigRoomClient.tsx), [`src/app/(app)/rig/[id]/page.tsx`](file:///c:/Users/rob_b/Ryff/src/app/(app)/rig/[id]/page.tsx), [`src/app/(app)/trader/TraderClient.tsx`](file:///c:/Users/rob_b/Ryff/src/app/(app)/trader/TraderClient.tsx), and [`src/app/welcome/page.tsx`](file:///c:/Users/rob_b/Ryff/src/app/welcome/page.tsx) to reflect Passport terminology.
+  - Added integration test suite [`tests/passport-schema.test.ts`](file:///c:/Users/rob_b/Ryff/tests/passport-schema.test.ts) confirming database schema adherence.
+
+---
+
+### 3. White-Label & Domain-Agnostic Utility
+- **Universal Digital Product Passports:** Shifting from "collection lists" to "Passports" provides a universal asset verification pattern applicable to any vertical where provenance, maintenance history, and serial number privacy matter:
+  - 🚗 **Automotive / Classic Cars:** Vehicle Service Passport tracking maintenance intervals, modifications, and VIN visibility for private sales.
+  - ⌚ **Luxury Watches:** Digital Watch Passport documenting movement servicing, polish history, and serial number verification.
+  - 🚲 **Bicycles & Sports Equipment:** Cycling Passport tracking chain replacements, suspension overhauls, and frame serial registration for theft recovery and resale.
+
+---
+
 ## Feature: Individual Instrument Profiles: Nicknames, Immersive Studio Themes, Granular Spec Sheets & Snapshot Versioning
 - **Date:** October 4, 2026
 - **Category:** UI / UX Excellence / Rig Management / Instrument Profiling

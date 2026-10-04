@@ -1,9 +1,13 @@
 import { db } from './db';
 
+export type PersonalityMode = 'hank' | 'vee' | 'dry' | 'blunt' | 'chatty';
+
 export interface UserPreferences {
   favoritePlayers: string[];
   followedBrands: string[];
   reverbRegion: 'UK_ONLY' | 'SHIPS_TO_UK' | 'US_ONLY' | 'WORLDWIDE';
+  commandInputMode: 'text_and_voice' | 'text_only' | 'off';
+  personality: PersonalityMode;
 }
 
 export interface FeedItemCard {
@@ -31,33 +35,47 @@ export interface FeedItemCard {
 }
 
 /**
- * Retrieves a user's followed brands and favorite players
+ * Retrieves a user's followed brands, favorite players, command input mode, and personality
  */
 export async function getUserPreferences(userId: string): Promise<UserPreferences> {
   const rows = await db`
-    select favorite_players, followed_brands, reverb_region
+    select favorite_players, followed_brands, reverb_region, command_input_mode, personality
     from users
     where id = ${userId}
     limit 1
   `;
 
   if (rows.length === 0) {
-    return { favoritePlayers: [], followedBrands: [], reverbRegion: 'SHIPS_TO_UK' };
+    return {
+      favoritePlayers: [],
+      followedBrands: [],
+      reverbRegion: 'SHIPS_TO_UK',
+      commandInputMode: 'text_and_voice',
+      personality: 'hank',
+    };
   }
 
   return {
     favoritePlayers: rows[0].favorite_players || [],
     followedBrands: rows[0].followed_brands || [],
     reverbRegion: (rows[0].reverb_region as UserPreferences['reverbRegion']) || 'SHIPS_TO_UK',
+    commandInputMode: (rows[0].command_input_mode as UserPreferences['commandInputMode']) || 'text_and_voice',
+    personality: (rows[0].personality as PersonalityMode) || 'hank',
   };
 }
 
 /**
- * Updates a user's followed brands and favorite players
+ * Updates a user's preferences
  */
 export async function updateUserPreferences(
   userId: string,
-  prefs: { favoritePlayers?: string[]; followedBrands?: string[]; reverbRegion?: 'UK_ONLY' | 'SHIPS_TO_UK' | 'US_ONLY' | 'WORLDWIDE' }
+  prefs: {
+    favoritePlayers?: string[];
+    followedBrands?: string[];
+    reverbRegion?: 'UK_ONLY' | 'SHIPS_TO_UK' | 'US_ONLY' | 'WORLDWIDE';
+    commandInputMode?: 'text_and_voice' | 'text_only' | 'off';
+    personality?: PersonalityMode;
+  }
 ): Promise<UserPreferences> {
   const current = await getUserPreferences(userId);
 
@@ -73,12 +91,22 @@ export async function updateUserPreferences(
     ? prefs.reverbRegion
     : current.reverbRegion;
 
+  const newCommandMode = prefs.commandInputMode !== undefined
+    ? prefs.commandInputMode
+    : current.commandInputMode;
+
+  const newPersonality = prefs.personality !== undefined
+    ? prefs.personality
+    : current.personality;
+
   await db`
     update users
     set 
       favorite_players = ${newPlayers},
       followed_brands = ${newBrands},
-      reverb_region = ${newRegion}
+      reverb_region = ${newRegion},
+      command_input_mode = ${newCommandMode},
+      personality = ${newPersonality}
     where id = ${userId}
   `;
 
@@ -86,6 +114,8 @@ export async function updateUserPreferences(
     favoritePlayers: newPlayers,
     followedBrands: newBrands,
     reverbRegion: newRegion,
+    commandInputMode: newCommandMode,
+    personality: newPersonality,
   };
 }
 

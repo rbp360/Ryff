@@ -57,6 +57,19 @@ interface UserMetrics {
   totalRigs: number;
 }
 
+interface AssistantUserCostRow {
+  userId: string;
+  email: string | null;
+  cohort: string | null;
+  totalRequests: number;
+  actionCount: number;
+  queryCount: number;
+  helpCount: number;
+  chatCount: number;
+  totalCostUsd: number;
+  lastActive: Date;
+}
+
 async function getAdminData() {
   try {
     const sql = postgres(env.DATABASE_URL);
@@ -129,6 +142,40 @@ async function getAdminData() {
         (SELECT COUNT(*) FROM rig_items) as total_rigs
     `;
 
+    // 9. Assistant Commands & Cost Per User (Today)
+    const assistantCostsRaw = await sql`
+      SELECT 
+        u.id as user_id,
+        u.email,
+        u.cohort,
+        COUNT(a.id) as total_requests,
+        COUNT(a.id) FILTER (WHERE a.intent = 'action') as action_count,
+        COUNT(a.id) FILTER (WHERE a.intent = 'query') as query_count,
+        COUNT(a.id) FILTER (WHERE a.intent = 'app_help') as help_count,
+        COUNT(a.id) FILTER (WHERE a.intent = 'chat') as chat_count,
+        COALESCE(SUM(a.cost_usd), 0) as total_cost_usd,
+        MAX(a.created_at) as last_active
+      FROM assistant_cost_logs a
+      JOIN users u ON u.id = a.user_id
+      WHERE a.created_at >= CURRENT_DATE
+      GROUP BY u.id, u.email, u.cohort
+      ORDER BY total_cost_usd DESC, total_requests DESC
+      LIMIT 20
+    `;
+
+    const assistantCosts: AssistantUserCostRow[] = assistantCostsRaw.map((r) => ({
+      userId: String(r.user_id),
+      email: r.email ? String(r.email) : null,
+      cohort: r.cohort ? String(r.cohort) : null,
+      totalRequests: Number(r.total_requests || 0),
+      actionCount: Number(r.action_count || 0),
+      queryCount: Number(r.query_count || 0),
+      helpCount: Number(r.help_count || 0),
+      chatCount: Number(r.chat_count || 0),
+      totalCostUsd: Number(r.total_cost_usd || 0),
+      lastActive: new Date(r.last_active),
+    }));
+
     await sql.end();
 
     const todaySpend = Number(todaySpendResult[0]?.today_spend || 0);
@@ -153,6 +200,7 @@ async function getAdminData() {
       flaggedMessages,
       feedbackList,
       userMetrics,
+      assistantCosts,
     };
   } catch (err) {
     console.error('Failed to query admin command centre data:', err);
@@ -166,6 +214,7 @@ async function getAdminData() {
       flaggedMessages: [],
       feedbackList: [],
       userMetrics: { totalUsers: 0, cadreUsers: 0, ukResidents: 0, totalMessages: 0, totalRigs: 0 },
+      assistantCosts: [],
     };
   }
 }
@@ -181,6 +230,7 @@ export default async function AdminCommandCentrePage() {
     flaggedMessages,
     feedbackList,
     userMetrics,
+    assistantCosts,
   } = await getAdminData();
 
   const totalSources = sources.length;
@@ -517,6 +567,77 @@ export default async function AdminCommandCentrePage() {
                       </td>
                       <td className="py-2.5 px-4 text-slate-400">
                         {ep.published_at ? new Date(ep.published_at).toLocaleString() : 'Draft'}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
+          </div>
+        </section>
+ 
+        {/* Assistant Usage & Cost by User (Today) */}
+        <section className="bg-slate-900/90 border border-slate-800 rounded-xl overflow-hidden shadow-xl space-y-0">
+          <div className="p-5 border-b border-slate-800 flex items-center justify-between">
+            <h2 className="text-lg font-bold text-white flex items-center gap-2">
+              <span className="text-amber-400">⚡</span> Assistant Commands &amp; Cost by User (Today) ({assistantCosts.length})
+            </h2>
+            <span className="text-xs bg-slate-800 text-slate-300 px-3 py-1 rounded-full border border-slate-700 font-mono">
+              Live Daily Telemetry
+            </span>
+          </div>
+
+          <div className="overflow-x-auto max-h-80">
+            {assistantCosts.length === 0 ? (
+              <div className="p-8 text-center text-slate-500 text-xs font-mono">
+                No assistant commands logged yet today.
+              </div>
+            ) : (
+              <table className="w-full text-left text-xs">
+                <thead className="bg-slate-950/60 text-slate-400 border-b border-slate-800 font-mono uppercase tracking-wider sticky top-0">
+                  <tr>
+                    <th className="py-2.5 px-4">User</th>
+                    <th className="py-2.5 px-4">Cohort</th>
+                    <th className="py-2.5 px-4">Total Commands</th>
+                    <th className="py-2.5 px-4">Breakdown (Act / Qry / Help / Chat)</th>
+                    <th className="py-2.5 px-4">Estimated Spend</th>
+                    <th className="py-2.5 px-4">Last Command</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-800/60 font-mono text-slate-300">
+                  {assistantCosts.map((u) => (
+                    <tr key={u.userId} className="hover:bg-slate-800/40 transition">
+                      <td className="py-2.5 px-4 font-semibold text-white">
+                        {u.email || `${u.userId.slice(0, 8)}...`}
+                      </td>
+                      <td className="py-2.5 px-4">
+                        <span
+                          className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${
+                            u.cohort === 'cadre'
+                              ? 'bg-amber-950 text-amber-400 border border-amber-800/60'
+                              : 'bg-slate-800 text-slate-400'
+                          }`}
+                        >
+                          {u.cohort || 'public'}
+                        </span>
+                      </td>
+                      <td className="py-2.5 px-4 font-bold text-cyan-300">
+                        {u.totalRequests}
+                      </td>
+                      <td className="py-2.5 px-4 text-slate-400 text-[11px]">
+                        <span className="text-emerald-400 font-semibold">{u.actionCount} act</span>
+                        {' · '}
+                        <span className="text-cyan-400 font-semibold">{u.queryCount} qry</span>
+                        {' · '}
+                        <span className="text-blue-400 font-semibold">{u.helpCount} help</span>
+                        {' · '}
+                        <span className="text-purple-400 font-semibold">{u.chatCount} chat</span>
+                      </td>
+                      <td className="py-2.5 px-4 font-bold text-emerald-400">
+                        ${u.totalCostUsd.toFixed(5)}
+                      </td>
+                      <td className="py-2.5 px-4 text-slate-400 text-[11px]">
+                        {new Date(u.lastActive).toLocaleTimeString()}
                       </td>
                     </tr>
                   ))}

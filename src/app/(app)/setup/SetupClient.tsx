@@ -11,6 +11,7 @@ interface SetupClientProps {
     favoritePlayers: string[];
     followedBrands: string[];
     reverbRegion: 'UK_ONLY' | 'SHIPS_TO_UK' | 'US_ONLY' | 'WORLDWIDE';
+    commandInputMode?: 'text_and_voice' | 'text_only' | 'off';
   };
 }
 
@@ -49,7 +50,55 @@ export function SetupClient({ initialEmail, initialPreferences }: SetupClientPro
     forums: true,
   });
   const [region, setRegion] = useState(initialPreferences.reverbRegion || 'SHIPS_TO_UK');
+  const [commandMode, setCommandMode] = useState<'text_and_voice' | 'text_only' | 'off'>(
+    initialPreferences.commandInputMode || 'text_and_voice'
+  );
   const [savedNotice, setSavedNotice] = useState(false);
+
+  // Assistant activity state (Step 3)
+  const [activity, setActivity] = useState<any[]>([]);
+  const [loadingActivity, setLoadingActivity] = useState(false);
+  const [undoingId, setUndoingId] = useState<number | null>(null);
+
+  // Load assistant activity
+  useEffect(() => {
+    fetchActivity();
+  }, []);
+
+  async function fetchActivity() {
+    setLoadingActivity(true);
+    try {
+      const res = await fetch('/api/command/activity?limit=10');
+      const data = await res.json();
+      if (res.ok) {
+        setActivity(data.activity || []);
+      }
+    } catch {
+      // Ignore
+    } finally {
+      setLoadingActivity(false);
+    }
+  }
+
+  async function handleUndoActivity(actionId: number) {
+    setUndoingId(actionId);
+    try {
+      const res = await fetch('/api/command/undo', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ actionId }),
+      });
+      if (res.ok) {
+        setActivity((prev) =>
+          prev.map((a) => (a.id === actionId ? { ...a, status: 'undone' } : a))
+        );
+      }
+    } catch {
+      // Ignore
+    } finally {
+      setUndoingId(null);
+    }
+  }
 
   // Load local tone & sources
   useEffect(() => {
@@ -130,13 +179,22 @@ export function SetupClient({ initialEmail, initialPreferences }: SetupClientPro
 
   async function handleRegionChange(newRegion: 'UK_ONLY' | 'SHIPS_TO_UK' | 'US_ONLY' | 'WORLDWIDE') {
     setRegion(newRegion);
-    syncPreferences(players, brands, newRegion);
+    syncPreferences(players, brands, newRegion, commandMode);
+  }
+
+  async function handleCommandModeChange(newMode: 'text_and_voice' | 'text_only' | 'off') {
+    setCommandMode(newMode);
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('ryff_command_mode_changed', { detail: newMode }));
+    }
+    syncPreferences(players, brands, region, newMode);
   }
 
   async function syncPreferences(
     newPlayers: string[],
     newBrands: string[],
-    newRegion: 'UK_ONLY' | 'SHIPS_TO_UK' | 'US_ONLY' | 'WORLDWIDE'
+    newRegion: 'UK_ONLY' | 'SHIPS_TO_UK' | 'US_ONLY' | 'WORLDWIDE',
+    newCommandMode: 'text_and_voice' | 'text_only' | 'off' = commandMode
   ) {
     try {
       await fetch('/api/preferences', {
@@ -146,6 +204,7 @@ export function SetupClient({ initialEmail, initialPreferences }: SetupClientPro
           favoritePlayers: newPlayers,
           followedBrands: newBrands,
           reverbRegion: newRegion,
+          commandInputMode: newCommandMode,
         }),
       });
       flashNotice();
@@ -402,7 +461,146 @@ export function SetupClient({ initialEmail, initialPreferences }: SetupClientPro
         </div>
       </div>
 
-      {/* 5. Account Management */}
+      {/* 5. Command Input Mode */}
+      <div className="card">
+        <h3>Command input</h3>
+        <p>Global assistant input available across all screens to log gear, maintenance, and ask questions.</p>
+        <div className="row" style={{ borderBottom: 0, paddingBottom: 0 }}>
+          <span>Input mode</span>
+          <select
+            value={commandMode}
+            onChange={(e) => handleCommandModeChange(e.target.value as 'text_and_voice' | 'text_only' | 'off')}
+            style={{
+              background: '#000',
+              color: 'var(--tx)',
+              border: '1px solid var(--ln)',
+              padding: '6px 10px',
+              borderRadius: '6px',
+              fontSize: '12px',
+              fontWeight: 700,
+            }}
+          >
+            <option value="text_and_voice">Text and voice (Default)</option>
+            <option value="text_only">Text only</option>
+            <option value="off">Off</option>
+          </select>
+        </div>
+      </div>
+
+      {/* 6. Assistant Activity (Step 3) */}
+      <div className="card">
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div>
+            <h3>Assistant activity</h3>
+            <p>Recent commands and recorded maintenance or wants.</p>
+          </div>
+          <button
+            type="button"
+            onClick={fetchActivity}
+            disabled={loadingActivity}
+            style={{
+              background: 'rgba(255, 255, 255, 0.06)',
+              border: '1px solid var(--ln)',
+              color: 'var(--mu)',
+              borderRadius: '6px',
+              padding: '4px 8px',
+              fontSize: '11px',
+              fontWeight: 700,
+              cursor: 'pointer',
+            }}
+          >
+            {loadingActivity ? 'Refreshing...' : '↻ Refresh'}
+          </button>
+        </div>
+
+        {activity.length === 0 ? (
+          <div style={{ padding: '16px 0', fontSize: '12.5px', color: 'var(--mu)', textAlign: 'center' }}>
+            No assistant actions recorded yet. Use the ⚡ Tell Ryff button to log gear or wants.
+          </div>
+        ) : (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '10px' }}>
+            {activity.map((item) => (
+              <div
+                key={item.id}
+                style={{
+                  background: 'rgba(255, 255, 255, 0.03)',
+                  border: '1px solid var(--ln)',
+                  borderRadius: '10px',
+                  padding: '10px 12px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  gap: '12px',
+                }}
+              >
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '3px', flex: 1 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <span
+                      style={{
+                        fontSize: '10px',
+                        fontWeight: 800,
+                        padding: '1px 5px',
+                        borderRadius: '3px',
+                        background:
+                          item.status === 'confirmed'
+                            ? 'rgba(16, 185, 129, 0.2)'
+                            : item.status === 'undone'
+                            ? 'rgba(245, 158, 11, 0.2)'
+                            : 'rgba(255, 255, 255, 0.1)',
+                        color:
+                          item.status === 'confirmed'
+                            ? '#34d399'
+                            : item.status === 'undone'
+                            ? '#fbbf24'
+                            : 'var(--mu)',
+                      }}
+                    >
+                      {item.status.toUpperCase()}
+                    </span>
+                    <span style={{ fontSize: '11px', color: 'var(--mu)' }}>
+                      {new Date(item.created_at).toLocaleDateString(undefined, {
+                        month: 'short',
+                        day: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                      })}
+                    </span>
+                  </div>
+                  <span style={{ fontSize: '13px', fontWeight: 600, color: '#fff' }}>
+                    &ldquo;{item.source_text}&rdquo;
+                  </span>
+                  <span style={{ fontSize: '11.5px', color: 'var(--mu)' }}>
+                    {item.result?.summary || item.result?.title || item.tool_name}
+                  </span>
+                </div>
+
+                {item.status === 'confirmed' && (
+                  <button
+                    type="button"
+                    onClick={() => handleUndoActivity(item.id)}
+                    disabled={undoingId === item.id}
+                    style={{
+                      background: 'rgba(239, 68, 68, 0.15)',
+                      border: '1px solid #ef4444',
+                      color: '#f87171',
+                      borderRadius: '6px',
+                      padding: '4px 10px',
+                      fontSize: '11.5px',
+                      fontWeight: 700,
+                      cursor: 'pointer',
+                      flexShrink: 0,
+                    }}
+                  >
+                    {undoingId === item.id ? 'Reversing...' : 'Undo'}
+                  </button>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* 7. Account Management */}
       <div className="card" style={{ marginBottom: '32px' }}>
         <h3>Account</h3>
         <p>Manage your login session.</p>

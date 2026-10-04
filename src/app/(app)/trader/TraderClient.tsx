@@ -130,7 +130,7 @@ export default function TraderClient({
               Tracking {userWants.length} {userWants.length === 1 ? 'Want' : 'Wants'}
             </span>
 
-            {/* Space under / next to 'edit wants in rig room' for watchlist toggle switch */}
+            {/* Space under / next to 'edit wants in rig passport' for watchlist toggle switch */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '14px', flexWrap: 'wrap' }}>
               <label
                 style={{
@@ -183,7 +183,7 @@ export default function TraderClient({
               </label>
 
               <Link href="/rig" style={{ fontSize: '11px', color: 'var(--ac2)', fontWeight: 700 }}>
-                Edit Wants in Rig room ›
+                Edit Wants in Rig Passport ›
               </Link>
             </div>
           </div>
@@ -248,14 +248,14 @@ export default function TraderClient({
             Your wants list is empty
           </p>
           <p style={{ color: 'var(--mu)', fontSize: '12px', marginBottom: '14px' }}>
-            Add gear you are looking for in the Rig room, and Trader will automatically find used bargains and price drops across Reverb.
+            Add gear you are looking for in your Rig Passport, and Trader will automatically find used bargains and price drops across Reverb.
           </p>
           <Link
             href="/rig"
             className="go"
             style={{ display: 'inline-block', padding: '8px 16px', borderRadius: '8px' }}
           >
-            + Add Wants in Rig Room
+            + Add Wants in Rig Passport
           </Link>
         </div>
       )}

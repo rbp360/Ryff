@@ -58,6 +58,7 @@ export async function PATCH(
 
     const allowedFields = [
       'serial_number',
+      'serial_visible',
       'purchase_date',
       'purchase_price',
       'condition',
@@ -94,6 +95,8 @@ export async function PATCH(
       'drum_pieces',
       'cymbal_pieces',
       'snapshots',
+      'restring_interval_days',
+      'restring_interval_basis',
     ];
 
     const updates: Record<string, unknown> = {};

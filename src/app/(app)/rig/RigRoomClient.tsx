@@ -272,7 +272,7 @@ export function RigRoomClient({ initialItems, initialLogs }: RigRoomClientProps)
       <div className="top" style={{ marginBottom: '10px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
           <BackButton fallbackHref="/" />
-          <h1 style={{ marginBottom: 0 }}>Rig room</h1>
+          <h1 style={{ marginBottom: 0 }}>Rig Passport</h1>
         </div>
         <Link href="/setup" className="gearbtn" aria-label="Setup">
           ⚙
@@ -310,7 +310,7 @@ export function RigRoomClient({ initialItems, initialLogs }: RigRoomClientProps)
           {ownedItems.length === 0 ? (
             <div className="card" style={{ textAlign: 'center', padding: '32px 16px' }}>
               <p style={{ color: 'var(--tx)', fontWeight: 800, fontSize: '15px', marginBottom: '6px' }}>
-                Your rig is empty
+                Your Rig Passport is empty
               </p>
               <p style={{ color: 'var(--mu)', fontSize: '13px', margin: 0 }}>
                 Speak or type your guitars, amps, and pedals below to get started.
