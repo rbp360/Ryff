@@ -1,5 +1,131 @@
 # Ryff Feature Log
 
+## Feature: Individual Instrument Profiles: Nicknames, Immersive Studio Themes, Granular Spec Sheets & Snapshot Versioning
+- **Date:** October 4, 2026
+- **Category:** UI / UX Excellence / Rig Management / Instrument Profiling
+
+### 1. User & Marketing Overview
+- **Prominent Instrument Nicknames:** Instruments can be given iconic, personal nicknames (e.g., *"Lucille"*, *"Old Black"*, *"Red Special"*) displayed with custom typography, brand/model subtitles, and instant inline editing.
+- **Atmospheric Environmental Studio Backdrops:** Dynamic ambient room backdrops with soft radial vignette shading (`Guitar backdrop.png`, `drum room.png`, `Amp backdrop.png`, `Studio backdrop.png`, `Synthzone.png`, `DJbooth.png`, `Orchestra backdrop.png`) automatically load behind gear details according to the instrument's category or room assignment.
+- **Category-Tailored Spec Sheets:**
+  - **Guitars & Basses:** Interactive tuning selector with note breakdowns, string count selector (4, 5, 6, 7, 8, 12 strings), gauge presets, string manufacturer dropdown, and distinct Bridge, Middle, and Neck pickup assignments.
+  - **Amplifiers & Pedals:** Multi-line knob/channel tone settings block and an intelligent Digital Preset Link detector that identifies Line 6 Helix, Neural DSP Quad Cortex, Kemper, ToneX, Axe-Fx, Strymon, Google Drive, Dropbox, and Mega with glowing branded badges and external links.
+  - **Drums & Percussion:** Per-piece shell, head tension, and cymbal tracking.
+- **Setup Snapshot Versioning:** Capture historical setup snapshots (tuning, strings, pickups, amp settings, notes) with a single tap, browsable in a clean snapshot history drawer with detailed modal inspection.
+- **Quick Edit Gear Modal:** In-page modal allowing instant changes to Nickname, Brand, Model, Category, Serial Number, Year, Color, Purchase Price, and Purchase Date without page reloads.
+
+---
+
+### 2. Technical Details (For Developers)
+- **UI Architecture Upgrades ([`src/app/(app)/rig/[id]/page.tsx`](file:///c:/Users/rob_b/Ryff/src/app/(app)/rig/%5Bid%5D/page.tsx)):**
+  - Ambient room backdrop rendering with CSS mask-image radial vignette overlay.
+  - Integrated `getBackdropForCategory` and `detectSettingsProvider` from [`src/lib/gear-specs.ts`](file:///c:/Users/rob_b/Ryff/src/lib/gear-specs.ts).
+  - Built interactive spec editor for string counts, tunings, gauges, brands, and multi-pickup assignments.
+  - Built preset file badge detector with direct outbound URL linking.
+  - Integrated `handleCreateSnapshot` appending new timestamped entries into the `snapshots` JSON array and saving via `PATCH /api/rig/[id]`.
+  - Added `ItemSettingsModal` form for editing core equipment metadata.
+  - Verified full reactivity with AI voice memo logger and real-time state synchronization.
+- **Validation:**
+  - TypeScript typecheck passed cleanly with zero errors (`npm run typecheck`).
+  - Vitest test suite passed with 58/58 passing tests (`npm run test`).
+
+---
+
+### 3. White-Label & Domain-Agnostic Utility
+- **Cross-Domain Application:** This feature implements an **Adaptive Item Profile, Thematic Ambient Backdrops & Configuration Snapshot Vault**.
+- **Use Cases for Other Verticals:**
+  - 👟 **Athletic Footwear:** Shoe nicknames (*"Marathon Racers"*), lace/insole spec sheets, running track/trail ambient backdrops, and race-day setup snapshots.
+  - 🚗 **Performance Automotive:** Car nicknames (*"Project Track Car"*), suspension/ECU tune notes, dyno/tune link badges, garage backdrops, and race weekend configuration snapshots.
+  - ⌚ **Luxury Timepieces:** Watch nicknames (*"The Explorer"*), strap/bracelet/bezel specs, workshop backdrops, and service overhaul snapshots.
+
+---
+
+## Feature: Rigistry Asset Migration & Comprehensive Gear Specification Constants Engine
+- **Date:** October 4, 2026
+- **Category:** Rig Management / Asset Pipeline / Specification Engine
+
+### 1. User & Marketing Overview
+- **Immersive Environmental Room Backdrops:** High-resolution studio and stage backdrops (`Guitar backdrop.png`, `drum room.png`, `Amp backdrop.png`, `Live backdrop.png`, `Studio backdrop.png`, `DJbooth.png`, `Synthzone.png`, `Orchestra backdrop.png`) provide rich visual context behind instrument detail views.
+- **Category Artwork Fallbacks:** High-definition default brand and instrument category cards (`Bass gear brand default.png`, `Drum gear brand default.png`, `Effects brand default.jpg`, `Microphone default branding.jpg`, etc.) ensure visual polish even when custom photos haven't been uploaded.
+- **Curated Multi-Genre Tunings & Gauges:** Out-of-the-box tuning presets for 6, 7, 8, and 12-string guitars and 4, 5, and 6-string basses (Standard, Drop D, DADGAD, Open tunings, Baritone, 8-string Meshuggah, Animals as Leaders) with note breakdowns and standard string gauge sets.
+- **Digital Preset Provider Detector:** Intelligent URL parser automatically identifies links to external tone presets and cloud hosts (Line 6 Helix, Neural DSP Quad Cortex, Kemper Profiler, IK Multimedia ToneX, Fractal Axe-Fx, Strymon Nixie, Boss Tone Studio, GitHub Gists, Google Drive, Dropbox, Mega) and outputs branded badge badges.
+- **Smart Restring Date Autocomplete:** Rapid shorthand input parser converting 4, 6, or 8-digit inputs (e.g. `151024` -> `15/10/2024`) with automatic century expansion and day/month inversion guards.
+- **Natural Language Voice & Memo Spec Parser:** Spoken or written voice memos (e.g. *"Restrung on 1st October with Ernie Ball 10-46 and tuned to Drop D, call this guitar Lucille"*) automatically extract and update the exact schema fields (`tuning`, `string_gauge`, `string_manufacturer`, `last_restrung_at`, `nickname`, and pickups) in real-time.
+
+---
+
+### 2. Technical Details (For Developers)
+- **Asset Pipeline Migration (`public/branding/`):**
+  - Migrated 20+ studio environment backdrops, room graphics, and category default textures directly from Rigistry into `Ryff/public/branding/`.
+  - Added `brand-defaults-by-kind.json` for Kind-to-Graphic mapping.
+- **Specifications & Presets Module ([`src/lib/gear-specs.ts`](file:///c:/Users/rob_b/Ryff/src/lib/gear-specs.ts)):**
+  - Exported `GUITAR_TUNINGS`, `BASS_TUNINGS`, `GUITAR_STRING_GAUGES`, `BASS_STRING_GAUGES`, `STRING_MANUFACTURERS`, and `PICKUP_MANUFACTURERS`.
+  - `detectSettingsProvider(url)`: Regex and hostname evaluator matching preset platforms with associated badge styling.
+  - `getBackdropForCategory(category, room)`: Resolves ambient room backdrops based on classification hierarchy.
+  - `getCategoryDefaultImage(category)`: Resolves default artwork for photo-less gear items.
+  - `autocompleteDate(val)`: Normalizes shorthand user keystrokes into standardized `DD/MM/YYYY` format.
+- **AI Voice & Text Parser Engine ([`src/lib/gear-parser.ts`](file:///c:/Users/rob_b/Ryff/src/lib/gear-parser.ts) & [`src/app/api/rig/[id]/log/route.ts`](file:///c:/Users/rob_b/Ryff/src/app/api/rig/%5Bid%5D/log/route.ts)):**
+  - Extended Gemini system prompt to extract structured `tuning`, `string_gauge`, `string_manufacturer`, `number_of_strings`, `pickup_bridge`, `pickup_middle`, `pickup_neck`, and `nickname`.
+  - Added rule-based fallback regex parsers for tunings, string brands, gauges, and nicknames.
+  - Updated `/api/rig/[id]/log` POST handler to automatically persist extracted specs and tuning to the `rig_items` PostgreSQL table on voice or note logging.
+- **Test Suite ([`tests/gear-specs.test.ts`](file:///c:/Users/rob_b/Ryff/tests/gear-specs.test.ts)):**
+  - 15 unit tests validating preset detector accuracy across all supported gear cloud hosts, backdrop mapping, category fallbacks, date autocompletion, and specs coverage.
+
+---
+
+### 3. White-Label & Domain-Agnostic Utility
+- **Cross-Domain Application:** This feature represents a **Modular Specification Hierarchy, Asset Theme Provider & External Resource Detector**.
+- **Use Cases for Other Verticals:**
+  - 👟 **Athletic Footwear:** Preset catalogs of stack heights, heel-to-toe drops, pronation types, and terrain backdrops (track, trail, road, treadmill) with detection of Strava/Garmin workout links.
+  - 🚗 **Motorsports & Garages:** Pre-configured engine displacement tiers, gearbox ratios, tire compounds, and track/garage backdrops with auto-detection of tuning logs (ECU flash links, Dyno sheets).
+  - ☕ **Espresso & Coffee Gear:** Burr geometry presets, basket sizes, roast profile detectors, and roastery/café backdrops.
+
+---
+
+## Feature: Rig Item Profiles Database Architecture: Nicknames, Specifications, Presets & Snapshots
+- **Date:** October 4, 2026
+- **Category:** Rig Management / Database Architecture / Instrument Specifications
+
+### 1. User & Marketing Overview
+- **Instrument Nicknames:** Users can assign personalized nicknames to their instruments and gear (e.g., *"Old Black"*, *"Lucille"*, *"Red Special"*), creating an intimate, authentic connection with their cataloged equipment.
+- **Granular Instrument & String Specifications:** Enables detailed tracking of instrument string count (4, 5, 6, 7, 8, 12 strings), specific tunings (Standard, Drop D, DADGAD, Open tunings, Baritone, 8-string Meshuggah), string gauge sets, and string manufacturer.
+- **Pickups Breakdown:** Replaces vague single-summary fields with distinct Bridge, Middle, and Neck pickup assignments and manufacturers.
+- **Amplifier Settings & Preset Link Integration:** Dedicated storage for amp settings text blocks and external digital preset file links (ToneLib, Neural DSP, Helix, Quad Cortex, Kemper, Fractal Axe-Fx, etc.).
+- **Per-Piece Drum Kit & Cymbal Engine:** Complete structured schemas for drum pieces (snare, kick, toms, heads, tension, muffling) and cymbals (diameters, brands, models, replacement dates).
+- **Historical Setup Snapshots:** Enables capturing and versioning complete setup snapshots over time, allowing musicians to preserve historic configurations for tours, album sessions, or vintage builds.
+
+---
+
+### 2. Technical Details (For Developers)
+- **Database Migration ([`db/migrations/0012_rig_item_profiles_and_snapshots.sql`](file:///c:/Users/rob_b/Ryff/db/migrations/0012_rig_item_profiles_and_snapshots.sql)):**
+  - Extended `rig_items` table with:
+    - `number_of_strings` (`integer`)
+    - `tuning` (`text`)
+    - `string_gauge` (`text`)
+    - `string_manufacturer` (`text`)
+    - `pickup_bridge`, `pickup_middle`, `pickup_neck` (`text`)
+    - `drum_head_details`, `drum_head_tension`, `drum_head_change_date` (`text`)
+    - `drum_body`, `drum_mods_muffles` (`text`)
+    - `drum_pieces` (`jsonb not null default '[]'::jsonb`)
+    - `cymbal_pieces` (`jsonb not null default '[]'::jsonb`)
+    - `snapshots` (`jsonb not null default '[]'::jsonb`)
+  - Executed migration safely via `npm run migrate` (`tsx scripts/migrate.ts`).
+- **REST API Endpoint Upgrades ([`src/app/api/rig/[id]/route.ts`](file:///c:/Users/rob_b/Ryff/src/app/api/rig/%5Bid%5D/route.ts)):**
+  - Expanded `allowedFields` array to permit updates to `nickname`, `amp_settings`, `settings_file_url`, string specs, pickup fields, drum pieces, cymbal pieces, and historical snapshot arrays.
+  - Implemented safe JSON serialization (`JSON.stringify()::jsonb`) and conditional parameter updating (`CASE WHEN ... THEN ... ELSE column END`) to allow setting, overriding, or clearing values.
+
+---
+
+### 3. White-Label & Domain-Agnostic Utility
+- **Cross-Domain Application:** This feature implements a **Hierarchical Component Specification & Historical Configuration Snapshot Engine**.
+- **Use Cases for Other Verticals:**
+  - 👟 **Athletics & Running Gear:** Track shoe nicknames (*"Race Day Alphaflys"*), specific lace types, insole orthotics, and historical mileage/condition snapshots for each marathon or season.
+  - 🚗 **Vehicles & Motorsports:** Track car nicknames (*"Track Beast"*), engine/ECU tuning maps, suspension setup, tire compounds, and service/mod snapshots per race weekend.
+  - ⌚ **Horology & Luxury Watches:** Catalog watch nicknames (*"The Explorer"*), bracelet link counts, bezel inserts, caliber regulation timing, and service history snapshots.
+  - 🚲 **Cycling & Bike Builds:** Group component specs by wheelset, cassette ratios, tire widths, tubeless sealant change dates, and race-day setup snapshots.
+
+---
+
 ## Feature: Multi-Tier Gear Photo Pipeline & Drag-and-Drop Image Uploader
 - **Date:** October 3, 2026
 - **Category:** Rig Management / Asset Pipeline / UI Excellence

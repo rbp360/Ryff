@@ -4,6 +4,34 @@ import { use, useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { BackButton } from '@/components/BackButton';
 import { GearHeroPhoto } from '@/components/GearHeroPhoto';
+import {
+  GUITAR_TUNINGS,
+  BASS_TUNINGS,
+  GUITAR_STRING_GAUGES,
+  BASS_STRING_GAUGES,
+  STRING_MANUFACTURERS,
+  PICKUP_MANUFACTURERS,
+  detectSettingsProvider,
+  getBackdropForCategory,
+  autocompleteDate,
+  type DetectedProvider,
+} from '@/lib/gear-specs';
+
+interface GearSetupSnapshot {
+  savedAt: number;
+  monthYear: string;
+  tuning?: string;
+  stringGauge?: string;
+  stringManufacturer?: string;
+  numberOfStrings?: number;
+  pickupBridge?: string;
+  pickupMiddle?: string;
+  pickupNeck?: string;
+  ampSettings?: string;
+  settingsFileUrl?: string;
+  nickname?: string;
+  notes?: string;
+}
 
 interface RigItem {
   id: number;
@@ -11,16 +39,39 @@ interface RigItem {
   brand: string | null;
   model: string | null;
   category: string;
+  nickname?: string | null;
   image_url?: string | null;
   serial_number?: string | null;
   purchase_date?: string | null;
   purchase_price?: string | null;
+  condition?: string | null;
+  year_manufacture?: string | null;
+  color?: string | null;
+  notes?: string | null;
+  room?: string | null;
   current_strings?: string | null;
   last_restrung_at?: string | null;
+  number_of_strings?: number | null;
+  tuning?: string | null;
+  string_gauge?: string | null;
+  string_manufacturer?: string | null;
+  pickup_bridge?: string | null;
+  pickup_middle?: string | null;
+  pickup_neck?: string | null;
   pickups_summary?: string | null;
   modifications_summary?: string | null;
   valves_summary?: string | null;
   last_valves_changed_at?: string | null;
+  amp_settings?: string | null;
+  settings_file_url?: string | null;
+  drum_head_details?: string | null;
+  drum_head_tension?: string | null;
+  drum_head_change_date?: string | null;
+  drum_body?: string | null;
+  drum_mods_muffles?: string | null;
+  drum_pieces?: Array<{ id: string; pieceType?: string; headDetails?: string; headTension?: string; headChangeDate?: string; body?: string; modsMuffles?: string }>;
+  cymbal_pieces?: Array<{ id: string; cymbalType?: string; brandModel?: string; diameter?: string; changeDate?: string; notes?: string }>;
+  snapshots?: GearSetupSnapshot[];
 }
 
 interface RigItemLog {
@@ -64,6 +115,7 @@ export default function GearDetailPage({ params }: { params: Promise<{ id: strin
   const [news, setNews] = useState<MatchingNewsItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [saveSuccessMsg, setSaveSuccessMsg] = useState<string | null>(null);
 
   // Quick Log State (Voice or Text)
   const [logText, setLogText] = useState('');
@@ -73,6 +125,36 @@ export default function GearDetailPage({ params }: { params: Promise<{ id: strin
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Spec Editing States
+  const [isEditingSpecs, setIsEditingSpecs] = useState(false);
+  const [isSavingSpecs, setIsSavingSpecs] = useState(false);
+  const [showSettingsModal, setShowSettingsModal] = useState(false);
+  const [showSnapshotModal, setShowSnapshotModal] = useState(false);
+  const [activeSnapshot, setActiveSnapshot] = useState<GearSetupSnapshot | null>(null);
+
+  // Form State for quick spec editing
+  const [tuningVal, setTuningVal] = useState('');
+  const [gaugeVal, setGaugeVal] = useState('');
+  const [stringsBrandVal, setStringsBrandVal] = useState('');
+  const [stringsCountVal, setStringsCountVal] = useState<number>(6);
+  const [pickupBridgeVal, setPickupBridgeVal] = useState('');
+  const [pickupMiddleVal, setPickupMiddleVal] = useState('');
+  const [pickupNeckVal, setPickupNeckVal] = useState('');
+  const [ampSettingsVal, setAmpSettingsVal] = useState('');
+  const [presetUrlVal, setPresetUrlVal] = useState('');
+  const [notesVal, setNotesVal] = useState('');
+  const [nicknameVal, setNicknameVal] = useState('');
+
+  // Settings Modal fields
+  const [editBrand, setEditBrand] = useState('');
+  const [editModel, setEditModel] = useState('');
+  const [editCategory, setEditCategory] = useState('');
+  const [editSerial, setEditSerial] = useState('');
+  const [editYear, setEditYear] = useState('');
+  const [editColor, setEditColor] = useState('');
+  const [editPurchasePrice, setEditPurchasePrice] = useState('');
+  const [editPurchaseDate, setEditPurchaseDate] = useState('');
 
   useEffect(() => {
     let ignore = false;
@@ -84,9 +166,32 @@ export default function GearDetailPage({ params }: { params: Promise<{ id: strin
         }
         const data = await res.json();
         if (!ignore) {
-          setItem(data.item);
+          const it = data.item as RigItem;
+          setItem(it);
           setLogs(data.logs || []);
           if (data.matchingNews) setNews(data.matchingNews);
+
+          // Sync local form state
+          setTuningVal(it.tuning || '');
+          setGaugeVal(it.string_gauge || '');
+          setStringsBrandVal(it.string_manufacturer || '');
+          setStringsCountVal(it.number_of_strings || (it.category?.toLowerCase() === 'bass' ? 4 : 6));
+          setPickupBridgeVal(it.pickup_bridge || '');
+          setPickupMiddleVal(it.pickup_middle || '');
+          setPickupNeckVal(it.pickup_neck || '');
+          setAmpSettingsVal(it.amp_settings || '');
+          setPresetUrlVal(it.settings_file_url || '');
+          setNotesVal(it.notes || '');
+          setNicknameVal(it.nickname || '');
+
+          setEditBrand(it.brand || '');
+          setEditModel(it.model || '');
+          setEditCategory(it.category || 'guitar');
+          setEditSerial(it.serial_number || '');
+          setEditYear(it.year_manufacture || '');
+          setEditColor(it.color || '');
+          setEditPurchasePrice(it.purchase_price || '');
+          setEditPurchaseDate(it.purchase_date || '');
         }
       } catch (err: unknown) {
         if (!ignore) {
@@ -102,6 +207,102 @@ export default function GearDetailPage({ params }: { params: Promise<{ id: strin
       ignore = true;
     };
   }, [itemId]);
+
+  async function updateGear(fields: Partial<RigItem>) {
+    try {
+      const res = await fetch(`/api/rig/${itemId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(fields),
+      });
+      const data = await res.json();
+      if (res.ok && data.item) {
+        setItem(data.item);
+        setSaveSuccessMsg('Saved successfully!');
+        setTimeout(() => setSaveSuccessMsg(null), 3000);
+        return true;
+      } else {
+        setError(data.error || 'Failed to update item');
+      }
+    } catch {
+      setError('Network error saving changes');
+    }
+    return false;
+  }
+
+  async function handleSaveSpecs() {
+    setIsSavingSpecs(true);
+    setError(null);
+    await updateGear({
+      tuning: tuningVal || null,
+      string_gauge: gaugeVal || null,
+      string_manufacturer: stringsBrandVal || null,
+      number_of_strings: stringsCountVal || null,
+      pickup_bridge: pickupBridgeVal || null,
+      pickup_middle: pickupMiddleVal || null,
+      pickup_neck: pickupNeckVal || null,
+      amp_settings: ampSettingsVal || null,
+      settings_file_url: presetUrlVal || null,
+      notes: notesVal || null,
+      nickname: nicknameVal || null,
+    });
+    setIsSavingSpecs(false);
+    setIsEditingSpecs(false);
+  }
+
+  async function handleSaveSettingsModal(e: React.FormEvent) {
+    e.preventDefault();
+    setIsSavingSpecs(true);
+    await updateGear({
+      nickname: nicknameVal || null,
+      brand: editBrand || null,
+      model: editModel || null,
+      category: editCategory || 'guitar',
+      serial_number: editSerial || null,
+      year_manufacture: editYear || null,
+      color: editColor || null,
+      purchase_price: editPurchasePrice || null,
+      purchase_date: editPurchaseDate || null,
+    });
+    setIsSavingSpecs(false);
+    setShowSettingsModal(false);
+  }
+
+  async function handleCreateSnapshot() {
+    if (!item) return;
+    const now = new Date();
+    const monthYear = `${String(now.getMonth() + 1).padStart(2, '0')}/${String(now.getFullYear()).slice(-2)}`;
+    const newSnapshot: GearSetupSnapshot = {
+      savedAt: Date.now(),
+      monthYear,
+      tuning: item.tuning || tuningVal || undefined,
+      stringGauge: item.string_gauge || gaugeVal || undefined,
+      stringManufacturer: item.string_manufacturer || stringsBrandVal || undefined,
+      numberOfStrings: item.number_of_strings || stringsCountVal || undefined,
+      pickupBridge: item.pickup_bridge || pickupBridgeVal || undefined,
+      pickupMiddle: item.pickup_middle || pickupMiddleVal || undefined,
+      pickupNeck: item.pickup_neck || pickupNeckVal || undefined,
+      ampSettings: item.amp_settings || ampSettingsVal || undefined,
+      settingsFileUrl: item.settings_file_url || presetUrlVal || undefined,
+      nickname: item.nickname || nicknameVal || undefined,
+      notes: item.notes || notesVal || `Saved snapshot on ${now.toLocaleDateString()}`,
+    };
+
+    const currentSnapshots = item.snapshots || [];
+    const updatedSnapshots = [newSnapshot, ...currentSnapshots];
+
+    // Auto-append snapshot tag into notes for rapid reference
+    const noteMarker = `--Snapshot ${monthYear}--`;
+    const updatedNotes = item.notes ? `${item.notes} ${noteMarker}` : noteMarker;
+    setNotesVal(updatedNotes);
+
+    await updateGear({
+      snapshots: updatedSnapshots,
+      notes: updatedNotes,
+    });
+    setSaveSuccessMsg(`Snapshot saved for ${monthYear}!`);
+    setTimeout(() => setSaveSuccessMsg(null), 3000);
+  }
 
   // Voice recording handlers (15s limit)
   async function startRecording() {
@@ -174,7 +375,13 @@ export default function GearDetailPage({ params }: { params: Promise<{ id: strin
         const data = await res.json();
         if (res.ok) {
           if (data.log) setLogs((prev) => [data.log, ...prev]);
-          if (data.item) setItem(data.item);
+          if (data.item) {
+            setItem(data.item);
+            if (data.item.tuning) setTuningVal(data.item.tuning);
+            if (data.item.string_gauge) setGaugeVal(data.item.string_gauge);
+            if (data.item.string_manufacturer) setStringsBrandVal(data.item.string_manufacturer);
+            if (data.item.nickname) setNicknameVal(data.item.nickname);
+          }
         } else {
           setError(data.error || 'Failed to process voice log');
         }
@@ -202,7 +409,13 @@ export default function GearDetailPage({ params }: { params: Promise<{ id: strin
       if (res.ok) {
         setLogText('');
         if (data.log) setLogs((prev) => [data.log, ...prev]);
-        if (data.item) setItem(data.item);
+        if (data.item) {
+          setItem(data.item);
+          if (data.item.tuning) setTuningVal(data.item.tuning);
+          if (data.item.string_gauge) setGaugeVal(data.item.string_gauge);
+          if (data.item.string_manufacturer) setStringsBrandVal(data.item.string_manufacturer);
+          if (data.item.nickname) setNicknameVal(data.item.nickname);
+        }
       } else {
         setError(data.error || 'Failed to save log');
       }
@@ -215,16 +428,16 @@ export default function GearDetailPage({ params }: { params: Promise<{ id: strin
 
   if (loading) {
     return (
-      <div style={{ textAlign: 'center', padding: '40px 0' }}>
-        <p style={{ color: 'var(--mu)', fontSize: '13px' }}>Loading gear details...</p>
+      <div style={{ textAlign: 'center', padding: '60px 0' }}>
+        <p style={{ color: 'var(--mu)', fontSize: '14px' }}>Loading gear details...</p>
       </div>
     );
   }
 
   if (!item) {
     return (
-      <div style={{ textAlign: 'center', padding: '40px 0' }}>
-        <p style={{ color: 'var(--mu)', fontSize: '14px', marginBottom: '14px' }}>
+      <div style={{ textAlign: 'center', padding: '60px 0' }}>
+        <p style={{ color: 'var(--mu)', fontSize: '15px', marginBottom: '14px' }}>
           {error || 'Gear item not found.'}
         </p>
         <Link href="/rig" className="back">
@@ -234,41 +447,180 @@ export default function GearDetailPage({ params }: { params: Promise<{ id: strin
     );
   }
 
-  const isGuitar =
-    item.category?.toLowerCase() === 'guitar' ||
-    item.category?.toLowerCase() === 'guitars' ||
-    !item.category;
-  const isAmp = item.category?.toLowerCase() === 'amp' || item.category?.toLowerCase() === 'amps';
+  const categoryLower = (item.category || '').toLowerCase();
+  const isGuitar = categoryLower === 'guitar' || categoryLower === 'guitars' || !categoryLower;
+  const isBass = categoryLower === 'bass' || categoryLower === 'basses';
+  const isAmp = categoryLower === 'amp' || categoryLower === 'amps' || categoryLower === 'amplifiers-effects' || categoryLower === 'pedal' || categoryLower === 'cab';
+  const isDrum = categoryLower === 'drums' || categoryLower === 'percussion';
   const stringHealth = getStringHealthText(item.last_restrung_at);
 
-  return (
-    <>
-      <BackButton fallbackHref="/rig" label="Rig room" />
+  const backdropSrc = getBackdropForCategory(item.category, item.room);
+  const detectedPreset: DetectedProvider | null = item.settings_file_url ? detectSettingsProvider(item.settings_file_url) : null;
+  const tuningOptions = isBass ? (BASS_TUNINGS[stringsCountVal] || BASS_TUNINGS[4]) : (GUITAR_TUNINGS[stringsCountVal] || GUITAR_TUNINGS[6]);
+  const gaugeOptions = isBass ? (BASS_STRING_GAUGES[stringsCountVal] || BASS_STRING_GAUGES[4]) : (GUITAR_STRING_GAUGES[stringsCountVal] || GUITAR_STRING_GAUGES[6]);
 
+  return (
+    <div style={{ position: 'relative', minHeight: '100vh', paddingBottom: '80px' }}>
+      {/* Environmental Studio / Stage Room Backdrop */}
+      {backdropSrc && (
+        <div
+          aria-hidden="true"
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: '50%',
+            transform: 'translateX(-50%)',
+            width: '100vw',
+            maxWidth: '1200px',
+            height: '600px',
+            pointerEvents: 'none',
+            zIndex: 0,
+            opacity: 0.22,
+            overflow: 'hidden',
+            maskImage: 'radial-gradient(ellipse at 50% 15%, black 40%, transparent 80%)',
+            WebkitMaskImage: 'radial-gradient(ellipse at 50% 15%, black 40%, transparent 80%)',
+          }}
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={backdropSrc}
+            alt=""
+            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+          />
+        </div>
+      )}
+
+      {/* Header Bar */}
+      <div style={{ position: 'relative', zIndex: 10, display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px' }}>
+        <BackButton fallbackHref="/rig" label="Rig room" />
+        <button
+          type="button"
+          onClick={() => setShowSettingsModal(true)}
+          title="Edit gear details"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '6px',
+            background: 'rgba(20,20,20,0.85)',
+            border: '1px solid var(--ln)',
+            color: 'var(--tx)',
+            padding: '7px 14px',
+            borderRadius: '20px',
+            fontSize: '12px',
+            fontWeight: 700,
+            backdropFilter: 'blur(8px)',
+            cursor: 'pointer',
+          }}
+        >
+          <span>⚙</span> Edit Item
+        </button>
+      </div>
 
       {/* 4:3 Hero Photo with Drag & Drop & Stock Fallback */}
-      <GearHeroPhoto
-        itemId={item.id}
-        initialImageUrl={item.image_url}
-        brand={item.brand}
-        model={item.model}
-        category={item.category}
-        rawText={item.raw_text}
-        onImageUpdated={(newUrl) => {
-          setItem((prev) => (prev ? { ...prev, image_url: newUrl } : null));
-        }}
-      />
+      <div style={{ position: 'relative', zIndex: 2 }}>
+        <GearHeroPhoto
+          itemId={item.id}
+          initialImageUrl={item.image_url}
+          brand={item.brand}
+          model={item.model}
+          category={item.category}
+          rawText={item.raw_text}
+          onImageUpdated={(newUrl) => {
+            setItem((prev) => (prev ? { ...prev, image_url: newUrl } : null));
+          }}
+        />
+      </div>
 
-      <h1 style={{ marginTop: '16px' }}>
-        {item.brand ? `${item.brand} ` : ''}{item.model || item.raw_text}
-      </h1>
-      <p className="sub">{item.category || 'Gear'}</p>
+      {/* Title & Nickname Header */}
+      <div style={{ position: 'relative', zIndex: 2, marginTop: '20px' }}>
+        {item.nickname ? (
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+              <h1 style={{ margin: 0, color: 'var(--ac)', fontSize: '28px', letterSpacing: '-0.02em' }}>
+                &ldquo;{item.nickname}&rdquo;
+              </h1>
+              <span
+                style={{
+                  background: 'rgba(34, 197, 94, 0.14)',
+                  color: 'var(--ac)',
+                  border: '1px solid rgba(34, 197, 94, 0.35)',
+                  fontSize: '11px',
+                  fontWeight: 800,
+                  padding: '2px 8px',
+                  borderRadius: '12px',
+                  textTransform: 'uppercase',
+                }}
+              >
+                Nickname
+              </span>
+            </div>
+            <p style={{ margin: '6px 0 0', fontSize: '16px', fontWeight: 600, color: 'var(--tx)' }}>
+              {item.brand ? `${item.brand} ` : ''}{item.model || item.raw_text}
+              {item.serial_number ? <span style={{ opacity: 0.5, fontSize: '13px' }}> · #{item.serial_number}</span> : null}
+            </p>
+          </div>
+        ) : (
+          <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '12px' }}>
+            <div>
+              <h1 style={{ margin: 0 }}>
+                {item.brand ? `${item.brand} ` : ''}{item.model || item.raw_text}
+              </h1>
+              <p className="sub">
+                {item.category || 'Gear'}
+                {item.serial_number ? ` · #${item.serial_number}` : ''}
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() => {
+                setNicknameVal('');
+                setShowSettingsModal(true);
+              }}
+              style={{
+                fontSize: '12px',
+                fontWeight: 700,
+                color: 'var(--ac)',
+                background: 'rgba(34, 197, 94, 0.08)',
+                border: '1px dashed var(--ac)',
+                padding: '6px 12px',
+                borderRadius: '8px',
+                cursor: 'pointer',
+                whiteSpace: 'nowrap',
+              }}
+            >
+              + Nickname
+            </button>
+          </div>
+        )}
+      </div>
+
+      {/* Toast Save Message */}
+      {saveSuccessMsg && (
+        <div
+          style={{
+            position: 'fixed',
+            bottom: '80px',
+            right: '24px',
+            background: 'var(--ac)',
+            color: '#000',
+            fontWeight: 800,
+            fontSize: '13px',
+            padding: '10px 18px',
+            borderRadius: '10px',
+            boxShadow: '0 4px 18px rgba(0,0,0,0.5)',
+            zIndex: 100,
+            animation: 'fadeIn 0.2s',
+          }}
+        >
+          ✓ {saveSuccessMsg}
+        </div>
+      )}
 
       {/* Status Card */}
-      <div className="status">
-        <small>{isGuitar ? 'Last string change' : isAmp ? 'Last valve service' : 'Last logged'}</small>
+      <div className="status" style={{ marginTop: '16px', position: 'relative', zIndex: 2 }}>
+        <small>{(isGuitar || isBass) ? 'Last string change' : isAmp ? 'Last valve service' : 'Last logged'}</small>
         <b style={{ color: stringHealth.warn ? '#f59e0b' : 'var(--tx)' }}>
-          {isGuitar
+          {(isGuitar || isBass)
             ? stringHealth.text
             : isAmp && item.last_valves_changed_at
             ? new Date(item.last_valves_changed_at).toLocaleDateString()
@@ -278,181 +630,526 @@ export default function GearDetailPage({ params }: { params: Promise<{ id: strin
         </b>
       </div>
 
-      {/* Quick Audio Voice & Note Logger */}
-      <h2>Log something</h2>
-      <div className="card" style={{ padding: '16px' }}>
-        <p style={{ color: 'var(--mu)', fontSize: '12px', marginBottom: '12px' }}>
-          Speak any maintenance, setup, string change, or parts swap. AI automatically logs it.
-        </p>
+      {/* QUICK AUDIO & NOTE VOICE LOGGER */}
+      <div style={{ position: 'relative', zIndex: 2 }}>
+        <h2>Log something</h2>
+        <div className="card" style={{ padding: '16px' }}>
+          <p style={{ color: 'var(--mu)', fontSize: '12px', marginBottom: '12px' }}>
+            Speak any maintenance, setup, tuning, or string swap. AI automatically logs it and updates specs.
+          </p>
 
-        {isRecording ? (
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              background: '#161616',
-              border: '1px solid var(--ac)',
-              borderRadius: '12px',
-              padding: '12px 16px',
-            }}
-          >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <span
-                style={{
-                  width: '10px',
-                  height: '10px',
-                  borderRadius: '50%',
-                  background: '#ef4444',
-                  animation: 'pulse 1s infinite',
-                }}
-              />
-              <span style={{ fontSize: '13px', fontWeight: 800 }}>
-                Listening ({recordingSeconds}s / 15s)...
-              </span>
-            </div>
-            <button
-              type="button"
-              onClick={stopRecording}
+          {isRecording ? (
+            <div
               style={{
-                background: 'var(--ac)',
-                color: '#000',
-                padding: '6px 14px',
-                borderRadius: '8px',
-                fontSize: '12px',
-                fontWeight: 800,
-              }}
-            >
-              Done
-            </button>
-          </div>
-        ) : (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-            <button
-              type="button"
-              onClick={startRecording}
-              disabled={isProcessingLog}
-              style={{
-                width: '100%',
-                padding: '14px',
-                borderRadius: '10px',
-                border: '1px dashed var(--ac)',
-                color: 'var(--ac)',
-                fontSize: '13px',
-                fontWeight: 800,
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'center',
-                gap: '8px',
-                background: 'rgba(34,197,94,0.06)',
+                justifyContent: 'space-between',
+                background: '#161616',
+                border: '1px solid var(--ac)',
+                borderRadius: '12px',
+                padding: '12px 16px',
               }}
             >
-              <span style={{ fontSize: '16px' }}>🎙️</span>
-              <span>{isProcessingLog ? 'AI processing audio...' : 'Tap to Record Voice Memo'}</span>
-            </button>
-
-            <div style={{ display: 'flex', gap: '8px', marginTop: '4px' }}>
-              <input
-                value={logText}
-                onChange={(e) => setLogText(e.target.value)}
-                placeholder="Or type a note (e.g. Changed strings to 10-46)..."
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') handleTextSubmit();
-                }}
-                disabled={isProcessingLog}
-                style={{
-                  flex: 1,
-                  background: '#0a0a0a',
-                  border: '1px solid var(--ln)',
-                  color: 'var(--tx)',
-                  padding: '10px 12px',
-                  borderRadius: '8px',
-                  fontSize: '13px',
-                }}
-              />
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <span
+                  style={{
+                    width: '10px',
+                    height: '10px',
+                    borderRadius: '50%',
+                    background: '#ef4444',
+                    animation: 'pulse 1s infinite',
+                  }}
+                />
+                <span style={{ fontSize: '13px', fontWeight: 800 }}>
+                  Listening ({recordingSeconds}s / 15s)...
+                </span>
+              </div>
               <button
                 type="button"
-                onClick={handleTextSubmit}
-                disabled={isProcessingLog || !logText.trim()}
+                onClick={stopRecording}
                 style={{
-                  background: 'var(--sf)',
-                  border: '1px solid var(--ln)',
-                  padding: '0 16px',
+                  background: 'var(--ac)',
+                  color: '#000',
+                  padding: '6px 14px',
                   borderRadius: '8px',
                   fontSize: '12px',
-                  fontWeight: 700,
+                  fontWeight: 800,
                 }}
               >
-                Save
+                Done
               </button>
             </div>
+          ) : (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              <button
+                type="button"
+                onClick={startRecording}
+                disabled={isProcessingLog}
+                style={{
+                  width: '100%',
+                  padding: '14px',
+                  borderRadius: '10px',
+                  border: '1px dashed var(--ac)',
+                  color: 'var(--ac)',
+                  fontSize: '13px',
+                  fontWeight: 800,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px',
+                  background: 'rgba(34,197,94,0.06)',
+                }}
+              >
+                <span style={{ fontSize: '16px' }}>🎙️</span>
+                <span>{isProcessingLog ? 'AI processing audio...' : 'Tap to Record Voice Memo'}</span>
+              </button>
+
+              <div style={{ display: 'flex', gap: '8px', marginTop: '4px' }}>
+                <input
+                  value={logText}
+                  onChange={(e) => setLogText(e.target.value)}
+                  placeholder="Or type e.g. Restrung with Ernie Ball 10-46 in Drop D..."
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') handleTextSubmit();
+                  }}
+                  disabled={isProcessingLog}
+                  style={{
+                    flex: 1,
+                    background: '#0a0a0a',
+                    border: '1px solid var(--ln)',
+                    color: 'var(--tx)',
+                    padding: '10px 12px',
+                    borderRadius: '8px',
+                    fontSize: '13px',
+                  }}
+                />
+                <button
+                  type="button"
+                  onClick={handleTextSubmit}
+                  disabled={isProcessingLog || !logText.trim()}
+                  style={{
+                    background: 'var(--sf)',
+                    border: '1px solid var(--ln)',
+                    padding: '0 16px',
+                    borderRadius: '8px',
+                    fontSize: '12px',
+                    fontWeight: 700,
+                  }}
+                >
+                  Save
+                </button>
+              </div>
+            </div>
+          )}
+
+          {error && (
+            <p style={{ color: '#ef4444', fontSize: '12px', marginTop: '10px', fontWeight: 600 }}>
+              {error}
+            </p>
+          )}
+        </div>
+      </div>
+
+      {/* DETAILED SPECIFICATIONS & PRESETS SECTION */}
+      <div style={{ position: 'relative', zIndex: 2, marginTop: '28px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px' }}>
+          <h2 style={{ margin: 0 }}>Instrument Specifications</h2>
+          <div style={{ display: 'flex', gap: '8px' }}>
+            <button
+              type="button"
+              onClick={handleCreateSnapshot}
+              title="Save a timestamped snapshot of current setup"
+              style={{
+                fontSize: '12px',
+                fontWeight: 700,
+                color: 'var(--tx)',
+                background: 'rgba(255,255,255,0.06)',
+                border: '1px solid var(--ln)',
+                borderRadius: '8px',
+                padding: '5px 10px',
+                cursor: 'pointer',
+              }}
+            >
+              📸 Save Snapshot
+            </button>
+            <button
+              type="button"
+              onClick={() => setIsEditingSpecs(!isEditingSpecs)}
+              style={{
+                fontSize: '12px',
+                fontWeight: 700,
+                color: isEditingSpecs ? 'var(--ac)' : 'var(--mu)',
+                background: 'var(--sf)',
+                border: '1px solid var(--ln)',
+                borderRadius: '8px',
+                padding: '5px 12px',
+                cursor: 'pointer',
+              }}
+            >
+              {isEditingSpecs ? 'Cancel' : 'Edit Specs'}
+            </button>
+          </div>
+        </div>
+
+        {/* GUITAR / BASS SPECIFICATIONS PANEL */}
+        {(isGuitar || isBass) && (
+          <div className="card" style={{ padding: '16px', marginBottom: '16px' }}>
+            {isEditingSpecs ? (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                  <label style={{ display: 'flex', flexDirection: 'column', gap: '4px', fontSize: '12px', color: 'var(--mu)', fontWeight: 600 }}>
+                    Strings Count
+                    <select
+                      value={stringsCountVal}
+                      onChange={(e) => setStringsCountVal(parseInt(e.target.value, 10))}
+                      style={{ background: '#0a0a0a', border: '1px solid var(--ln)', color: '#fff', padding: '8px 10px', borderRadius: '8px' }}
+                    >
+                      {isBass ? (
+                        <>
+                          <option value={4}>4 Strings</option>
+                          <option value={5}>5 Strings</option>
+                          <option value={6}>6 Strings</option>
+                        </>
+                      ) : (
+                        <>
+                          <option value={6}>6 Strings</option>
+                          <option value={7}>7 Strings</option>
+                          <option value={8}>8 Strings</option>
+                          <option value={12}>12 Strings</option>
+                        </>
+                      )}
+                    </select>
+                  </label>
+
+                  <label style={{ display: 'flex', flexDirection: 'column', gap: '4px', fontSize: '12px', color: 'var(--mu)', fontWeight: 600 }}>
+                    Tuning
+                    <select
+                      value={tuningVal}
+                      onChange={(e) => setTuningVal(e.target.value)}
+                      style={{ background: '#0a0a0a', border: '1px solid var(--ln)', color: '#fff', padding: '8px 10px', borderRadius: '8px' }}
+                    >
+                      <option value="">Select tuning...</option>
+                      {tuningOptions.map((t) => (
+                        <option key={t.name} value={t.name}>
+                          {t.name}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                </div>
+
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                  <label style={{ display: 'flex', flexDirection: 'column', gap: '4px', fontSize: '12px', color: 'var(--mu)', fontWeight: 600 }}>
+                    String Gauge
+                    <select
+                      value={gaugeVal}
+                      onChange={(e) => setGaugeVal(e.target.value)}
+                      style={{ background: '#0a0a0a', border: '1px solid var(--ln)', color: '#fff', padding: '8px 10px', borderRadius: '8px' }}
+                    >
+                      <option value="">Select gauge...</option>
+                      {gaugeOptions.map((g) => (
+                        <option key={g} value={g}>
+                          {g}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+
+                  <label style={{ display: 'flex', flexDirection: 'column', gap: '4px', fontSize: '12px', color: 'var(--mu)', fontWeight: 600 }}>
+                    String Manufacturer
+                    <select
+                      value={stringsBrandVal}
+                      onChange={(e) => setStringsBrandVal(e.target.value)}
+                      style={{ background: '#0a0a0a', border: '1px solid var(--ln)', color: '#fff', padding: '8px 10px', borderRadius: '8px' }}
+                    >
+                      <option value="">Select brand...</option>
+                      {STRING_MANUFACTURERS.map((m) => (
+                        <option key={m} value={m}>
+                          {m}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                </div>
+
+                <div style={{ borderTop: '1px solid var(--ln)', paddingTop: '12px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                  <span style={{ fontSize: '12px', fontWeight: 800, color: 'var(--tx)' }}>Pickups Configuration</span>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '10px' }}>
+                    <label style={{ display: 'flex', flexDirection: 'column', gap: '4px', fontSize: '11px', color: 'var(--mu)' }}>
+                      Bridge Pickup
+                      <input
+                        value={pickupBridgeVal}
+                        onChange={(e) => setPickupBridgeVal(e.target.value)}
+                        placeholder="e.g. Seymour Duncan JB"
+                        list="pickup-manufacturers"
+                        style={{ background: '#0a0a0a', border: '1px solid var(--ln)', color: '#fff', padding: '8px 10px', borderRadius: '8px', fontSize: '13px' }}
+                      />
+                    </label>
+                    <label style={{ display: 'flex', flexDirection: 'column', gap: '4px', fontSize: '11px', color: 'var(--mu)' }}>
+                      Middle Pickup
+                      <input
+                        value={pickupMiddleVal}
+                        onChange={(e) => setPickupMiddleVal(e.target.value)}
+                        placeholder="e.g. Fender Custom 69"
+                        list="pickup-manufacturers"
+                        style={{ background: '#0a0a0a', border: '1px solid var(--ln)', color: '#fff', padding: '8px 10px', borderRadius: '8px', fontSize: '13px' }}
+                      />
+                    </label>
+                    <label style={{ display: 'flex', flexDirection: 'column', gap: '4px', fontSize: '11px', color: 'var(--mu)' }}>
+                      Neck Pickup
+                      <input
+                        value={pickupNeckVal}
+                        onChange={(e) => setPickupNeckVal(e.target.value)}
+                        placeholder="e.g. Seymour Duncan '59"
+                        list="pickup-manufacturers"
+                        style={{ background: '#0a0a0a', border: '1px solid var(--ln)', color: '#fff', padding: '8px 10px', borderRadius: '8px', fontSize: '13px' }}
+                      />
+                    </label>
+                  </div>
+                  <datalist id="pickup-manufacturers">
+                    {PICKUP_MANUFACTURERS.map((p) => (
+                      <option key={p} value={p} />
+                    ))}
+                  </datalist>
+                </div>
+
+                <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px', marginTop: '6px' }}>
+                  <button
+                    type="button"
+                    onClick={() => setIsEditingSpecs(false)}
+                    style={{ padding: '8px 14px', borderRadius: '8px', border: '1px solid var(--ln)', fontSize: '12px', color: 'var(--mu)' }}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleSaveSpecs}
+                    disabled={isSavingSpecs}
+                    style={{ background: 'var(--ac)', color: '#000', fontWeight: 800, padding: '8px 18px', borderRadius: '8px', fontSize: '12px' }}
+                  >
+                    {isSavingSpecs ? 'Saving...' : 'Save Specs'}
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '10px' }}>
+                  <div style={{ background: '#0a0a0a', padding: '10px 12px', borderRadius: '8px', border: '1px solid var(--ln)' }}>
+                    <small style={{ color: 'var(--mu)', fontSize: '11px', display: 'block' }}>Tuning</small>
+                    <b style={{ fontSize: '13px', color: 'var(--tx)' }}>{item.tuning || 'Standard'}</b>
+                  </div>
+                  <div style={{ background: '#0a0a0a', padding: '10px 12px', borderRadius: '8px', border: '1px solid var(--ln)' }}>
+                    <small style={{ color: 'var(--mu)', fontSize: '11px', display: 'block' }}>Gauge</small>
+                    <b style={{ fontSize: '13px', color: 'var(--tx)' }}>{item.string_gauge || '10-46'}</b>
+                  </div>
+                  <div style={{ background: '#0a0a0a', padding: '10px 12px', borderRadius: '8px', border: '1px solid var(--ln)' }}>
+                    <small style={{ color: 'var(--mu)', fontSize: '11px', display: 'block' }}>Strings Brand</small>
+                    <b style={{ fontSize: '13px', color: 'var(--tx)' }}>{item.string_manufacturer || item.current_strings || 'Not specified'}</b>
+                  </div>
+                  <div style={{ background: '#0a0a0a', padding: '10px 12px', borderRadius: '8px', border: '1px solid var(--ln)' }}>
+                    <small style={{ color: 'var(--mu)', fontSize: '11px', display: 'block' }}>Strings Count</small>
+                    <b style={{ fontSize: '13px', color: 'var(--tx)' }}>{item.number_of_strings || (isBass ? 4 : 6)} string</b>
+                  </div>
+                </div>
+
+                {(item.pickup_bridge || item.pickup_middle || item.pickup_neck || item.pickups_summary) && (
+                  <div style={{ marginTop: '4px', borderTop: '1px solid var(--ln)', paddingTop: '10px' }}>
+                    <small style={{ color: 'var(--mu)', fontSize: '11px', display: 'block', marginBottom: '4px' }}>Pickups</small>
+                    <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', fontSize: '12px' }}>
+                      {item.pickup_bridge && (
+                        <span style={{ background: '#181818', padding: '4px 10px', borderRadius: '6px', border: '1px solid var(--ln)' }}>
+                          <b style={{ color: 'var(--ac)' }}>Bridge:</b> {item.pickup_bridge}
+                        </span>
+                      )}
+                      {item.pickup_middle && (
+                        <span style={{ background: '#181818', padding: '4px 10px', borderRadius: '6px', border: '1px solid var(--ln)' }}>
+                          <b style={{ color: 'var(--ac)' }}>Middle:</b> {item.pickup_middle}
+                        </span>
+                      )}
+                      {item.pickup_neck && (
+                        <span style={{ background: '#181818', padding: '4px 10px', borderRadius: '6px', border: '1px solid var(--ln)' }}>
+                          <b style={{ color: 'var(--ac)' }}>Neck:</b> {item.pickup_neck}
+                        </span>
+                      )}
+                      {!item.pickup_bridge && !item.pickup_middle && !item.pickup_neck && item.pickups_summary && (
+                        <span>{item.pickups_summary}</span>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         )}
 
-        {error && (
-          <p style={{ color: '#ef4444', fontSize: '12px', marginTop: '10px', fontWeight: 600 }}>
-            {error}
-          </p>
+        {/* AMPLIFIER / EFFECTS SETTINGS PANEL */}
+        {isAmp && (
+          <div className="card" style={{ padding: '16px', marginBottom: '16px' }}>
+            <h3 style={{ margin: '0 0 10px', fontSize: '14px', fontWeight: 800 }}>Amp & Tone Settings</h3>
+            {isEditingSpecs ? (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                <label style={{ display: 'flex', flexDirection: 'column', gap: '4px', fontSize: '12px', color: 'var(--mu)' }}>
+                  Tone Notes / Knob Settings
+                  <textarea
+                    rows={3}
+                    value={ampSettingsVal}
+                    onChange={(e) => setAmpSettingsVal(e.target.value)}
+                    placeholder="e.g. Gain 7, Bass 5, Mid 6.5, Treble 7, Master 4, Lead Channel on"
+                    style={{ background: '#0a0a0a', border: '1px solid var(--ln)', color: '#fff', padding: '8px 10px', borderRadius: '8px', fontSize: '13px' }}
+                  />
+                </label>
+                <label style={{ display: 'flex', flexDirection: 'column', gap: '4px', fontSize: '12px', color: 'var(--mu)' }}>
+                  Digital Preset Link (Helix, Quad Cortex, Kemper, ToneX, Google Drive)
+                  <input
+                    value={presetUrlVal}
+                    onChange={(e) => setPresetUrlVal(e.target.value)}
+                    placeholder="https://..."
+                    style={{ background: '#0a0a0a', border: '1px solid var(--ln)', color: '#fff', padding: '8px 10px', borderRadius: '8px', fontSize: '13px' }}
+                  />
+                </label>
+                <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px' }}>
+                  <button
+                    type="button"
+                    onClick={handleSaveSpecs}
+                    disabled={isSavingSpecs}
+                    style={{ background: 'var(--ac)', color: '#000', fontWeight: 800, padding: '8px 18px', borderRadius: '8px', fontSize: '12px' }}
+                  >
+                    Save Amp Settings
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div>
+                <p style={{ margin: 0, fontSize: '13px', color: item.amp_settings ? 'var(--tx)' : 'var(--mu)', whiteSpace: 'pre-wrap' }}>
+                  {item.amp_settings || 'No knob positions or channel settings logged yet.'}
+                </p>
+                {item.settings_file_url && (
+                  <div style={{ marginTop: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    {detectedPreset && (
+                      <span
+                        style={{
+                          background: detectedPreset.color,
+                          color: '#000',
+                          fontWeight: 900,
+                          fontSize: '10px',
+                          padding: '3px 8px',
+                          borderRadius: '6px',
+                          letterSpacing: '0.04em',
+                        }}
+                      >
+                        {detectedPreset.badge}
+                      </span>
+                    )}
+                    <a
+                      href={item.settings_file_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{
+                        fontSize: '13px',
+                        color: 'var(--ac)',
+                        fontWeight: 700,
+                        textDecoration: 'underline',
+                      }}
+                    >
+                      Open Preset Link ↗
+                    </a>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* DRUM SETUP PANEL */}
+        {isDrum && (
+          <div className="card" style={{ padding: '16px', marginBottom: '16px' }}>
+            <h3 style={{ margin: '0 0 10px', fontSize: '14px', fontWeight: 800 }}>Drum Kit Configuration</h3>
+            <p style={{ margin: 0, fontSize: '13px', color: item.drum_head_details ? 'var(--tx)' : 'var(--mu)' }}>
+              {item.drum_head_details || 'Snare, kick, and toms head tension and materials can be customized via voice notes or settings.'}
+            </p>
+          </div>
+        )}
+
+        {/* HISTORICAL SNAPSHOTS DRAWER / CARD */}
+        {item.snapshots && item.snapshots.length > 0 && (
+          <div className="card" style={{ padding: '16px', marginBottom: '16px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px' }}>
+              <span style={{ fontSize: '13px', fontWeight: 800 }}>Historical Setup Snapshots ({item.snapshots.length})</span>
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              {item.snapshots.map((snap, idx) => (
+                <div
+                  key={idx}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    background: '#0a0a0a',
+                    border: '1px solid var(--ln)',
+                    borderRadius: '8px',
+                    padding: '8px 12px',
+                    fontSize: '12px',
+                  }}
+                >
+                  <div>
+                    <span style={{ color: 'var(--ac)', fontWeight: 800, marginRight: '8px' }}>
+                      Snapshot {snap.monthYear}
+                    </span>
+                    <span style={{ color: 'var(--mu)' }}>
+                      {[snap.tuning, snap.stringGauge, snap.stringManufacturer].filter(Boolean).join(' · ') || 'Saved setup state'}
+                    </span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setActiveSnapshot(snap);
+                      setShowSnapshotModal(true);
+                    }}
+                    style={{
+                      background: 'var(--sf)',
+                      color: 'var(--tx)',
+                      border: '1px solid var(--ln)',
+                      padding: '4px 10px',
+                      borderRadius: '6px',
+                      fontSize: '11px',
+                      fontWeight: 700,
+                    }}
+                  >
+                    View
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
         )}
       </div>
 
-      {/* Specs Sheet Overview */}
-      {(item.current_strings || item.pickups_summary || item.modifications_summary || item.serial_number) && (
-        <>
-          <h2>Specs & Mods</h2>
-          <div className="card" style={{ padding: '14px' }}>
-            {item.current_strings && (
-              <div className="row">
-                <span style={{ color: 'var(--mu)' }}>Strings</span>
-                <b>{item.current_strings}</b>
-              </div>
-            )}
-            {item.pickups_summary && (
-              <div className="row">
-                <span style={{ color: 'var(--mu)' }}>Pickups</span>
-                <b>{item.pickups_summary}</b>
-              </div>
-            )}
-            {item.modifications_summary && (
-              <div className="row">
-                <span style={{ color: 'var(--mu)' }}>Mods</span>
-                <b>{item.modifications_summary}</b>
-              </div>
-            )}
-            {item.serial_number && (
-              <div className="row">
-                <span style={{ color: 'var(--mu)' }}>Serial</span>
-                <b>{item.serial_number}</b>
-              </div>
-            )}
-          </div>
-        </>
-      )}
-
       {/* History Timeline */}
-      <h2>History</h2>
-      {logs.length === 0 ? (
-        <p className="sub">Nothing logged yet.</p>
-      ) : (
-        <div className="tl">
-          {logs.map((log) => (
-            <div key={log.id}>
-              <b>
-                {log.title}
-                <span className="ltag">{log.event_type}</span>
-              </b>
-              <small>
-                {new Date(log.event_date).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
-                {log.description ? ` · ${log.description}` : ''}
-              </small>
-            </div>
-          ))}
-        </div>
-      )}
+      <div style={{ position: 'relative', zIndex: 2, marginTop: '24px' }}>
+        <h2>Maintenance & Setup History</h2>
+        {logs.length === 0 ? (
+          <p className="sub">Nothing logged yet.</p>
+        ) : (
+          <div className="tl">
+            {logs.map((log) => (
+              <div key={log.id}>
+                <b>
+                  {log.title}
+                  <span className="ltag">{log.event_type}</span>
+                </b>
+                <small>
+                  {new Date(log.event_date).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
+                  {log.description ? ` · ${log.description}` : ''}
+                </small>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
 
       {/* In the News */}
       {news.length > 0 && (
-        <>
+        <div style={{ position: 'relative', zIndex: 2, marginTop: '24px' }}>
           <h2>In the news</h2>
           {news.map((n) => (
             <a
@@ -471,8 +1168,265 @@ export default function GearDetailPage({ params }: { params: Promise<{ id: strin
               </span>
             </a>
           ))}
-        </>
+        </div>
       )}
-    </>
+
+      {/* SNAPSHOT INSPECTOR MODAL */}
+      {showSnapshotModal && activeSnapshot && (
+        <div
+          style={{
+            position: 'fixed',
+            inset: 0,
+            background: 'rgba(0,0,0,0.75)',
+            backdropFilter: 'blur(8px)',
+            zIndex: 100,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '16px',
+          }}
+        >
+          <div
+            style={{
+              background: '#161616',
+              border: '1px solid var(--ln)',
+              borderRadius: '16px',
+              padding: '24px',
+              maxWidth: '480px',
+              width: '100%',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '16px',
+            }}
+          >
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <h3 style={{ margin: 0, fontSize: '18px', color: 'var(--ac)' }}>
+                Setup Snapshot ({activeSnapshot.monthYear})
+              </h3>
+              <button
+                type="button"
+                onClick={() => setShowSnapshotModal(false)}
+                style={{ color: 'var(--mu)', fontSize: '18px', fontWeight: 800 }}
+              >
+                ✕
+              </button>
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', fontSize: '13px' }}>
+              <div style={{ background: '#0a0a0a', padding: '10px', borderRadius: '8px' }}>
+                <small style={{ color: 'var(--mu)', display: 'block' }}>Tuning</small>
+                <b>{activeSnapshot.tuning || 'Standard'}</b>
+              </div>
+              <div style={{ background: '#0a0a0a', padding: '10px', borderRadius: '8px' }}>
+                <small style={{ color: 'var(--mu)', display: 'block' }}>Gauge</small>
+                <b>{activeSnapshot.stringGauge || '10-46'}</b>
+              </div>
+              <div style={{ background: '#0a0a0a', padding: '10px', borderRadius: '8px' }}>
+                <small style={{ color: 'var(--mu)', display: 'block' }}>Strings Brand</small>
+                <b>{activeSnapshot.stringManufacturer || 'Not logged'}</b>
+              </div>
+              <div style={{ background: '#0a0a0a', padding: '10px', borderRadius: '8px' }}>
+                <small style={{ color: 'var(--mu)', display: 'block' }}>Bridge Pickup</small>
+                <b>{activeSnapshot.pickupBridge || 'Stock'}</b>
+              </div>
+            </div>
+
+            {activeSnapshot.ampSettings && (
+              <div style={{ background: '#0a0a0a', padding: '10px', borderRadius: '8px', fontSize: '12px' }}>
+                <small style={{ color: 'var(--mu)', display: 'block', marginBottom: '4px' }}>Amp Settings</small>
+                <p style={{ margin: 0, whiteSpace: 'pre-wrap' }}>{activeSnapshot.ampSettings}</p>
+              </div>
+            )}
+
+            {activeSnapshot.notes && (
+              <div style={{ background: '#0a0a0a', padding: '10px', borderRadius: '8px', fontSize: '12px' }}>
+                <small style={{ color: 'var(--mu)', display: 'block', marginBottom: '4px' }}>Notes</small>
+                <p style={{ margin: 0 }}>{activeSnapshot.notes}</p>
+              </div>
+            )}
+
+            <button
+              type="button"
+              onClick={() => setShowSnapshotModal(false)}
+              style={{
+                background: 'var(--sf)',
+                border: '1px solid var(--ln)',
+                color: 'var(--tx)',
+                padding: '10px',
+                borderRadius: '8px',
+                fontWeight: 700,
+                fontSize: '13px',
+              }}
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* QUICK SETTINGS & NICKNAME MODAL */}
+      {showSettingsModal && (
+        <div
+          style={{
+            position: 'fixed',
+            inset: 0,
+            background: 'rgba(0,0,0,0.75)',
+            backdropFilter: 'blur(8px)',
+            zIndex: 100,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '16px',
+          }}
+        >
+          <form
+            onSubmit={handleSaveSettingsModal}
+            style={{
+              background: '#161616',
+              border: '1px solid var(--ln)',
+              borderRadius: '16px',
+              padding: '24px',
+              maxWidth: '520px',
+              width: '100%',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '14px',
+            }}
+          >
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <h3 style={{ margin: 0, fontSize: '18px' }}>Edit Gear Item</h3>
+              <button
+                type="button"
+                onClick={() => setShowSettingsModal(false)}
+                style={{ color: 'var(--mu)', fontSize: '18px', fontWeight: 800 }}
+              >
+                ✕
+              </button>
+            </div>
+
+            <label style={{ display: 'flex', flexDirection: 'column', gap: '4px', fontSize: '12px', color: 'var(--mu)', fontWeight: 600 }}>
+              Nickname (e.g. &ldquo;Lucille&rdquo;, &ldquo;Old Black&rdquo;)
+              <input
+                value={nicknameVal}
+                onChange={(e) => setNicknameVal(e.target.value)}
+                placeholder="Give your instrument a nickname..."
+                style={{ background: '#0a0a0a', border: '1px solid var(--ln)', color: '#fff', padding: '10px', borderRadius: '8px', fontSize: '14px' }}
+              />
+            </label>
+
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+              <label style={{ display: 'flex', flexDirection: 'column', gap: '4px', fontSize: '12px', color: 'var(--mu)', fontWeight: 600 }}>
+                Brand
+                <input
+                  value={editBrand}
+                  onChange={(e) => setEditBrand(e.target.value)}
+                  style={{ background: '#0a0a0a', border: '1px solid var(--ln)', color: '#fff', padding: '8px 10px', borderRadius: '8px' }}
+                />
+              </label>
+              <label style={{ display: 'flex', flexDirection: 'column', gap: '4px', fontSize: '12px', color: 'var(--mu)', fontWeight: 600 }}>
+                Model
+                <input
+                  value={editModel}
+                  onChange={(e) => setEditModel(e.target.value)}
+                  style={{ background: '#0a0a0a', border: '1px solid var(--ln)', color: '#fff', padding: '8px 10px', borderRadius: '8px' }}
+                />
+              </label>
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+              <label style={{ display: 'flex', flexDirection: 'column', gap: '4px', fontSize: '12px', color: 'var(--mu)', fontWeight: 600 }}>
+                Classification (Category)
+                <select
+                  value={editCategory}
+                  onChange={(e) => setEditCategory(e.target.value)}
+                  style={{ background: '#0a0a0a', border: '1px solid var(--ln)', color: '#fff', padding: '8px 10px', borderRadius: '8px' }}
+                >
+                  <option value="guitar">Guitar</option>
+                  <option value="bass">Bass</option>
+                  <option value="amp">Amplifier</option>
+                  <option value="pedal">Pedal / Effects</option>
+                  <option value="drums">Drums</option>
+                  <option value="keyboard-synth-sampler">Synthesizer / Keyboard</option>
+                  <option value="decks-dj">Decks / DJ</option>
+                  <option value="vocals-microphone">Vocals / Microphone</option>
+                  <option value="studio-sound">Studio Sound / Interface</option>
+                  <option value="strings">Orchestral Strings</option>
+                  <option value="brass">Brass / Woodwind</option>
+                  <option value="accessories">Accessories</option>
+                </select>
+              </label>
+              <label style={{ display: 'flex', flexDirection: 'column', gap: '4px', fontSize: '12px', color: 'var(--mu)', fontWeight: 600 }}>
+                Serial Number
+                <input
+                  value={editSerial}
+                  onChange={(e) => setEditSerial(e.target.value)}
+                  placeholder="Optional serial..."
+                  style={{ background: '#0a0a0a', border: '1px solid var(--ln)', color: '#fff', padding: '8px 10px', borderRadius: '8px' }}
+                />
+              </label>
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+              <label style={{ display: 'flex', flexDirection: 'column', gap: '4px', fontSize: '12px', color: 'var(--mu)', fontWeight: 600 }}>
+                Year
+                <input
+                  value={editYear}
+                  onChange={(e) => setEditYear(e.target.value)}
+                  placeholder="e.g. 1994"
+                  style={{ background: '#0a0a0a', border: '1px solid var(--ln)', color: '#fff', padding: '8px 10px', borderRadius: '8px' }}
+                />
+              </label>
+              <label style={{ display: 'flex', flexDirection: 'column', gap: '4px', fontSize: '12px', color: 'var(--mu)', fontWeight: 600 }}>
+                Color / Finish
+                <input
+                  value={editColor}
+                  onChange={(e) => setEditColor(e.target.value)}
+                  placeholder="e.g. Olympic White"
+                  style={{ background: '#0a0a0a', border: '1px solid var(--ln)', color: '#fff', padding: '8px 10px', borderRadius: '8px' }}
+                />
+              </label>
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+              <label style={{ display: 'flex', flexDirection: 'column', gap: '4px', fontSize: '12px', color: 'var(--mu)', fontWeight: 600 }}>
+                Purchase Price
+                <input
+                  value={editPurchasePrice}
+                  onChange={(e) => setEditPurchasePrice(e.target.value)}
+                  placeholder="e.g. £850"
+                  style={{ background: '#0a0a0a', border: '1px solid var(--ln)', color: '#fff', padding: '8px 10px', borderRadius: '8px' }}
+                />
+              </label>
+              <label style={{ display: 'flex', flexDirection: 'column', gap: '4px', fontSize: '12px', color: 'var(--mu)', fontWeight: 600 }}>
+                Purchase Date
+                <input
+                  value={editPurchaseDate}
+                  onChange={(e) => setEditPurchaseDate(autocompleteDate(e.target.value))}
+                  placeholder="DD/MM/YYYY"
+                  style={{ background: '#0a0a0a', border: '1px solid var(--ln)', color: '#fff', padding: '8px 10px', borderRadius: '8px' }}
+                />
+              </label>
+            </div>
+
+            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px', marginTop: '10px' }}>
+              <button
+                type="button"
+                onClick={() => setShowSettingsModal(false)}
+                style={{ padding: '8px 14px', borderRadius: '8px', border: '1px solid var(--ln)', fontSize: '12px', color: 'var(--mu)' }}
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                disabled={isSavingSpecs}
+                style={{ background: 'var(--ac)', color: '#000', fontWeight: 800, padding: '8px 18px', borderRadius: '8px', fontSize: '12px' }}
+              >
+                {isSavingSpecs ? 'Saving...' : 'Save Changes'}
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
+    </div>
   );
 }

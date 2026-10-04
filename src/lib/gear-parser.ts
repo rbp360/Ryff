@@ -12,6 +12,15 @@ export interface ParsedGearLog {
   gear_updates: {
     current_strings?: string | null;
     last_restrung_at?: string | null;
+    tuning?: string | null;
+    string_gauge?: string | null;
+    string_manufacturer?: string | null;
+    number_of_strings?: number | null;
+    pickup_bridge?: string | null;
+    pickup_middle?: string | null;
+    pickup_neck?: string | null;
+    nickname?: string | null;
+    amp_settings?: string | null;
     pickups_summary?: string | null;
     modifications_summary?: string | null;
     valves_summary?: string | null;
@@ -42,8 +51,8 @@ export async function parseGearVoiceOrText(input: ParseGearLogInput): Promise<Pa
 
   const gearContext = `Target Gear: ${input.item.brand || ''} ${input.item.model || input.item.raw_text || 'Gear'} (Category: ${input.item.category || 'Instrument/Audio Gear'}). Today's Date: ${todayIso}.`;
 
-  const systemPrompt = `You are a guitar tech and music gear specialist parser.
-Your job is to analyze a musician's log or voice memo about their gear and extract structured maintenance, modification, or spec data into valid JSON.
+  const systemPrompt = `You are a professional guitar tech, luthier, and audio gear specialist parser.
+Your job is to analyze a musician's log or voice memo about their gear and extract structured maintenance, modification, tuning, strings, or component spec data into valid JSON.
 
 Context: ${gearContext}
 
@@ -52,15 +61,24 @@ Respond with ONLY a raw JSON object (no markdown, no backticks, no codeblocks):
 {
   "transcript": string (the exact spoken/written text),
   "event_type": "string_change" | "modification" | "maintenance" | "repair" | "valve_change" | "setup" | "note" | "general",
-  "title": string (concise, e.g. "Restrung with Elixir 9-46", "Bridge Pickup Upgrade", "R2 Resistor Mod", "Valve Replacement"),
+  "title": string (concise, e.g. "Restrung with Elixir 9-46 in Standard Tuning", "Bridge Pickup Upgrade", "R2 Resistor Mod", "Valve Replacement"),
   "description": string (clear summary of what was logged or modified),
-  "component": string or null (e.g. "Strings", "Bridge Pickup", "R2 Resistor", "Power Valves", "Action / Truss Rod", "Pots"),
+  "component": string or null (e.g. "Strings", "Bridge Pickup", "Tuning", "Power Valves", "Action / Truss Rod", "Pots"),
   "original_part": string or null (e.g. "Stock PRS HFS in case", "Stock 100k resistor", null),
-  "event_date": string (YYYY-MM-DD format. If user mentions "Monday", "last week", "November 2025", "August 2017", compute the appropriate date relative to today ${todayIso}),
+  "event_date": string (YYYY-MM-DD format. If user mentions "Monday", "1st October", "last week", "November 2025", compute the appropriate date relative to today ${todayIso}),
   "gear_updates": {
     "current_strings": string or null (e.g. "Elixir 9-46", "Ernie Ball Regular Slinky 10-46"),
-    "last_restrung_at": string or null (ISO timestamp like "${todayIso}T12:00:00Z" if string change occurred),
-    "pickups_summary": string or null (e.g. "Lavarack Custom ~9k Bridge, stock neck"),
+    "last_restrung_at": string or null (ISO timestamp like "YYYY-MM-DDT12:00:00Z" if a string change occurred or restring date mentioned),
+    "tuning": string or null (Normalized tuning if mentioned: e.g. "Standard (E A D G B E)", "Drop D (D A D G B E)", "DADGAD", "Eb Standard", "Drop C", "Open G (D G D G B D)", "Drop A", etc.),
+    "string_gauge": string or null (Normalized gauge string if mentioned: e.g. "010-046 (Regular Light)", "009-042 (Super Light)", "009-046 (Custom Light / Hybrid)", "010-052 (Light Top / Heavy Bottom)", "011-050 (Medium)"),
+    "string_manufacturer": string or null (e.g. "Ernie Ball", "D'Addario", "Elixir", "DR Strings", "GHS", "Rotosound", "Martin", "Fender", "Gibson", "Dunlop"),
+    "number_of_strings": number or null (e.g. 6, 7, 8, 12, 4, 5 if mentioned),
+    "pickup_bridge": string or null (e.g. "Seymour Duncan JB", "Lavarack Custom 9k", "EMG 81"),
+    "pickup_middle": string or null (e.g. "Fender Custom Shop '69 Single Coil"),
+    "pickup_neck": string or null (e.g. "Seymour Duncan '59", "DiMarzio Air Norton"),
+    "nickname": string or null (e.g. "Lucille", "Old Black", "Red Special" if user says "named it...", "call this..."),
+    "amp_settings": string or null (amp knob/channel notes if mentioned),
+    "pickups_summary": string or null (overall pickup summary),
     "modifications_summary": string or null,
     "valves_summary": string or null,
     "last_valves_changed_at": string or null,
@@ -158,7 +176,17 @@ Respond with ONLY a raw JSON object (no markdown, no backticks, no codeblocks):
     title = `Restrung with ${stringName}`;
     gearUpdates.current_strings = stringName;
     gearUpdates.last_restrung_at = new Date().toISOString();
-  } else if (lower.includes('pickup') || lower.includes('pickup') || lower.includes('wound') || lower.includes('mod') || lower.includes('resistor')) {
+
+    if (lower.includes('ernie ball')) gearUpdates.string_manufacturer = 'Ernie Ball';
+    else if (lower.includes("d'addario") || lower.includes('nyxl')) gearUpdates.string_manufacturer = "D'Addario";
+    else if (lower.includes('elixir')) gearUpdates.string_manufacturer = 'Elixir';
+    else if (lower.includes('dr strings')) gearUpdates.string_manufacturer = 'DR Strings';
+
+    if (lower.includes('10-46') || lower.includes('10 to 46')) gearUpdates.string_gauge = '010-046 (Regular Light)';
+    else if (lower.includes('9-42') || lower.includes('9 to 42')) gearUpdates.string_gauge = '009-042 (Super Light)';
+    else if (lower.includes('9-46') || lower.includes('9 to 46')) gearUpdates.string_gauge = '009-046 (Custom Light / Hybrid)';
+    else if (lower.includes('10-52') || lower.includes('10 to 52')) gearUpdates.string_gauge = '010-052 (Light Top / Heavy Bottom)';
+  } else if (lower.includes('pickup') || lower.includes('wound') || lower.includes('mod') || lower.includes('resistor')) {
     eventType = 'modification';
     title = 'Hardware Modification';
     if (lower.includes('pickup')) component = 'Pickups';
@@ -170,6 +198,25 @@ Respond with ONLY a raw JSON object (no markdown, no backticks, no codeblocks):
     title = 'Valves / Tubes Serviced';
     gearUpdates.valves_summary = rawText;
     gearUpdates.last_valves_changed_at = new Date().toISOString();
+  }
+
+  // Tuning detection
+  if (lower.includes('drop d')) {
+    gearUpdates.tuning = 'Drop D (D A D G B E)';
+  } else if (lower.includes('drop c')) {
+    gearUpdates.tuning = 'Drop C';
+  } else if (lower.includes('dadgad')) {
+    gearUpdates.tuning = 'DADGAD';
+  } else if (lower.includes('eb standard') || lower.includes('half step down') || lower.includes('half-step down')) {
+    gearUpdates.tuning = 'Eb Standard';
+  } else if (lower.includes('standard tuning') || lower.includes('in standard') || lower.includes('tuned to standard')) {
+    gearUpdates.tuning = 'Standard (E A D G B E)';
+  }
+
+  // Nickname detection
+  const nickMatch = rawText.match(/(?:named|call(?:ed)?|nickname(?:d)?)\s+(?:it|her|this)?\s*["']?([A-Z][a-zA-Z0-9\s'-]+?)["']?(?:[,\.]|\s+and|\s+in|\s+with|$)/i);
+  if (nickMatch && nickMatch[1]) {
+    gearUpdates.nickname = nickMatch[1].trim();
   }
 
   if (lower.includes('original') && lower.includes('case')) {

@@ -45,4 +45,21 @@ describe('gear-parser', () => {
     expect(result.event_type).toBe('modification');
     expect(result.title.toLowerCase()).toContain('mod');
   }, 30000);
+
+  it('parses spoken restring date, string gauge, brand, and standard tuning', async () => {
+    const result = await parseGearVoiceOrText({
+      item: {
+        brand: 'Fender',
+        model: 'Stratocaster',
+        category: 'guitar',
+      },
+      text: 'Restrung on 1st October with Ernie Ball 10-46 and tuned to standard tuning',
+    });
+
+    expect(result.event_type).toBe('string_change');
+    expect(result.gear_updates.tuning).toBeDefined();
+    expect(result.gear_updates.tuning?.toLowerCase()).toContain('standard');
+    expect(result.gear_updates.string_gauge).toBeDefined();
+    expect(result.gear_updates.string_manufacturer?.toLowerCase()).toContain('ernie ball');
+  }, 30000);
 });
