@@ -1,8 +1,9 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeAll, afterAll } from 'vitest';
 import { POST } from '../src/app/api/command/route';
 import { NextRequest } from 'next/server';
 import { getUserPreferences, updateUserPreferences } from '../src/lib/personalization';
 import * as transcribeModule from '../src/lib/command/transcribe';
+import { db } from '../src/lib/db';
 
 vi.mock('../src/lib/session', () => ({
   getSession: vi.fn(async () => ({
@@ -15,6 +16,26 @@ vi.mock('../src/lib/session', () => ({
 
 describe('Step 1: Global Command Input & Endpoint', { timeout: 20000 }, () => {
   const testUserId = '00000000-0000-0000-0000-000000000001';
+
+  beforeAll(async () => {
+    try {
+      await db`
+        insert into users (id, email, is_adult, consented_at, cohort, command_input_mode)
+        values (${testUserId}, 'tester@ryff.local', true, now(), 'cadre', 'text_and_voice')
+        on conflict (id) do update set command_input_mode = 'text_and_voice'
+      `;
+    } catch (err) {
+      console.warn('[CommandInputTest] Warning during beforeAll user setup:', err);
+    }
+  });
+
+  afterAll(async () => {
+    try {
+      await db`delete from users where id = ${testUserId}`;
+    } catch {
+      // Ignore if disconnected
+    }
+  });
 
   it('saves and retrieves commandInputMode in preferences', async () => {
     // 1. Update preference to text_only

@@ -191,7 +191,7 @@ function inferCategory(
 
   // 2. Explicit amp keywords
   if (
-    /katana|deluxe reverb|twin reverb|combo|head\b|cab\b|cabinet|amplifier|amp\b|stack|half stack|preamp|power amp|50w|100w|20w|15w|watt|valve|tube|slo-?\d+|slo\b|dsl|jcm|rectifier|dual rec/i.test(
+    /soldano|katana|deluxe reverb|twin reverb|combo|head\b|cab\b|cabinet|amplifier|amp\b|stack|half stack|preamp|power amp|50w|100w|20w|15w|watt|valve|tube|slo-?\d+|slo\b|dsl|jcm|rectifier|dual rec/i.test(
       combined
     )
   ) {

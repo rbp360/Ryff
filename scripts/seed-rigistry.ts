@@ -178,7 +178,15 @@ async function seed() {
           is_canonical: true
         });
       } else {
-        brandMap.get(norm)!.is_canonical = true;
+        const existing = brandMap.get(norm)!;
+        existing.is_canonical = true;
+        if (!existing.categories || existing.categories.length === 0) {
+          if (norm.includes('soldano') || norm.includes('marshall') || norm.includes('orange') || norm.includes('mesa') || norm.includes('boss') || norm.includes('electro harmonix')) {
+            existing.categories = ['amplifiers-effects'];
+          } else {
+            existing.categories = ['guitar', 'bass', 'amplifiers-effects'];
+          }
+        }
       }
     }
 
@@ -209,12 +217,12 @@ async function seed() {
     { alias: 'fender music corporation', canonicalName: 'Fender' },
     { alias: 'fmic', canonicalName: 'Fender' },
     { alias: 'mesa boogie', canonicalName: 'Mesa Boogie' },
-    { alias: 'mesa boogie', canonicalName: 'Mesa Boogie' },
     { alias: 'mesa engineering', canonicalName: 'Mesa Boogie' },
     { alias: 'gibson guitars', canonicalName: 'Gibson' },
     { alias: 'gibson guitar corp', canonicalName: 'Gibson' },
     { alias: 'ehx', canonicalName: 'Electro-Harmonix' },
     { alias: 'line6', canonicalName: 'Line 6' },
+    { alias: 'soldano custom amplification', canonicalName: 'Soldano' },
   ];
 
   for (const { alias, canonicalName } of aliasMappings) {

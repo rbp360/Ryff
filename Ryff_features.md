@@ -14,9 +14,12 @@
 - **GitHub Actions CI Workflow Configuration ([`.github/workflows/ci.yml`](file:///c:/Users/rob_b/Ryff/.github/workflows/ci.yml)):**
   - Added a `postgres:16` service container with automated health checks (`pg_isready`), standard port mapping (`5432:5432`), and pre-configured test credentials.
   - Added automatic execution of `pnpm migrate` and `pnpm seed:rigistry` before `pnpm test`, ensuring all passport schema, assistant confirmation, quota tracking, and habit learning tests execute against a fully initialized test database.
-- **Static Rigistry Fallback Lookup ([`src/lib/rigistry-parser.ts`](file:///c:/Users/rob_b/Ryff/src/lib/rigistry-parser.ts)):**
+- **Static Rigistry Fallback Lookup & Taxonomy Alignment ([`src/lib/rigistry-parser.ts`](file:///c:/Users/rob_b/Ryff/src/lib/rigistry-parser.ts), [`scripts/seed-rigistry.ts`](file:///c:/Users/rob_b/Ryff/scripts/seed-rigistry.ts), [`data/rigistry/manufacturers.index.json`](file:///c:/Users/rob_b/Ryff/data/rigistry/manufacturers.index.json)):**
   - Added `STATIC_FALLBACK_BRANDS` and `buildStaticFallbackLookup()` supplying canonical brand records, categories, and aliases when database queries fail or when running standalone unit tests.
-  - Ensured `parseGearLineWithRigistry` reliably categorizes guitars, amps, pedals, and basses even in disconnected offline environments.
+  - Updated manufacturer dataset and `seed-rigistry.ts` canonical brand fallback logic so `Soldano` and `Soldano Custom Amplification` are categorized under `amplifiers-effects`. Added `soldano` to explicit amp keywords in `inferCategory()`.
+  - Ensured `parseGearLineWithRigistry` reliably categorizes guitars, amps, pedals, and basses across both database-connected and offline environments.
+- **Command Input Test Fixture ([`tests/command-input.test.ts`](file:///c:/Users/rob_b/Ryff/tests/command-input.test.ts)):**
+  - Added `beforeAll` and `afterAll` hooks initializing the test user in the database, aligning with isolation practices in the rest of the test suite.
 
 ---
 
