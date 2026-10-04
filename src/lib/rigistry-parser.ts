@@ -40,6 +40,76 @@ function normalizeKey(str: string): string {
     .replace(/\s+/g, ' ');
 }
 
+const STATIC_FALLBACK_BRANDS: Array<{
+  id: number;
+  name: string;
+  normalized_name: string;
+  categories: string[];
+  is_canonical: boolean;
+  aliases?: string[];
+}> = [
+  { id: 1, name: 'Fender', normalized_name: 'fender', categories: ['guitar', 'bass', 'amplifiers-effects'], is_canonical: true },
+  { id: 2, name: 'Gibson', normalized_name: 'gibson', categories: ['guitar', 'bass'], is_canonical: true },
+  { id: 3, name: 'PRS', normalized_name: 'prs', categories: ['guitar', 'bass', 'amplifiers-effects'], is_canonical: true, aliases: ['paul reed smith', 'prs guitars'] },
+  { id: 4, name: 'Charvel', normalized_name: 'charvel', categories: ['guitar'], is_canonical: true },
+  { id: 5, name: 'Soldano', normalized_name: 'soldano', categories: ['amplifiers-effects'], is_canonical: true, aliases: ['soldano amplification'] },
+  { id: 6, name: 'Ibanez', normalized_name: 'ibanez', categories: ['guitar', 'bass', 'amplifiers-effects'], is_canonical: true },
+  { id: 7, name: 'Marshall', normalized_name: 'marshall', categories: ['amplifiers-effects'], is_canonical: true },
+  { id: 8, name: 'Boss', normalized_name: 'boss', categories: ['amplifiers-effects'], is_canonical: true },
+  { id: 9, name: 'Strymon', normalized_name: 'strymon', categories: ['amplifiers-effects'], is_canonical: true },
+  { id: 10, name: 'ESP', normalized_name: 'esp', categories: ['guitar', 'bass'], is_canonical: true, aliases: ['esp guitars', 'ltd'] },
+  { id: 11, name: 'Jackson', normalized_name: 'jackson', categories: ['guitar', 'bass'], is_canonical: true },
+  { id: 12, name: 'Epiphone', normalized_name: 'epiphone', categories: ['guitar', 'bass'], is_canonical: true },
+  { id: 13, name: 'Music Man', normalized_name: 'music man', categories: ['guitar', 'bass'], is_canonical: true, aliases: ['ernie ball music man', 'ebmm'] },
+  { id: 14, name: 'Schecter', normalized_name: 'schecter', categories: ['guitar', 'bass'], is_canonical: true },
+  { id: 15, name: 'Yamaha', normalized_name: 'yamaha', categories: ['guitar', 'bass', 'keyboard-synth-sampler', 'drums'], is_canonical: true },
+  { id: 16, name: 'Squier', normalized_name: 'squier', categories: ['guitar', 'bass'], is_canonical: true },
+  { id: 17, name: 'Gretsch', normalized_name: 'gretsch', categories: ['guitar', 'drums'], is_canonical: true },
+  { id: 18, name: 'Taylor', normalized_name: 'taylor', categories: ['guitar'], is_canonical: true },
+  { id: 19, name: 'Martin', normalized_name: 'martin', categories: ['guitar'], is_canonical: true, aliases: ['c f martin', 'cf martin'] },
+  { id: 20, name: 'Vox', normalized_name: 'vox', categories: ['amplifiers-effects', 'guitar'], is_canonical: true },
+  { id: 21, name: 'Mesa/Boogie', normalized_name: 'mesa boogie', categories: ['amplifiers-effects'], is_canonical: true, aliases: ['mesa', 'boogie'] },
+  { id: 22, name: 'Orange', normalized_name: 'orange', categories: ['amplifiers-effects'], is_canonical: true, aliases: ['orange amplification'] },
+  { id: 23, name: 'Peavey', normalized_name: 'peavey', categories: ['amplifiers-effects', 'guitar', 'bass'], is_canonical: true },
+  { id: 24, name: 'EVH', normalized_name: 'evh', categories: ['guitar', 'amplifiers-effects'], is_canonical: true },
+  { id: 25, name: 'Suhr', normalized_name: 'suhr', categories: ['guitar', 'amplifiers-effects'], is_canonical: true },
+  { id: 26, name: 'Duesenberg', normalized_name: 'duesenberg', categories: ['guitar', 'bass'], is_canonical: true },
+  { id: 27, name: 'Rickenbacker', normalized_name: 'rickenbacker', categories: ['guitar', 'bass'], is_canonical: true },
+  { id: 28, name: 'Electro-Harmonix', normalized_name: 'electro harmonix', categories: ['amplifiers-effects'], is_canonical: true, aliases: ['ehx'] },
+  { id: 29, name: 'MXR', normalized_name: 'mxr', categories: ['amplifiers-effects'], is_canonical: true },
+  { id: 30, name: 'TC Electronic', normalized_name: 'tc electronic', categories: ['amplifiers-effects'], is_canonical: true },
+  { id: 31, name: 'Dunlop', normalized_name: 'dunlop', categories: ['amplifiers-effects', 'accessories'], is_canonical: true, aliases: ['jim dunlop'] },
+  { id: 32, name: 'Korg', normalized_name: 'korg', categories: ['keyboard-synth-sampler', 'accessories'], is_canonical: true },
+  { id: 33, name: 'Roland', normalized_name: 'roland', categories: ['keyboard-synth-sampler', 'drums', 'amplifiers-effects'], is_canonical: true },
+  { id: 34, name: 'Moog', normalized_name: 'moog', categories: ['keyboard-synth-sampler'], is_canonical: true },
+  { id: 35, name: 'Shure', normalized_name: 'shure', categories: ['vocals-microphone', 'live-sound'], is_canonical: true },
+  { id: 36, name: 'Sennheiser', normalized_name: 'sennheiser', categories: ['vocals-microphone', 'live-sound', 'studio-sound'], is_canonical: true },
+];
+
+function buildStaticFallbackLookup(): RigistryLookup {
+  const brandMap = new Map<string, CachedBrand>();
+  const aliasToBrand = new Map<string, CachedBrand>();
+
+  for (const b of STATIC_FALLBACK_BRANDS) {
+    brandMap.set(b.normalized_name, b);
+    brandMap.set(b.name.toLowerCase().trim(), b);
+    if (b.aliases) {
+      for (const a of b.aliases) {
+        aliasToBrand.set(normalizeKey(a), b);
+        aliasToBrand.set(a.toLowerCase().trim(), b);
+      }
+    }
+  }
+
+  const sortedBrands = [...STATIC_FALLBACK_BRANDS].sort((a, b) => b.name.length - a.name.length);
+
+  return {
+    brands: sortedBrands,
+    aliasToBrand,
+    brandMap,
+  };
+}
+
 /**
  * Load brands and aliases from the PostgreSQL Rigistry database into memory.
  */
@@ -54,6 +124,10 @@ export async function getRigistryLookup(): Promise<RigistryLookup> {
       select id, name, normalized_name, categories, is_canonical
       from brands
     `;
+
+    if (!brandsRows || brandsRows.length === 0) {
+      return buildStaticFallbackLookup();
+    }
 
     const aliasRows = await db<{ alias: string; brand_id: number }[]>`
       select alias, brand_id
@@ -90,12 +164,7 @@ export async function getRigistryLookup(): Promise<RigistryLookup> {
     return cachedLookup;
   } catch (err) {
     console.error('[RigistryParser] Failed to load brands from DB, using fallback:', err);
-    // Return empty fallback so parser still works with keyword rules
-    return {
-      brands: [],
-      aliasToBrand: new Map(),
-      brandMap: new Map(),
-    };
+    return buildStaticFallbackLookup();
   }
 }
 

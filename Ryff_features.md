@@ -1,5 +1,30 @@
 # Ryff Feature Log
 
+## Feature: CI Database Test Automation & Resilient Static Fallback Rigistry Taxonomy
+- **Date:** October 4, 2026
+- **Category:** Infrastructure / Testing / Taxonomy & Brand Resolution
+
+### 1. User & Marketing Overview
+- **Rock-Solid Automated Quality Assurance:** Enhanced the automated continuous integration (CI) pipeline on GitHub Actions to spin up an isolated, dedicated PostgreSQL test service container, automatically apply database schema migrations, and seed canonical equipment taxonomies before running full test suites.
+- **Zero-Downtime Offline Gear Taxonomy Resilience:** Enhanced the equipment parsing engine with an embedded static dictionary of 36+ canonical manufacturer brands and aliases (e.g. Charvel, Soldano, PRS, Fender, Gibson, Ibanez, Marshall, Boss, Strymon). Even if database connections experience latency or transient disconnections, gear classification and want parsing continue operating seamlessly.
+
+---
+
+### 2. Technical Details (For Developers)
+- **GitHub Actions CI Workflow Configuration ([`.github/workflows/ci.yml`](file:///c:/Users/rob_b/Ryff/.github/workflows/ci.yml)):**
+  - Added a `postgres:16` service container with automated health checks (`pg_isready`), standard port mapping (`5432:5432`), and pre-configured test credentials.
+  - Added automatic execution of `pnpm migrate` and `pnpm seed:rigistry` before `pnpm test`, ensuring all passport schema, assistant confirmation, quota tracking, and habit learning tests execute against a fully initialized test database.
+- **Static Rigistry Fallback Lookup ([`src/lib/rigistry-parser.ts`](file:///c:/Users/rob_b/Ryff/src/lib/rigistry-parser.ts)):**
+  - Added `STATIC_FALLBACK_BRANDS` and `buildStaticFallbackLookup()` supplying canonical brand records, categories, and aliases when database queries fail or when running standalone unit tests.
+  - Ensured `parseGearLineWithRigistry` reliably categorizes guitars, amps, pedals, and basses even in disconnected offline environments.
+
+---
+
+### 3. White-Label & Domain-Agnostic Utility
+- **Self-Healing Domain Taxonomy Architecture:** Any white-label deployment (e.g. automotive parts, running gear, high-end timepieces) benefits from this dual-layer taxonomy design: primary dynamic database lookup backed by instant offline fallback dictionaries, ensuring mission-critical classification never crashes during network outages or isolated test runs.
+
+---
+
 ## Feature: Visual Branding Assets & OpenGraph Integration (ryff_main.jpg & ryff_pick.jpg)
 - **Date:** October 4, 2026
 - **Category:** Design System / Branding / Metadata & OpenGraph
