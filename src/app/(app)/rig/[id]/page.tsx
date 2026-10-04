@@ -465,9 +465,10 @@ export default function GearDetailPage({ params }: { params: Promise<{ id: strin
   }
 
   const categoryLower = (item.category || '').toLowerCase();
-  const isGuitar = categoryLower === 'guitar' || categoryLower === 'guitars' || !categoryLower;
+  const isGuitar = categoryLower === 'guitar' || categoryLower === 'guitars';
   const isBass = categoryLower === 'bass' || categoryLower === 'basses';
-  const isAmp = categoryLower === 'amp' || categoryLower === 'amps' || categoryLower === 'amplifiers-effects' || categoryLower === 'pedal' || categoryLower === 'cab';
+  const isAmp = categoryLower === 'amp' || categoryLower === 'amps' || categoryLower === 'cab';
+  const isPedal = categoryLower === 'pedal' || categoryLower === 'pedals' || categoryLower === 'effects' || categoryLower === 'amplifiers-effects';
   const isDrum = categoryLower === 'drums' || categoryLower === 'percussion';
   const stringHealth = getStringHealthText(item.last_restrung_at);
 
@@ -587,15 +588,15 @@ export default function GearDetailPage({ params }: { params: Promise<{ id: strin
 
       {/* Status Card */}
       <div className="status" style={{ marginTop: '16px', position: 'relative', zIndex: 2 }}>
-        <small>{(isGuitar || isBass) ? 'Last string change' : isAmp ? 'Last valve service' : 'Last logged'}</small>
+        <small>{(isGuitar || isBass) ? 'Last string change' : isAmp ? 'Last valve service' : 'Last log entry'}</small>
         <b style={{ color: stringHealth.warn ? '#f59e0b' : 'var(--tx)' }}>
           {(isGuitar || isBass)
-            ? stringHealth.text
-            : isAmp && item.last_valves_changed_at
-            ? new Date(item.last_valves_changed_at).toLocaleDateString()
+            ? (item.last_restrung_at ? stringHealth.text : '—')
+            : isAmp
+            ? (item.last_valves_changed_at ? new Date(item.last_valves_changed_at).toLocaleDateString() : '—')
             : logs[0]
             ? `${logs[0].title} · ${logs[0].event_date}`
-            : 'Nothing logged yet'}
+            : '—'}
         </b>
       </div>
 
@@ -963,10 +964,12 @@ export default function GearDetailPage({ params }: { params: Promise<{ id: strin
       </div>
         )}
 
-        {/* AMPLIFIER / EFFECTS SETTINGS PANEL */}
-        {isAmp && (
+        {/* AMPLIFIER / PEDAL SETTINGS PANEL */}
+        {(isAmp || isPedal) && (
           <div className="card" style={{ padding: '16px', marginBottom: '16px' }}>
-            <h3 style={{ margin: '0 0 10px', fontSize: '14px', fontWeight: 800 }}>Amp & Tone Settings</h3>
+            <h3 style={{ margin: '0 0 10px', fontSize: '14px', fontWeight: 800 }}>
+              {isPedal ? 'Pedal & Tone Settings' : 'Amp & Tone Settings'}
+            </h3>
             {isEditingSpecs ? (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                 <label style={{ display: 'flex', flexDirection: 'column', gap: '4px', fontSize: '12px', color: 'var(--mu)' }}>
