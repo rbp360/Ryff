@@ -18,16 +18,21 @@
 
 ### 2. Technical Details (For Developers)
 - **UI Architecture Upgrades ([`src/app/(app)/rig/[id]/page.tsx`](file:///c:/Users/rob_b/Ryff/src/app/(app)/rig/%5Bid%5D/page.tsx)):**
-  - Ambient room backdrop rendering with CSS mask-image radial vignette overlay.
+  - Ambient room backdrop rendering with CSS mask-image radial vignette overlay and increased brightness/visibility (`opacity: 0.48`).
   - Integrated `getBackdropForCategory` and `detectSettingsProvider` from [`src/lib/gear-specs.ts`](file:///c:/Users/rob_b/Ryff/src/lib/gear-specs.ts).
+  - Compact Hero Photo box (`maxWidth: 360px`, centered) in [`src/components/GearHeroPhoto.tsx`](file:///c:/Users/rob_b/Ryff/src/components/GearHeroPhoto.tsx) with "Cycle Reverb Photo" removed to preserve user-uploaded pictures.
+  - Equal prominence display for instrument nickname inside primary `h1` header (`<span>Brand Model</span> <span class="accent">“Nickname”</span>`), managed alongside gear attributes in the Edit Item settings modal.
   - Built interactive spec editor for string counts, tunings, gauges, brands, and multi-pickup assignments.
   - Built preset file badge detector with direct outbound URL linking.
   - Integrated `handleCreateSnapshot` appending new timestamped entries into the `snapshots` JSON array and saving via `PATCH /api/rig/[id]`.
   - Added `ItemSettingsModal` form for editing core equipment metadata.
+  - Added `resolveStringSpecs` in [`src/lib/gear-specs.ts`](file:///c:/Users/rob_b/Ryff/src/lib/gear-specs.ts) to eliminate hardcoded `'10-46'` fallbacks and cleanly extract brand and gauge from legacy combined string records (e.g. converting `"Elixir 9-42"` into brand: `"Elixir"` and gauge: `"009-042 (Super Light)"`).
+  - Completely purged all hardcoded fallbacks and assumptions across the equipment spec sheet and snapshot modals (e.g. removed forced defaults like `'Standard'`, `'10-46'`, `'6 string'`, and `'Stock'`); unentered fields remain strictly blank rather than displaying misleading data.
+  - Resolved `UNDEFINED_VALUE` database update error in [`src/app/api/rig/[id]/route.ts`](file:///c:/Users/rob_b/Ryff/src/app/api/rig/%5Bid%5D/route.ts) by utilizing `postgres.js` helper `db(updates)` without undefined values.
   - Verified full reactivity with AI voice memo logger and real-time state synchronization.
 - **Validation:**
   - TypeScript typecheck passed cleanly with zero errors (`npm run typecheck`).
-  - Vitest test suite passed with 58/58 passing tests (`npm run test`).
+  - Vitest test suite passed with 62/62 passing tests (`npm run test`).
 
 ---
 

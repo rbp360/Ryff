@@ -323,3 +323,77 @@ export function autocompleteDate(val: string): string {
   }
   return val;
 }
+
+const GAUGE_NORMALIZATIONS: Record<string, string> = {
+  '8-38': '008-038 (Extra Light)',
+  '08-38': '008-038 (Extra Light)',
+  '008-038': '008-038 (Extra Light)',
+  '9-42': '009-042 (Super Light)',
+  '09-42': '009-042 (Super Light)',
+  '009-042': '009-042 (Super Light)',
+  '9-46': '009-046 (Custom Light / Hybrid)',
+  '09-46': '009-046 (Custom Light / Hybrid)',
+  '009-046': '009-046 (Custom Light / Hybrid)',
+  '10-46': '010-046 (Regular Light)',
+  '010-046': '010-046 (Regular Light)',
+  '10-52': '010-052 (Light Top / Heavy Bottom)',
+  '010-052': '010-052 (Light Top / Heavy Bottom)',
+  '11-48': '011-048 (Medium Light)',
+  '011-048': '011-048 (Medium Light)',
+  '11-50': '011-050 (Medium)',
+  '011-050': '011-050 (Medium)',
+  '11-52': '011-052 (Heavy Top / Bottom)',
+  '011-052': '011-052 (Heavy Top / Bottom)',
+  '12-54': '012-054 (Heavy)',
+  '012-054': '012-054 (Heavy)',
+  '13-56': '013-056 (Extra Heavy / Baritone)',
+  '013-056': '013-056 (Extra Heavy / Baritone)',
+};
+
+// Intelligently separates gauge and brand even if stored combined in legacy current_strings
+export function resolveStringSpecs(
+  gauge?: string | null,
+  manufacturer?: string | null,
+  currentStrings?: string | null
+): { gauge: string; manufacturer: string; normalizedGauge: string } {
+  let g = (gauge || '').trim();
+  let m = (manufacturer || '').trim();
+  const raw = (currentStrings || '').trim();
+
+  // 1. If explicit gauge is missing, extract gauge pattern (e.g. 9-42, 10-46, 11-52, 009-042)
+  if (!g) {
+    const combined = `${m} ${raw}`;
+    const match = combined.match(/\b(\d{1,3}\s*[-–]\s*\d{2,3})\b/);
+    if (match) {
+      g = match[1].replace(/\s+/g, '');
+    }
+  }
+
+  // 2. If manufacturer is missing, check raw current_strings for brand
+  if (!m && raw) {
+    const lower = raw.toLowerCase();
+    const brands = [
+      'Elixir', "D'Addario", 'Ernie Ball', 'DR Strings', 'GHS', 'Rotosound',
+      'Martin', 'Fender', 'Gibson', 'Dunlop', 'Curt Mangan', 'Thomastik', 'Cleartone'
+    ];
+    const found = brands.find((b) => lower.includes(b.toLowerCase()));
+    if (found) {
+      m = found;
+    } else {
+      // Strip gauge digits if present
+      m = raw.replace(/\b\d{1,3}\s*[-–]\s*\d{2,3}\b/g, '').trim();
+    }
+  } else if (m) {
+    // If manufacturer string accidentally contains the gauge (e.g. "Elixir 9-42"), clean off the gauge
+    m = m.replace(/\b\d{1,3}\s*[-–]\s*\d{2,3}\b/g, '').trim();
+  }
+
+  const cleanGaugeKey = g.toLowerCase().replace(/\s*\(.*\)/, '').trim();
+  const normalized = GAUGE_NORMALIZATIONS[cleanGaugeKey] || g;
+
+  return {
+    gauge: normalized || g || '',
+    manufacturer: m || raw || '',
+    normalizedGauge: normalized || g || '',
+  };
+}

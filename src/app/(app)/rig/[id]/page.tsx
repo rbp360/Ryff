@@ -14,6 +14,7 @@ import {
   detectSettingsProvider,
   getBackdropForCategory,
   autocompleteDate,
+  resolveStringSpecs,
   type DetectedProvider,
 } from '@/lib/gear-specs';
 
@@ -137,7 +138,7 @@ export default function GearDetailPage({ params }: { params: Promise<{ id: strin
   const [tuningVal, setTuningVal] = useState('');
   const [gaugeVal, setGaugeVal] = useState('');
   const [stringsBrandVal, setStringsBrandVal] = useState('');
-  const [stringsCountVal, setStringsCountVal] = useState<number>(6);
+  const [stringsCountVal, setStringsCountVal] = useState<number | ''>('');
   const [pickupBridgeVal, setPickupBridgeVal] = useState('');
   const [pickupMiddleVal, setPickupMiddleVal] = useState('');
   const [pickupNeckVal, setPickupNeckVal] = useState('');
@@ -172,10 +173,11 @@ export default function GearDetailPage({ params }: { params: Promise<{ id: strin
           if (data.matchingNews) setNews(data.matchingNews);
 
           // Sync local form state
+          const resolved = resolveStringSpecs(it.string_gauge, it.string_manufacturer, it.current_strings);
           setTuningVal(it.tuning || '');
-          setGaugeVal(it.string_gauge || '');
-          setStringsBrandVal(it.string_manufacturer || '');
-          setStringsCountVal(it.number_of_strings || (it.category?.toLowerCase() === 'bass' ? 4 : 6));
+          setGaugeVal(it.string_gauge || resolved.normalizedGauge || resolved.gauge || '');
+          setStringsBrandVal(it.string_manufacturer || resolved.manufacturer || '');
+          setStringsCountVal(it.number_of_strings ?? '');
           setPickupBridgeVal(it.pickup_bridge || '');
           setPickupMiddleVal(it.pickup_middle || '');
           setPickupNeckVal(it.pickup_neck || '');
@@ -250,6 +252,21 @@ export default function GearDetailPage({ params }: { params: Promise<{ id: strin
     setIsEditingSpecs(false);
   }
 
+  function openSettingsModal() {
+    if (item) {
+      setNicknameVal(item.nickname || '');
+      setEditBrand(item.brand || '');
+      setEditModel(item.model || '');
+      setEditCategory(item.category || 'guitar');
+      setEditSerial(item.serial_number || '');
+      setEditYear(item.year_manufacture || '');
+      setEditColor(item.color || '');
+      setEditPurchasePrice(item.purchase_price || '');
+      setEditPurchaseDate(item.purchase_date || '');
+    }
+    setShowSettingsModal(true);
+  }
+
   async function handleSaveSettingsModal(e: React.FormEvent) {
     e.preventDefault();
     setIsSavingSpecs(true);
@@ -278,7 +295,7 @@ export default function GearDetailPage({ params }: { params: Promise<{ id: strin
       tuning: item.tuning || tuningVal || undefined,
       stringGauge: item.string_gauge || gaugeVal || undefined,
       stringManufacturer: item.string_manufacturer || stringsBrandVal || undefined,
-      numberOfStrings: item.number_of_strings || stringsCountVal || undefined,
+      numberOfStrings: item.number_of_strings || (stringsCountVal ? Number(stringsCountVal) : undefined),
       pickupBridge: item.pickup_bridge || pickupBridgeVal || undefined,
       pickupMiddle: item.pickup_middle || pickupMiddleVal || undefined,
       pickupNeck: item.pickup_neck || pickupNeckVal || undefined,
@@ -456,8 +473,9 @@ export default function GearDetailPage({ params }: { params: Promise<{ id: strin
 
   const backdropSrc = getBackdropForCategory(item.category, item.room);
   const detectedPreset: DetectedProvider | null = item.settings_file_url ? detectSettingsProvider(item.settings_file_url) : null;
-  const tuningOptions = isBass ? (BASS_TUNINGS[stringsCountVal] || BASS_TUNINGS[4]) : (GUITAR_TUNINGS[stringsCountVal] || GUITAR_TUNINGS[6]);
-  const gaugeOptions = isBass ? (BASS_STRING_GAUGES[stringsCountVal] || BASS_STRING_GAUGES[4]) : (GUITAR_STRING_GAUGES[stringsCountVal] || GUITAR_STRING_GAUGES[6]);
+  const countKey = typeof stringsCountVal === 'number' ? stringsCountVal : (isBass ? 4 : 6);
+  const tuningOptions = isBass ? (BASS_TUNINGS[countKey] || []) : (GUITAR_TUNINGS[countKey] || []);
+  const gaugeOptions = isBass ? (BASS_STRING_GAUGES[countKey] || []) : (GUITAR_STRING_GAUGES[countKey] || []);
 
   return (
     <div style={{ position: 'relative', minHeight: '100vh', paddingBottom: '80px' }}>
@@ -472,13 +490,13 @@ export default function GearDetailPage({ params }: { params: Promise<{ id: strin
             transform: 'translateX(-50%)',
             width: '100vw',
             maxWidth: '1200px',
-            height: '600px',
+            height: '700px',
             pointerEvents: 'none',
             zIndex: 0,
-            opacity: 0.22,
+            opacity: 0.48,
             overflow: 'hidden',
-            maskImage: 'radial-gradient(ellipse at 50% 15%, black 40%, transparent 80%)',
-            WebkitMaskImage: 'radial-gradient(ellipse at 50% 15%, black 40%, transparent 80%)',
+            maskImage: 'radial-gradient(ellipse at 50% 25%, black 65%, transparent 95%)',
+            WebkitMaskImage: 'radial-gradient(ellipse at 50% 25%, black 65%, transparent 95%)',
           }}
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -495,7 +513,7 @@ export default function GearDetailPage({ params }: { params: Promise<{ id: strin
         <BackButton fallbackHref="/rig" label="Rig room" />
         <button
           type="button"
-          onClick={() => setShowSettingsModal(true)}
+          onClick={openSettingsModal}
           title="Edit gear details"
           style={{
             display: 'flex',
@@ -533,65 +551,16 @@ export default function GearDetailPage({ params }: { params: Promise<{ id: strin
 
       {/* Title & Nickname Header */}
       <div style={{ position: 'relative', zIndex: 2, marginTop: '20px' }}>
-        {item.nickname ? (
-          <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
-              <h1 style={{ margin: 0, color: 'var(--ac)', fontSize: '28px', letterSpacing: '-0.02em' }}>
-                &ldquo;{item.nickname}&rdquo;
-              </h1>
-              <span
-                style={{
-                  background: 'rgba(34, 197, 94, 0.14)',
-                  color: 'var(--ac)',
-                  border: '1px solid rgba(34, 197, 94, 0.35)',
-                  fontSize: '11px',
-                  fontWeight: 800,
-                  padding: '2px 8px',
-                  borderRadius: '12px',
-                  textTransform: 'uppercase',
-                }}
-              >
-                Nickname
-              </span>
-            </div>
-            <p style={{ margin: '6px 0 0', fontSize: '16px', fontWeight: 600, color: 'var(--tx)' }}>
-              {item.brand ? `${item.brand} ` : ''}{item.model || item.raw_text}
-              {item.serial_number ? <span style={{ opacity: 0.5, fontSize: '13px' }}> · #{item.serial_number}</span> : null}
-            </p>
-          </div>
-        ) : (
-          <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '12px' }}>
-            <div>
-              <h1 style={{ margin: 0 }}>
-                {item.brand ? `${item.brand} ` : ''}{item.model || item.raw_text}
-              </h1>
-              <p className="sub">
-                {item.category || 'Gear'}
-                {item.serial_number ? ` · #${item.serial_number}` : ''}
-              </p>
-            </div>
-            <button
-              type="button"
-              onClick={() => {
-                setNicknameVal('');
-                setShowSettingsModal(true);
-              }}
-              style={{
-                fontSize: '12px',
-                fontWeight: 700,
-                color: 'var(--ac)',
-                background: 'rgba(34, 197, 94, 0.08)',
-                border: '1px dashed var(--ac)',
-                padding: '6px 12px',
-                borderRadius: '8px',
-                cursor: 'pointer',
-                whiteSpace: 'nowrap',
-              }}
-            >
-              + Nickname
-            </button>
-          </div>
-        )}
+        <h1 style={{ margin: 0, fontSize: '28px', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '-0.02em', display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+          <span>{item.brand ? `${item.brand} ` : ''}{item.model || item.raw_text}</span>
+          {item.nickname ? (
+            <span style={{ color: 'var(--ac)' }}>&ldquo;{item.nickname}&rdquo;</span>
+          ) : null}
+        </h1>
+        <p className="sub" style={{ margin: '4px 0 0' }}>
+          {item.category || 'Gear'}
+          {item.serial_number ? ` · #${item.serial_number}` : ''}
+        </p>
       </div>
 
       {/* Toast Save Message */}
@@ -801,9 +770,10 @@ export default function GearDetailPage({ params }: { params: Promise<{ id: strin
                     Strings Count
                     <select
                       value={stringsCountVal}
-                      onChange={(e) => setStringsCountVal(parseInt(e.target.value, 10))}
+                      onChange={(e) => setStringsCountVal(e.target.value ? parseInt(e.target.value, 10) : '')}
                       style={{ background: '#0a0a0a', border: '1px solid var(--ln)', color: '#fff', padding: '8px 10px', borderRadius: '8px' }}
                     >
+                      <option value="">Select strings count...</option>
                       {isBass ? (
                         <>
                           <option value={4}>4 Strings</option>
@@ -847,6 +817,9 @@ export default function GearDetailPage({ params }: { params: Promise<{ id: strin
                       style={{ background: '#0a0a0a', border: '1px solid var(--ln)', color: '#fff', padding: '8px 10px', borderRadius: '8px' }}
                     >
                       <option value="">Select gauge...</option>
+                      {gaugeVal && !gaugeOptions.includes(gaugeVal) && (
+                        <option value={gaugeVal}>{gaugeVal}</option>
+                      )}
                       {gaugeOptions.map((g) => (
                         <option key={g} value={g}>
                           {g}
@@ -863,6 +836,9 @@ export default function GearDetailPage({ params }: { params: Promise<{ id: strin
                       style={{ background: '#0a0a0a', border: '1px solid var(--ln)', color: '#fff', padding: '8px 10px', borderRadius: '8px' }}
                     >
                       <option value="">Select brand...</option>
+                      {stringsBrandVal && !(STRING_MANUFACTURERS as readonly string[]).includes(stringsBrandVal) && (
+                        <option value={stringsBrandVal}>{stringsBrandVal}</option>
+                      )}
                       {STRING_MANUFACTURERS.map((m) => (
                         <option key={m} value={m}>
                           {m}
@@ -932,25 +908,28 @@ export default function GearDetailPage({ params }: { params: Promise<{ id: strin
                 </div>
               </div>
             ) : (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '10px' }}>
-                  <div style={{ background: '#0a0a0a', padding: '10px 12px', borderRadius: '8px', border: '1px solid var(--ln)' }}>
-                    <small style={{ color: 'var(--mu)', fontSize: '11px', display: 'block' }}>Tuning</small>
-                    <b style={{ fontSize: '13px', color: 'var(--tx)' }}>{item.tuning || 'Standard'}</b>
-                  </div>
-                  <div style={{ background: '#0a0a0a', padding: '10px 12px', borderRadius: '8px', border: '1px solid var(--ln)' }}>
-                    <small style={{ color: 'var(--mu)', fontSize: '11px', display: 'block' }}>Gauge</small>
-                    <b style={{ fontSize: '13px', color: 'var(--tx)' }}>{item.string_gauge || '10-46'}</b>
-                  </div>
-                  <div style={{ background: '#0a0a0a', padding: '10px 12px', borderRadius: '8px', border: '1px solid var(--ln)' }}>
-                    <small style={{ color: 'var(--mu)', fontSize: '11px', display: 'block' }}>Strings Brand</small>
-                    <b style={{ fontSize: '13px', color: 'var(--tx)' }}>{item.string_manufacturer || item.current_strings || 'Not specified'}</b>
-                  </div>
-                  <div style={{ background: '#0a0a0a', padding: '10px 12px', borderRadius: '8px', border: '1px solid var(--ln)' }}>
-                    <small style={{ color: 'var(--mu)', fontSize: '11px', display: 'block' }}>Strings Count</small>
-                    <b style={{ fontSize: '13px', color: 'var(--tx)' }}>{item.number_of_strings || (isBass ? 4 : 6)} string</b>
-                  </div>
-                </div>
+              (() => {
+                const resolvedStrings = resolveStringSpecs(item.string_gauge, item.string_manufacturer, item.current_strings);
+                return (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '10px' }}>
+                      <div style={{ background: '#0a0a0a', padding: '10px 12px', borderRadius: '8px', border: '1px solid var(--ln)' }}>
+                        <small style={{ color: 'var(--mu)', fontSize: '11px', display: 'block' }}>Tuning</small>
+                        <b style={{ fontSize: '13px', color: 'var(--tx)' }}>{item.tuning || ''}</b>
+                      </div>
+                      <div style={{ background: '#0a0a0a', padding: '10px 12px', borderRadius: '8px', border: '1px solid var(--ln)' }}>
+                        <small style={{ color: 'var(--mu)', fontSize: '11px', display: 'block' }}>Gauge</small>
+                        <b style={{ fontSize: '13px', color: 'var(--tx)' }}>{resolvedStrings.gauge || ''}</b>
+                      </div>
+                      <div style={{ background: '#0a0a0a', padding: '10px 12px', borderRadius: '8px', border: '1px solid var(--ln)' }}>
+                        <small style={{ color: 'var(--mu)', fontSize: '11px', display: 'block' }}>Strings Brand</small>
+                        <b style={{ fontSize: '13px', color: 'var(--tx)' }}>{resolvedStrings.manufacturer || ''}</b>
+                      </div>
+                      <div style={{ background: '#0a0a0a', padding: '10px 12px', borderRadius: '8px', border: '1px solid var(--ln)' }}>
+                        <small style={{ color: 'var(--mu)', fontSize: '11px', display: 'block' }}>Strings Count</small>
+                        <b style={{ fontSize: '13px', color: 'var(--tx)' }}>{item.number_of_strings ? `${item.number_of_strings} string` : ''}</b>
+                      </div>
+                    </div>
 
                 {(item.pickup_bridge || item.pickup_middle || item.pickup_neck || item.pickups_summary) && (
                   <div style={{ marginTop: '4px', borderTop: '1px solid var(--ln)', paddingTop: '10px' }}>
@@ -978,8 +957,10 @@ export default function GearDetailPage({ params }: { params: Promise<{ id: strin
                   </div>
                 )}
               </div>
-            )}
-          </div>
+            );
+          })()
+        )}
+      </div>
         )}
 
         {/* AMPLIFIER / EFFECTS SETTINGS PANEL */}
@@ -1021,7 +1002,7 @@ export default function GearDetailPage({ params }: { params: Promise<{ id: strin
             ) : (
               <div>
                 <p style={{ margin: 0, fontSize: '13px', color: item.amp_settings ? 'var(--tx)' : 'var(--mu)', whiteSpace: 'pre-wrap' }}>
-                  {item.amp_settings || 'No knob positions or channel settings logged yet.'}
+                  {item.amp_settings || ''}
                 </p>
                 {item.settings_file_url && (
                   <div style={{ marginTop: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -1065,7 +1046,7 @@ export default function GearDetailPage({ params }: { params: Promise<{ id: strin
           <div className="card" style={{ padding: '16px', marginBottom: '16px' }}>
             <h3 style={{ margin: '0 0 10px', fontSize: '14px', fontWeight: 800 }}>Drum Kit Configuration</h3>
             <p style={{ margin: 0, fontSize: '13px', color: item.drum_head_details ? 'var(--tx)' : 'var(--mu)' }}>
-              {item.drum_head_details || 'Snare, kick, and toms head tension and materials can be customized via voice notes or settings.'}
+              {item.drum_head_details || ''}
             </p>
           </div>
         )}
@@ -1215,19 +1196,19 @@ export default function GearDetailPage({ params }: { params: Promise<{ id: strin
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', fontSize: '13px' }}>
               <div style={{ background: '#0a0a0a', padding: '10px', borderRadius: '8px' }}>
                 <small style={{ color: 'var(--mu)', display: 'block' }}>Tuning</small>
-                <b>{activeSnapshot.tuning || 'Standard'}</b>
+                <b>{activeSnapshot.tuning || ''}</b>
               </div>
               <div style={{ background: '#0a0a0a', padding: '10px', borderRadius: '8px' }}>
                 <small style={{ color: 'var(--mu)', display: 'block' }}>Gauge</small>
-                <b>{activeSnapshot.stringGauge || '10-46'}</b>
+                <b>{activeSnapshot.stringGauge || ''}</b>
               </div>
               <div style={{ background: '#0a0a0a', padding: '10px', borderRadius: '8px' }}>
                 <small style={{ color: 'var(--mu)', display: 'block' }}>Strings Brand</small>
-                <b>{activeSnapshot.stringManufacturer || 'Not logged'}</b>
+                <b>{activeSnapshot.stringManufacturer || ''}</b>
               </div>
               <div style={{ background: '#0a0a0a', padding: '10px', borderRadius: '8px' }}>
                 <small style={{ color: 'var(--mu)', display: 'block' }}>Bridge Pickup</small>
-                <b>{activeSnapshot.pickupBridge || 'Stock'}</b>
+                <b>{activeSnapshot.pickupBridge || ''}</b>
               </div>
             </div>
 

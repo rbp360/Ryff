@@ -175,7 +175,7 @@ export function GearHeroPhoto({
   const isCustom = stockSource === 'custom';
 
   return (
-    <div style={{ position: 'relative', width: '100%', marginBottom: '16px' }}>
+    <div style={{ position: 'relative', width: '100%', maxWidth: '360px', margin: '0 auto 16px' }}>
       {/* Hidden File Input */}
       <input
         ref={fileInputRef}
@@ -349,28 +349,6 @@ export function GearHeroPhoto({
         </div>
 
         <div style={{ display: 'flex', gap: '8px' }}>
-          {/* Cycle Reverb Stock Photo */}
-          <button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              fetchStock(pickIndex + 1, true);
-            }}
-            disabled={isFetchingStock || isUploading}
-            style={{
-              background: 'var(--sf)',
-              border: '1px solid var(--ln)',
-              color: 'var(--tx)',
-              fontSize: '11px',
-              fontWeight: 700,
-              padding: '5px 10px',
-              borderRadius: '8px',
-              cursor: 'pointer',
-            }}
-          >
-            🔄 Cycle Reverb Photo
-          </button>
-
           {/* Remove custom upload */}
           {isCustom && (
             <button

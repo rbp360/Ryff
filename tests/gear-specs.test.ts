@@ -9,6 +9,7 @@ import {
   GUITAR_STRING_GAUGES,
   STRING_MANUFACTURERS,
   PICKUP_MANUFACTURERS,
+  resolveStringSpecs,
 } from '../src/lib/gear-specs';
 
 describe('gear-specs', () => {
@@ -104,6 +105,33 @@ describe('gear-specs', () => {
       expect(STRING_MANUFACTURERS).toContain("D'Addario");
       expect(PICKUP_MANUFACTURERS).toContain('Seymour Duncan');
       expect(PICKUP_MANUFACTURERS).toContain('Bare Knuckle Pickups');
+    });
+  });
+
+  describe('resolveStringSpecs', () => {
+    it('intelligently separates brand and gauge from combined string name like "Elixir 9-42"', () => {
+      const res = resolveStringSpecs(null, null, 'Elixir 9-42');
+      expect(res.manufacturer).toBe('Elixir');
+      expect(res.gauge).toBe('009-042 (Super Light)');
+      expect(res.normalizedGauge).toBe('009-042 (Super Light)');
+    });
+
+    it('extracts gauge when manufacturer mistakenly contains it', () => {
+      const res = resolveStringSpecs(null, 'Elixir 9-42', null);
+      expect(res.manufacturer).toBe('Elixir');
+      expect(res.gauge).toBe('009-042 (Super Light)');
+    });
+
+    it('preserves explicitly configured gauge and manufacturer', () => {
+      const res = resolveStringSpecs('010-046 (Regular Light)', 'D\'Addario', 'D\'Addario 10-46');
+      expect(res.manufacturer).toBe('D\'Addario');
+      expect(res.gauge).toBe('010-046 (Regular Light)');
+    });
+
+    it('handles empty data with blank strings without falling back to hardcoded 10-46', () => {
+      const res = resolveStringSpecs(null, null, null);
+      expect(res.manufacturer).toBe('');
+      expect(res.gauge).toBe('');
     });
   });
 });
