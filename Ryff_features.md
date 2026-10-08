@@ -1,5 +1,35 @@
 # Ryff Feature Log
 
+## Feature: Bot Overhaul Architecture, 5-Bot Simulation Scaffold & Behavior Tuning Manual (Milestone M7.1)
+- **Date:** October 8, 2026
+- **Category:** Persona Architecture / Multi-Bot Simulation / Autonomous Debates & Founder Tuning
+
+### 1. User & Marketing Overview
+- **Evolution from 2-Bot Duopoly to Companion Model:** Initiated the transition from the legacy hardcoded two-bot model (Hank and Vee) to a personal "one bot per user" companion architecture. The platform now supports multi-persona simulation across 5 distinct archetypal bots: **RobBPaul** (Founder / User Proxy), **Stevie** (Vintage Blues & Dynamic Valve Purist), **Tim** (Modern Tech & Modeller Architect), **Hank** (Grumpy Vintage Luthier), and **McGee** (High-Gain Shredder & Pawnshop Modder).
+- **Founder's Behavior & Tuning Manual ([`docs/BOT_BEHAVIOR_AND_TUNING_GUIDE.md`](file:///c:/Users/rob_b/Ryff/docs/BOT_BEHAVIOR_AND_TUNING_GUIDE.md)):** Authored a plain-English reference explaining the direct relationship between technical parameters (temperature, system prompt, brand biases, few-shot anchor lines, pushback rates) and human persona qualities, empowering founders to make manual adjustments to speech style, brand allegiances (e.g. Marshall vs. Fender), and cynicism without touching application code.
+- **Master Milestone & Micro-Spec Plan ([`docs/BOT_OVERHAUL_PLAN.md`](file:///c:/Users/rob_b/Ryff/docs/BOT_OVERHAUL_PLAN.md), [`initialisation documents/04-bot-overhaul-milestones.md`](file:///c:/Users/rob_b/Ryff/initialisation%20documents/04-bot-overhaul-milestones.md)):** Established a self-contained, token-efficient implementation guide outlining Milestones M7.1 through M7.4 (Bot Registry, Backstage Chat Upgrade, Multi-Bot Autonomous Debates, and Future "Barstool Audition" Onboarding Flow).
+
+---
+
+### 2. Technical Details (For Developers)
+- **Bot Dossier Schema Contract ([`src/types/bot.ts`](file:///c:/Users/rob_b/Ryff/src/types/bot.ts)):**
+  - Defined `BotDossier`, `BotVoiceConfig`, and `BotBiasesConfig` capturing `id`, `name`, `isUserProxy`, `archetype`, `temperature`, `voice` (`tone`, `slang`, `forbidden_phrases`), `biases` (`favoured_gear`, `hostile_concepts`, `stance_on_modelling`), `irrational_hill_to_die_on`, `disagreement_rate`, and `sample_lines`.
+- **5 Skeletal Persona Configurations (`data/bots/*.json`):**
+  - Created modular JSON configurations for `robbpaul.json`, `stevie.json`, `tim.json`, `hank.json`, and `mcgee.json`.
+- **Bot Registry & Prompt Assembler ([`src/lib/bots.ts`](file:///c:/Users/rob_b/Ryff/src/lib/bots.ts)):**
+  - Implemented `getAllBots()`, `getBot(id)` (with default fallback to `robbpaul`), and `buildBotSystemPrompt(bot, options)`.
+  - Automatically compiles persona identity, vocabulary, gear biases, and few-shot voice anchors while enforcing universal safety rules and optional disagreement pushback directives (`Math.random() < bot.disagreement_rate`).
+- **Automated Test Suite ([`tests/bots.test.ts`](file:///c:/Users/rob_b/Ryff/tests/bots.test.ts)):**
+  - 4 comprehensive unit tests validating roster completeness, schema integrity, temperature ranges, default fallbacks, and prompt compilation.
+
+---
+
+### 3. White-Label & Domain-Agnostic Utility
+- **Domain-Agnostic Persona Simulation Framework:** The modular dossier and registry engine decouples character logic entirely from the codebase. In any white-label vertical (e.g. automotive tuning: Track-Day EV Architect vs. Classic Carburetor Muscle Purist; horology: Vintage Mechanical Purist vs. Smartwatch Pragmatist), creating contrasting debating personalities is accomplished purely via JSON dossiers with zero backend rewrites.
+
+---
+
+
 ## Feature: CI Database Test Automation & Resilient Static Fallback Rigistry Taxonomy
 - **Date:** October 4, 2026
 - **Category:** Infrastructure / Testing / Taxonomy & Brand Resolution
