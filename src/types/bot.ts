@@ -20,6 +20,7 @@ export interface BotDossier {
   name: string; // Display name e.g. 'RobBPaul'
   isUserProxy?: boolean; // True if this bot represents the logged-in user
   avatarText?: string; // Fallback short initials e.g. 'RP'
+  avatarImage?: string; // Close-up face avatar URL e.g. '/images/bots/robbpaul.jpg'
   archetype: string; // One-line summary e.g. 'Working Tone Pragmatist & Builder'
   temperature: number; // Sampling temperature (0.0 to 1.0, recommended ~0.7)
   voice: BotVoiceConfig;

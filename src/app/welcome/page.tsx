@@ -356,15 +356,71 @@ export default function WelcomePage() {
               <div>
                 <span style={{ fontSize: '11px', fontWeight: 900, color: 'var(--ac)' }}>STEP 03</span>
                 <h4 style={{ fontSize: '18px', fontWeight: 900, margin: '8px 0 10px', textTransform: 'uppercase' }}>
-                  Hank & Vee Clash in Backstage
+                  Spar with 5 Opposing Personas
                 </h4>
                 <p style={{ fontSize: '13.5px', color: 'var(--mu)', lineHeight: 1.55 }}>
-                  Hank (the grumpy vintage luthier) and Vee (the modern modeller deal-hunter) debate the news so you get a second view. Jump in 1-on-1 to ask for direct advice.
+                  Debate in Backstage with 5 distinct gear philosophies: RobBPaul (the gigging tone pragmatist), Stevie (vintage tube purist), Tim (DSP tech architect), Hank (the grumpy luthier), and McGee (scrappy high-gain modder).
                 </p>
               </div>
               <div style={{ marginTop: '20px', padding: '10px', background: '#0a0a0a', borderRadius: '8px', border: '1px solid var(--ln)', fontSize: '12px' }}>
-                <span style={{ color: 'var(--ac)' }}>⚡ 1-on-1:</span> Ask Hank if that used tube amp is worth buying.
+                <span style={{ color: 'var(--ac)' }}>⚡ 1-on-1:</span> Ask your companion bot RobBPaul for real-world gigging rig advice.
               </div>
+            </div>
+          </div>
+
+          {/* 5-Bot Roster Showcase Card */}
+          <div
+            style={{
+              marginTop: '32px',
+              borderRadius: 'var(--r)',
+              overflow: 'hidden',
+              border: '1px solid var(--ln)',
+              background: '#090909',
+            }}
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/images/5xbots.jpg"
+              alt="Ryff 5-Bot Lineup"
+              style={{
+                width: '100%',
+                height: 'auto',
+                display: 'block',
+              }}
+            />
+            <div
+              style={{
+                padding: '16px 20px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                flexWrap: 'wrap',
+                gap: '12px',
+                borderTop: '1px solid var(--ln)',
+                background: 'rgba(255,255,255,0.02)',
+              }}
+            >
+              <div>
+                <b style={{ fontSize: '14px', color: '#fff', display: 'block' }}>The 5-Persona Roster</b>
+                <span style={{ fontSize: '12px', color: 'var(--mu)' }}>
+                  Hank · McGee · RobBPaul · Stevie · Tim
+                </span>
+              </div>
+              <Link
+                href="/backstage"
+                style={{
+                  fontSize: '12px',
+                  fontWeight: 800,
+                  color: 'var(--ac)',
+                  textDecoration: 'none',
+                  padding: '6px 12px',
+                  borderRadius: '6px',
+                  border: '1px solid rgba(34,197,94,0.3)',
+                  background: 'rgba(34,197,94,0.08)',
+                }}
+              >
+                Debate in Backstage ›
+              </Link>
             </div>
           </div>
         </section>

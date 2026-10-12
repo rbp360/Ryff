@@ -2,16 +2,10 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import postgres from 'postgres';
 import { env } from '@/lib/env';
+import { getBot } from '@/lib/bots';
+import { EpisodeTopic, DebateTurn } from '@/types/episode';
 
 export const revalidate = 0; // Dynamic server component
-
-interface EpisodeTopic {
-  title: string;
-  hank: string;
-  vee: string;
-  disagreement: string;
-  source_item_ids: number[];
-}
 
 interface CitedItem {
   id: number;
@@ -24,9 +18,121 @@ interface EpisodeData {
   id: number;
   headline: string;
   topics: EpisodeTopic[];
-  transcript: unknown;
+  transcript: DebateTurn[];
   published_at: string | null;
   status: string;
+}
+
+const BOT_UI_THEMES: Record<string, { accent: string; bg: string; border: string; badge: string; emoji: string }> = {
+  robbpaul: {
+    accent: '#22c55e',
+    bg: 'rgba(34, 197, 94, 0.08)',
+    border: 'rgba(34, 197, 94, 0.35)',
+    badge: 'Companion',
+    emoji: '🎸',
+  },
+  stevie: {
+    accent: '#f59e0b',
+    bg: 'rgba(245, 158, 11, 0.08)',
+    border: 'rgba(245, 158, 11, 0.35)',
+    badge: 'Purist',
+    emoji: '🎙️',
+  },
+  tim: {
+    accent: '#38bdf8',
+    bg: 'rgba(56, 189, 248, 0.08)',
+    border: 'rgba(56, 189, 248, 0.35)',
+    badge: 'DSP Tech',
+    emoji: '⚡',
+  },
+  hank: {
+    accent: '#ea580c',
+    bg: 'rgba(234, 88, 12, 0.08)',
+    border: 'rgba(234, 88, 12, 0.35)',
+    badge: 'Luthier',
+    emoji: '🧔',
+  },
+  mcgee: {
+    accent: '#ef4444',
+    bg: 'rgba(239, 68, 68, 0.08)',
+    border: 'rgba(239, 68, 68, 0.35)',
+    badge: 'High-Gain',
+    emoji: '🔥',
+  },
+  vee: {
+    accent: '#06b6d4',
+    bg: 'rgba(6, 182, 212, 0.08)',
+    border: 'rgba(6, 182, 212, 0.35)',
+    badge: 'Modeller',
+    emoji: '⚡',
+  },
+};
+
+interface RenderTake {
+  botId: string;
+  name: string;
+  archetype: string;
+  avatarImage?: string;
+  text: string;
+}
+
+function resolveTopicTakes(topic: EpisodeTopic): RenderTake[] {
+  if (topic.takes && Array.isArray(topic.takes) && topic.takes.length > 0) {
+    return topic.takes.map((tk) => {
+      const bot = getBot(tk.speaker_id);
+      return {
+        botId: bot.id,
+        name: tk.speaker_name || bot.name,
+        archetype: bot.archetype,
+        avatarImage: bot.avatarImage || `/images/bots/${bot.id}.jpg`,
+        text: tk.text,
+      };
+    });
+  }
+
+  // Fallback to dynamic keys on topic (e.g. topic.robbpaul, topic.stevie)
+  const takes: RenderTake[] = [];
+  const knownBotIds = ['robbpaul', 'stevie', 'tim', 'hank', 'mcgee'];
+
+  for (const id of knownBotIds) {
+    if (topic[id] && typeof topic[id] === 'string') {
+      const bot = getBot(id);
+      takes.push({
+        botId: bot.id,
+        name: bot.name,
+        archetype: bot.archetype,
+        avatarImage: bot.avatarImage || `/images/bots/${bot.id}.jpg`,
+        text: String(topic[id]),
+      });
+    }
+  }
+
+  if (takes.length > 0) {
+    return takes;
+  }
+
+  // Legacy fallback for old Hank & Vee episodes
+  if (topic.hank) {
+    const hank = getBot('hank');
+    takes.push({
+      botId: 'hank',
+      name: 'Hank',
+      archetype: hank.archetype,
+      avatarImage: hank.avatarImage || '/images/bots/hank.jpg',
+      text: topic.hank,
+    });
+  }
+  if (topic.vee) {
+    takes.push({
+      botId: 'vee',
+      name: 'Vee',
+      archetype: 'The Modern Modeller • Deal Hunter & Tech Fan',
+      avatarImage: '/images/bots/tim.jpg',
+      text: topic.vee,
+    });
+  }
+
+  return takes;
 }
 
 async function getEpisodeById(id: string) {
@@ -53,6 +159,13 @@ async function getEpisodeById(id: string) {
     const topics: EpisodeTopic[] = typeof rawEpisode.topics === 'string'
       ? JSON.parse(rawEpisode.topics)
       : rawEpisode.topics;
+
+    let transcript: DebateTurn[] = [];
+    if (rawEpisode.transcript) {
+      transcript = typeof rawEpisode.transcript === 'string'
+        ? JSON.parse(rawEpisode.transcript)
+        : rawEpisode.transcript;
+    }
 
     // Collect all cited item IDs
     const citedIds = Array.from(
@@ -83,7 +196,7 @@ async function getEpisodeById(id: string) {
         id: rawEpisode.id,
         headline: rawEpisode.headline,
         topics,
-        transcript: rawEpisode.transcript,
+        transcript,
         published_at: rawEpisode.published_at,
         status: rawEpisode.status,
       } as EpisodeData,
@@ -111,6 +224,17 @@ export default async function EpisodePage({
 
   const { episode, citedItemsMap, prevEpisode, nextEpisode } = data;
 
+  // Extract participating debaters for header subtitle
+  const participatingDebaters = Array.from(
+    new Set(
+      episode.topics.flatMap((t) => resolveTopicTakes(t).map((take) => take.name))
+    )
+  );
+
+  const debaterSubtitle = participatingDebaters.length > 0
+    ? `Autonomous debate between ${participatingDebaters.join(' and ')} on today's gear news.`
+    : "Autonomous debate between Ryff personas on today's gear news.";
+
   return (
     <main className="min-h-screen bg-slate-950 text-slate-100 font-sans pb-16">
       {/* Top Navigation */}
@@ -132,10 +256,10 @@ export default async function EpisodePage({
               ← Latest Episode
             </Link>
             <Link
-              href="/admin"
+              href="/backstage"
               className="text-xs px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 transition border border-slate-700 font-mono"
             >
-              Command Centre
+              Backstage Chat
             </Link>
           </div>
         </div>
@@ -161,7 +285,7 @@ export default async function EpisodePage({
           </h1>
 
           <p className="text-slate-400 text-sm md:text-base max-w-2xl mx-auto">
-            Autonomous debate between Hank (The Grumpy Luthier) and Vee (The Modern Modeller) on today&apos;s guitar news.
+            {debaterSubtitle}
           </p>
         </section>
 
@@ -172,101 +296,167 @@ export default async function EpisodePage({
               No debate topics recorded for this episode.
             </div>
           ) : (
-            episode.topics.map((topic, idx) => (
-              <div
-                key={idx}
-                className="bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-6 hover:border-slate-700 transition"
-              >
-                {/* Topic Header & Disagreement */}
-                <div className="space-y-2 border-b border-slate-800/80 pb-4">
-                  <div className="flex items-center justify-between flex-wrap gap-2">
-                    <span className="text-xs font-bold uppercase tracking-wider text-cyan-400 font-mono">
-                      Topic #{idx + 1}
-                    </span>
-                    <span className="text-xs px-2.5 py-1 rounded-full bg-amber-950/80 text-amber-300 border border-amber-800/60 font-medium">
-                      ⚡ Disagreement: {topic.disagreement}
-                    </span>
-                  </div>
-                  <h2 className="text-xl font-bold text-white tracking-tight">
-                    {topic.title}
-                  </h2>
-                </div>
+            episode.topics.map((topic, idx) => {
+              const takes = resolveTopicTakes(topic);
+              const gridColsClass = takes.length >= 3 ? 'grid-cols-1 md:grid-cols-3' : 'grid-cols-1 md:grid-cols-2';
 
-                {/* Character Cards Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {/* Hank Card */}
-                  <div className="bg-slate-950/80 border border-amber-900/30 rounded-xl p-5 space-y-3 relative overflow-hidden">
-                    <div className="flex items-center gap-3">
-                      <div className="h-10 w-10 rounded-full bg-amber-950 border border-amber-700/50 flex items-center justify-center text-xl shadow">
-                        🧔
-                      </div>
-                      <div>
-                        <h3 className="text-sm font-bold text-amber-300">Hank</h3>
-                        <p className="text-xs text-slate-400">The Grumpy Luthier • Vintage & Craft Purist</p>
-                      </div>
+              return (
+                <div
+                  key={idx}
+                  className="bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-6 hover:border-slate-700 transition"
+                >
+                  {/* Topic Header & Disagreement */}
+                  <div className="space-y-2 border-b border-slate-800/80 pb-4">
+                    <div className="flex items-center justify-between flex-wrap gap-2">
+                      <span className="text-xs font-bold uppercase tracking-wider text-cyan-400 font-mono">
+                        Topic #{idx + 1}
+                      </span>
+                      <span className="text-xs px-2.5 py-1 rounded-full bg-amber-950/80 text-amber-300 border border-amber-800/60 font-medium">
+                        ⚡ Disagreement: {topic.disagreement}
+                      </span>
                     </div>
-                    <p className="text-slate-300 text-sm leading-relaxed italic border-l-2 border-amber-600/50 pl-3">
-                      &ldquo;{topic.hank.replace(/^Hank:\s*/i, '')}&rdquo;
-                    </p>
+                    <h2 className="text-xl font-bold text-white tracking-tight">
+                      {topic.title}
+                    </h2>
                   </div>
 
-                  {/* Vee Card */}
-                  <div className="bg-slate-950/80 border border-cyan-900/30 rounded-xl p-5 space-y-3 relative overflow-hidden">
-                    <div className="flex items-center gap-3">
-                      <div className="h-10 w-10 rounded-full bg-cyan-950 border border-cyan-700/50 flex items-center justify-center text-xl shadow">
-                        ⚡
-                      </div>
-                      <div>
-                        <h3 className="text-sm font-bold text-cyan-300">Vee</h3>
-                        <p className="text-xs text-slate-400">The Modern Modeller • Deal Hunter & Tech Fan</p>
-                      </div>
-                    </div>
-                    <p className="text-slate-300 text-sm leading-relaxed italic border-l-2 border-cyan-600/50 pl-3">
-                      &ldquo;{topic.vee.replace(/^Vee:\s*/i, '')}&rdquo;
-                    </p>
-                  </div>
-                </div>
-
-                {/* Cited Sources with real outbound links (rel="noopener nofollow") */}
-                {topic.source_item_ids && topic.source_item_ids.length > 0 && (
-                  <div className="pt-3 border-t border-slate-800/60 space-y-2">
-                    <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider font-mono">
-                      Cited Sources:
-                    </span>
-                    <div className="flex flex-wrap gap-2">
-                      {topic.source_item_ids.map((id) => {
-                        const item = citedItemsMap.get(id);
-                        if (!item) {
-                          return (
-                            <span
-                              key={id}
-                              className="text-xs px-2 py-1 rounded bg-slate-800 text-slate-500 font-mono"
+                  {/* Character Cards Grid (Dynamic 2-way or 3-way) */}
+                  <div className={`grid ${gridColsClass} gap-4`}>
+                    {takes.map((take, tIdx) => {
+                      const theme = BOT_UI_THEMES[take.botId] || BOT_UI_THEMES.robbpaul;
+                      return (
+                        <div
+                          key={tIdx}
+                          className="bg-slate-950/80 rounded-xl p-5 space-y-3 relative overflow-hidden"
+                          style={{
+                            border: `1px solid ${theme.border}`,
+                            background: theme.bg,
+                          }}
+                        >
+                          <div className="flex items-center gap-3">
+                            <div
+                              className="h-10 w-10 rounded-full overflow-hidden flex-shrink-0 flex items-center justify-center shadow"
+                              style={{
+                                border: `1.5px solid ${theme.accent}`,
+                                background: '#111',
+                              }}
                             >
-                              [Item #{id}]
-                            </span>
-                          );
-                        }
-                        return (
-                          <a
-                            key={id}
-                            href={item.url}
-                            target="_blank"
-                            rel="noopener nofollow"
-                            className="inline-flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-lg bg-slate-800/90 hover:bg-slate-700 text-cyan-300 hover:text-cyan-200 border border-slate-700 transition"
+                              {/* eslint-disable-next-line @next/next/no-img-element */}
+                              <img
+                                src={take.avatarImage || `/images/bots/${take.botId}.jpg`}
+                                alt={take.name}
+                                className="w-full h-full object-cover"
+                              />
+                            </div>
+                            <div className="min-w-0 flex-1">
+                              <div className="flex items-center gap-1.5">
+                                <h3 className="text-sm font-bold text-white truncate" style={{ color: theme.accent }}>
+                                  {take.name}
+                                </h3>
+                                <span
+                                  className="text-[10px] font-bold uppercase px-1.5 py-0.2 rounded"
+                                  style={{
+                                    background: 'rgba(255, 255, 255, 0.1)',
+                                    color: theme.accent,
+                                  }}
+                                >
+                                  {theme.badge}
+                                </span>
+                              </div>
+                              <p className="text-xs text-slate-400 line-clamp-1">{take.archetype}</p>
+                            </div>
+                          </div>
+                          <p
+                            className="text-slate-300 text-sm leading-relaxed italic pl-3"
+                            style={{ borderLeft: `2px solid ${theme.accent}` }}
                           >
-                            <span>🔗</span>
-                            <span className="font-medium truncate max-w-xs">{item.title}</span>
-                            <span className="text-[10px] text-slate-400 font-mono">({item.source_name})</span>
-                          </a>
-                        );
-                      })}
-                    </div>
+                            &ldquo;{take.text.replace(new RegExp(`^${take.name}:\\s*`, 'i'), '')}&rdquo;
+                          </p>
+                        </div>
+                      );
+                    })}
                   </div>
-                )}
-              </div>
-            ))
+
+                  {/* Cited Sources with real outbound links */}
+                  {topic.source_item_ids && topic.source_item_ids.length > 0 && (
+                    <div className="pt-3 border-t border-slate-800/60 space-y-2">
+                      <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider font-mono">
+                        Cited Sources:
+                      </span>
+                      <div className="flex flex-wrap gap-2">
+                        {topic.source_item_ids.map((id) => {
+                          const item = citedItemsMap.get(id);
+                          if (!item) {
+                            return (
+                              <span
+                                key={id}
+                                className="text-xs px-2 py-1 rounded bg-slate-800 text-slate-500 font-mono"
+                              >
+                                [Item #{id}]
+                              </span>
+                            );
+                          }
+                          return (
+                            <a
+                              key={id}
+                              href={item.url}
+                              target="_blank"
+                              rel="noopener nofollow"
+                              className="inline-flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-lg bg-slate-800/90 hover:bg-slate-700 text-cyan-300 hover:text-cyan-200 border border-slate-700 transition"
+                            >
+                              <span>🔗</span>
+                              <span className="font-medium truncate max-w-xs">{item.title}</span>
+                              <span className="text-[10px] text-slate-400 font-mono">({item.source_name})</span>
+                            </a>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              );
+            })
           )}
         </section>
+
+        {/* 4-Turn Sparring Transcript Audit Section (if available) */}
+        {episode.transcript && episode.transcript.length > 0 && (
+          <section className="bg-slate-900/60 border border-slate-800 rounded-2xl p-6 space-y-4">
+            <h2 className="text-base font-bold text-white flex items-center gap-2">
+              <span>🎙️</span> Full 4-Round Debate Sparring Transcript
+            </h2>
+            <div className="space-y-3">
+              {episode.transcript.map((t, idx) => {
+                const botId = t.speaker_id || t.speaker?.toLowerCase() || 'robbpaul';
+                const bot = getBot(botId);
+                const theme = BOT_UI_THEMES[bot.id] || BOT_UI_THEMES.robbpaul;
+                return (
+                  <div
+                    key={idx}
+                    className="p-3.5 rounded-xl bg-slate-950/60 border border-slate-800/80 space-y-1.5"
+                  >
+                    <div className="flex items-center justify-between text-xs">
+                      <div className="flex items-center gap-2">
+                        <span className="font-bold" style={{ color: theme.accent }}>
+                          {t.speaker_name || t.speaker || bot.name}
+                        </span>
+                        <span className="text-[10px] text-slate-400 font-mono">
+                          Round {t.round || t.turn || idx + 1}
+                        </span>
+                      </div>
+                      <span className="text-[10px] uppercase font-bold text-slate-500">
+                        {theme.badge}
+                      </span>
+                    </div>
+                    <p className="text-xs text-slate-300 leading-relaxed italic">
+                      &ldquo;{t.text}&rdquo;
+                    </p>
+                  </div>
+                );
+              })}
+            </div>
+          </section>
+        )}
 
         {/* Previous / Next Episode Navigation */}
         <div className="flex items-center justify-between border-t border-b border-slate-800/80 py-4">
@@ -304,6 +494,8 @@ export default async function EpisodePage({
         <footer className="pt-4 text-center text-xs text-slate-500 space-y-2">
           <p>AI-generated fictional characters. Not professional advice.</p>
           <div className="flex items-center justify-center gap-4 text-[11px] text-slate-400">
+            <Link href="/welcome" className="hover:text-slate-300 underline">About Ryff</Link>
+            <span>•</span>
             <Link href="/legal/privacy" className="hover:text-slate-300 underline">Privacy Policy</Link>
             <span>•</span>
             <Link href="/legal/terms" className="hover:text-slate-300 underline">Terms of Service</Link>

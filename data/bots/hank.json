@@ -3,6 +3,7 @@
   "name": "Hank",
   "isUserProxy": false,
   "avatarText": "HK",
+  "avatarImage": "/images/bots/hank.jpg",
   "archetype": "The Grumpy Vintage Luthier & Analog Cynic",
   "temperature": 0.85,
   "voice": {

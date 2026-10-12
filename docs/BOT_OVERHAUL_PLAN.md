@@ -96,7 +96,7 @@ NEW MODEL (Dynamic Multi-Persona Registry):
 
 ---
 
-### Milestone M7.2: Backstage Chat Multi-Bot Upgrade
+### Milestone M7.2: Backstage Chat Multi-Bot Upgrade (Completed)
 **Goal:** Allow users to chat 1-on-1 with any of the 5 bots, defaulting to **RobBPaul** as the companion bot.
 
 **Tasks:**
@@ -115,10 +115,11 @@ NEW MODEL (Dynamic Multi-Persona Registry):
 **Done When:**
 - A user can open Backstage, switch between RobBPaul, Stevie, Tim, Hank, and McGee, and get distinct, in-character replies from all 5.
 - RobBPaul responds with the founder's defined tone and biases.
+- Verified with Vitest suite (`tests/backstage-multi-bot.test.ts`) and TypeScript check.
 
 ---
 
-### Milestone M7.3: Multi-Bot Autonomous Debate Pipeline
+### Milestone M7.3: Multi-Bot Autonomous Debate Pipeline (Completed)
 **Goal:** Transition the twice-daily automated news debate from a fixed Hank-vs-Vee 2-person clash to a dynamic debate featuring selected bots from the 5-bot roster.
 
 **Tasks:**

@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { db } from '@/lib/db';
 import { getSession, DEV_ADMIN_USER } from '@/lib/session';
 import { getGearRestringHealth } from '@/lib/command/intervals';
+import { getBot } from '@/lib/bots';
 
 export const revalidate = 0; // Dynamic server component
 
@@ -61,21 +62,31 @@ export default async function HomePage() {
     }
   }
 
-  // 4. Latest episode & Hank's takeaway
+  // 4. Latest episode & Companion Bot (RobBPaul) takeaway
+  const companionBot = getBot('robbpaul');
   const latestEpisode = episodesResult[0] || null;
   const debateReady = Boolean(latestEpisode);
-  let hankTakeaway = 'Pedals into a clean tube amp beat a bigger amp. Your rig already does this.';
+  let companionTakeaway = 'Wood is wood. Spend £100 on fresh coated strings and a proper setup before you waste half a grand chasing new pickups.';
   let topicsCount = 0;
 
   if (latestEpisode?.topics) {
     const topics = typeof latestEpisode.topics === 'string'
       ? JSON.parse(latestEpisode.topics)
       : latestEpisode.topics;
-    topicsCount = Array.isArray(topics) ? topics.length : 0;
-    if (topics[0]?.hank) {
-      hankTakeaway = String(topics[0].hank).replace(/^Hank:\s*/i, '').replace(/^"|"$/g, '');
+    const firstTopic = topics[0];
+    if (firstTopic?.robbpaul) {
+      companionTakeaway = String(firstTopic.robbpaul).replace(/^RobBPaul:\s*/i, '').replace(/^"|"$/g, '');
+    } else if (firstTopic?.takes && Array.isArray(firstTopic.takes)) {
+      const robTake = firstTopic.takes.find((tk: { speaker_id: string; text: string }) => tk.speaker_id === 'robbpaul');
+      if (robTake) {
+        companionTakeaway = String(robTake.text).replace(/^RobBPaul:\s*/i, '').replace(/^"|"$/g, '');
+      } else if (firstTopic.takes[0]?.text) {
+        companionTakeaway = String(firstTopic.takes[0].text);
+      }
+    } else if (firstTopic?.hank) {
+      companionTakeaway = String(firstTopic.hank).replace(/^Hank:\s*/i, '').replace(/^"|"$/g, '');
     } else if (latestEpisode.headline) {
-      hankTakeaway = latestEpisode.headline;
+      companionTakeaway = `"${latestEpisode.headline}" — Focus on reliable gear that survives real gigs. What works in the mix on Saturday night is what matters.`;
     }
   }
 
@@ -154,18 +165,55 @@ export default async function HomePage() {
         Up to date · updated {updatedTime}
       </div>
 
-      {/* Today's takeaway card */}
-      <div className="take tk">
-        <div className="ph round" style={{ width: 40, height: 40, minWidth: 40 }}>
-          Hank
-          <br />
-          40px
+      {/* Today's Companion Bot Takeaway Card */}
+      <Link
+        href="/backstage?bot=robbpaul"
+        className="take tk"
+        style={{
+          display: 'flex',
+          textDecoration: 'none',
+          color: 'inherit',
+          transition: 'all 0.15s ease',
+          cursor: 'pointer',
+          borderLeft: '3px solid var(--ac)',
+          background: 'var(--sf)',
+          borderRadius: '0 var(--r) var(--r) 0',
+          padding: '14px 16px',
+        }}
+      >
+        <div
+          style={{
+            width: 44,
+            height: 44,
+            minWidth: 44,
+            borderRadius: '50%',
+            overflow: 'hidden',
+            background: 'linear-gradient(135deg, #15803d, #14532d)',
+            border: '2px solid var(--ac)',
+            boxShadow: '0 0 10px rgba(34, 197, 94, 0.3)',
+            flexShrink: 0,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={companionBot.avatarImage || '/images/bots/robbpaul.jpg'}
+            alt={companionBot.name}
+            style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+          />
         </div>
-        <div>
-          <small>Hank’s takeaway today</small>
-          <p>{hankTakeaway}</p>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '4px' }}>
+            <small style={{ color: 'var(--ac)', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+              {companionBot.name}’s Takeaway (Companion)
+            </small>
+            <span style={{ fontSize: '11px', color: 'var(--mu)', fontWeight: 700 }}>Debate ›</span>
+          </div>
+          <p style={{ margin: 0, fontSize: '13.5px', lineHeight: 1.45, color: '#e2e8f0' }}>{companionTakeaway}</p>
         </div>
-      </div>
+      </Link>
 
       {/* Needs Attention Section (Hidden if none) */}
       {needsAttentionItems.length > 0 && (

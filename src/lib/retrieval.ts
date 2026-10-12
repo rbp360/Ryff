@@ -1,18 +1,13 @@
 import { db } from './db';
 import { DealContext } from './guard';
 import { getUserPreferences, getPersonalizedFeed } from './personalization';
+import { EpisodeTopic } from '@/types/episode';
 
 export interface RetrievedContext {
   episode: {
     id: number;
     headline: string;
-    topics: Array<{
-      title: string;
-      hank: string;
-      vee: string;
-      disagreement: string;
-      source_item_ids: number[];
-    }>;
+    topics: EpisodeTopic[];
   } | null;
   items: Array<{
     id: number;
@@ -59,13 +54,7 @@ export async function retrieveChatContext(userId: string, userMessage: string): 
     limit 1
   `;
 
-  let episodeTopics: Array<{
-    title: string;
-    hank: string;
-    vee: string;
-    disagreement: string;
-    source_item_ids: number[];
-  }> = [];
+  let episodeTopics: EpisodeTopic[] = [];
 
   if (latestEpisode?.topics) {
     if (Array.isArray(latestEpisode.topics)) {

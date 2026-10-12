@@ -3,6 +3,7 @@
   "name": "Tim",
   "isUserProxy": false,
   "avatarText": "TM",
+  "avatarImage": "/images/bots/tim.jpg",
   "archetype": "Modern Tech, DSP Modeller & Studio Architect",
   "temperature": 0.68,
   "voice": {

@@ -1,5 +1,128 @@
 # Ryff Feature Log
 
+## Feature: Multi-Bot Autonomous Debate Pipeline (Milestone M7.3)
+- **Date:** October 12, 2026
+- **Category:** Autonomous News Debates / Multi-Bot Sparring / Dynamic Roundtable Pipeline & Backwards Compatibility
+
+### 1. User & Marketing Overview
+- **Dynamic 2-Way and 3-Way Daily Sparring:** Transitions the twice-daily automated gear debate from a fixed Hank-vs-Vee duopoly into a dynamic news showdown drawing from the 5 distinct character personas (**RobBPaul**, **Stevie**, **Tim**, **Hank**, and **McGee**). The system intelligently pairs bots whose philosophies naturally clash on the day's specific news.
+- **4-Round Authentic Sparring Structure:** Each debate unfolds across four distinct character rounds:
+  - *Round 1 (Opening Hot Take):* Speaker A opens with their unfiltered perspective on Act 1 (The Main Event) and Act 2 (Community Wildcard), citing ingested items.
+  - *Round 2 (Counter & Reaction):* Speaker B directly counters Speaker A, attacking philosophical blind spots while conceding fair points.
+  - *Round 3 (Wildcard Interjection or Rebuttal):* In 3-bot debates, Speaker C interjects as a third voice cutting through both speakers; in 2-bot debates, Speaker A delivers a sharp rebuttal.
+  - *Round 4 (Room Consensus & Verdict):* A closing verdict providing musicians with practical takeaways and the bottom line on the day's controversy.
+- **Rich Multi-Speaker Episode Archive UI (`/episodes/:id`):** The episode reader dynamically renders bespoke speaker badges, character portraits from `public/images/bots/`, theme accent rings, and quotes for all participating personas (supporting 2-way and 3-way grids), along with an expandable 4-round sparring transcript audit section.
+- **Backwards-Compatible Legacy Viewing:** Seamlessly preserves full compatibility for historical episodes recorded under Hank and Vee while empowering all future digests with dynamic bot rosters.
+
+---
+
+### 2. Technical Details (For Developers)
+- **Dynamic Debater Selection Engine ([`src/pipeline/debate.ts`](file:///c:/Users/rob_b/Ryff/src/pipeline/debate.ts)):**
+  - `selectDebatersForDebate(candidateItems, options)`: Analyzes candidate news items against domain keyword dictionaries (e.g. DSP/modelling -> Tim; vintage/tubes -> Stevie; luthier/wood -> Hank; metal/modding -> McGee; gigging/practicality -> RobBPaul).
+  - Ranks personas by topic affinity and pairs the top scorer with their natural ideological opponent (`NATURAL_OPPONENTS`).
+  - Evaluates topic controversy and multi-concept complexity to conditionally recruit a 3rd wildcard speaker.
+  - Supports programmatic debater overrides via `speakerIds` in `DebateOptions`.
+- **Multi-Turn Sparring Pipeline ([`src/pipeline/debate.ts`](file:///c:/Users/rob_b/Ryff/src/pipeline/debate.ts)):**
+  - Assembles each debater's system prompt dynamically via `buildBotSystemPrompt(bot)` using their configured LLM sampling temperature (`bot.temperature`), speech anchors, biases, and disagreement pushback flags.
+  - Generates 4 sequential sparring rounds via `complete()` using `env.MODEL_SMART`.
+  - Persists generic transcript turns into `episodes.transcript`.
+- **Generic Transcript & Structured Topic Schema ([`src/types/episode.ts`](file:///c:/Users/rob_b/Ryff/src/types/episode.ts)):**
+  - Standardized `episodes.transcript` to store generic `DebateTurn` objects: `{ speaker_id, speaker_name, speaker, text, round, turn }`.
+  - Structured topics JSON schema formatted via `env.MODEL_FAST`: produces `takes: Array<{ speaker_id, speaker_name, text }>`, dynamic bot keys `[bot.id]: take`, and legacy `hank`/`vee` fallbacks.
+- **UI & CLI Integration ([`src/app/episodes/[id]/page.tsx`](file:///c:/Users/rob_b/Ryff/src/app/episodes/%5Bid%5D/page.tsx), [`scripts/print-episode.ts`](file:///c:/Users/rob_b/Ryff/scripts/print-episode.ts)):**
+  - Upgraded Episode Page to render dynamic character cards with `BOT_UI_THEMES`, avatar images, dynamic grid layouts (`grid-cols-2` vs `grid-cols-3`), and full transcript breakdown.
+  - Upgraded `print-episode.ts` (`pnpm episode`) to dynamically render arbitrary debater names, archetypes, and full 4-round transcripts.
+- **Chat & Home Ingestion ([`src/app/api/chat/route.ts`](file:///c:/Users/rob_b/Ryff/src/app/api/chat/route.ts), [`src/lib/retrieval.ts`](file:///c:/Users/rob_b/Ryff/src/lib/retrieval.ts), [`src/app/(app)/page.tsx`](file:///c:/Users/rob_b/Ryff/src/app/%28app%29/page.tsx)):**
+  - Updated context XML serialization and Home companion takeaway card to consume dynamic takes.
+- **Automated Vitest Test Suite ([`tests/debate.test.ts`](file:///c:/Users/rob_b/Ryff/tests/debate.test.ts)):**
+  - 8 comprehensive tests validating dynamic debater selection heuristics (keyword scoring, ideological pairing, clamp/dedup), 2-bot & 3-bot 4-round pipeline executions, transcript persistence schemas, and backwards compatibility.
+
+---
+
+### 3. White-Label & Domain-Agnostic Utility
+- **Autonomous Multi-Perspective Roundtable Architecture:** Completely decouples debate generation from guitar gear. In an automotive application, a daily news digest can autonomously pit an EV Software Architect against a Classic Muscle Luthier and a Budget Track-Day Tuner; in personal finance, an Indexer can spar with a Crypto Trader and a Dividend Growth Investor over daily market news. The 4-turn format delivers balanced, high-retention content without human editorial overhead.
+
+---
+
+## Feature: Master Bot Roster Artwork & Close-Up Face Avatar Pipeline (`5xbots.jpg`)
+- **Date:** October 12, 2026
+- **Category:** Visual Design / Persona Avatars / Image Processing & Asset Pipeline
+
+### 1. User & Marketing Overview
+- **Close-Up Face Avatars for All 5 Personas:** Extracted high-resolution, centered face portraits from the master artwork (`public/images/5xbots.jpg`) for all 5 bots (**RobBPaul**, **Stevie**, **Tim**, **Hank**, and **McGee**), replacing the plain text/initials badges with rich photographic character portraits across the bot selector, character dossier header, and chat message bubbles.
+- **Cinematic Master Roster Showcase Banner in Backstage:** Added an interactive, expandable "Ryff Roster" showcase card at the top of Backstage featuring the master 5-bot lineup photo. Users can preview the lineup in a sleek header or expand it to examine the high-resolution artwork of all 5 guitar characters side by side.
+- **Hero Persona Showcase on Welcome Page:** Featured `5xbots.jpg` on the Welcome landing page (`/welcome`) under the "Spar with 5 Opposing Personas" section, introducing new visitors to the opposing perspectives before entering Backstage.
+- **Home Dashboard Companion Avatar:** Upgraded the primary companion takeaway card on the Home screen to display RobBPaul's close-up portrait with the emerald companion ring, creating visual continuity across the entire app.
+
+---
+
+### 2. Technical Details (For Developers)
+- **High-Resolution Cropping & Generation Pipeline (`public/images/bots/`):**
+  - Generated pixel-calibrated square crops from `public/images/5xbots.jpg` (2528x1696 master source) preserving full headwear, facial expressions, and studio lighting:
+    - `robbpaul.jpg` (400x400): centered workshop portrait with pencils behind ears.
+    - `stevie.jpg` (420x420): vintage blues portrait with complete fedora hat and tube background.
+    - `tim.jpg` (400x400): modern DSP engineer portrait with glasses and headphones.
+    - `hank.jpg` (400x400): grumpy luthier portrait with full beard and workshop lighting.
+    - `mcgee.jpg` (410x410): scrappy shredder portrait with signature hairstyle and neon guitar backdrop.
+  - Also generated full card portraits: `card_hank.jpg`, `card_mcgee.jpg`, `card_robbpaul.jpg`, `card_stevie.jpg`, `card_tim.jpg`.
+- **Bot Dossier Schema Update ([`src/types/bot.ts`](file:///c:/Users/rob_b/Ryff/src/types/bot.ts), `data/bots/*.json`):**
+  - Extended `BotDossier` interface with `avatarImage?: string`.
+  - Added `"avatarImage": "/images/bots/<id>.jpg"` to `robbpaul.json`, `stevie.json`, `tim.json`, `hank.json`, and `mcgee.json`.
+- **Backstage Component UI Integration ([`src/app/(app)/backstage/page.tsx`](file:///c:/Users/rob_b/Ryff/src/app/%28app%29/backstage/page.tsx)):**
+  - Replaced initials circles in the tab row with 28x28 circular face photos with active accent rings and glowing drop-shadows.
+  - Replaced the profile header placeholder with a 52x52 face portrait.
+  - Replaced message bubble assistant avatars with 36x36 circular face portraits.
+  - Integrated `showRosterPreview` interactive toggle for `5xbots.jpg` with smooth CSS transition.
+- **Automated Vitest Verification ([`tests/bots.test.ts`](file:///c:/Users/rob_b/Ryff/tests/bots.test.ts)):**
+  - Added schema validation asserting `avatarImage` is defined for every bot in the roster.
+
+---
+
+### 3. White-Label & Domain-Agnostic Utility
+- **Asset Modularization for Custom Archetypes:** Character avatars are decoupled from code and defined directly in each persona's JSON manifest. In white-label re-skins (e.g. running shoe coaches, watch collectors, auto mechanics), swapping character avatars requires only placing cropped portraits in `public/images/<domain>/` and specifying the path in the JSON dossiers.
+
+---
+
+## Feature: Backstage Chat Multi-Bot Upgrade & Companion Bot Integration (Milestone M7.2)
+- **Date:** October 12, 2026
+- **Category:** Backstage Chat / Multi-Persona Sparring / Companion Integration & Quota Management
+
+### 1. User & Marketing Overview
+- **1-on-1 Multi-Persona Sparring:** Upgraded Backstage from the legacy 2-bot toggle (Hank and Vee) to full 1-on-1 private chat with any of the 5 simulated bots in the roster, defaulting to **RobBPaul** as the user's primary companion bot.
+- **Responsive Bot Switcher & Persona Dossier Header:** Integrated a horizontal bot carousel displaying each bot's custom avatar initials (`RP`, `ST`, `TM`, `HK`, `MG`), theme colors, archetype summary, and their signature **"Hill to Die On"** callout (e.g. RobBPaul's *"In-ear monitors ruin the vibe"*, Stevie's *"Heavy string gauges and glowing power valves"*, Tim's *"Nobody can tell Brazilian rosewood from richlite in a dense mix"*).
+- **Tailored Starter Debate Prompts:** When opening a fresh conversation with any bot, users are presented with tailored conversation starters calibrated to provoke the bot's biases (e.g. asking Tim about DSP quad-core profiling vs. valve heads, or asking McGee how to make a cheap pawnshop beater chug).
+- **Home Companion Takeaway Card:** Elevated the user's companion bot (RobBPaul) to provide the primary takeaway card on the Home dashboard, featuring direct deep-linking into Backstage (`/backstage?bot=robbpaul`).
+- **In-Character Quota & Bench Limits:** When daily query caps or monthly spend budgets are reached, users receive witty, in-character messages tailored to each persona (e.g. Rob packing his gig bag for band rehearsal, Stevie letting the tubes cool down, Tim reporting an audio buffer overflow, McGee blowing a fuse on the 5150).
+
+---
+
+### 2. Technical Details (For Developers)
+- **API Route Parameterization ([`src/app/api/chat/route.ts`](file:///c:/Users/rob_b/Ryff/src/app/api/chat/route.ts)):**
+  - Replaced hardcoded `bot === 'vee' ? 'vee' : 'hank'` checks with dynamic resolution via `getBot(requestedBotId || 'robbpaul')`.
+  - Wired up dynamic sampling temperatures passed directly to `complete()` (`bot.temperature`).
+  - Executed disagreement dice-rolls: evaluated `Math.random() < bot.disagreement_rate` to conditionally inject pushback directives into the assembled system prompt.
+  - Returned bot metadata (`bot.id`, `bot.name`, `disagreed`) and per-bot usage statistics.
+- **Database Schema Migration ([`db/migrations/0016_messages_bot_unconstrained.sql`](file:///c:/Users/rob_b/Ryff/db/migrations/0016_messages_bot_unconstrained.sql)):**
+  - Dropped the legacy `messages_bot_check` constraint on `messages.bot` so arbitrary bot IDs (`robbpaul`, `stevie`, `tim`, `hank`, `mcgee`, and future user-generated bot IDs) persist cleanly without check constraint violations.
+- **In-Character Quota Handling ([`src/lib/usage.ts`](file:///c:/Users/rob_b/Ryff/src/lib/usage.ts)):**
+  - Extended `checkUserUsage(userId, cohort, bot)` to accept any bot identifier and return persona-customized rejection messages for all 5 bots.
+- **Backstage Chat Client UI ([`src/app/(app)/backstage/page.tsx`](file:///c:/Users/rob_b/Ryff/src/app/%28app%29/backstage/page.tsx)):**
+  - Built responsive multi-bot switcher with `BOT_THEMES` color accents, gradients, and badges (`Companion`, `Purist`, `DSP Tech`, `Luthier`, `High-Gain`).
+  - Added client-side message caching (`historyCache`) to ensure zero-flicker instantaneous transitions when toggling between bots.
+  - Wrapped search parameter reading in `<Suspense>` to cleanly parse incoming `?bot=` queries.
+  - Added in-character thinking status indicators (`"Rob is sizing up your rig..."`, `"Tim is crunching the DSP curves..."`, etc.).
+- **Home Companion Takeaway Card ([`src/app/(app)/page.tsx`](file:///c:/Users/rob_b/Ryff/src/app/%28app%29/page.tsx)):**
+  - Updated `HomePage` to resolve `companionBot` (`RobBPaul`), displaying his takeaway with green/amber styling and deep-linking to Backstage.
+- **Automated Vitest Test Suite ([`tests/backstage-multi-bot.test.ts`](file:///c:/Users/rob_b/Ryff/tests/backstage-multi-bot.test.ts)):**
+  - Added unit and integration tests verifying default fallback to `robbpaul`, distinct temperatures and hills to die on across all 5 personas, disagreement directive injection, and in-character usage messages.
+
+---
+
+### 3. White-Label & Domain-Agnostic Utility
+- **Pluggable Companion & Advisory Network:** This multi-bot chat architecture is completely domain-agnostic. In an automotive maintenance app, users can switch between a Track Day Mechanic (focus on lap times & suspension), a Budget DIY Tuner (junkyard swaps), an EV Tech (battery curves), and a Classic Restoration Purist. In horology or cycling, identical UI and API mechanics allow users to consult competing perspectives on their equipment.
+
+---
+
 ## Feature: Bot Overhaul Architecture, 5-Bot Simulation Scaffold & Behavior Tuning Manual (Milestone M7.1)
 - **Date:** October 8, 2026
 - **Category:** Persona Architecture / Multi-Bot Simulation / Autonomous Debates & Founder Tuning

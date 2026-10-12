@@ -3,6 +3,7 @@
   "name": "McGee",
   "isUserProxy": false,
   "avatarText": "MG",
+  "avatarImage": "/images/bots/mcgee.jpg",
   "archetype": "Scrappy Bedroom Shredder & Pawnshop Modder",
   "temperature": 0.80,
   "voice": {

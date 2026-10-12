@@ -49,7 +49,7 @@ export interface UserUsageCheckResult {
 export async function checkUserUsage(
   userId: string,
   cohort: 'cadre' | 'public' = 'cadre',
-  bot: 'hank' | 'vee' = 'hank'
+  bot: string = 'robbpaul'
 ): Promise<UserUsageCheckResult> {
   const caps = getCapsForCohort(cohort);
   const globalCaps = getGlobalCaps();
@@ -86,9 +86,27 @@ export async function checkUserUsage(
 
   // Check Daily Cap
   if (msgsToday >= caps.dailyMsgs) {
-    const inCharacterMessage = bot === 'hank'
-      ? `Hank's put his soldering iron away and gone to the pub. You've hit your daily message limit (${caps.dailyMsgs}/${caps.dailyMsgs}). Back tomorrow morning.`
-      : `Vee is off checking fresh warehouse stock and deal listings! You've used all ${caps.dailyMsgs} chats for today. Catch you tomorrow!`;
+    let inCharacterMessage = `You've hit your daily message limit (${caps.dailyMsgs}/${caps.dailyMsgs}). Back tomorrow morning.`;
+    switch (bot) {
+      case 'robbpaul':
+        inCharacterMessage = `Rob's packed his gig bag and gone down to rehearsal. You've hit your daily message limit (${caps.dailyMsgs}/${caps.dailyMsgs}). Catch you tomorrow.`;
+        break;
+      case 'stevie':
+        inCharacterMessage = `Stevie's let the power tubes cool down for the night. You've hit your daily message limit (${caps.dailyMsgs}/${caps.dailyMsgs}). Let the ears rest until tomorrow.`;
+        break;
+      case 'tim':
+        inCharacterMessage = `Tim's audio buffer is maxed out for today. Daily message cap reached (${caps.dailyMsgs}/${caps.dailyMsgs}). Resetting at 00:00.`;
+        break;
+      case 'hank':
+        inCharacterMessage = `Hank's put his soldering iron away and gone to the pub. You've hit your daily message limit (${caps.dailyMsgs}/${caps.dailyMsgs}). Back tomorrow morning.`;
+        break;
+      case 'mcgee':
+        inCharacterMessage = `McGee blew another fuse on the 5150. Daily message limit reached (${caps.dailyMsgs}/${caps.dailyMsgs}). Go practice your scales and check back tomorrow!`;
+        break;
+      case 'vee':
+        inCharacterMessage = `Vee is off checking fresh warehouse stock and deal listings! You've used all ${caps.dailyMsgs} chats for today. Catch you tomorrow!`;
+        break;
+    }
 
     return {
       allowed: false,
@@ -103,9 +121,27 @@ export async function checkUserUsage(
 
   // Check Monthly Budget
   if (costMonthUsd >= caps.monthlyBudgetUsd) {
-    const inCharacterMessage = bot === 'hank'
-      ? `Monthly bench time is used up. Come back next month when the ledger resets.`
-      : `You've reached your monthly allowance! Rest up and see you next month for more gear talk.`;
+    let inCharacterMessage = `Monthly bench time is used up. Come back next month when the ledger resets.`;
+    switch (bot) {
+      case 'robbpaul':
+        inCharacterMessage = `Monthly budget limit reached on gear consultations. Come back next month when the books reset!`;
+        break;
+      case 'stevie':
+        inCharacterMessage = `The studio lock-in is over for this month. Ledger resets next month.`;
+        break;
+      case 'tim':
+        inCharacterMessage = `Monthly compute allocation exceeded. System resets on the 1st of the month.`;
+        break;
+      case 'hank':
+        inCharacterMessage = `Monthly bench time is used up. Come back next month when the ledger resets.`;
+        break;
+      case 'mcgee':
+        inCharacterMessage = `We ran through the whole string budget for this month! See you on the first of the month.`;
+        break;
+      default:
+        inCharacterMessage = `You've reached your monthly allowance! Rest up and see you next month for more gear talk.`;
+        break;
+    }
 
     return {
       allowed: false,

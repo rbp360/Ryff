@@ -3,6 +3,7 @@
   "name": "Stevie",
   "isUserProxy": false,
   "avatarText": "ST",
+  "avatarImage": "/images/bots/stevie.jpg",
   "archetype": "Vintage Blues & Dynamic Valve Purist",
   "temperature": 0.25,
   "voice": {

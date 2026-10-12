@@ -17,16 +17,16 @@
 
 ## Build Order
 
-- [ ] **M7.1: Bot Registry, Schema & 5 Skeletal Dossiers**
+- [x] **M7.1: Bot Registry, Schema & 5 Skeletal Dossiers**
   - [x] Schema definition in `src/types/bot.ts`.
   - [x] 5 JSON starter dossiers in `data/bots/` (`robbpaul.json`, `stevie.json`, `tim.json`, `hank.json`, `mcgee.json`).
-  - [ ] Loader & prompt assembler in `src/lib/bots.ts`.
-  - [ ] Unit tests in `tests/bots.test.ts`.
+  - [x] Loader & prompt assembler in `src/lib/bots.ts`.
+  - [x] Unit tests in `tests/bots.test.ts`.
 
-- [ ] **M7.2: Backstage Chat Multi-Bot Upgrade**
-  - [ ] Update `/api/chat` to accept dynamic `botId` (defaulting to `robbpaul`).
-  - [ ] Build 5-bot selector bar in `/backstage`.
-  - [ ] Wire up disagreement rate & dynamic temperature.
+- [x] **M7.2: Backstage Chat Multi-Bot Upgrade**
+  - [x] Update `/api/chat` to accept dynamic `botId` (defaulting to `robbpaul`).
+  - [x] Build 5-bot selector bar in `/backstage`.
+  - [x] Wire up disagreement rate & dynamic temperature.
 
 - [ ] **M7.3: Multi-Bot Autonomous Debate Pipeline**
   - [ ] Refactor `src/pipeline/debate.ts` to pick 2–3 bots dynamically from the registry.

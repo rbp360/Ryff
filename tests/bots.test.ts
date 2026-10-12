@@ -27,6 +27,7 @@ describe('Bot Registry and Dossiers', () => {
       expect(b.biases.hostile_concepts.length).toBeGreaterThan(0);
       expect(b.sample_lines.length).toBeGreaterThanOrEqual(3);
       expect(b.disagreement_rate).toBeGreaterThan(0);
+      expect(b.avatarImage).toBeTruthy();
     }
   });
 

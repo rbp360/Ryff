@@ -10,6 +10,7 @@ import { retrieveChatContext } from '../../../lib/retrieval';
 import { complete, LLMMessage } from '../../../lib/llm';
 import { logEvent } from '../../../lib/events';
 import { env } from '../../../lib/env';
+import { getBot, buildBotSystemPrompt } from '../../../lib/bots';
 
 function loadPromptFile(filename: string): string {
   try {
@@ -32,19 +33,28 @@ export async function GET(request: NextRequest) {
   await ensureUserExists(session);
 
   const { searchParams } = new URL(request.url);
-  const bot = searchParams.get('bot') || 'hank';
+  const botParam = searchParams.get('bot') || 'robbpaul';
+  const bot = getBot(botParam);
 
   const messages = await db`
     select id, conversation_id, bot, role, content, flagged, created_at
     from messages
-    where user_id = ${session.userId} and bot = ${bot}
+    where user_id = ${session.userId} and bot = ${bot.id}
     order by created_at asc
     limit 50
   `;
 
-  const usageCheck = await checkUserUsage(session.userId, session.cohort, bot as 'hank' | 'vee');
+  const usageCheck = await checkUserUsage(session.userId, session.cohort, bot.id);
 
   return NextResponse.json({
+    bot: {
+      id: bot.id,
+      name: bot.name,
+      archetype: bot.archetype,
+      irrational_hill_to_die_on: bot.irrational_hill_to_die_on,
+      avatarText: bot.avatarText,
+      temperature: bot.temperature,
+    },
     messages,
     usage: {
       msgsToday: usageCheck.msgsToday,
@@ -65,11 +75,12 @@ export async function POST(request: NextRequest) {
     await ensureUserExists(session);
 
     const body = await request.json();
-    const { bot = 'hank', message, conversationId } = body;
-    const cleanBot: 'hank' | 'vee' = bot === 'vee' ? 'vee' : 'hank';
+    const { bot: botParam, botId, message, conversationId } = body;
+    const requestedId = botId || botParam || 'robbpaul';
+    const targetBot = getBot(requestedId);
 
     // 1. Check Usage Caps
-    const usageCheck = await checkUserUsage(session.userId, session.cohort, cleanBot);
+    const usageCheck = await checkUserUsage(session.userId, session.cohort, targetBot.id);
     if (!usageCheck.allowed) {
       return NextResponse.json({
         text: usageCheck.inCharacterMessage || "Message limit reached for today.",
@@ -92,7 +103,8 @@ export async function POST(request: NextRequest) {
     const context = await retrieveChatContext(session.userId, cleanUserText);
 
     // 4. Build System & Context Blocks
-    const personaPrompt = loadPromptFile(`persona.${cleanBot}.md`);
+    const shouldDisagree = Math.random() < targetBot.disagreement_rate;
+    const personaPrompt = buildBotSystemPrompt(targetBot, { disagreement: shouldDisagree });
     const chatRules = loadPromptFile('chat.system.md');
 
     let systemInstruction = `${personaPrompt}\n\n${chatRules}`;
@@ -100,7 +112,16 @@ export async function POST(request: NextRequest) {
     if (context.episode) {
       systemInstruction += `\n\n<today_episode headline="${context.episode.headline}">\n`;
       for (const t of context.episode.topics) {
-        systemInstruction += `Topic: ${t.title}\nHank Take: ${t.hank}\nVee Take: ${t.vee}\nDisagreement: ${t.disagreement}\n\n`;
+        systemInstruction += `Topic: ${t.title}\nDisagreement: ${t.disagreement}\n`;
+        if (t.takes && Array.isArray(t.takes)) {
+          for (const take of t.takes) {
+            systemInstruction += `${take.speaker_name} Take: ${take.text}\n`;
+          }
+        } else {
+          if (t.hank) systemInstruction += `Hank Take: ${t.hank}\n`;
+          if (t.vee) systemInstruction += `Vee Take: ${t.vee}\n`;
+        }
+        systemInstruction += '\n';
       }
       systemInstruction += `</today_episode>`;
     }
@@ -113,8 +134,14 @@ export async function POST(request: NextRequest) {
       contextXml += `  <today_episode id="${context.episode.id}" headline="${sanitiseUntrusted(context.episode.headline, 120)}">\n`;
       for (const t of context.episode.topics) {
         contextXml += `    <topic title="${sanitiseUntrusted(t.title, 100)}">\n`;
-        contextXml += `      <hank_take>${sanitiseUntrusted(t.hank, 250)}</hank_take>\n`;
-        contextXml += `      <vee_take>${sanitiseUntrusted(t.vee, 250)}</vee_take>\n`;
+        if (t.takes && Array.isArray(t.takes)) {
+          for (const take of t.takes) {
+            contextXml += `      <take speaker="${sanitiseUntrusted(take.speaker_name, 50)}">${sanitiseUntrusted(take.text, 250)}</take>\n`;
+          }
+        } else {
+          if (t.hank) contextXml += `      <hank_take>${sanitiseUntrusted(t.hank, 250)}</hank_take>\n`;
+          if (t.vee) contextXml += `      <vee_take>${sanitiseUntrusted(t.vee, 250)}</vee_take>\n`;
+        }
         contextXml += `      <disagreement>${sanitiseUntrusted(t.disagreement, 150)}</disagreement>\n`;
         contextXml += `    </topic>\n`;
       }
@@ -179,7 +206,7 @@ export async function POST(request: NextRequest) {
     const historyRows = await db`
       select role, content
       from messages
-      where user_id = ${session.userId} and bot = ${cleanBot} and conversation_id = ${convId}
+      where user_id = ${session.userId} and bot = ${targetBot.id} and conversation_id = ${convId}
       order by created_at asc
       limit 6
     `;
@@ -205,8 +232,8 @@ export async function POST(request: NextRequest) {
       system: systemInstruction,
       messages: llmMessages,
       maxTokens: 350,
-      temperature: 0.8,
-      purpose: `chat_${cleanBot}`,
+      temperature: targetBot.temperature,
+      purpose: `chat_${targetBot.id}`,
       userId: session.userId,
     });
 
@@ -214,14 +241,14 @@ export async function POST(request: NextRequest) {
     const renderedReply = renderTokens(result.text, {
       items: context.items,
       deals: context.deals,
-      bot: cleanBot,
+      bot: targetBot.id,
       episodeId: context.episode?.id,
     });
 
     // 8. Persist user & assistant messages
     await db`
       insert into messages (user_id, conversation_id, bot, role, content)
-      values (${session.userId}, ${convId}, ${cleanBot}, 'user', ${cleanUserText})
+      values (${session.userId}, ${convId}, ${targetBot.id}, 'user', ${cleanUserText})
     `;
 
     const [savedAssistant] = await db`
@@ -231,7 +258,7 @@ export async function POST(request: NextRequest) {
       values (
         ${session.userId},
         ${convId},
-        ${cleanBot},
+        ${targetBot.id},
         'assistant',
         ${renderedReply},
         ${result.usage.input_tokens},
@@ -243,11 +270,16 @@ export async function POST(request: NextRequest) {
 
     // 9. Update daily usage & log event
     await recordMessageUsage(session.userId, result.costUsd);
-    await logEvent('chat_sent', { bot: cleanBot, costUsd: result.costUsd }, session.userId);
+    await logEvent('chat_sent', { bot: targetBot.id, costUsd: result.costUsd }, session.userId);
 
     return NextResponse.json({
       text: renderedReply,
       rawText: result.text,
+      bot: {
+        id: targetBot.id,
+        name: targetBot.name,
+      },
+      disagreed: shouldDisagree,
       messageId: savedAssistant?.id,
       conversationId: convId,
       costUsd: result.costUsd,
