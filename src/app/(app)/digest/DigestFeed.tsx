@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 import { FeedItemCard, UserPreferences } from '@/lib/personalization';
 import { BackButton } from '@/components/BackButton';
@@ -42,15 +42,17 @@ function stripEmojis(text?: string | null): string {
     .trim();
 }
 
-function FeedImage({ src, alt, category }: { src?: string | null; alt: string; category?: string }) {
-  const fallback = getCategoryFallbackImage(category);
+function FeedImageContent({
+  src,
+  alt,
+  fallback,
+}: {
+  src?: string | null;
+  alt: string;
+  fallback: string;
+}) {
   const [currentSrc, setCurrentSrc] = useState<string>(src || fallback);
   const [failed, setFailed] = useState(false);
-
-  useEffect(() => {
-    setCurrentSrc(src || fallback);
-    setFailed(false);
-  }, [src, fallback]);
 
   if (failed) {
     return (
@@ -85,6 +87,11 @@ function FeedImage({ src, alt, category }: { src?: string | null; alt: string; c
       />
     </div>
   );
+}
+
+function FeedImage({ src, alt, category }: { src?: string | null; alt: string; category?: string }) {
+  const fallback = getCategoryFallbackImage(category);
+  return <FeedImageContent key={`${src || ''}:${fallback}`} src={src} alt={alt} fallback={fallback} />;
 }
 
 export function DigestFeed({
