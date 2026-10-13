@@ -173,6 +173,17 @@ const USER_AGENTS = [
 ];
 
 export async function fetchFeed(feedUrl: string, keywordPrefilter: string[] | null = null): Promise<{ items: ParsedFeedItem[]; status: string }> {
+  if (feedUrl.includes('localhost:1200')) {
+    try {
+      const ping = await fetch(feedUrl, { signal: AbortSignal.timeout(600) });
+      if (!ping.ok) {
+        return { items: [], status: 'offline: Local RSSHub bridge returned ' + ping.status };
+      }
+    } catch {
+      return { items: [], status: 'offline: Local RSSHub bridge not running on port 1200' };
+    }
+  }
+
   let lastErrorStatus = '';
 
   for (let attempt = 1; attempt <= 2; attempt++) {
@@ -181,16 +192,16 @@ export async function fetchFeed(feedUrl: string, keywordPrefilter: string[] | nu
       const res = await fetch(feedUrl, {
         headers: {
           'User-Agent': ua,
-          'Accept': 'application/rss+xml, application/xml, text/xml, application/atom+xml, */*;q=0.8',
+          'Accept': 'application/rss+xml, application/xml, text/xml, application/atom+xml, text/html;q=0.9, */*;q=0.8',
           'Accept-Language': 'en-US,en;q=0.9',
         },
-        signal: AbortSignal.timeout(5000),
+        signal: AbortSignal.timeout(10000),
       });
 
       if (!res.ok) {
         lastErrorStatus = `error: HTTP ${res.status} (${res.statusText || 'Fetch failed'})`;
         if (attempt < 2 && (res.status === 404 || res.status === 500 || res.status === 429 || res.status === 409)) {
-          await new Promise(r => setTimeout(r, 500));
+          await new Promise(r => setTimeout(r, 1000));
           continue;
         }
         return { items: [], status: lastErrorStatus };

@@ -104,7 +104,7 @@ export async function digestPendingItems(batchSize: number = 10, maxTotal: numbe
 
     try {
       const llmResult = await complete({
-        model: env.MODEL_FAST || 'gemini-2.5-flash',
+        model: env.MODEL_FAST || 'gemini-3.5-flash-lite',
         system: digestSystemPrompt,
         messages: [{ role: 'user', content: userContent }],
         purpose: `batch-digest-${i / batchSize + 1}`,

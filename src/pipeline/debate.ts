@@ -269,7 +269,7 @@ export async function runDebatePipeline(options: DebateOptions = {}) {
   console.log(`\n[Debate] Round 1: ${speakerA.name} Opening...`);
   const speakerASystem = buildBotSystemPrompt(speakerA);
   const turn1 = await complete({
-    model: env.MODEL_SMART || 'gemini-2.5-pro',
+    model: env.MODEL_SMART || 'gemini-3.8-flash',
     system: speakerASystem,
     messages: [
       {
@@ -297,7 +297,7 @@ export async function runDebatePipeline(options: DebateOptions = {}) {
   console.log(`[Debate] Round 2: ${speakerB.name} Responding...`);
   const speakerBSystem = buildBotSystemPrompt(speakerB, { disagreement: true });
   const turn2 = await complete({
-    model: env.MODEL_SMART || 'gemini-2.5-pro',
+    model: env.MODEL_SMART || 'gemini-3.8-flash',
     system: speakerBSystem,
     messages: [
       {
@@ -330,7 +330,7 @@ export async function runDebatePipeline(options: DebateOptions = {}) {
     : `${contextBlock}\n\nRebuttal: Rebut ${speakerB.name}'s counter-arguments briefly in your character voice (${speakerA.archetype}). Defend your stance while keeping the sparring sharp. Max 140 words.\n\nYour opening was:\n"${turn1.text}"\n\n${speakerB.name} replied:\n"${turn2.text}"`;
 
   const turn3 = await complete({
-    model: env.MODEL_SMART || 'gemini-2.5-pro',
+    model: env.MODEL_SMART || 'gemini-3.8-flash',
     system: round3System,
     messages: [{ role: 'user', content: round3Prompt }],
     purpose: `debate-round3-${round3Speaker.id}-${isTriad ? 'wildcard' : 'rebuttal'}`,
@@ -354,7 +354,7 @@ export async function runDebatePipeline(options: DebateOptions = {}) {
   console.log(`[Debate] Round 4: ${verdictSpeaker.name} Closing Verdict & Consensus...`);
   const verdictSystem = buildBotSystemPrompt(verdictSpeaker);
   const turn4 = await complete({
-    model: env.MODEL_SMART || 'gemini-2.5-pro',
+    model: env.MODEL_SMART || 'gemini-3.8-flash',
     system: verdictSystem,
     messages: [
       {
@@ -407,7 +407,7 @@ Format guidelines:
 5. "takes": Array containing each debater's distilled in-character take for this topic.`;
 
   const formatRes = await complete({
-    model: env.MODEL_FAST || 'gemini-2.5-flash',
+    model: env.MODEL_FAST || 'gemini-3.5-flash-lite',
     system: formatPrompt,
     messages: [
       { role: 'user', content: `Here is the debate transcript to structure into JSON:\n\n${fullTranscriptText}` },

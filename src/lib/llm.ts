@@ -75,18 +75,25 @@ export async function complete(params: CompleteParams): Promise<CompleteResult> 
       } catch (callErr: unknown) {
         const msg = callErr instanceof Error ? callErr.message : String(callErr);
         const isTransient = msg.includes('503') || msg.includes('UNAVAILABLE') || msg.includes('429') || msg.includes('fetch failed') || msg.includes('ECONNRESET') || msg.includes('ETIMEDOUT');
+        const isModelUnavailable = msg.includes('404') || msg.includes('not found') || msg.includes('no longer available') || msg.includes('RESOURCE_EXHAUSTED');
+
         if (isTransient && attempts < maxAttempts) {
           const delayMs = attempts * 2000;
           console.warn(`[LLM Retry - ${params.purpose}] API Spike or Network Glitch encountered (${msg.slice(0, 60)}...). Retrying in ${delayMs / 1000}s (Attempt ${attempts}/${maxAttempts})...`);
           await new Promise((resolve) => setTimeout(resolve, delayMs));
-        } else if (isTransient && model !== 'gemini-3.5-flash-lite') {
-          console.warn(`[LLM Fallback Model - ${params.purpose}] ${model} transient issue. Falling back to gemini-3.5-flash-lite...`);
-          response = await ai.models.generateContent({
-            model: 'gemini-3.5-flash-lite',
-            contents,
-            config,
-          });
-          break;
+        } else if ((isTransient || isModelUnavailable) && model !== 'gemini-3.5-flash-lite') {
+          console.warn(`[LLM Fallback Model - ${params.purpose}] ${model} issue (${msg.slice(0, 80)}...). Falling back to gemini-3.5-flash-lite...`);
+          try {
+            response = await ai.models.generateContent({
+              model: 'gemini-3.5-flash-lite',
+              contents,
+              config,
+            });
+            break;
+          } catch (fallbackErr) {
+            console.error(`[LLM Fallback Error - ${params.purpose}]:`, fallbackErr);
+            throw callErr;
+          }
         } else {
           throw callErr;
         }

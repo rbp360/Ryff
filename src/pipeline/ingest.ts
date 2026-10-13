@@ -61,8 +61,9 @@ export async function ingestAllFeeds(): Promise<IngestStats> {
       }
     }
 
-    // Polite delay between sources to respect rate limits
-    await new Promise((resolve) => setTimeout(resolve, 150));
+    // Polite delay between sources to respect rate limits (higher for YouTube)
+    const delayMs = src.url.includes('youtube.com') ? 1200 : 300;
+    await new Promise((resolve) => setTimeout(resolve, delayMs));
   }
 
   console.log(`[Ingest Complete] Sources: ${activeSources.length} | New Items Stored: ${itemsIngested} | Errors: ${errors}`);

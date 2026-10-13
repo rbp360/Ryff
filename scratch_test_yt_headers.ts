@@ -19,7 +19,7 @@ async function testYtHeaders() {
 
   for (const v of headerVariations) {
     try {
-      const res = await fetch(url, { headers: v.headers });
+      const res = await fetch(url, { headers: v.headers as Record<string, string> });
       console.log(`[${v.name}] HTTP ${res.status}`);
       if (res.ok) {
         const text = await res.text();

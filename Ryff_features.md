@@ -1158,3 +1158,43 @@ Ryff's Digest feed and Gear Radar now display crisp, high-resolution feature pho
   - 👟 **Sneaker & Apparel Drops:** Scrape official product release hero photos from brand blogs and forums.
   - 🏠 **Real Estate / PropTech:** Retrieve high-res listing photos and architectural hero images from property blogs and auction feeds.
 
+---
+
+## Feature: Feed Ingestion Reliability, Resilient Model Migration & Pipeline Diagnostics
+- **Date:** October 13, 2026
+- **Category:** Ingestion Pipeline / LLM Resilience / Model Migration / Feed Diagnostics
+
+### 1. User & Marketing Overview
+Automated news generation, feed health, and multi-bot debate synthesis have been restored to 100% operational status:
+- **Daily Intelligence Regeneration Unblocked:** Resolved a critical pipeline halt caused by provider deprecation of legacy Gemini models (`gemini-2.5-flash` and `gemini-2.5-pro`). Upgraded the pipeline to ultra-fast, cost-effective models (`gemini-3.5-flash-lite` for batch summarization and `gemini-3.8-flash` for multi-persona debates).
+- **Automated Failover & Spike Recovery:** Added graceful fallback and automatic exponential backoff to LLM generation calls. If a model endpoint is temporarily unavailable, rate-limited, or deprecated, the pipeline automatically falls back to lightweight fallback models rather than aborting.
+- **Feed Ingestion Resilience:** Upgraded feed fetch timeouts to 10 seconds, added realistic browser client hints to prevent 403 Forbidden blocks on XenForo/Cloudflare forums, introduced polite request spacing (1.2s) for YouTube endpoints to prevent 404/500 anti-scraping blocks, and added graceful offline detection for local bridges.
+- **Fresh Multi-Persona Episode Published:** Published Episode #13 (*Germanium Mojo vs. Budget Dirt: The Great Pedalboard Showdown* featuring Stevie, RobBPaul, and McGee) at a total run cost of under $0.002.
+
+---
+
+### 2. Technical Details (For Developers)
+- **Model Environment & Configuration ([`src/lib/env.ts`](file:///c:/Users/rob_b/Ryff/src/lib/env.ts), [`.env.local`](file:///c:/Users/rob_b/Ryff/.env.local), [`config/pricing.json`](file:///c:/Users/rob_b/Ryff/config/pricing.json)):**
+  - Updated defaults: `MODEL_FAST` to `gemini-3.5-flash-lite` ($0.075 / $0.30 per MTok) and `MODEL_SMART` to `gemini-3.8-flash` ($0.15 / $0.60 per MTok).
+  - Updated `.github/workflows/pipeline.yml` to default to `gemini-3.5-flash-lite` and `gemini-3.8-flash`.
+  - Added pricing matrix entries in `config/pricing.json` for accurate per-token accounting.
+- **Fault-Tolerant LLM Execution ([`src/lib/llm.ts`](file:///c:/Users/rob_b/Ryff/src/lib/llm.ts)):**
+  - Enhanced `complete()` with detection for 404 (model deprecated / removed) and `RESOURCE_EXHAUSTED` (tier quota reached) errors, instantly routing to `gemini-3.5-flash-lite` fallback.
+- **Pipeline Stages ([`src/pipeline/digest.ts`](file:///c:/Users/rob_b/Ryff/src/pipeline/digest.ts) & [`src/pipeline/debate.ts`](file:///c:/Users/rob_b/Ryff/src/pipeline/debate.ts)):**
+  - Standardized model references to use `env.MODEL_FAST` and `env.MODEL_SMART` with active model fallbacks.
+  - Verified batch digest execution and multi-bot transcript formatting.
+- **Feed Fetcher Enhancements ([`src/lib/feeds.ts`](file:///c:/Users/rob_b/Ryff/src/lib/feeds.ts) & [`src/pipeline/ingest.ts`](file:///c:/Users/rob_b/Ryff/src/pipeline/ingest.ts)):**
+  - Increased network timeout to 10s (`AbortSignal.timeout(10000)`).
+  - Added detection for local RSSHub ports (`localhost:1200`) to log clean offline status rather than raw connection failures.
+  - Added dynamic 1200ms inter-source delays for YouTube feeds to prevent burst rate limits.
+
+---
+
+### 3. White-Label & Domain-Agnostic Utility
+- **Cross-Domain Application:** Resilient Content Ingestion, Entity Clustering & Multi-Agent Editorial Pipeline.
+- **Use Cases for Other Verticals:**
+  - 🏎️ **Motorsport & Automotive Tech:** Daily intelligence aggregation from racing news, automotive blogs, and YouTube dyno reviews, with opposing bots debating electric vs. combustion performance.
+  - 🏃 **Athletics & Endurance Sports:** Crawling shoe review blogs and runner vlogs with automated shoe tech entity extraction and marathon shoe debate episodes.
+  - 💻 **DevOps & Cloud Engineering:** Automated ingestion of cloud provider release feeds, RFCs, and tech blogs with simulated architect sparring on serverless vs. Kubernetes.
+
+
