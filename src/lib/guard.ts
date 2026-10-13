@@ -21,6 +21,7 @@ export interface RenderContext {
   deals?: DealContext[];
   bot?: string;
   episodeId?: number | string;
+  compactLinks?: boolean;
 }
 
 /**
@@ -82,7 +83,8 @@ export function renderTokens(text: string, context: RenderContext): string {
     const item = itemMap.get(String(id));
     if (item) {
       const outUrl = `/api/out?u=${encodeURIComponent(item.url)}&type=item&id=${encodeURIComponent(id)}`;
-      return `[${item.title || `Source #${id}`}](${outUrl})`;
+      const label = context.compactLinks ? 'link' : (item.title || `Source #${id}`);
+      return `[${label}](${outUrl})`;
     }
     return ''; // Remove if ID is not in context
   });
@@ -110,7 +112,10 @@ export function renderTokens(text: string, context: RenderContext): string {
         priceText = ` (${deal.daysOnMarket}d on Reverb)`;
       }
 
-      return `[${deal.title || 'Reverb Deal'}${priceText}](${outUrl})`;
+      const label = context.compactLinks
+        ? (priceText ? `deal${priceText}` : 'deal')
+        : `${deal.title || 'Reverb Deal'}${priceText}`;
+      return `[${label}](${outUrl})`;
     }
     return ''; // Remove if deal ID not in context
   });

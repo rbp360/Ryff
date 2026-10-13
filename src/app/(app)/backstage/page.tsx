@@ -100,6 +100,86 @@ function getLoadingText(botId: string): string {
   }
 }
 
+function renderParagraphContent(paraText: string, isUser: boolean, activeAccent: string) {
+  const parts: React.ReactNode[] = [];
+  let lastIndex = 0;
+  let match: RegExpExecArray | null;
+  // Matches markdown links where label can contain inner brackets like [News] or [Review]
+  const linkRegex = /\[((?:[^[\]]|\[[^[\]]*\])*)\]\(((\/api\/out|https?:\/\/)[^)]+)\)/g;
+
+  while ((match = linkRegex.exec(paraText)) !== null) {
+    const [fullMatch, rawLabel, rawUrl] = match;
+    const matchStart = match.index;
+
+    if (matchStart > lastIndex) {
+      parts.push(paraText.slice(lastIndex, matchStart));
+    }
+
+    // Determine clean label:
+    // If the label is long (like a full article title from historical messages) or already says "link",
+    // clean it up to "link ↗". If it's a deal with price, format neatly like "deal (£450) ↗" or "link ↗".
+    let label = rawLabel.trim();
+    const tooltipTitle = label;
+
+    if (label.toLowerCase() !== 'link' && !/^deal\s*\(/i.test(label) && label.length > 15) {
+      label = 'link';
+    }
+
+    parts.push(
+      <a
+        key={`${matchStart}-${rawUrl}`}
+        href={rawUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        title={tooltipTitle}
+        className="chat-link"
+        style={
+          isUser
+            ? undefined
+            : {
+                color: activeAccent,
+                borderColor: `${activeAccent}44`,
+                backgroundColor: `${activeAccent}18`,
+              }
+        }
+        onClick={(e) => e.stopPropagation()}
+      >
+        {label} ↗
+      </a>
+    );
+
+    lastIndex = matchStart + fullMatch.length;
+  }
+
+  if (lastIndex < paraText.length) {
+    parts.push(paraText.slice(lastIndex));
+  }
+
+  return parts.length > 0 ? parts : paraText;
+}
+
+function renderMessageContent(content: string, isUser: boolean, activeAccent: string) {
+  if (!content) return null;
+  const trimmed = content.trim();
+
+  // Split on double newlines for distinct paragraphs
+  const paragraphs = trimmed.split(/\n{2,}/);
+
+  return (
+    <div className="txt">
+      {paragraphs.map((para, pIdx) => {
+        const cleanPara = para.trim();
+        if (!cleanPara) return null;
+        return (
+          <p key={pIdx} className="msg-para">
+            {renderParagraphContent(cleanPara, isUser, activeAccent)}
+          </p>
+        );
+      })}
+    </div>
+  );
+}
+
 function BackstageChatInner() {
   const searchParams = useSearchParams();
   const requestedBotParam = searchParams.get('bot');
@@ -581,7 +661,7 @@ function BackstageChatInner() {
                 <div className="who">
                   {isUser ? 'You' : activeBot.name}
                 </div>
-                <div className="txt">{m.content}</div>
+                {renderMessageContent(m.content, isUser, activeTheme.accent)}
               </div>
             </div>
           );

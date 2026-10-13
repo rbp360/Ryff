@@ -37,6 +37,20 @@ describe('Guard & Content Integrity', () => {
     expect(rendered).toContain('[Used Strat (£450)](/api/out?u=https%3A%2F%2Freverb.com%2Fitem%2F12345&type=deal&id=202&b=vee)');
   });
 
+  it('renders compact [[item:ID]] and [[deal:ID]] tokens when compactLinks is true', () => {
+    const text = 'Check out [[item:101]] and this deal: [[deal:202]] on Reverb.';
+    const context = {
+      items: [{ id: 101, url: 'https://guitarworld.com/new-fender', title: 'New Fender Launch' }],
+      deals: [{ id: 202, listingUrl: 'https://reverb.com/item/12345', title: 'Used Strat', priceAmount: 450, priceCurrency: '£' }],
+      bot: 'vee',
+      compactLinks: true,
+    };
+
+    const rendered = renderTokens(text, context);
+    expect(rendered).toContain('[link](/api/out?u=https%3A%2F%2Fguitarworld.com%2Fnew-fender&type=item&id=101)');
+    expect(rendered).toContain('[deal (£450)](/api/out?u=https%3A%2F%2Freverb.com%2Fitem%2F12345&type=deal&id=202&b=vee)');
+  });
+
   it('strips unauthorized [[...]] tokens and raw arbitrary URLs from model output', () => {
     const text = 'Check [[item:999]] and [[fake_token]] and visit https://evil-scam.com now!';
     const rendered = renderTokens(text, { items: [], deals: [] });

@@ -70,6 +70,7 @@ export function buildBotSystemPrompt(
   }
 
   parts.push(`\nUniversal Rules:`);
+  parts.push(`- Length and layout: Maximum 150 words total. Always split your answer into 2 to 3 short paragraphs separated by blank lines (\\n\\n). Never output a single continuous block of text.`);
   parts.push(`- Only state factual claims about news or prices if they appear in <context>. Everything else is opinion and banter.`);
   parts.push(`- Criticise products and ideas, never individual people.`);
   parts.push(`- No medical, legal, or financial advice. Never impersonate living celebrities.`);

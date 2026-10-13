@@ -290,6 +290,9 @@ export async function runDebatePipeline(options: DebateOptions = {}) {
     turn: 1,
   });
 
+  // Inter-turn rate-limit buffer
+  await new Promise((r) => setTimeout(r, 1000));
+
   // Round 2: Counter / reaction from Speaker B
   console.log(`[Debate] Round 2: ${speakerB.name} Responding...`);
   const speakerBSystem = buildBotSystemPrompt(speakerB, { disagreement: true });
@@ -315,6 +318,9 @@ export async function runDebatePipeline(options: DebateOptions = {}) {
     turn: 2,
   });
 
+  // Inter-turn rate-limit buffer
+  await new Promise((r) => setTimeout(r, 1000));
+
   // Round 3: Wildcard interjection from Speaker C (if 3-way) OR rebuttal from Speaker A (if 2-way)
   const round3Speaker = isTriad ? speakerC! : speakerA;
   console.log(`[Debate] Round 3: ${round3Speaker.name} ${isTriad ? 'Wildcard Interjection' : 'Rebuttal'}...`);
@@ -339,6 +345,9 @@ export async function runDebatePipeline(options: DebateOptions = {}) {
     round: 3,
     turn: 3,
   });
+
+  // Inter-turn rate-limit buffer
+  await new Promise((r) => setTimeout(r, 1000));
 
   // Round 4: Room consensus & verdict summary
   const verdictSpeaker = speakerB;

@@ -8,6 +8,8 @@ describe('Affiliate & Outbound Redirection', () => {
     expect(isAllowedDest('https://guitarworld.com/news/123')).toBe(true);
     expect(isAllowedDest('https://musicradar.com/reviews/abc')).toBe(true);
     expect(isAllowedDest('http://stompboxsteals.blogspot.com/2026/09/post.html')).toBe(true);
+    expect(isAllowedDest('https://www.ultimate-guitar.com/news/gear/zakk-wylde.html')).toBe(true);
+    expect(isAllowedDest('https://delicious-audio.com/best-pedals')).toBe(true);
   });
 
   it('rejects disallowed, non-web, or phishing domains', () => {

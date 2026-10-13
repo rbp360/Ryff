@@ -231,18 +231,19 @@ export async function POST(request: NextRequest) {
       model: env.MODEL_FAST,
       system: systemInstruction,
       messages: llmMessages,
-      maxTokens: 350,
+      maxTokens: 300,
       temperature: targetBot.temperature,
       purpose: `chat_${targetBot.id}`,
       userId: session.userId,
     });
 
-    // 7. Render safe token links
+    // 7. Render safe token links (using compact "link" / "deal" text)
     const renderedReply = renderTokens(result.text, {
       items: context.items,
       deals: context.deals,
       bot: targetBot.id,
       episodeId: context.episode?.id,
+      compactLinks: true,
     });
 
     // 8. Persist user & assistant messages

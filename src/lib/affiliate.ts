@@ -60,35 +60,48 @@ export function isAllowedDest(urlString: string, extraAllowedHosts: string[] = [
       return true;
     }
 
-    // Default trusted news feeds & platforms
+    // Default trusted news feeds & platforms from config/sources.json
     const trustedHosts = [
       'guitarworld.com',
-      'www.guitarworld.com',
       'musicradar.com',
-      'www.musicradar.com',
       'guitar.com',
-      'www.guitar.com',
       'pedalhaven.com',
-      'www.pedalhaven.com',
+      'delicious-audio.com',
+      'adamharkus.com',
+      'performermag.com',
+      'thekingofgear.com',
+      'looperpedalreviews.com',
+      'thehighwaystar.com',
+      'jemsite.com',
+      'tdpri.com',
+      'thegearpage.net',
+      'thegearforum.com',
+      'rig-talk.com',
       'gazette.gibson.com',
       'premierguitar.com',
-      'www.premierguitar.com',
       'youtube.com',
-      'www.youtube.com',
       'youtu.be',
       'gearnews.com',
-      'www.gearnews.com',
       'guitarplayer.com',
-      'www.guitarplayer.com',
+      'ultimate-guitar.com',
+      'instagram.com',
       ...extraAllowedHosts.map(h => h.toLowerCase()),
     ];
 
-    if (trustedHosts.includes(hostname)) {
+    const hostMatches = trustedHosts.some(trusted => {
+      const t = trusted.toLowerCase();
+      return hostname === t || hostname.endsWith(`.${t}`);
+    });
+
+    if (hostMatches) {
       return true;
     }
 
-    // Allow subdomains of trusted feed platforms (e.g. blogspot, youtube)
-    if (hostname.endsWith('.blogspot.com') || hostname.endsWith('.wordpress.com')) {
+    // Allow subdomains of trusted feed platforms (e.g. blogspot, youtube, wordpress)
+    if (
+      hostname.endsWith('.blogspot.com') ||
+      hostname.endsWith('.wordpress.com')
+    ) {
       return true;
     }
 

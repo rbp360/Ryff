@@ -1,5 +1,43 @@
 # Ryff Feature Log
 
+## Feature: Chat Formatting Overhaul — Paragraph Segmentation, 150-Word Cap & Compact Citation Badges
+- **Date:** October 13, 2026
+- **Category:** Chat Experience / Readability / Citation UX / Outbound Security & Affiliate Routing
+
+### 1. User & Marketing Overview
+- **Distinct Paragraph Layout:** Completely eliminates dense, wall-of-text bot responses. Bot replies are now cleanly split into 2 to 3 readable, bite-sized paragraphs separated by dedicated margins, making advice and sparring takes instantly digestible on both desktop and mobile screens.
+- **Punchier, Truncated 150-Word Answers:** Trims maximum response length to 150 words total, removing filler and wordiness to keep bot sparring snappy, high-energy, and direct.
+- **Compact Interactive Link Badges:** Replaces unwieldy 140-character article headlines and full 150-character encoded redirect URLs with sleek, inline clickable citation badges (e.g. `link ↗` and `deal (£450) ↗`). The link sits seamlessly within the sentence flow without disrupting reading or cluttering chat bubbles.
+- **Working External Links with Tooltips:** Clicking any citation badge opens the destination safely in a new tab via the authenticated `/api/out` redirect pipeline. Hovering over a link displays a tooltip with the complete article or gear deal headline.
+- **Retroactive Fix for Chat History:** Dynamically parses and cleans up previous chat history turns stored in the database, ensuring existing long titles and URLs with nested brackets (such as RSS `[News]` tags) are instantly rendered as clean, clickable pills.
+
+---
+
+### 2. Technical Details (For Developers)
+- **Token Guard & Compact Formatting ([`src/lib/guard.ts`](file:///c:/Users/rob_b/Ryff/src/lib/guard.ts)):**
+  - Added `compactLinks?: boolean` to `RenderContext`.
+  - Updated `renderTokens()`: when `compactLinks` is enabled, maps `[[item:ID]]` tokens to `[link](${outUrl})` and `[[deal:ID]]` tokens to `[deal (${priceText})](${outUrl})`, while preserving backwards-compatible full titles for tests and headless pipeline contexts.
+- **Chat Prompt & Token Cap Calibration ([`prompts/chat.system.md`](file:///c:/Users/rob_b/Ryff/prompts/chat.system.md), [`src/lib/bots.ts`](file:///c:/Users/rob_b/Ryff/src/lib/bots.ts), [`src/app/api/chat/route.ts`](file:///c:/Users/rob_b/Ryff/src/app/api/chat/route.ts)):**
+  - Updated `chat.system.md` and `buildBotSystemPrompt()` with explicit layout instructions: strictly enforce a 150-word cap and 2 to 3 short paragraphs separated by blank lines (`\n\n`).
+  - Adjusted API completion `maxTokens` from 350 to 300 in `POST /api/chat` and passed `compactLinks: true` to `renderTokens()`.
+- **UI Markdown & Paragraph Stream Engine ([`src/app/(app)/backstage/page.tsx`](file:///c:/Users/rob_b/Ryff/src/app/%28app%29/backstage/page.tsx), [`src/app/ryff.css`](file:///c:/Users/rob_b/Ryff/src/app/ryff.css)):**
+  - Implemented `renderMessageContent()` and `renderParagraphContent()`:
+    - Splits message content on double newlines (`\n{2,}`) into structured `<p className="msg-para">` elements styled with `margin: 0 0 10px 0` and `white-space: pre-line`.
+    - Parses markdown links with support for nested square brackets in RSS headlines (e.g. `[... [News]](url)`) using balanced group regex `\[((?:[^[\]]|\[[^[\]]*\])*)\]\(((\/api\/out|https?:\/\/)[^)]+)\)`.
+    - Truncates oversized labels (>15 chars) to `'link ↗'` while passing the full raw title to the `title` tooltip attribute for hover inspection.
+    - Styles `.chat-link` pills with bot persona theme accents (`color`, `borderColor`, `background`), smooth hover transitions, and a dedicated `.msg.me .chat-link` variant for user-sent messages.
+- **Outbound Redirect Hostname Allowlist Expansion ([`src/lib/affiliate.ts`](file:///c:/Users/rob_b/Ryff/src/lib/affiliate.ts)):**
+  - Expanded `isAllowedDest()` to match all active news sources from `config/sources.json` (including `ultimate-guitar.com`, `delicious-audio.com`, `performermag.com`, `thegearpage.net`, `tdpri.com`, etc.) using subdomain prefix matching (`hostname === t || hostname.endsWith('.' + t)`), preventing false-positive 400 rejection on valid news article redirects.
+- **Automated Vitest Test Suites ([`tests/guard.test.ts`](file:///c:/Users/rob_b/Ryff/tests/guard.test.ts), [`tests/affiliate.test.ts`](file:///c:/Users/rob_b/Ryff/tests/affiliate.test.ts)):**
+  - Added unit test cases for `compactLinks` token substitution and allowlist verification of `ultimate-guitar.com` and `delicious-audio.com`.
+
+---
+
+### 3. White-Label & Domain-Agnostic Utility
+- **Clean Citation & Micro-Copy Architecture:** In any white-label deployment (e.g. running shoe reviews, mechanical watch forums, vintage camera collector sparring), dense model outputs and long URLs degrade trust and usability. This paragraph-chunking and micro-badge system provides a generic, drop-in pattern for rendering verified catalog items, affiliate links, and knowledge citations as clean, readable pills without leaking internal tracking parameters or cluttering conversational interfaces.
+
+---
+
 ## Feature: Multi-Bot Autonomous Debate Pipeline (Milestone M7.3)
 - **Date:** October 12, 2026
 - **Category:** Autonomous News Debates / Multi-Bot Sparring / Dynamic Roundtable Pipeline & Backwards Compatibility

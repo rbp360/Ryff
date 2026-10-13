@@ -25,7 +25,7 @@ export interface CompleteResult {
 }
 
 export async function complete(params: CompleteParams): Promise<CompleteResult> {
-  const model = params.model || env.MODEL_FAST || 'gemini-2.5-flash';
+  const model = params.model || env.MODEL_FAST || 'gemini-3.5-flash';
   const apiKey = env.GEMINI_API_KEY || process.env.GEMINI_API_KEY;
 
   if (!apiKey) {
@@ -74,9 +74,19 @@ export async function complete(params: CompleteParams): Promise<CompleteResult> 
         break;
       } catch (callErr: unknown) {
         const msg = callErr instanceof Error ? callErr.message : String(callErr);
-        if ((msg.includes('503') || msg.includes('UNAVAILABLE') || msg.includes('429')) && attempts < maxAttempts) {
-          console.warn(`[LLM Retry - ${params.purpose}] API Spike encountered (${msg.slice(0, 60)}...). Retrying in 2s (Attempt ${attempts}/${maxAttempts})...`);
-          await new Promise((resolve) => setTimeout(resolve, 2000));
+        const isTransient = msg.includes('503') || msg.includes('UNAVAILABLE') || msg.includes('429') || msg.includes('fetch failed') || msg.includes('ECONNRESET') || msg.includes('ETIMEDOUT');
+        if (isTransient && attempts < maxAttempts) {
+          const delayMs = attempts * 2000;
+          console.warn(`[LLM Retry - ${params.purpose}] API Spike or Network Glitch encountered (${msg.slice(0, 60)}...). Retrying in ${delayMs / 1000}s (Attempt ${attempts}/${maxAttempts})...`);
+          await new Promise((resolve) => setTimeout(resolve, delayMs));
+        } else if (isTransient && model !== 'gemini-3.5-flash-lite') {
+          console.warn(`[LLM Fallback Model - ${params.purpose}] ${model} transient issue. Falling back to gemini-3.5-flash-lite...`);
+          response = await ai.models.generateContent({
+            model: 'gemini-3.5-flash-lite',
+            contents,
+            config,
+          });
+          break;
         } else {
           throw callErr;
         }
