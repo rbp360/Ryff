@@ -81,11 +81,12 @@ export async function complete(params: CompleteParams): Promise<CompleteResult> 
           const delayMs = attempts * 2000;
           console.warn(`[LLM Retry - ${params.purpose}] API Spike or Network Glitch encountered (${msg.slice(0, 60)}...). Retrying in ${delayMs / 1000}s (Attempt ${attempts}/${maxAttempts})...`);
           await new Promise((resolve) => setTimeout(resolve, delayMs));
-        } else if ((isTransient || isModelUnavailable) && model !== 'gemini-3.5-flash-lite') {
-          console.warn(`[LLM Fallback Model - ${params.purpose}] ${model} issue (${msg.slice(0, 80)}...). Falling back to gemini-3.5-flash-lite...`);
+        } else if (isTransient || isModelUnavailable) {
+          const fallbackModel = model === 'gemini-3.5-flash-lite' ? 'gemini-3.5-flash' : 'gemini-3.5-flash-lite';
+          console.warn(`[LLM Fallback Model - ${params.purpose}] ${model} issue (${msg.slice(0, 80)}...). Falling back to ${fallbackModel}...`);
           try {
             response = await ai.models.generateContent({
-              model: 'gemini-3.5-flash-lite',
+              model: fallbackModel,
               contents,
               config,
             });

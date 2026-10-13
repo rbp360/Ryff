@@ -1209,17 +1209,17 @@ Automated news generation, feed health, and multi-bot debate synthesis have been
 
 ### 2. Technical Details (For Developers)
 - **Model Environment & Configuration ([`src/lib/env.ts`](file:///c:/Users/rob_b/Ryff/src/lib/env.ts), [`.env.local`](file:///c:/Users/rob_b/Ryff/.env.local), [`config/pricing.json`](file:///c:/Users/rob_b/Ryff/config/pricing.json)):**
-  - Updated defaults: `MODEL_FAST` to `gemini-3.5-flash-lite` ($0.075 / $0.30 per MTok) and `MODEL_SMART` to `gemini-3.8-flash` ($0.15 / $0.60 per MTok).
-  - Updated `.github/workflows/pipeline.yml` to default to `gemini-3.5-flash-lite` and `gemini-3.8-flash`.
+  - Configured user models: `MODEL_FAST=gemini-3.5-flash-lite` ($0.075 / $0.30 per MTok) and `MODEL_SMART=gemini-3.5-flash` ($0.15 / $0.60 per MTok).
+  - Updated [`.github/workflows/pipeline.yml`](file:///c:/Users/rob_b/Ryff/.github/workflows/pipeline.yml) to default to `gemini-3.5-flash-lite` and `gemini-3.5-flash`.
   - Added pricing matrix entries in `config/pricing.json` for accurate per-token accounting.
 - **Fault-Tolerant LLM Execution ([`src/lib/llm.ts`](file:///c:/Users/rob_b/Ryff/src/lib/llm.ts)):**
-  - Enhanced `complete()` with detection for 404 (model deprecated / removed) and `RESOURCE_EXHAUSTED` (tier quota reached) errors, instantly routing to `gemini-3.5-flash-lite` fallback.
+  - Enhanced `complete()` with detection for 404 (model deprecated / removed) and 503/transient rate spikes, featuring bi-directional automated fallback between `gemini-3.5-flash-lite` and `gemini-3.5-flash` with exponential backoff retries.
 - **Pipeline Stages ([`src/pipeline/digest.ts`](file:///c:/Users/rob_b/Ryff/src/pipeline/digest.ts) & [`src/pipeline/debate.ts`](file:///c:/Users/rob_b/Ryff/src/pipeline/debate.ts)):**
   - Standardized model references to use `env.MODEL_FAST` and `env.MODEL_SMART` with active model fallbacks.
   - Verified batch digest execution and multi-bot transcript formatting.
 - **Feed Fetcher Enhancements ([`src/lib/feeds.ts`](file:///c:/Users/rob_b/Ryff/src/lib/feeds.ts) & [`src/pipeline/ingest.ts`](file:///c:/Users/rob_b/Ryff/src/pipeline/ingest.ts)):**
-  - Increased network timeout to 10s (`AbortSignal.timeout(10000)`).
-  - Added detection for local RSSHub ports (`localhost:1200`) to log clean offline status rather than raw connection failures.
+  - Increased network timeout to 25 seconds (`AbortSignal.timeout(25000)`) to accommodate high-latency forum and RSS endpoints.
+  - Added detection and verified integration with local Docker RSSHub container (`http://localhost:1200`) for social/Instagram feeds.
   - Added dynamic 1200ms inter-source delays for YouTube feeds to prevent burst rate limits.
 
 ---

@@ -195,7 +195,7 @@ export async function fetchFeed(feedUrl: string, keywordPrefilter: string[] | nu
           'Accept': 'application/rss+xml, application/xml, text/xml, application/atom+xml, text/html;q=0.9, */*;q=0.8',
           'Accept-Language': 'en-US,en;q=0.9',
         },
-        signal: AbortSignal.timeout(10000),
+        signal: AbortSignal.timeout(25000),
       });
 
       if (!res.ok) {
