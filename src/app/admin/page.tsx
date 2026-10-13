@@ -235,7 +235,7 @@ export default async function AdminCommandCentrePage() {
 
   const totalSources = sources.length;
   const activeSources = sources.filter((s) => s.active).length;
-  const okSources = sources.filter((s) => s.last_status && s.last_status.toLowerCase() === 'ok').length;
+  const okSources = sources.filter((s) => s.last_status && s.last_status.toLowerCase().startsWith('ok')).length;
   const errorSources = sources.filter(
     (s) => s.last_status && (s.last_status.toLowerCase().includes('error') || s.last_status.includes('403') || s.last_status.includes('429'))
   ).length;

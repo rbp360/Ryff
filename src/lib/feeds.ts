@@ -26,9 +26,11 @@ export interface ParsedFeedItem {
 export function extractImageUrl(item: any): string | null {
   // 1. YouTube video URL or ID check (watch links, shorts, embeds, yt:video IDs)
   const rawUrl = typeof item.link === 'string' ? item.link : (item.link?.href || item.guid || item.id || '');
-  const ytMatch = String(rawUrl).match(/(?:v=|\/|vi\/|shorts\/|yt:video:)([a-zA-Z0-9_-]{11})/);
-  if (ytMatch && ytMatch[1]) {
-    return `https://i.ytimg.com/vi/${ytMatch[1]}/hqdefault.jpg`;
+  if (rawUrl.includes('youtube.com') || rawUrl.includes('youtu.be')) {
+    const ytMatch = String(rawUrl).match(/(?:v=|vi\/|shorts\/|\/embed\/|\/v\/|youtu\.be\/|yt:video:)([a-zA-Z0-9_-]{11})/);
+    if (ytMatch && ytMatch[1]) {
+      return `https://i.ytimg.com/vi/${ytMatch[1]}/hqdefault.jpg`;
+    }
   }
 
   // 2. Media:group tags (YouTube RSS feed format)
@@ -94,7 +96,7 @@ export async function fetchOgImage(url: string): Promise<string | null> {
 
   // YouTube fast check
   if (url.includes('youtube.com') || url.includes('youtu.be')) {
-    const match = url.match(/(?:v=|\/|vi\/|shorts\/)([a-zA-Z0-9_-]{11})/);
+    const match = url.match(/(?:v=|vi\/|shorts\/|\/embed\/|\/v\/|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
     if (match && match[1]) {
       return `https://i.ytimg.com/vi/${match[1]}/hqdefault.jpg`;
     }
@@ -175,7 +177,7 @@ const USER_AGENTS = [
 export async function fetchFeed(feedUrl: string, keywordPrefilter: string[] | null = null): Promise<{ items: ParsedFeedItem[]; status: string }> {
   if (feedUrl.includes('localhost:1200')) {
     try {
-      const ping = await fetch(feedUrl, { signal: AbortSignal.timeout(600) });
+      const ping = await fetch('http://localhost:1200/', { signal: AbortSignal.timeout(2000) });
       if (!ping.ok) {
         return { items: [], status: 'offline: Local RSSHub bridge returned ' + ping.status };
       }

@@ -1,10 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { FeedItemCard, UserPreferences } from '@/lib/personalization';
 import { BackButton } from '@/components/BackButton';
 import { getCategoryFallbackImage } from '@/lib/gear-images';
+import { getBot } from '@/lib/bots';
 
 interface DigestFeedProps {
   initialPersonalized: FeedItemCard[];
@@ -43,28 +44,26 @@ function stripEmojis(text?: string | null): string {
 
 function FeedImage({ src, alt, category }: { src?: string | null; alt: string; category?: string }) {
   const fallback = getCategoryFallbackImage(category);
-  const initialSrc = src || fallback;
+  const [currentSrc, setCurrentSrc] = useState<string>(src || fallback);
   const [failed, setFailed] = useState(false);
-  const [isUsingFallback, setIsUsingFallback] = useState(false);
-  const [prevSrc, setPrevSrc] = useState(initialSrc);
 
-  if (initialSrc !== prevSrc) {
-    setPrevSrc(initialSrc);
-    setIsUsingFallback(false);
+  useEffect(() => {
+    setCurrentSrc(src || fallback);
     setFailed(false);
-  }
+  }, [src, fallback]);
 
   if (failed) {
     return (
-      <div className="story-thumb-container">
-        <div className="story-thumb-placeholder">
-          <span style={{ fontSize: '11px', fontWeight: 800, color: 'var(--mu)', letterSpacing: '0.05em' }}>RYFF</span>
-        </div>
+      <div className="story-thumb-container" style={{ background: '#0a0a0d', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/ryff_pick.jpg"
+          alt="Ryff Pick"
+          style={{ width: '48px', height: '48px', objectFit: 'contain', opacity: 0.85 }}
+        />
       </div>
     );
   }
-
-  const currentSrc = isUsingFallback ? fallback : initialSrc;
 
   return (
     <div className="story-thumb-container">
@@ -74,8 +73,10 @@ function FeedImage({ src, alt, category }: { src?: string | null; alt: string; c
         alt={alt}
         loading="lazy"
         onError={() => {
-          if (!isUsingFallback && initialSrc !== fallback) {
-            setIsUsingFallback(true);
+          if (currentSrc !== fallback) {
+            setCurrentSrc(fallback);
+          } else if (currentSrc !== '/branding/Rigistry only.png') {
+            setCurrentSrc('/branding/Rigistry only.png');
           } else {
             setFailed(true);
           }
@@ -94,6 +95,10 @@ export function DigestFeed({
   newCount,
   updatedTime,
 }: DigestFeedProps) {
+  const activeBot = getBot(initialPreferences?.personality);
+  const agentName = activeBot?.name || 'RobBPaul';
+  const agentId = activeBot?.id || 'robbpaul';
+
   const [tab, setTab] = useState<'personalized' | 'global'>('personalized');
   const [category, setCategory] = useState('all');
   const [personalizedItems, setPersonalizedItems] = useState<FeedItemCard[]>(initialPersonalized);
@@ -261,9 +266,12 @@ export function DigestFeed({
 
       {/* Story Cards */}
       {filteredItems.map((item) => {
-        const primaryMatch = stripEmojis(item.match_badges?.[0]?.replace(/^(Wanted:|Followed:|In Your Rig:)\s*/i, ''));
+        const rawBadge = item.match_badges?.[0]?.replace(/^(Wanted:|Followed:|In Your Rig:)\s*/i, '');
+        const isOutletsBadge = rawBadge?.toLowerCase().includes('outlet');
+        const primaryMatch = isOutletsBadge ? null : stripEmojis(rawBadge);
         const headlineText = stripEmojis(item.headline || item.title);
-        const botTake = stripEmojis(item.key_takeaways?.[0] || item.summary || 'Worth keeping an eye on this week.');
+        const synopsisText = stripEmojis(item.summary || item.key_takeaways?.[0] || 'Worth keeping an eye on this week.');
+        const takeaways = (item.key_takeaways || []).map(t => stripEmojis(t)).filter(t => t && t.length > 0 && t !== synopsisText);
         const timeAgo = getTimeAgo(item.published_at);
 
         return (
@@ -304,12 +312,21 @@ export function DigestFeed({
               />
             </div>
 
-            {/* Hank editorial take */}
+            {/* Agent editorial take */}
             <div className="say">
-              <div className="ph round hank-avatar">
-                Hank
+              <div className="ph round hank-avatar" style={{ textTransform: 'uppercase', fontSize: '9px', fontWeight: 800 }}>
+                {agentName.slice(0, 4)}
               </div>
-              <span>{botTake}</span>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <p style={{ margin: 0, fontSize: '14px', lineHeight: 1.5, color: '#e2e8f0' }}>{synopsisText}</p>
+                {takeaways.length > 0 && (
+                  <ul style={{ margin: '8px 0 0 16px', padding: 0, fontSize: '12px', color: 'var(--mu)', lineHeight: 1.4 }}>
+                    {takeaways.slice(0, 3).map((takeaway, idx) => (
+                      <li key={idx} style={{ marginBottom: '3px' }}>{takeaway}</li>
+                    ))}
+                  </ul>
+                )}
+              </div>
             </div>
 
             {/* Actions */}
@@ -331,8 +348,8 @@ export function DigestFeed({
                 </button>
               </div>
 
-              <Link href="/backstage" className="ask-hank-link">
-                Ask Hank about this ›
+              <Link href={`/backstage?bot=${agentId}`} className="ask-hank-link">
+                Ask {agentName} about this ›
               </Link>
             </div>
           </div>

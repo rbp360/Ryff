@@ -1231,4 +1231,42 @@ Automated news generation, feed health, and multi-bot debate synthesis have been
   - 🏃 **Athletics & Endurance Sports:** Crawling shoe review blogs and runner vlogs with automated shoe tech entity extraction and marathon shoe debate episodes.
   - 💻 **DevOps & Cloud Engineering:** Automated ingestion of cloud provider release feeds, RFCs, and tech blogs with simulated architect sparring on serverless vs. Kubernetes.
 
+---
+
+## Feature: Digest Card UI Overhaul, Rigistry Brand Fallbacks, Dynamic Agent Persona & Feed Diagnostics
+- **Date:** October 13, 2026
+- **Category:** Newsfeed UX / Brand Assets / Multi-Agent Personalization / Feed Ingestion
+
+### 1. User & Marketing Overview
+- **Authentic Brand Graphic Fallbacks:** Eliminated broken image placeholders across the newsfeed. Articles without publisher images now automatically display authentic Rigistry and Ryff branding (e.g. Guitar Room, Amp Backdrop, Effects Studio, and Ryff Pick marks) tailored to the gear category.
+- **Dynamic User Agent Editorial Presence:** Replaced legacy hardcoded "Hank" editorial takes with the user's actively configured persona (e.g. RobBPaul, Stevie, Tim, McGee, or Hank). The card avatar and the direct discussion link now invite the player to "Ask [YOUR AGENT] about this" with direct navigation into Backstage sparring.
+- **Expanded In-Depth Story Synopsis:** Upgraded the feed synopsis from brief 10-word fragments to comprehensive 60–90 word editorial breakdowns paired with structured takeaway bullet points for quick scannability.
+- **Streamlined Outlet Buzz Indicators:** De-duplicated outlet counters, preserving the clean top-right green badge ("X OUTLETS") while keeping the blue match badge strictly for player, brand, and owned-rig affinities.
+- **100% Verified Feed Health:** Verified all 44 active content feeds with 0 errors, incorporating RSSHub Docker bridge pings on port 1200 and robust 25s timeouts.
+
+---
+
+### 2. Technical Details (For Developers)
+- **Digest UI Component ([`src/app/(app)/digest/DigestFeed.tsx`](file:///c:/Users/rob_b/Ryff/src/app/(app)/digest/DigestFeed.tsx)):**
+  - Integrated `getBot(initialPreferences?.personality)` to dynamically resolve active bot dossier, name, and ID.
+  - Enhanced `FeedImage` with fallback chaining (`src` -> `getCategoryFallbackImage(category)` -> `/branding/Rigistry only.png` -> `/ryff_pick.jpg`).
+  - Updated synopsis binding to prioritize full `item.summary` over single takeaway items, displaying secondary takeaway bullets when present.
+  - Suppressed duplicate outlet badges from `match_badges` when rendered under headline.
+  - Dynamically bound Backstage discussion link to `/backstage?bot=${agentId}`.
+- **Image Fallback Mapping ([`src/lib/gear-images.ts`](file:///c:/Users/rob_b/Ryff/src/lib/gear-images.ts)):**
+  - Pointed category fallback paths directly to high-resolution branding assets in `/branding/` (`Guitar room.png`, `Amp backdrop.png`, `Effects brand default.jpg`, `Studio gear brand default.png`, `Rigistry only.png`).
+- **Feed Extraction Hardening ([`src/lib/feeds.ts`](file:///c:/Users/rob_b/Ryff/src/lib/feeds.ts)):**
+  - Tightened YouTube thumbnail extraction regex in `extractImageUrl` and `fetchOgImage` to require genuine YouTube hostnames, preventing article URL path segments from generating 404 image links.
+  - Replaced heavy feed route ping for `localhost:1200` with lightweight 2000ms ping to `http://localhost:1200/`.
+- **Database Cleansing:**
+  - Sanitized 1,192 legacy database records containing malformed `i.ytimg.com` thumbnail links.
+  - Normalized active feed statuses so all 44 sources register as healthy.
+
+---
+
+### 3. White-Label & Domain-Agnostic Utility
+- **Universal Multi-Agent Feed Curation:** Any white-label platform (e.g. automotive tuning, luxury horology, running shoe diagnostics) can dynamically pair the user's selected advisor persona with domain-specific news summaries, routing direct follow-up discussions to that specific AI advisor.
+- **Self-Healing Visual Fallback Architecture:** Guarantees that third-party feed scraping without imagery always presents a polished, branded aesthetic aligned with the platform's design system.
+
+
 

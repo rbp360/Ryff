@@ -12,21 +12,21 @@ export interface StockImageResult {
 export function getCategoryFallbackImage(category?: string | null): string {
   const cat = (category || '').toLowerCase().trim();
   if (cat === 'guitar' || cat === 'guitars' || cat === 'bass' || cat === 'basses' || cat === 'artist') {
-    return '/images/Bass gear brand default.png';
+    return '/branding/Guitar room.png';
   }
   if (cat === 'amp' || cat === 'amps' || cat === 'amplifier' || cat === 'amplifiers' || cat === 'cab' || cat === 'cabinet') {
-    return '/images/Logo 1 landscape.jpg';
+    return '/branding/Amp backdrop.png';
   }
   if (cat === 'pedal' || cat === 'pedals' || cat === 'effects' || cat === 'effect') {
-    return '/images/Effects brand default.jpg';
+    return '/branding/Effects brand default.jpg';
   }
   if (cat === 'modeller' || cat === 'modellers' || cat === 'studio' || cat === 'tech' || cat === 'synth' || cat === 'keyboard') {
-    return '/images/Studio gear brand default.png';
+    return '/branding/Studio gear brand default.png';
   }
   if (cat === 'drum' || cat === 'drums' || cat === 'percussion') {
-    return '/images/Drum gear brand default.png';
+    return '/branding/Drum gear brand default.png';
   }
-  return '/images/Logo 1 landscape.jpg';
+  return '/branding/Rigistry only.png';
 }
 
 /**
