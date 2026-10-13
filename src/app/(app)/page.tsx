@@ -73,6 +73,9 @@ export default async function HomePage() {
     const topics = typeof latestEpisode.topics === 'string'
       ? JSON.parse(latestEpisode.topics)
       : latestEpisode.topics;
+    if (Array.isArray(topics)) {
+      topicsCount = topics.length;
+    }
     const firstTopic = topics[0];
     if (firstTopic?.robbpaul) {
       companionTakeaway = String(firstTopic.robbpaul).replace(/^RobBPaul:\s*/i, '').replace(/^"|"$/g, '');

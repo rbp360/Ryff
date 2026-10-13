@@ -191,21 +191,22 @@ function BackstageChatInner() {
     }
     return DEFAULT_BOT_ID;
   });
+  const [prevBotParam, setPrevBotParam] = useState(requestedBotParam);
+
+  // Sync if URL search parameter changes
+  if (requestedBotParam !== prevBotParam) {
+    setPrevBotParam(requestedBotParam);
+    if (requestedBotParam) {
+      setActiveBotId(getBot(requestedBotParam).id);
+    }
+  }
 
   const activeBot = useMemo(() => getBot(activeBotId), [activeBotId]);
   const activeTheme = BOT_THEMES[activeBot.id] || BOT_THEMES.robbpaul;
   const [showRosterPreview, setShowRosterPreview] = useState(false);
 
-  // Sync if URL search parameter changes
-  useEffect(() => {
-    if (requestedBotParam) {
-      const resolved = getBot(requestedBotParam).id;
-      setActiveBotId(resolved);
-    }
-  }, [requestedBotParam]);
-
   const [messages, setMessages] = useState<ChatMessage[]>([]);
-  const [historyCache, setHistoryCache] = useState<Record<string, ChatMessage[]>>({});
+  const historyCacheRef = useRef<Record<string, ChatMessage[]>>({});
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [loadingHistory, setLoadingHistory] = useState(false);
@@ -216,8 +217,8 @@ function BackstageChatInner() {
     let ignore = false;
     async function fetchHistory() {
       // If cached locally, display immediately without flicker
-      if (historyCache[activeBotId]) {
-        setMessages(historyCache[activeBotId]);
+      if (historyCacheRef.current[activeBotId]) {
+        setMessages(historyCacheRef.current[activeBotId]);
       } else {
         setMessages([]);
       }
@@ -229,7 +230,7 @@ function BackstageChatInner() {
           const data = await res.json();
           const loadedMsgs = data.messages || [];
           setMessages(loadedMsgs);
-          setHistoryCache((prev) => ({ ...prev, [activeBotId]: loadedMsgs }));
+          historyCacheRef.current[activeBotId] = loadedMsgs;
           if (data.usage) {
             setUsage(data.usage);
           }
@@ -258,7 +259,7 @@ function BackstageChatInner() {
     const userMsg: ChatMessage = { role: 'user', content: messageText };
     setMessages((prev) => {
       const updated = [...prev, userMsg];
-      setHistoryCache((cache) => ({ ...cache, [activeBotId]: updated }));
+      historyCacheRef.current[activeBotId] = updated;
       return updated;
     });
     if (!textToSend) setInput('');
@@ -287,7 +288,7 @@ function BackstageChatInner() {
 
       setMessages((prev) => {
         const updated = [...prev, assistantMsg];
-        setHistoryCache((cache) => ({ ...cache, [activeBotId]: updated }));
+        historyCacheRef.current[activeBotId] = updated;
         return updated;
       });
     } catch {

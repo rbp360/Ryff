@@ -1,5 +1,39 @@
 # Ryff Feature Log
 
+## Feature: Bot Quality & Grounding Overhaul — Anti-Cliché Safeguards, Hardware Evidence Grounding & Onboarding Blueprint (Milestones M7.3 & M7.4)
+- **Date:** October 13, 2026
+- **Category:** Bot Persona Quality / Prompt Engineering / Anti-Caricature Guardrails / Onboarding Architecture
+
+### 1. User & Marketing Overview
+- **Eliminating Cliché Overload:** Replaces repetitive, cartoonish rock slogans (such as repeating *"play it like you stole it"* or *"it's only rock and roll"* multiple times per debate) with natural, intelligent musician banter. Character voices remain sharp and irreverent without sounding like scripted soundbites.
+- **Deep Technical Grounding:** Pushes AI sparring bots to anchor their hot takes in concrete hardware evidence—component drift, circuit tolerance, solder joints, valve sag, pickup output, and blind ABX test results—turning debates into insightful gear discussions rather than generic opinion shouting.
+- **"The Barstool Audition" Onboarding Blueprint:** Formally documented the end-to-end user-created bot architecture in [`docs/BOT_ONBOARDING_AND_LIFECYCLE.md`](file:///c:/Users/rob_b/Ryff/docs/BOT_ONBOARDING_AND_LIFECYCLE.md). Prepares Milestone M7.4 by allowing everyday players to create bespoke sparring bots through a 5-question questionnaire without writing code, JSON, or cheesy catchphrases.
+
+---
+
+### 2. Technical Details (For Developers)
+- **System Prompt Calibration & Anti-Repetition Rules ([`src/lib/bots.ts`](file:///c:/Users/rob_b/Ryff/src/lib/bots.ts)):**
+  - Updated `buildBotSystemPrompt`: explicitly instructed LLMs that `sample_lines` are voice and attitude anchors (cadence, mindset, argumentation style) and must **never** be repeated or quoted verbatim.
+  - Added **Natural Banter** universal rule: models must speak like real musicians in a workshop having an authentic disagreement; signature slang from `voice.slang` is treated as light seasoning (at most once per conversation), never as repeated sentence punctuation.
+  - Added **Grounding** universal rule: models must anchor opinions in actual circuit specs, hardware details, or test results provided in `<context>`.
+- **Sparring Debate Guardrails ([`src/pipeline/debate.ts`](file:///c:/Users/rob_b/Ryff/src/pipeline/debate.ts)):**
+  - Added explicit instructions across all 4 debate rounds (Round 1 Opener, Round 2 Counter, Round 3 Wildcard/Rebuttal, Round 4 Closing Verdict) to avoid tired rock clichés and focus on physical gear mechanics and circuit evidence.
+- **Targeted Bot Dossier Refinements ([`data/bots/mcgee.json`](file:///c:/Users/rob_b/Ryff/data/bots/mcgee.json), [`data/bots/robbpaul.json`](file:///c:/Users/rob_b/Ryff/data/bots/robbpaul.json)):**
+  - Replaced high-gravity cliché trigger in `mcgee.json` (`"play it like you stole it"` -> `"let it rip without fear"`).
+  - Formatted multi-item arrays cleanly in `robbpaul.json`, corrected typos (`"the be fair"` -> `"to be fair"`, `"someonesomeone elses"` -> `"someone else's"`), and separated concatenated sample lines while leaving all user-customized gear preferences intact.
+- **Onboarding Architecture Reference ([`docs/BOT_ONBOARDING_AND_LIFECYCLE.md`](file:///c:/Users/rob_b/Ryff/docs/BOT_ONBOARDING_AND_LIFECYCLE.md)):**
+  - Documented the 5-question UI questionnaire mapping directly to `BotDossier` fields.
+  - Documented the AI Persona Compiler prompt specification (`POST /api/persona/generate`) using Gemini `MODEL_FAST`/`MODEL_SMART`.
+  - Defined the `user_bots` PostgreSQL database schema and resolution hierarchy (user bot -> preset bots -> default companion).
+
+---
+
+### 3. White-Label & Domain-Agnostic Utility
+- **Anti-Caricature Architecture for Vertical AI:** When LLMs represent persona roles in any domain (e.g. coffee roasting, vintage car tuning, mechanical timepieces, audio mastering), they instinctively lean into predictable bumper-sticker slogans (*"boost the bass!"*, *"pull a god shot!"*, *"hit the gas!"*). The "Meat Before the Spice" paradigm and anti-cliché prompt patterns ensure AI agents debate technical fundamentals (extraction yield, gear ratios, escapement friction) rather than empty tropes.
+- **Universal 5-Question Persona Compiler:** The questionnaire structure (Number One Item, Pet Peeve, Hard-Won Wisdom, Cliché You Hate, Banter Style) adapts effortlessly to any white-label vertical, allowing non-technical end users to generate deeply nuanced domain personas with zero prompt engineering expertise.
+
+---
+
 ## Feature: Chat Formatting Overhaul — Paragraph Segmentation, 150-Word Cap & Compact Citation Badges
 - **Date:** October 13, 2026
 - **Category:** Chat Experience / Readability / Citation UX / Outbound Security & Affiliate Routing

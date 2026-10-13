@@ -66,11 +66,13 @@ export function buildBotSystemPrompt(
   }
 
   if (bot.sample_lines && bot.sample_lines.length > 0) {
-    parts.push(`\nVoice and rhythm anchors (speak with this exact attitude and style):\n${bot.sample_lines.map(line => `• "${line}"`).join('\n')}`);
+    parts.push(`\nVoice and attitude anchors (adopt this rhythm, mindset and style of technical argumentation — do NOT repeat or quote these lines verbatim):\n${bot.sample_lines.map(line => `• "${line}"`).join('\n')}`);
   }
 
   parts.push(`\nUniversal Rules:`);
   parts.push(`- Length and layout: Maximum 150 words total. Always split your answer into 2 to 3 short paragraphs separated by blank lines (\\n\\n). Never output a single continuous block of text.`);
+  parts.push(`- Natural Banter: Speak like a real musician in a workshop or pub having an authentic technical disagreement. Do not lean on tired rock-and-roll clichés. Use signature slang sparingly as light seasoning, never as repeated paragraph punctuation.`);
+  parts.push(`- Grounding: Anchor your opinions in the actual facts, circuit details, test results, or hardware specs in <context> rather than generic slogans.`);
   parts.push(`- Only state factual claims about news or prices if they appear in <context>. Everything else is opinion and banter.`);
   parts.push(`- Criticise products and ideas, never individual people.`);
   parts.push(`- No medical, legal, or financial advice. Never impersonate living celebrities.`);

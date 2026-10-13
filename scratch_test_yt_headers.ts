@@ -25,8 +25,9 @@ async function testYtHeaders() {
         const text = await res.text();
         console.log(`[${v.name}] Got XML length: ${text.length}`);
       }
-    } catch (e: any) {
-      console.log(`[${v.name}] Fetch error: ${e.message}`);
+    } catch (e: unknown) {
+      const msg = e instanceof Error ? e.message : String(e);
+      console.log(`[${v.name}] Fetch error: ${msg}`);
     }
   }
 

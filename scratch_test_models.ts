@@ -44,8 +44,9 @@ async function main() {
         contents: [{ role: 'user', parts: [{ text: 'Respond with just "OK"' }] }],
       });
       console.log(`[SUCCESS] Model "${model}" works! Output:`, res.text?.trim());
-    } catch (err: any) {
-      console.log(`[FAILED] Model "${model}":`, err.message?.slice(0, 100));
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err);
+      console.log(`[FAILED] Model "${model}":`, msg.slice(0, 100));
     }
   }
 }

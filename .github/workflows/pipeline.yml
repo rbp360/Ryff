@@ -23,6 +23,6 @@ jobs:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           MODEL_FAST: ${{ vars.MODEL_FAST || 'gemini-3.5-flash-lite' }}
-          MODEL_SMART: ${{ vars.MODEL_SMART || 'gemini-3.8-flash' }}
+          MODEL_SMART: ${{ vars.MODEL_SMART || 'gemini-3.5-flash' }}
           CONTACT_EMAIL: ${{ vars.CONTACT_EMAIL || 'bedlamthebandbedlam@gmail.com' }}
           SESSION_SECRET: ${{ secrets.SESSION_SECRET }}

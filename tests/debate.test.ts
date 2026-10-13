@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, type Mock } from 'vitest';
 import { selectDebatersForDebate, runDebatePipeline, CandidateItem } from '../src/pipeline/debate';
 import { complete } from '../src/lib/llm';
 import { db } from '../src/lib/db';
@@ -163,7 +163,7 @@ describe('Milestone M7.3: Multi-Bot Autonomous Debate Pipeline', () => {
         });
 
       // Mock database insertion
-      (mockDb as any).mockImplementation((strings: any) => {
+      (mockDb as unknown as Mock).mockImplementation((strings: TemplateStringsArray | string[]) => {
         const query = Array.isArray(strings) ? strings.join(' ') : String(strings);
         if (query.includes('INSERT INTO episodes')) {
           return Promise.resolve([
@@ -195,8 +195,11 @@ describe('Milestone M7.3: Multi-Bot Autonomous Debate Pipeline', () => {
       expect(result?.topics[0].vee).toBeDefined();
 
       // Inspect DB insert call args
-      const dbCalls = (mockDb as any).mock.calls;
-      const insertCall = dbCalls.find((c: any) => c[0].join(' ').includes('INSERT INTO episodes'));
+      const dbCalls = (mockDb as unknown as Mock).mock.calls;
+      const insertCall = dbCalls.find((c: unknown[]) => {
+        const firstArg = c[0];
+        return Array.isArray(firstArg) && firstArg.join(' ').includes('INSERT INTO episodes');
+      });
       expect(insertCall).toBeDefined();
 
       // Check transcript stored in DB
@@ -272,7 +275,7 @@ describe('Milestone M7.3: Multi-Bot Autonomous Debate Pipeline', () => {
           usage: { input_tokens: 220, output_tokens: 60 },
         });
 
-      (mockDb as any).mockImplementation((strings: any) => {
+      (mockDb as unknown as Mock).mockImplementation((strings: TemplateStringsArray | string[]) => {
         const query = Array.isArray(strings) ? strings.join(' ') : String(strings);
         if (query.includes('INSERT INTO episodes')) {
           return Promise.resolve([{ id: 100, created_at: new Date().toISOString(), headline: '3-Way Clash' }]);
@@ -294,8 +297,11 @@ describe('Milestone M7.3: Multi-Bot Autonomous Debate Pipeline', () => {
       expect(result?.debaters.map((d) => d.id)).toEqual(['stevie', 'tim', 'mcgee']);
       expect(result?.topics[0].takes).toHaveLength(3);
 
-      const dbCalls = (mockDb as any).mock.calls;
-      const insertCall = dbCalls.find((c: any) => c[0].join(' ').includes('INSERT INTO episodes'));
+      const dbCalls = (mockDb as unknown as Mock).mock.calls;
+      const insertCall = dbCalls.find((c: unknown[]) => {
+        const firstArg = c[0];
+        return Array.isArray(firstArg) && firstArg.join(' ').includes('INSERT INTO episodes');
+      });
       const transcriptArg = JSON.parse(insertCall![3] as string);
 
       expect(transcriptArg).toHaveLength(4);

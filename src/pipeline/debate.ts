@@ -165,16 +165,6 @@ export function selectDebatersForDebate(
 export async function runDebatePipeline(options: DebateOptions = {}) {
   const limitItems = options.limitItems || 8;
   const promptVer = options.promptVersion || process.env.PROMPT_VERSION || 'v1';
-  const promptDir = path.resolve(process.cwd(), 'prompts', promptVer);
-  const fallbackPromptDir = path.resolve(process.cwd(), 'prompts');
-
-  const getPrompt = (file: string) => {
-    const versionedPath = path.join(promptDir, file);
-    if (fs.existsSync(versionedPath)) {
-      return fs.readFileSync(versionedPath, 'utf8');
-    }
-    return fs.readFileSync(path.join(fallbackPromptDir, file), 'utf8');
-  };
 
   let candidateItems: CandidateItem[] = [];
 
@@ -274,7 +264,7 @@ export async function runDebatePipeline(options: DebateOptions = {}) {
     messages: [
       {
         role: 'user',
-        content: `Opener: You are opening today's 2-Act gear debate.\nAct 1 (The Main Event): Deliver your passionate take on the #1 headline industry story. Cite supporting items as [[item:ID]].\nAct 2 (The Community Wildcard): Deliver your take on the secondary controversy or gear deal. Cite supporting items as [[item:ID]].\nSpeak strictly in your authentic character voice (${speakerA.archetype}). Do not invent facts. Max 220 words.\n\n${contextBlock}`,
+        content: `Opener: You are opening today's 2-Act gear debate.\nAct 1 (The Main Event): Deliver your passionate take on the #1 headline industry story. Cite supporting items as [[item:ID]].\nAct 2 (The Community Wildcard): Deliver your take on the secondary controversy or gear deal. Cite supporting items as [[item:ID]].\nSpeak strictly in your authentic character voice (${speakerA.archetype}). Ground your perspective in the real hardware evidence and circuit details rather than tired rock clichés. Do not invent facts. Max 220 words.\n\n${contextBlock}`,
       },
     ],
     purpose: `debate-round1-${speakerA.id}-opener`,
@@ -302,7 +292,7 @@ export async function runDebatePipeline(options: DebateOptions = {}) {
     messages: [
       {
         role: 'user',
-        content: `${contextBlock}\n\nReply: Respond directly to ${speakerA.name}'s opening arguments for both Act 1 (The Main Event) and Act 2 (The Community Wildcard).\nDisagree where your philosophy (${speakerB.archetype}) clashes with theirs, concede where they make a fair point, and counter with your own perspective.\nCite items as [[item:ID]]. Max 200 words.\n\n${speakerA.name} argues:\n"${turn1.text}"`,
+        content: `${contextBlock}\n\nReply: Respond directly to ${speakerA.name}'s opening arguments for both Act 1 (The Main Event) and Act 2 (The Community Wildcard).\nDisagree where your philosophy (${speakerB.archetype}) clashes with theirs, concede where they make a fair point, and counter with your own technical perspective. Avoid rock clichés or slogans; focus on real gear mechanics.\nCite items as [[item:ID]]. Max 200 words.\n\n${speakerA.name} argues:\n"${turn1.text}"`,
       },
     ],
     purpose: `debate-round2-${speakerB.id}-response`,
@@ -326,8 +316,8 @@ export async function runDebatePipeline(options: DebateOptions = {}) {
   console.log(`[Debate] Round 3: ${round3Speaker.name} ${isTriad ? 'Wildcard Interjection' : 'Rebuttal'}...`);
   const round3System = buildBotSystemPrompt(round3Speaker);
   const round3Prompt = isTriad
-    ? `${contextBlock}\n\nWildcard Interjection: You are joining the debate as the third voice.\nBoth ${speakerA.name} and ${speakerB.name} have made their cases:\n${speakerA.name} opened with:\n"${turn1.text}"\n\n${speakerB.name} countered with:\n"${turn2.text}"\n\nJump in with your own unfiltered perspective (${round3Speaker.archetype}). Call out where both ${speakerA.name} and ${speakerB.name} are missing the point. Max 140 words.`
-    : `${contextBlock}\n\nRebuttal: Rebut ${speakerB.name}'s counter-arguments briefly in your character voice (${speakerA.archetype}). Defend your stance while keeping the sparring sharp. Max 140 words.\n\nYour opening was:\n"${turn1.text}"\n\n${speakerB.name} replied:\n"${turn2.text}"`;
+    ? `${contextBlock}\n\nWildcard Interjection: You are joining the debate as the third voice.\nBoth ${speakerA.name} and ${speakerB.name} have made their cases:\n${speakerA.name} opened with:\n"${turn1.text}"\n\n${speakerB.name} countered with:\n"${turn2.text}"\n\nJump in with your own unfiltered perspective (${round3Speaker.archetype}). Call out where both ${speakerA.name} and ${speakerB.name} are missing the point based on equipment reality. Avoid rock clichés. Max 140 words.`
+    : `${contextBlock}\n\nRebuttal: Rebut ${speakerB.name}'s counter-arguments briefly in your character voice (${speakerA.archetype}). Defend your stance with real gear logic while keeping the sparring sharp. Avoid rock clichés. Max 140 words.\n\nYour opening was:\n"${turn1.text}"\n\n${speakerB.name} replied:\n"${turn2.text}"`;
 
   const turn3 = await complete({
     model: env.MODEL_SMART || 'gemini-3.8-flash',
@@ -359,7 +349,7 @@ export async function runDebatePipeline(options: DebateOptions = {}) {
     messages: [
       {
         role: 'user',
-        content: `${contextBlock}\n\nDebate summary so far:\n${speakerA.name} (Round 1): "${turn1.text}"\n${speakerB.name} (Round 2): "${turn2.text}"\n${round3Speaker.name} (Round 3): "${turn3.text}"\n\nDeliver the closing verdict for today's debate in your authentic character voice (${verdictSpeaker.archetype}).\nSummarize where the room lands (or the core irreconcilable difference between the viewpoints) on Act 1 and Act 2.\nGive the player listening the practical takeaway or bottom line. Max 130 words.`,
+        content: `${contextBlock}\n\nDebate summary so far:\n${speakerA.name} (Round 1): "${turn1.text}"\n${speakerB.name} (Round 2): "${turn2.text}"\n${round3Speaker.name} (Round 3): "${turn3.text}"\n\nDeliver the closing verdict for today's debate in your authentic character voice (${verdictSpeaker.archetype}).\nSummarize where the room lands (or the core irreconcilable difference between the viewpoints) on Act 1 and Act 2.\nGive the player listening the practical takeaway or bottom line without empty slogans. Max 130 words.`,
       },
     ],
     purpose: `debate-round4-${verdictSpeaker.id}-verdict`,
