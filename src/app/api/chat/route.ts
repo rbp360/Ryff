@@ -38,11 +38,11 @@ export async function GET(request: NextRequest) {
   let bot = getBot(botParam);
   if (bot.id !== botParam && botParam !== 'robbpaul') {
     try {
-      const userBotRows = await db<{ dossier: Record<string, unknown> }[]>`
+      const userBotRows = await db<{ dossier: BotDossier }[]>`
         select dossier from user_bots where id::text = ${botParam} or (user_id = ${session.userId} and is_active = true) limit 1
       `;
       if (userBotRows.length > 0) {
-        bot = userBotRows[0].dossier as BotDossier;
+        bot = userBotRows[0].dossier;
       }
     } catch {
       // fallback to resolved bot
@@ -93,11 +93,11 @@ export async function POST(request: NextRequest) {
     let targetBot = getBot(requestedId);
     if (targetBot.id !== requestedId && requestedId !== 'robbpaul') {
       try {
-        const userBotRows = await db<{ dossier: Record<string, unknown> }[]>`
+        const userBotRows = await db<{ dossier: BotDossier }[]>`
           select dossier from user_bots where id::text = ${requestedId} or (user_id = ${session.userId} and is_active = true) limit 1
         `;
         if (userBotRows.length > 0) {
-          targetBot = userBotRows[0].dossier as BotDossier;
+          targetBot = userBotRows[0].dossier;
         }
       } catch {
         // fallback to default
