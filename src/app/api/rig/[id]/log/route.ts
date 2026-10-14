@@ -231,10 +231,14 @@ export async function PATCH(
           where id = ${itemId} and user_id = ${session.userId}
         `;
       } else {
-        // No active string logs remain: clear the hallucinated/voided string change!
+        // No active string logs remain: clear the hallucinated/voided string change and specs!
         await db`
           update rig_items set
             last_restrung_at = null,
+            current_strings = null,
+            string_gauge = null,
+            string_manufacturer = null,
+            string_type = null,
             updated_at = now()
           where id = ${itemId} and user_id = ${session.userId}
         `;

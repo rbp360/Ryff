@@ -323,12 +323,7 @@ export default function GearDetailPage({ params }: { params: Promise<{ id: strin
 
   async function handleToggleVoidLog(logId: number, currentVoid: boolean) {
     const actionLabel = currentVoid ? 'restore' : 'strike through';
-    let reason: string | undefined = undefined;
-    if (!currentVoid) {
-      const input = window.prompt('Reason for strikethrough (e.g. "Hallucinated entry", "Accidental log"):', 'Hallucinated entry');
-      if (input === null) return; // cancelled
-      reason = input.trim() || 'Marked as void / hallucinated';
-    }
+    const reason = !currentVoid ? 'Accidental/hallucinated entry struck through by user' : undefined;
 
     try {
       const res = await fetch(`/api/rig/${itemId}/log`, {
@@ -1478,11 +1473,32 @@ export default function GearDetailPage({ params }: { params: Promise<{ id: strin
         ) : (
           <div className="tl">
             {logs.map((log) => (
-              <div key={log.id} style={{ opacity: log.is_voided ? 0.5 : 1, transition: 'all 0.2s ease' }}>
+              <div
+                key={log.id}
+                className={log.is_voided ? 'voided' : ''}
+                style={{
+                  opacity: log.is_voided ? 0.45 : 1,
+                  transition: 'all 0.2s ease',
+                }}
+              >
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px', flexWrap: 'wrap' }}>
-                  <b style={{ textDecoration: log.is_voided ? 'line-through' : 'none', color: log.is_voided ? 'var(--mu)' : 'var(--tx)' }}>
+                  <b
+                    style={{
+                      textDecoration: log.is_voided ? 'line-through 2px #ef4444' : 'none',
+                      color: log.is_voided ? '#9ca3af' : 'var(--tx)',
+                    }}
+                  >
                     {log.title}
-                    <span className="ltag">{log.event_type}</span>
+                    <span
+                      className="ltag"
+                      style={{
+                        borderColor: log.is_voided ? '#6b7280' : undefined,
+                        color: log.is_voided ? '#9ca3af' : undefined,
+                        textDecoration: log.is_voided ? 'line-through' : 'none',
+                      }}
+                    >
+                      {log.event_type}
+                    </span>
                     {log.is_voided && (
                       <span
                         title={log.voided_reason || 'Marked as void / hallucinated'}
@@ -1509,21 +1525,26 @@ export default function GearDetailPage({ params }: { params: Promise<{ id: strin
                     onClick={() => handleToggleVoidLog(log.id, Boolean(log.is_voided))}
                     title={log.is_voided ? 'Restore this log entry' : 'Strike through this log entry'}
                     style={{
-                      background: 'transparent',
+                      background: log.is_voided ? 'rgba(34, 197, 94, 0.1)' : 'transparent',
                       border: '1px solid var(--ln)',
                       borderRadius: '6px',
                       color: log.is_voided ? 'var(--ac)' : 'var(--mu)',
                       padding: '3px 8px',
                       fontSize: '11px',
                       cursor: 'pointer',
-                      fontWeight: 600,
+                      fontWeight: 700,
                       flexShrink: 0,
                     }}
                   >
                     {log.is_voided ? '↩ Restore' : '✕ Strike through'}
                   </button>
                 </div>
-                <small style={{ textDecoration: log.is_voided ? 'line-through' : 'none' }}>
+                <small
+                  style={{
+                    textDecoration: log.is_voided ? 'line-through' : 'none',
+                    color: log.is_voided ? '#6b7280' : 'var(--mu)',
+                  }}
+                >
                   {new Date(log.event_date).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
                   {log.description ? ` · ${log.description}` : ''}
                   {log.is_voided && log.voided_reason ? ` (${log.voided_reason})` : ''}

@@ -247,6 +247,11 @@ h1,.logo{font-family:var(--font-display)}
 .tl>div{position:relative;padding:0 0 16px 16px}
 .tl>div::before{content:"";position:absolute;left:-6px;top:3px;width:10px;height:10px;border-radius:50%;background:var(--ac)}
 .tl b{font-size:13px;font-weight:800}.tl small{color:var(--mu);font-size:11.5px;font-weight:600;display:block;margin-top:2px}
+.tl>div.voided{opacity:0.45;transition:opacity 0.2s ease}
+.tl>div.voided::before{background:#6b7280 !important;border:1px solid #9ca3af}
+.tl>div.voided b{text-decoration:line-through 2px #ef4444 !important;color:#9ca3af !important}
+.tl>div.voided small{text-decoration:line-through !important;color:#6b7280 !important}
+.tl>div.voided .ltag{border-color:#6b7280 !important;color:#9ca3af !important;text-decoration:line-through !important}
 .nrow{display:flex;gap:10px;align-items:center;font-size:13px;font-weight:600;padding:10px 0;border-top:1px solid var(--ln)}
 .nrow .ph{width:44px;height:44px}
 .addb{width:100%;border:1px dashed var(--ac);color:var(--ac);border-radius:var(--r);padding:12px;font-size:13px;font-weight:800;margin:14px 0 4px}

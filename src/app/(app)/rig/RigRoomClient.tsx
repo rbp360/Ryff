@@ -16,6 +16,7 @@ export interface RigItemData {
   category: string;
   kind: 'own' | 'want';
   budget_gbp: number | null;
+  nickname?: string | null;
   current_strings?: string | null;
   last_restrung_at?: string | null;
   image_url?: string | null;
@@ -397,6 +398,7 @@ export function RigRoomClient({ initialItems, initialLogs }: RigRoomClientProps)
                     style={{ textDecoration: 'none' }}
                   >
                     <GearThumbnail
+                      itemId={item.id}
                       imageUrl={item.image_url}
                       brand={item.brand}
                       model={item.model}
@@ -405,8 +407,12 @@ export function RigRoomClient({ initialItems, initialLogs }: RigRoomClientProps)
                       alt={formatGearTitle(item.brand, item.model, item.raw_text)}
                     />
                     <div className="b">
-                      <b>{formatGearTitle(item.brand, item.model, item.raw_text)}</b>
-                      <small>{item.category || 'Gear'}</small>
+                      <b>{item.nickname || formatGearTitle(item.brand, item.model, item.raw_text)}</b>
+                      <small>
+                        {item.nickname
+                          ? `${formatGearTitle(item.brand, item.model, item.raw_text)} · ${item.category || 'Gear'}`
+                          : (item.category || 'Gear')}
+                      </small>
                       {isGuitar && weeks !== null && (
                         <small
                           className={weeks >= 12 ? 'warn' : 'ok'}
@@ -729,6 +735,7 @@ export function RigRoomClient({ initialItems, initialLogs }: RigRoomClientProps)
               {wantedItems.map((want) => (
                 <div key={want.id} className="gc want">
                   <GearThumbnail
+                    itemId={want.id}
                     imageUrl={want.image_url}
                     brand={want.brand}
                     model={want.model}

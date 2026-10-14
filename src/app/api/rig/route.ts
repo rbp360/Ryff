@@ -19,7 +19,7 @@ export async function GET() {
   `;
 
   const items = await db`
-    select id, raw_text, brand, model, category, kind, budget_gbp, want_key,
+    select id, raw_text, brand, model, nickname, category, kind, budget_gbp, want_key,
            current_strings, last_restrung_at, serial_number, serial_visible, purchase_date, modifications_summary, image_url, created_at
     from rig_items
     where user_id = ${session.userId}

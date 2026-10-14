@@ -25,6 +25,14 @@ export function GearHeroPhoto({
 }: GearHeroPhotoProps) {
   const router = useRouter();
   const [currentUrl, setCurrentUrl] = useState<string | null>(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const cached = localStorage.getItem(`ryff_gear_photo_${itemId}`);
+        if (cached && (cached.includes('cloudinary') || !cached.includes('reverb.com'))) {
+          return cached;
+        }
+      } catch {}
+    }
     if (initialImageUrl) return initialImageUrl;
     if (typeof window !== 'undefined') {
       try {
@@ -39,14 +47,16 @@ export function GearHeroPhoto({
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
   const [stockSource, setStockSource] = useState<'custom' | 'reverb' | 'logo' | 'category'>(() => {
-    if (initialImageUrl) {
-      return initialImageUrl.includes('cloudinary') || !initialImageUrl.includes('reverb.com') ? 'custom' : 'reverb';
-    }
     if (typeof window !== 'undefined') {
       try {
         const cached = localStorage.getItem(`ryff_gear_photo_${itemId}`);
-        if (cached) return 'custom';
+        if (cached && (cached.includes('cloudinary') || !cached.includes('reverb.com'))) {
+          return 'custom';
+        }
       } catch {}
+    }
+    if (initialImageUrl) {
+      return initialImageUrl.includes('cloudinary') || !initialImageUrl.includes('reverb.com') ? 'custom' : 'reverb';
     }
     return 'category';
   });
@@ -55,9 +65,23 @@ export function GearHeroPhoto({
   const [prevInitialImageUrl, setPrevInitialImageUrl] = useState(initialImageUrl);
   if (initialImageUrl !== prevInitialImageUrl) {
     setPrevInitialImageUrl(initialImageUrl);
-    setCurrentUrl(initialImageUrl || null);
-    const isCustom = initialImageUrl ? (initialImageUrl.includes('cloudinary') || !initialImageUrl.includes('reverb.com')) : false;
-    setStockSource(isCustom ? 'custom' : (initialImageUrl ? 'reverb' : 'category'));
+    // Only accept new initialImageUrl if client doesn't already have a custom photo in localStorage
+    let hasCustomLocal = false;
+    if (typeof window !== 'undefined') {
+      try {
+        const cached = localStorage.getItem(`ryff_gear_photo_${itemId}`);
+        if (cached && (cached.includes('cloudinary') || !cached.includes('reverb.com'))) {
+          hasCustomLocal = true;
+          setCurrentUrl(cached);
+          setStockSource('custom');
+        }
+      } catch {}
+    }
+    if (!hasCustomLocal) {
+      setCurrentUrl(initialImageUrl || null);
+      const isCustom = initialImageUrl ? (initialImageUrl.includes('cloudinary') || !initialImageUrl.includes('reverb.com')) : false;
+      setStockSource(isCustom ? 'custom' : (initialImageUrl ? 'reverb' : 'category'));
+    }
   }
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -98,12 +122,17 @@ export function GearHeroPhoto({
     }
   }, [itemId, onImageUpdated, router]);
 
-  // If initialImageUrl was missing but recovered from localStorage, re-persist to database in background
+  // If custom user photo exists in localStorage that differs from DB (e.g. after DB reset), sync to database
   useEffect(() => {
-    if (!initialImageUrl && currentUrl && typeof window !== 'undefined') {
-      saveImageUrlToDatabase(currentUrl).catch(() => {});
+    if (typeof window !== 'undefined') {
+      const cached = localStorage.getItem(`ryff_gear_photo_${itemId}`);
+      if (cached && (cached.includes('cloudinary') || !cached.includes('reverb.com')) && cached !== initialImageUrl) {
+        saveImageUrlToDatabase(cached).catch(() => {});
+      } else if (!initialImageUrl && currentUrl) {
+        saveImageUrlToDatabase(currentUrl).catch(() => {});
+      }
     }
-  }, [initialImageUrl, currentUrl, saveImageUrlToDatabase]);
+  }, [initialImageUrl, currentUrl, itemId, saveImageUrlToDatabase]);
 
   const fetchStock = useCallback(async (indexToFetch: number = 0, autoSave: boolean = false) => {
     // If user already has a custom uploaded photo, DO NOT overwrite with stock!

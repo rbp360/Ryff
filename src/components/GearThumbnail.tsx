@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import { getCategoryFallbackImage } from '@/lib/gear-images';
 
 interface GearThumbnailProps {
+  itemId?: number | string;
   imageUrl?: string | null;
   brand?: string | null;
   model?: string | null;
@@ -14,6 +15,7 @@ interface GearThumbnailProps {
 }
 
 export function GearThumbnail({
+  itemId,
   imageUrl,
   brand,
   model,
@@ -27,6 +29,18 @@ export function GearThumbnail({
   const [hasFailed, setHasFailed] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
   const imgRef = useRef<HTMLImageElement | null>(null);
+
+  const [customCachedUrl] = useState<string | null>(() => {
+    if (typeof window !== 'undefined' && itemId) {
+      try {
+        const cached = localStorage.getItem(`ryff_gear_photo_${itemId}`);
+        if (cached && (cached.includes('cloudinary') || !cached.includes('reverb.com'))) {
+          return cached;
+        }
+      } catch {}
+    }
+    return null;
+  });
 
   useEffect(() => {
     let ignore = false;
@@ -65,7 +79,7 @@ export function GearThumbnail({
     };
   }, [imageUrl, brand, model, category, rawText]);
 
-  const targetSrc = imageUrl || stockSrc || fallback;
+  const targetSrc = customCachedUrl || imageUrl || stockSrc || fallback;
   const [prevTargetSrc, setPrevTargetSrc] = useState(targetSrc);
   if (targetSrc !== prevTargetSrc) {
     setPrevTargetSrc(targetSrc);
