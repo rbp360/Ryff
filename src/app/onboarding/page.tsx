@@ -16,21 +16,96 @@ export default function OnboardingPage() {
   const [want1, setWant1] = useState('Strymon Flint Reverb under £220');
 
   const [saving, setSaving] = useState(false);
-  const [selectedBot, setSelectedBot] = useState<'hank' | 'vee'>('hank');
+  const [selectedBot, setSelectedBot] = useState<string>('robbpaul');
   const [showImportModal, setShowImportModal] = useState(false);
 
-  const STARTER_PROMPTS = {
-    hank: [
-      "What's the smartest upgrade for my current rig?",
-      "What do you think of today's top story?",
-      "Is vintage gear really worth the price over modern reissues?"
-    ],
-    vee: [
-      "Are there any good used deals for my wishlist right now?",
-      "How would you optimize my signal chain for gigging?",
-      "What's the best budget pedal released this month?"
-    ]
-  };
+  const BOTS_INFO = [
+    {
+      id: 'robbpaul',
+      name: 'RobBPaul',
+      tag: 'Companion',
+      archetype: 'Working Tone Pragmatist & Builder',
+      desc: 'Stage-tested value, practical reliability, cuts through the mix.',
+      accent: '#22c55e',
+      border: 'rgba(34, 197, 94, 0.4)',
+      bg: 'rgba(34, 197, 94, 0.1)',
+      prompts: [
+        "Is a £2k guitar really 4x better than a £500 one?",
+        "What's the smartest £300 upgrade for a gigging rig?",
+        "Are in-ear monitors actually ruining live stage vibe?"
+      ]
+    },
+    {
+      id: 'hank',
+      name: 'Hank',
+      tag: 'Luthier',
+      archetype: 'Grumpy Vintage Luthier & Analog Cynic',
+      desc: 'Handwired turret boards, properly cut nuts, hates marketing fluff.',
+      accent: '#ea580c',
+      border: 'rgba(234, 88, 12, 0.4)',
+      bg: 'rgba(234, 88, 12, 0.1)',
+      prompts: [
+        "What's the smartest upgrade for my current rig?",
+        "Is vintage gear really worth the price over modern reissues?",
+        "Why is my guitar buzzing at the 12th fret?"
+      ]
+    },
+    {
+      id: 'stevie',
+      name: 'Stevie',
+      tag: 'Purist',
+      archetype: 'Classic Tube & Blues Purist',
+      desc: 'Point-to-point valve sag, nitro lacquer, dynamic picking touch.',
+      accent: '#f59e0b',
+      border: 'rgba(245, 158, 11, 0.4)',
+      bg: 'rgba(245, 158, 11, 0.1)',
+      prompts: [
+        "Can digital modellers ever truly replicate tube sag?",
+        "Does nitro lacquer actually let tonewood breathe?",
+        "Defend heavy strings (11s+) against slinky 9s."
+      ]
+    },
+    {
+      id: 'tim',
+      name: 'Tim',
+      tag: 'DSP Tech',
+      archetype: 'DSP Modeller & Tech Architect',
+      desc: 'Impulse responses, latency benchmarks, headless ergonomics.',
+      accent: '#38bdf8',
+      border: 'rgba(56, 189, 248, 0.4)',
+      bg: 'rgba(56, 189, 248, 0.1)',
+      prompts: [
+        "Pitch me the Quad Cortex over carrying a 100W valve head.",
+        "How do I properly gain-stage and low-pass my IRs?",
+        "Can anyone actually hear Brazilian rosewood in a dense mix?"
+      ]
+    },
+    {
+      id: 'mcgee',
+      name: 'McGee',
+      tag: 'High-Gain',
+      archetype: 'Scrappy High-Gain Modder',
+      desc: 'Pawnshop beaters, 5150 gain, chug riffs, cheap gear mods.',
+      accent: '#ef4444',
+      border: 'rgba(239, 68, 68, 0.4)',
+      bg: 'rgba(239, 68, 68, 0.1)',
+      prompts: [
+        "How do I make a cheap pawnshop beater chug?",
+        "What's the best budget overdrive to boost a high-gain amp?",
+        "Are active pickups obsolete with modern pedals?"
+      ]
+    }
+  ];
+
+  const currentBotObj = BOTS_INFO.find((b) => b.id === selectedBot) || BOTS_INFO[0];
+
+  function handleStartChat(promptText?: string) {
+    if (promptText) {
+      router.push(`/backstage?q=${encodeURIComponent(promptText)}&bot=${selectedBot}`);
+    } else {
+      router.push(`/backstage?bot=${selectedBot}`);
+    }
+  }
 
   async function handleSaveGear(e: React.FormEvent) {
     e.preventDefault();
@@ -57,14 +132,6 @@ export default function OnboardingPage() {
       console.error('Failed to save onboarding rig:', err);
     } finally {
       setSaving(false);
-    }
-  }
-
-  function handleStartChat(promptText?: string) {
-    if (promptText) {
-      router.push(`/chat?q=${encodeURIComponent(promptText)}&bot=${selectedBot}`);
-    } else {
-      router.push(`/chat?bot=${selectedBot}`);
     }
   }
 
@@ -180,71 +247,95 @@ export default function OnboardingPage() {
           <div className="space-y-5">
             <div>
               <h1 className="text-xl sm:text-2xl font-bold text-white tracking-tight flex items-center gap-2">
-                <span>💬</span>
-                <span>Choose Your First Question</span>
+                <span>🤖</span>
+                <span>Choose Your Companion Bot</span>
               </h1>
               <p className="text-xs text-slate-400 mt-1">
-                Pick who you want to talk to first and select a starting prompt.
+                Pick who you want as your primary gear sparring partner, or build your own custom bot.
               </p>
             </div>
 
-            {/* Persona Tabs */}
-            <div className="grid grid-cols-2 gap-3">
-              <button
-                type="button"
-                onClick={() => setSelectedBot('hank')}
-                className={`p-3 rounded-xl border text-left transition cursor-pointer ${
-                  selectedBot === 'hank'
-                    ? 'bg-amber-950/40 border-amber-500 text-amber-200'
-                    : 'bg-slate-950 border-slate-800 text-slate-400 hover:text-slate-200'
-                }`}
-              >
-                <div className="flex items-center gap-2 text-sm font-bold text-white">
-                  <span>🧔</span>
-                  <span>Hank</span>
+            {/* Custom Bot Banner CTA */}
+            <Link
+              href="/onboarding/bot"
+              className="block p-3.5 rounded-xl border border-emerald-500/40 bg-gradient-to-r from-emerald-950/40 to-slate-900 hover:border-emerald-400 text-left transition shadow-lg group text-decoration-none"
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2.5">
+                  <span className="text-lg">✨</span>
+                  <div>
+                    <div className="text-xs font-bold text-emerald-300 group-hover:text-emerald-200">
+                      Craft Your Own Personalized Bot
+                    </div>
+                    <div className="text-[11px] text-slate-400">
+                      The Barstool Audition • 100-word player manifesto + custom gear biases
+                    </div>
+                  </div>
                 </div>
-                <p className="text-[11px] text-slate-400 mt-1">Grumpy Luthier • Tonewoods &amp; Vintage</p>
-              </button>
+                <span className="text-emerald-400 text-xs font-bold font-mono">Build ›</span>
+              </div>
+            </Link>
 
-              <button
-                type="button"
-                onClick={() => setSelectedBot('vee')}
-                className={`p-3 rounded-xl border text-left transition cursor-pointer ${
-                  selectedBot === 'vee'
-                    ? 'bg-cyan-950/40 border-cyan-500 text-cyan-200'
-                    : 'bg-slate-950 border-slate-800 text-slate-400 hover:text-slate-200'
-                }`}
-              >
-                <div className="flex items-center gap-2 text-sm font-bold text-white">
-                  <span>⚡</span>
-                  <span>Vee</span>
-                </div>
-                <p className="text-[11px] text-slate-400 mt-1">Deal Hunter • Modellers &amp; Modern Value</p>
-              </button>
+            {/* 5-Bot Roster Cards */}
+            <div className="space-y-2">
+              <span className="text-[10.5px] font-mono text-slate-400 uppercase tracking-wider">
+                Or Select From The House Roster:
+              </span>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                {BOTS_INFO.map((bot) => (
+                  <button
+                    key={bot.id}
+                    type="button"
+                    onClick={() => setSelectedBot(bot.id)}
+                    className={`p-3 rounded-xl border text-left transition cursor-pointer flex flex-col justify-between ${
+                      selectedBot === bot.id
+                        ? 'border-emerald-500 bg-emerald-950/30 ring-1 ring-emerald-500/50'
+                        : 'border-slate-800 bg-slate-950/80 hover:border-slate-700'
+                    }`}
+                  >
+                    <div>
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-sm font-bold text-white flex items-center gap-1.5">
+                          <span>{bot.name}</span>
+                        </span>
+                        <span
+                          className="text-[9.5px] font-bold uppercase px-1.5 py-0.5 rounded"
+                          style={{ color: bot.accent, background: bot.bg }}
+                        >
+                          {bot.tag}
+                        </span>
+                      </div>
+                      <p className="text-[10.5px] text-slate-400 line-clamp-2 leading-tight">
+                        {bot.desc}
+                      </p>
+                    </div>
+                  </button>
+                ))}
+              </div>
             </div>
 
-            {/* Suggested Starter Prompts */}
-            <div className="space-y-2">
-              <span className="text-[11px] font-mono text-slate-400 uppercase tracking-wider">
-                Recommended First Questions:
+            {/* Selected Bot Recommended First Questions */}
+            <div className="space-y-2 pt-1 border-t border-slate-800">
+              <span className="text-[11px] font-mono text-slate-400 uppercase tracking-wider flex items-center justify-between">
+                <span>Recommended First Questions for {currentBotObj.name}:</span>
               </span>
-              {STARTER_PROMPTS[selectedBot].map((prompt, idx) => (
+              {currentBotObj.prompts.map((prompt, idx) => (
                 <button
                   key={idx}
                   onClick={() => handleStartChat(prompt)}
-                  className="w-full text-left p-3 bg-slate-950 hover:bg-slate-800 border border-slate-800 rounded-xl text-xs text-slate-200 hover:text-cyan-300 transition flex items-center justify-between cursor-pointer"
+                  className="w-full text-left p-2.5 bg-slate-950 hover:bg-slate-800 border border-slate-800 rounded-xl text-xs text-slate-200 hover:text-emerald-300 transition flex items-center justify-between cursor-pointer"
                 >
-                  <span>{prompt}</span>
-                  <span className="text-slate-500 text-[10px]">▶</span>
+                  <span className="line-clamp-1">{prompt}</span>
+                  <span className="text-slate-500 text-[10px] shrink-0 ml-2">▶</span>
                 </button>
               ))}
             </div>
 
             <button
               onClick={() => handleStartChat()}
-              className="w-full bg-cyan-600 hover:bg-cyan-500 text-white font-semibold py-2.5 rounded-xl text-sm transition shadow-lg cursor-pointer"
+              className="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-semibold py-2.5 rounded-xl text-sm transition shadow-lg cursor-pointer"
             >
-              Enter Private Chat Room →
+              Enter Backstage with {currentBotObj.name} →
             </button>
           </div>
         )}

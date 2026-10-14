@@ -1,5 +1,53 @@
 # Ryff Feature Log
 
+## Feature: Custom Companion Bot Studio ("The Barstool Audition"), 5-Bot Onboarding Selector & Autonomous Sparring Matrix (Milestone M7.4)
+- **Date:** October 14, 2026
+- **Category:** Companion AI / Persona Compiler / Onboarding / Barstool Audition / Multi-Persona Debates
+
+### 1. User & Marketing Overview
+- **House Roster Companion Picker (Phase 1 Onboarding):** Onboarding at [`/onboarding`](file:///c:/Users/rob_b/Ryff/src/app/onboarding/page.tsx) now features Ryff's full 5-bot roster—**RobBPaul** (Working Tone Pragmatist), **Hank** (Grumpy Vintage Luthier), **Stevie** (Classic Valve Purist), **Tim** (DSP Tech Architect), and **McGee** (Scrappy High-Gain Modder). Each bot card showcases their specialty badge, signature attitude, and 3 1-tap starter debate questions.
+- **"The Barstool Audition" Creation Studio ([`/onboarding/bot`](file:///c:/Users/rob_b/Ryff/src/app/onboarding/bot/page.tsx)):** Musicians can now build their own custom companion bot in under 60 seconds (accessible without a paywall).
+- **100-Word Player Manifesto Input:** Rather than filling in robotic questionnaires or drafting catchphrases, players write a ~100-word freeform paragraph describing their sound, era, and attitude (or write about themselves!). Includes a 1-tap "Load 1987 Sunset Strip Example" (Slash with a Derrig Les Paul replica, cranked Marshall, playing dirty blues and calling out hair-metal posers).
+- **Player & Source Affinities:** Users specify hero players (e.g. Keith Richards, Rory Gallagher), disliked players/scenes (e.g. Mötley Crüe, sterile shredders), trusted gear sources (e.g. That Pedal Show, Premier Guitar), and distrusted hype channels.
+- **AI Persona Compiler & Matrix Extraction (`POST /api/persona/generate`):** Powered by Gemini, the compiler parses the player manifesto into a structured `BotDossier`, extracting temperature dials (0.3–0.85), pushback rate (20%–45%), a punchy archetype label, an irrational hill to die on, and 3 authentic technical debate argument lines.
+- **"Meet Your Bot" Reveal Card:** Displays the compiled character dossier with live dials, hill to die on, argument lines, and 1-click actions: **Save & Spar in Backstage** or **Download .json Character File**.
+- **Live Backstage & Autonomous Debate Integration:** Saved custom bots automatically appear in the Backstage bot switcher carousel with custom avatars and tags, and can be selected as speakers in multi-bot autonomous debates pitted against natural ideological opposites (e.g. an anti-modeller custom bot pitted against Tim).
+
+---
+
+### 2. Technical Details (For Developers)
+- **Database Schema Migration ([`db/migrations/0018_user_bots.sql`](file:///c:/Users/rob_b/Ryff/db/migrations/0018_user_bots.sql)):**
+  - Created `user_bots` table with `id uuid primary key`, `user_id uuid references users(id)`, `name text`, `dossier jsonb`, `is_active boolean`, and indices on `user_id` and `is_active`.
+- **Persona Compiler API ([`src/app/api/persona/generate/route.ts`](file:///c:/Users/rob_b/Ryff/src/app/api/persona/generate/route.ts)):**
+  - Next.js route handling `POST /api/persona/generate`.
+  - Prompts Gemini (`MODEL_FAST`) with the anti-caricature compiler prompt from [`docs/BOT_ONBOARDING_AND_LIFECYCLE.md`](file:///c:/Users/rob_b/Ryff/docs/BOT_ONBOARDING_AND_LIFECYCLE.md).
+  - Validates and returns a full [`BotDossier`](file:///c:/Users/rob_b/Ryff/src/types/bot.ts) JSON object.
+- **Persona Persistence API ([`src/app/api/persona/route.ts`](file:///c:/Users/rob_b/Ryff/src/app/api/persona/route.ts)):**
+  - `GET /api/persona`: Returns active user bot from `user_bots`.
+  - `POST /api/persona`: Deactivates previous custom bots for the user and persists new active companion bot; registers bot in server memory via `registerCustomBot`.
+- **Bot Types & Engine Enhancements ([`src/types/bot.ts`](file:///c:/Users/rob_b/Ryff/src/types/bot.ts), [`src/lib/bots.ts`](file:///c:/Users/rob_b/Ryff/src/lib/bots.ts)):**
+  - Added `favoured_players`, `disliked_players`, `trusted_sources`, `distrusted_sources` to `BotBiasesConfig`.
+  - Added `player_manifesto` to `BotDossier`.
+  - Added `registerCustomBot` for dynamic in-memory bot registration during session runtime.
+  - Enhanced `buildBotSystemPrompt` to inject the player manifesto, admired heroes, dismissed scenes, and trusted/distrusted sources into the LLM system prompt.
+- **Autonomous Debate Pipeline Integration ([`src/pipeline/debate.ts`](file:///c:/Users/rob_b/Ryff/src/pipeline/debate.ts)):**
+  - Updated `DebateOptions` and `selectDebatersForDebate` to accept `userBot?: BotDossier`.
+  - When a user bot participates in a debate, the engine parses its hostile concepts and modelling stance to pair it against its natural ideological foil (e.g. anti-DSP pairs with Tim; anti-relic/cork-sniffer pairs with Stevie or Hank; anti-metal pairs with McGee).
+- **Chat & Backstage Integration ([`src/app/api/chat/route.ts`](file:///c:/Users/rob_b/Ryff/src/app/api/chat/route.ts), [`src/app/(app)/backstage/page.tsx`](file:///c:/Users/rob_b/Ryff/src/app/%28app%29/backstage/page.tsx)):**
+  - `api/chat`: Resolves bot from static roster, dynamic registry, or `user_bots` database table.
+  - `backstage/page.tsx`: Dynamically loads custom bot via `/api/persona` or local storage fallback; adds custom bot to switcher carousel; renders avatar text badges for custom bots; uses generated `sample_lines` as starter chips; adds `+ Build Custom Bot` studio link.
+- **Onboarding UI Upgrade ([`src/app/onboarding/page.tsx`](file:///c:/Users/rob_b/Ryff/src/app/onboarding/page.tsx)):**
+  - Modernized Step 2 to display all 5 bots with philosophy descriptions and starter questions.
+  - Added prominent banner linking to [`/onboarding/bot`](file:///c:/Users/rob_b/Ryff/src/app/onboarding/bot/page.tsx).
+
+---
+
+### 3. White-Label & Domain-Agnostic Utility
+- **Conversational Persona Distillation across Verticals:** In any domain (e.g., performance motoring, watchmaking, specialty coffee, cycling), asking users to configure personas through mechanical forms produces sterile caricatures. Capturing a 100-word freeform manifesto ("I drive a 1989 E30 M3, rev-match downshifts, hate electronic steering nannies, trust grassroots track builders...") and compiling it into hard affinities, trusted sources, and attitude dials creates deeply authentic, engaging sparring companions in any vertical.
+- **Ideological Foil Matchmaking for Autonomous Debates:** The logic pairing user bots with opposing viewpoints (e.g., purist mechanics vs. EV engineers; vintage mechanical watch purists vs. smartwatch horologists) allows automated multi-agent debates where user-generated agents find their natural foils automatically.
+
+---
+
 ## Feature: Forensic Instrument Specifications, Custom String Gauges & Passport Strikethrough Log Voiding
 - **Date:** October 14, 2026
 - **Category:** Rig Passport / Forensic Specs / Maintenance History / Audit Trail

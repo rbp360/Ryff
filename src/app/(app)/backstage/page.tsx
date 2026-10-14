@@ -4,7 +4,8 @@ import { useState, useEffect, useRef, useMemo, Suspense } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { BackButton } from '@/components/BackButton';
-import { getAllBots, getBot, DEFAULT_BOT_ID } from '@/lib/bots';
+import { getAllBots, getBot, DEFAULT_BOT_ID, registerCustomBot } from '@/lib/bots';
+import { BotDossier } from '@/types/bot';
 
 interface ChatMessage {
   id?: string | number;
@@ -183,7 +184,53 @@ function renderMessageContent(content: string, isUser: boolean, activeAccent: st
 function BackstageChatInner() {
   const searchParams = useSearchParams();
   const requestedBotParam = searchParams.get('bot');
-  const allBots = useMemo(() => getAllBots(), []);
+  const [customUserBot, setCustomUserBot] = useState<BotDossier | null>(null);
+
+  // Load custom companion bot from API or localStorage
+  useEffect(() => {
+    let ignore = false;
+    async function loadUserBot() {
+      try {
+        const res = await fetch('/api/persona');
+        if (res.ok && !ignore) {
+          const data = await res.json();
+          if (data.bot) {
+            registerCustomBot(data.bot);
+            setCustomUserBot(data.bot);
+            if (requestedBotParam === data.bot.id) {
+              setActiveBotId(data.bot.id);
+            }
+          }
+        }
+      } catch {
+        try {
+          const saved = localStorage.getItem('ryff_user_bot');
+          if (saved && !ignore) {
+            const parsed = JSON.parse(saved);
+            registerCustomBot(parsed);
+            setCustomUserBot(parsed);
+            if (requestedBotParam === parsed.id) {
+              setActiveBotId(parsed.id);
+            }
+          }
+        } catch {
+          // ignore
+        }
+      }
+    }
+    loadUserBot();
+    return () => {
+      ignore = true;
+    };
+  }, [requestedBotParam]);
+
+  const allBots = useMemo(() => {
+    const list = getAllBots();
+    if (customUserBot && !list.some((b) => b.id === customUserBot.id)) {
+      return [customUserBot, ...list];
+    }
+    return list;
+  }, [customUserBot]);
 
   const [activeBotId, setActiveBotId] = useState<string>(() => {
     if (requestedBotParam) {
@@ -197,12 +244,17 @@ function BackstageChatInner() {
   if (requestedBotParam !== prevBotParam) {
     setPrevBotParam(requestedBotParam);
     if (requestedBotParam) {
-      setActiveBotId(getBot(requestedBotParam).id);
+      setActiveBotId(getBot(requestedBotParam, customUserBot || undefined).id);
     }
   }
 
-  const activeBot = useMemo(() => getBot(activeBotId), [activeBotId]);
-  const activeTheme = BOT_THEMES[activeBot.id] || BOT_THEMES.robbpaul;
+  const activeBot = useMemo(() => getBot(activeBotId, customUserBot || undefined), [activeBotId, customUserBot]);
+  const activeTheme = BOT_THEMES[activeBot.id] || {
+    accent: '#22c55e',
+    bg: 'rgba(34, 197, 94, 0.15)',
+    badge: activeBot.isUserProxy ? 'Companion' : 'Custom',
+    gradient: 'linear-gradient(135deg, #15803d, #14532d)',
+  };
   const [showRosterPreview, setShowRosterPreview] = useState(false);
 
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -413,11 +465,41 @@ function BackstageChatInner() {
             overflowX: 'auto',
             paddingBottom: '4px',
             scrollbarWidth: 'none',
+            alignItems: 'center',
           }}
         >
+          {/* Custom Bot Studio Link */}
+          <Link
+            href="/onboarding/bot"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              padding: '7px 11px',
+              borderRadius: '10px',
+              border: '1px dashed rgba(34, 197, 94, 0.5)',
+              background: 'rgba(34, 197, 94, 0.06)',
+              color: 'var(--ac)',
+              fontWeight: 800,
+              fontSize: '11.5px',
+              whiteSpace: 'nowrap',
+              textDecoration: 'none',
+              flexShrink: 0,
+              cursor: 'pointer',
+            }}
+          >
+            <span>✨</span>
+            <span>{customUserBot ? 'Edit Custom Bot' : '+ Build Custom Bot'}</span>
+          </Link>
+
           {allBots.map((b) => {
             const isSelected = b.id === activeBotId;
-            const theme = BOT_THEMES[b.id] || BOT_THEMES.robbpaul;
+            const theme = BOT_THEMES[b.id] || {
+              accent: '#22c55e',
+              bg: 'rgba(34, 197, 94, 0.15)',
+              badge: b.isUserProxy ? 'Companion' : 'Custom',
+              gradient: 'linear-gradient(135deg, #15803d, #14532d)',
+            };
             return (
               <button
                 key={b.id}
@@ -458,17 +540,21 @@ function BackstageChatInner() {
                     flexShrink: 0,
                   }}
                 >
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={b.avatarImage || `/images/bots/${b.id}.jpg`}
-                    alt={b.name}
-                    style={{
-                      width: '100%',
-                      height: '100%',
-                      objectFit: 'cover',
-                      display: 'block',
-                    }}
-                  />
+                  {b.isUserProxy ? (
+                    <span>{b.avatarText || 'UB'}</span>
+                  ) : (
+                    /* eslint-disable-next-line @next/next/no-img-element */
+                    <img
+                      src={b.avatarImage || `/images/bots/${b.id}.jpg`}
+                      alt={b.name}
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'cover',
+                        display: 'block',
+                      }}
+                    />
+                  )}
                 </div>
                 <span>{b.name}</span>
                 <span
@@ -515,17 +601,23 @@ function BackstageChatInner() {
               justifyContent: 'center',
             }}
           >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={activeBot.avatarImage || `/images/bots/${activeBot.id}.jpg`}
-              alt={activeBot.name}
-              style={{
-                width: '100%',
-                height: '100%',
-                objectFit: 'cover',
-                display: 'block',
-              }}
-            />
+            {activeBot.isUserProxy ? (
+              <div style={{ fontSize: '18px', fontWeight: 900, color: '#fff' }}>
+                {activeBot.avatarText || 'UB'}
+              </div>
+            ) : (
+              /* eslint-disable-next-line @next/next/no-img-element */
+              <img
+                src={activeBot.avatarImage || `/images/bots/${activeBot.id}.jpg`}
+                alt={activeBot.name}
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                  display: 'block',
+                }}
+              />
+            )}
           </div>
           <div style={{ flex: 1, minWidth: 0 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
@@ -607,7 +699,7 @@ function BackstageChatInner() {
               No messages yet with <b>{activeBot.name}</b>. Spark a debate with one of these:
             </p>
             <div className="chips" style={{ justifyContent: 'center' }}>
-              {(BOT_STARTER_PROMPTS[activeBot.id] || BOT_STARTER_PROMPTS.robbpaul).map((prompt) => (
+              {(BOT_STARTER_PROMPTS[activeBot.id] || (activeBot.sample_lines && activeBot.sample_lines.length > 0 ? activeBot.sample_lines : BOT_STARTER_PROMPTS.robbpaul)).map((prompt) => (
                 <button
                   key={prompt}
                   type="button"

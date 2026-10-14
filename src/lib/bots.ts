@@ -15,26 +15,39 @@ export const BOT_ROSTER: Record<string, BotDossier> = {
 
 export const DEFAULT_BOT_ID = 'robbpaul';
 
-/**
- * Returns all active bots in the simulation roster.
- */
-export function getAllBots(): BotDossier[] {
-  return Object.values(BOT_ROSTER);
+// In-memory registry for user-created bots during session / runtime
+const DYNAMIC_BOTS: Record<string, BotDossier> = {};
+
+export function registerCustomBot(bot: BotDossier): void {
+  if (bot && bot.id) {
+    DYNAMIC_BOTS[bot.id.toLowerCase()] = bot;
+  }
 }
 
 /**
- * Retrieves a bot by its ID, defaulting to RobBPaul if not found.
+ * Returns all active bots in the simulation roster, plus any registered dynamic bots.
  */
-export function getBot(botId?: string | null): BotDossier {
+export function getAllBots(): BotDossier[] {
+  return [...Object.values(BOT_ROSTER), ...Object.values(DYNAMIC_BOTS)];
+}
+
+/**
+ * Retrieves a bot by its ID, checking static roster, registered dynamic bots,
+ * an optional inline custom bot, and defaulting to RobBPaul if not found.
+ */
+export function getBot(botId?: string | null, customBot?: BotDossier): BotDossier {
+  if (customBot && customBot.id && botId && customBot.id.toLowerCase() === botId.toLowerCase()) {
+    return customBot;
+  }
   if (!botId) return BOT_ROSTER[DEFAULT_BOT_ID];
   const normalized = botId.trim().toLowerCase();
-  return BOT_ROSTER[normalized] || BOT_ROSTER[DEFAULT_BOT_ID];
+  return BOT_ROSTER[normalized] || DYNAMIC_BOTS[normalized] || (customBot && customBot.id.toLowerCase() === normalized ? customBot : null) || BOT_ROSTER[DEFAULT_BOT_ID];
 }
 
 /**
  * Builds the complete system prompt for a bot based on its dossier,
  * enforcing voice, biases, anti-fluff rules, few-shot anchor lines,
- * and optional pushback directives.
+ * player affinities, manifesto, and optional pushback directives.
  */
 export function buildBotSystemPrompt(
   bot: BotDossier,
@@ -45,12 +58,32 @@ export function buildBotSystemPrompt(
   parts.push(`You are ${bot.name}, a fictional guitar gear character (${bot.archetype}).`);
   parts.push(`Tone: ${bot.voice.tone}`);
 
+  if (bot.player_manifesto) {
+    parts.push(`Core Player Ethos / Manifesto: "${bot.player_manifesto}"`);
+  }
+
   if (bot.voice.slang && bot.voice.slang.length > 0) {
     parts.push(`Natural phrases and vocabulary you use: ${bot.voice.slang.join(', ')}.`);
   }
 
   if (bot.biases.favoured_gear && bot.biases.favoured_gear.length > 0) {
     parts.push(`Gear and brands you love and advocate for: ${bot.biases.favoured_gear.join(', ')}.`);
+  }
+
+  if (bot.biases.favoured_players && bot.biases.favoured_players.length > 0) {
+    parts.push(`Guitarists, heroes, and inspirations you admire and defend: ${bot.biases.favoured_players.join(', ')}.`);
+  }
+
+  if (bot.biases.disliked_players && bot.biases.disliked_players.length > 0) {
+    parts.push(`Players, posers, or scenes you dismiss or critique: ${bot.biases.disliked_players.join(', ')}.`);
+  }
+
+  if (bot.biases.trusted_sources && bot.biases.trusted_sources.length > 0) {
+    parts.push(`Publications, channels, and sources you trust: ${bot.biases.trusted_sources.join(', ')}.`);
+  }
+
+  if (bot.biases.distrusted_sources && bot.biases.distrusted_sources.length > 0) {
+    parts.push(`Hype channels, clickbait, and sources you distrust: ${bot.biases.distrusted_sources.join(', ')}.`);
   }
 
   if (bot.biases.hostile_concepts && bot.biases.hostile_concepts.length > 0) {

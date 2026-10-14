@@ -46,6 +46,7 @@ export interface DebateOptions {
   items?: CandidateItem[];
   promptVersion?: string; // e.g. 'v1', 'v2'
   speakerIds?: string[]; // e.g. ['robbpaul', 'mcgee'] or ['stevie', 'tim', 'hank']
+  userBot?: BotDossier; // Custom companion bot to include in debate
 }
 
 // Bot keyword affinities for topic scoring
@@ -87,17 +88,18 @@ const NATURAL_OPPONENTS: Record<string, string[]> = {
 };
 
 /**
- * Dynamically selects 2 or 3 debaters from the 5-bot roster based on
- * item topics, keyword affinities, and philosophical friction.
+ * Dynamically selects 2 or 3 debaters based on
+ * item topics, keyword affinities, and philosophical friction,
+ * supporting both static roster and user companion bots.
  */
 export function selectDebatersForDebate(
   candidateItems: CandidateItem[],
-  options?: { speakerIds?: string[] }
+  options?: { speakerIds?: string[]; userBot?: BotDossier }
 ): BotDossier[] {
   // 1. If explicit speaker IDs passed, resolve and return them (clamped to 2-3 bots)
   if (options?.speakerIds && options.speakerIds.length >= 2) {
     const requested = options.speakerIds
-      .map((id) => getBot(id))
+      .map((id) => getBot(id, options?.userBot))
       .filter((b, idx, arr) => arr.findIndex((x) => x.id === b.id) === idx);
 
     if (requested.length >= 2) {
@@ -105,7 +107,7 @@ export function selectDebatersForDebate(
     }
   }
 
-  // 2. Score each bot against the candidate items text
+  // 2. Score each bot against candidate items text
   const itemText = candidateItems
     .map((it) => `${it.title} ${it.summary} ${(it.brands || []).join(' ')} ${(it.products || []).join(' ')}`)
     .join(' ')
@@ -129,6 +131,34 @@ export function selectDebatersForDebate(
     }
   }
 
+  // If a custom user companion bot is provided, determine ideological foil
+  if (options?.userBot) {
+    const userBot = options.userBot;
+    const hostile = [
+      ...(userBot.biases.hostile_concepts || []),
+      userBot.biases.stance_on_modelling || '',
+      userBot.irrational_hill_to_die_on || '',
+      ...(userBot.biases.disliked_players || []),
+    ].join(' ').toLowerCase();
+
+    // Determine highest friction opponent
+    let foilId = 'robbpaul';
+    if (/digital|dsp|modeller|kemper|helix|quad cortex/i.test(hostile)) {
+      foilId = 'tim';
+    } else if (/vintage|cork|relic|custom shop|purist|wood/i.test(hostile)) {
+      foilId = 'stevie';
+    } else if (/metal|shred|gain|5150|chug/i.test(hostile)) {
+      foilId = 'mcgee';
+    } else if (/repair|luthier|solder/i.test(hostile)) {
+      foilId = 'hank';
+    } else {
+      foilId = 'robbpaul';
+    }
+
+    const speakerB = getBot(foilId);
+    return [userBot, speakerB];
+  }
+
   // Sort bots by highest topic affinity
   const rankedBots = Object.entries(scores).sort((a, b) => b[1] - a[1]);
   const primaryBotId = rankedBots[0][1] > 0 ? rankedBots[0][0] : 'robbpaul';
@@ -136,7 +166,6 @@ export function selectDebatersForDebate(
 
   // 3. Select Speaker B from natural opponents
   const possibleOpponents = NATURAL_OPPONENTS[speakerA.id] || ['hank', 'tim'];
-  // Pick opponent with highest score among natural opponents, or first
   const speakerBId = possibleOpponents.sort((a, b) => (scores[b] || 0) - (scores[a] || 0))[0];
   const speakerB = getBot(speakerBId);
 
@@ -231,7 +260,10 @@ export async function runDebatePipeline(options: DebateOptions = {}) {
   candidateItems.forEach((it) => console.log(` - [ID ${it.id}] (Hype: ${it.hype}) ${it.title}`));
 
   // 1. Dynamic Speaker Selection
-  const debaters = selectDebatersForDebate(candidateItems, { speakerIds: options.speakerIds });
+  const debaters = selectDebatersForDebate(candidateItems, {
+    speakerIds: options.speakerIds,
+    userBot: options.userBot,
+  });
   const [speakerA, speakerB, speakerC] = debaters;
   const isTriad = Boolean(speakerC);
 

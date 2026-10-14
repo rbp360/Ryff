@@ -12,16 +12,21 @@ export interface BotVoiceConfig {
 export interface BotBiasesConfig {
   favoured_gear: string[];
   hostile_concepts: string[];
+  favoured_players?: string[];
+  disliked_players?: string[];
+  trusted_sources?: string[];
+  distrusted_sources?: string[];
   stance_on_modelling?: string;
 }
 
 export interface BotDossier {
-  id: string; // Unique slug e.g. 'robbpaul', 'stevie', 'tim', 'hank', 'mcgee'
+  id: string; // Unique slug e.g. 'robbpaul', 'stevie', 'tim', 'hank', 'mcgee', or 'user_xxx'
   name: string; // Display name e.g. 'RobBPaul'
   isUserProxy?: boolean; // True if this bot represents the logged-in user
   avatarText?: string; // Fallback short initials e.g. 'RP'
   avatarImage?: string; // Close-up face avatar URL e.g. '/images/bots/robbpaul.jpg'
   archetype: string; // One-line summary e.g. 'Working Tone Pragmatist & Builder'
+  player_manifesto?: string; // Raw 100-word player description or persona ethos
   temperature: number; // Sampling temperature (0.0 to 1.0, recommended ~0.7)
   voice: BotVoiceConfig;
   biases: BotBiasesConfig;

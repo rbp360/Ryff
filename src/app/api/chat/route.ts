@@ -11,6 +11,7 @@ import { complete, LLMMessage } from '../../../lib/llm';
 import { logEvent } from '../../../lib/events';
 import { env } from '../../../lib/env';
 import { getBot, buildBotSystemPrompt } from '../../../lib/bots';
+import { BotDossier } from '../../../types/bot';
 
 function loadPromptFile(filename: string): string {
   try {
@@ -34,7 +35,19 @@ export async function GET(request: NextRequest) {
 
   const { searchParams } = new URL(request.url);
   const botParam = searchParams.get('bot') || 'robbpaul';
-  const bot = getBot(botParam);
+  let bot = getBot(botParam);
+  if (bot.id !== botParam && botParam !== 'robbpaul') {
+    try {
+      const userBotRows = await db<{ dossier: any }[]>`
+        select dossier from user_bots where id::text = ${botParam} or (user_id = ${session.userId} and is_active = true) limit 1
+      `;
+      if (userBotRows.length > 0) {
+        bot = userBotRows[0].dossier as BotDossier;
+      }
+    } catch {
+      // fallback to resolved bot
+    }
+  }
 
   const messages = await db`
     select id, conversation_id, bot, role, content, flagged, created_at
@@ -77,7 +90,19 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { bot: botParam, botId, message, conversationId } = body;
     const requestedId = botId || botParam || 'robbpaul';
-    const targetBot = getBot(requestedId);
+    let targetBot = getBot(requestedId);
+    if (targetBot.id !== requestedId && requestedId !== 'robbpaul') {
+      try {
+        const userBotRows = await db<{ dossier: any }[]>`
+          select dossier from user_bots where id::text = ${requestedId} or (user_id = ${session.userId} and is_active = true) limit 1
+        `;
+        if (userBotRows.length > 0) {
+          targetBot = userBotRows[0].dossier as BotDossier;
+        }
+      } catch {
+        // fallback to default
+      }
+    }
 
     // 1. Check Usage Caps
     const usageCheck = await checkUserUsage(session.userId, session.cohort, targetBot.id);

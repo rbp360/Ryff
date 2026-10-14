@@ -106,6 +106,9 @@ export async function checkUserUsage(
       case 'vee':
         inCharacterMessage = `Vee is off checking fresh warehouse stock and deal listings! You've used all ${caps.dailyMsgs} chats for today. Catch you tomorrow!`;
         break;
+      default:
+        inCharacterMessage = `Your companion bot called it a night. Daily message cap reached (${caps.dailyMsgs}/${caps.dailyMsgs}). Catch you tomorrow!`;
+        break;
     }
 
     return {

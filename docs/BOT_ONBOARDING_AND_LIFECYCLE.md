@@ -18,58 +18,71 @@ When non-technical musicians or users are asked to define an AI persona, they na
 
 ## 2. "The Barstool Audition" Questionnaire (User UI)
 
-To onboard a user's custom companion bot, we do not ask users to write JSON or draft catchphrases. We ask **5 plain-English questions** that feel like a casual conversation at a guitar shop counter or pub barstool:
+To onboard a user's custom companion bot, we do not ask users to write JSON or draft catchphrases. We ask plain-English questions that feel like a casual conversation at a guitar shop counter or pub barstool, centered around a freeform player manifesto:
 
-### Question 1: The Number One Rig
-* **UI Label:** *"What's your number one guitar and amp combination?"*
-* **Example User Input:** *"1993 USA Strat with Texas Specials into a Fender Deluxe Reverb."*
-* **Mapped Dossier Field:** `biases.favoured_gear`
+### Core Prompt: The 100-Word Player Manifesto
+* **UI Label:** *"Describe what kind of player you want your bot to be in ~100 words (or write about yourself!)."*
+* **Example User Input:** *"I'm Slash, from the Sunset Strip in 1987. Bottle of Jack and a copied Les Paul is all I have to my name. Playing songs I think the Stones should've written. Don't care about the glam bands in the scene, don't care about gear hype—just want to play loud, brash, and loose. More of a blues player gone bad than an out-and-out shredder. Hate posers like Mötley Crüe."*
+* **Mapped Dossier Field:** `player_manifesto`, synthesized `archetype`, inferred `temperature` (dial 0.3–0.85), inferred `disagreement_rate` (dial 0.2–0.45), `voice.tone`, and seed for `sample_lines`.
 
-### Question 2: The Pet Peeve
-* **UI Label:** *"What guitar trend, spec, or player habit drives you completely up the wall?"*
-* **Example User Input:** *"People buying £4k Custom Shop guitars with fake relic scratches who never leave the bedroom."*
-* **Mapped Dossier Field:** `biases.hostile_concepts` and `irrational_hill_to_die_on`
-
-### Question 3: The Hard-Won Wisdom
-* **UI Label:** *"What's one piece of advice you find yourself constantly telling other players?"*
-* **Example User Input:** *"Spend £80 on a proper setup and fresh strings before you waste £300 swapping pickups."*
-* **Mapped Dossier Field:** Voice cadence & seed for argumentative `sample_lines`
-
-### Question 4: The Cliché You Hate
-* **UI Label:** *"What's one guitar cliché or phrase you would never be caught dead saying?"*
-* **Example User Input:** *"Toan is in the fingers / Mojo / Shredding."*
-* **Mapped Dossier Field:** `voice.forbidden_phrases`
-
-### Question 5: Banter Style (The Attitude Dial)
-* **UI Label:** *"How do you banter with your mates?"*
-* **Options (Single Select):**
-  - **Dry & Cynical:** *"Skeptical of marketing hype, values proven gigging reliability."*
-  - **Grumpy Purist:** *"Analog only, values craftsmanship and physical repairability."*
-  - **Tech Realist:** *"Pragmatic about audio science, DSP modelling, and mix ergonomics."*
-  - **Scrappy Modder:** *"Irreverent, loud, loves budget hacks, pawnshop beaters, and high gain."*
-* **Mapped Dossier Field:** `archetype`, `voice.tone`, `temperature`
+### Trait & Affinity Prompts:
+1. **The Number One Rig & Favourite Gear:**
+   - *UI Label:* *"What's your number one guitar and amp setup?"*
+   - *Mapped Field:* `biases.favoured_gear`
+2. **Hero Players & Influences:**
+   - *UI Label:* *"Who are your guitar heroes or favourite players?"* (e.g. Keith Richards, Rory Gallagher, Gilmour)
+   - *Mapped Field:* `biases.favoured_players`
+3. **Disliked / Distrusted Players & Scenes:**
+   - *UI Label:* *"What players, trends, or scenes do you find overrated or unlistenable?"* (e.g. 80s hair metal posers, sterile sweep-picking shredders)
+   - *Mapped Field:* `biases.disliked_players`
+4. **Trusted Gear Sources & Channels:**
+   - *UI Label:* *"What YouTube channels, magazines, or communities do you actually trust?"* (e.g. That Pedal Show, Premier Guitar)
+   - *Mapped Field:* `biases.trusted_sources`
+5. **Distrusted / Hype Sources:**
+   - *UI Label:* *"What channels or sites do you avoid or distrust?"* (e.g. clickbait gear vloggers, corporate PR releases)
+   - *Mapped Field:* `biases.distrusted_sources`
+6. **The Pet Peeve & Hill to Die On:**
+   - *UI Label:* *"What guitar trend, spec, or habit drives you completely up the wall?"*
+   - *Mapped Field:* `biases.hostile_concepts` and `irrational_hill_to_die_on`
+7. **The Cliché You Hate:**
+   - *UI Label:* *"What cliché would your bot never be caught dead saying?"*
+   - *Mapped Field:* `voice.forbidden_phrases`
+8. **Banter Style (The Attitude Dial):**
+   - *Options:*
+     - **Dry & Cynical:** *"Skeptical of marketing hype, values proven gigging reliability."*
+     - **Grumpy Purist:** *"Analog only, values craftsmanship and physical repairability."*
+     - **Tech Realist:** *"Pragmatic about audio science, DSP modelling, and mix ergonomics."*
+     - **Scrappy Modder:** *"Irreverent, loud, loves budget hacks, pawnshop beaters, and high gain."*
+     - **Wild Renegade:** *"Loud, loose, visceral rock 'n' roll street swagger; hates posers."*
 
 ---
 
 ## 3. The AI Persona Compiler (`POST /api/persona/generate`)
 
-When the user submits the questionnaire, the server calls Google Gemini (`MODEL_FAST` or `MODEL_SMART`) with the **Persona Compiler Prompt** to compile a complete, validated `BotDossier` object.
+When the user submits the questionnaire, the server calls Google Gemini (`MODEL_FAST` or `MODEL_SMART`) with the **Persona Compiler Prompt** to extract entities, calculate behavioral dials, and compile a complete, validated `BotDossier` object.
 
 ### The Compiler Prompt Specification
 
 ```markdown
-You are the Ryff Persona Compiler. Your job is to convert raw questionnaire answers from a musician into a rich, authentic guitar character dossier for a 1-on-1 sparring bot.
+You are the Ryff Persona Compiler. Your job is to convert raw questionnaire answers and a ~100-word musician manifesto into a rich, authentic guitar character dossier for a 1-on-1 sparring bot and pub debater.
 
 CRITICAL RULES:
 1. Do NOT generate bumper-sticker slogans or tired rock clichés (e.g. "play it like you stole it", "melt faces", "rock on").
-2. Write 3 distinct "sample_lines" that show how this player ARGUES technical points about gear. Each line must debate a real hardware aspect (string gauge, pots, nut slots, valve sag, latency, capacitors, mix clarity).
-3. Derive 3-5 forbidden phrases from the user's hates so the bot never sounds like generic AI filler or a cliché machine.
+2. Parse the ~100-word player description to infer:
+   - "temperature": 0.3 (surgical, precision tech) to 0.85 (loose, brash, rock-and-roll street swagger).
+   - "disagreement_rate": 0.20 to 0.45 based on skepticism of posers, hype, or modern trends.
+   - "archetype": A punchy 3-5 word label (e.g. "Sunset Strip Blues-Rock Renegade", "Benchtop Tube Purist").
+3. Extract explicit entities into:
+   - favoured_gear, hostile_concepts, favoured_players, disliked_players, trusted_sources, distrusted_sources.
+4. Write 3 distinct "sample_lines" that demonstrate how this exact player ARGUES technical points about gear. Each line must debate a real hardware aspect (string gauge, pots, nut slots, valve sag, latency, capacitors, mix clarity) in their authentic voice.
+5. Derive 3-5 forbidden phrases from the user's hates so the bot never sounds like generic AI filler or a cliché machine.
 
 Output valid JSON matching this schema:
 {
   "name": string,
   "archetype": string,
-  "temperature": number (0.3 to 0.8),
+  "player_manifesto": string,
+  "temperature": number,
   "voice": {
     "tone": string,
     "slang": string[],
@@ -78,10 +91,14 @@ Output valid JSON matching this schema:
   "biases": {
     "favoured_gear": string[],
     "hostile_concepts": string[],
+    "favoured_players": string[],
+    "disliked_players": string[],
+    "trusted_sources": string[],
+    "distrusted_sources": string[],
     "stance_on_modelling": string
   },
   "irrational_hill_to_die_on": string,
-  "disagreement_rate": number (0.2 to 0.45),
+  "disagreement_rate": number,
   "sample_lines": string[] // Exactly 3 technical argument lines
 }
 ```

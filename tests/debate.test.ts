@@ -109,6 +109,34 @@ describe('Milestone M7.3: Multi-Bot Autonomous Debate Pipeline', () => {
       expect(debaters[0].id).toBe('stevie');
       expect(['tim', 'mcgee', 'robbpaul']).toContain(debaters[1].id);
     });
+
+    it('pairs a custom user companion bot against their ideological foil', () => {
+      const customBot = {
+        id: 'user_slash_87',
+        name: 'Slash 87',
+        isUserProxy: true,
+        archetype: 'Sunset Strip Blues-Rock Renegade',
+        temperature: 0.8,
+        disagreement_rate: 0.4,
+        voice: { tone: 'Visceral', slang: [], forbidden_phrases: [] },
+        biases: {
+          favoured_gear: ['Les Paul', 'Marshall Jubilee'],
+          hostile_concepts: ['DSP modellers', 'Digital amp plugins'],
+          stance_on_modelling: 'Modellers are toys with an iPad screen.',
+        },
+        irrational_hill_to_die_on: 'Real rock requires real speaker air.',
+        sample_lines: ['Crank the gain.'],
+      };
+
+      const candidates: CandidateItem[] = [
+        { id: 104, title: 'Neural DSP Plugin Update', summary: 'Quad Cortex firmware.', brands: [], products: [] },
+      ];
+
+      const debaters = selectDebatersForDebate(candidates, { userBot: customBot as any });
+      expect(debaters.length).toBe(2);
+      expect(debaters[0].id).toBe('user_slash_87');
+      expect(debaters[1].id).toBe('tim');
+    });
   });
 
   describe('Multi-Turn Sparring Pipeline Execution', () => {
