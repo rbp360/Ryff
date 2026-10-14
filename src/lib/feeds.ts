@@ -169,9 +169,9 @@ export function computeUrlHash(url: string): string {
 }
 
 const USER_AGENTS = [
-  'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
-  'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.4.1 Safari/605.1.15',
-  'Mozilla/5.0 (X11; Linux x86_64; rv:125.0) Gecko/20100101 Firefox/125.0',
+  'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36',
+  'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Safari/605.1.15',
+  'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:126.0) Gecko/20100101 Firefox/126.0',
 ];
 
 export async function fetchFeed(feedUrl: string, keywordPrefilter: string[] | null = null): Promise<{ items: ParsedFeedItem[]; status: string }> {
@@ -188,22 +188,31 @@ export async function fetchFeed(feedUrl: string, keywordPrefilter: string[] | nu
 
   let lastErrorStatus = '';
 
-  for (let attempt = 1; attempt <= 2; attempt++) {
+  for (let attempt = 1; attempt <= 3; attempt++) {
     try {
       const ua = USER_AGENTS[(attempt - 1) % USER_AGENTS.length];
       const res = await fetch(feedUrl, {
         headers: {
           'User-Agent': ua,
-          'Accept': 'application/rss+xml, application/xml, text/xml, application/atom+xml, text/html;q=0.9, */*;q=0.8',
+          'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,application/rss+xml,application/atom+xml,*/*;q=0.8',
           'Accept-Language': 'en-US,en;q=0.9',
+          'Cache-Control': 'max-age=0',
+          'Sec-Ch-Ua': '"Google Chrome";v="125", "Chromium";v="125", "Not.A/Brand";v="24"',
+          'Sec-Ch-Ua-Mobile': '?0',
+          'Sec-Ch-Ua-Platform': '"Windows"',
+          'Sec-Fetch-Dest': 'document',
+          'Sec-Fetch-Mode': 'navigate',
+          'Sec-Fetch-Site': 'none',
+          'Sec-Fetch-User': '?1',
+          'Upgrade-Insecure-Requests': '1',
         },
         signal: AbortSignal.timeout(25000),
       });
 
       if (!res.ok) {
         lastErrorStatus = `error: HTTP ${res.status} (${res.statusText || 'Fetch failed'})`;
-        if (attempt < 2 && (res.status === 404 || res.status === 500 || res.status === 429 || res.status === 409)) {
-          await new Promise(r => setTimeout(r, 1000));
+        if (attempt < 3 && (res.status === 403 || res.status === 404 || res.status === 409 || res.status === 429 || res.status >= 500)) {
+          await new Promise(r => setTimeout(r, attempt * 1500));
           continue;
         }
         return { items: [], status: lastErrorStatus };
@@ -211,7 +220,12 @@ export async function fetchFeed(feedUrl: string, keywordPrefilter: string[] | nu
 
       const xmlText = await res.text();
       if (xmlText.trim().startsWith('<!doctype html') || xmlText.trim().startsWith('<html')) {
-        return { items: [], status: 'error: Returned HTML page instead of RSS feed' };
+        lastErrorStatus = 'error: Returned HTML page instead of RSS feed';
+        if (attempt < 3) {
+          await new Promise(r => setTimeout(r, attempt * 1500));
+          continue;
+        }
+        return { items: [], status: lastErrorStatus };
       }
 
       const feed = await parser.parseString(xmlText);

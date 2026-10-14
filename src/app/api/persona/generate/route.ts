@@ -22,7 +22,7 @@ export async function POST(request: NextRequest) {
     const compilerPrompt = `You are the Ryff Persona Compiler. Your job is to convert raw questionnaire answers and a ~100-word musician manifesto into a rich, authentic guitar character dossier for a 1-on-1 sparring bot and pub debater.
 
 CRITICAL RULES:
-1. Do NOT generate bumper-sticker slogans or tired rock clichés (e.g. "play it like you stole it", "melt faces", "rock on", "toan").
+1. Do NOT generate bumper-sticker slogans, catchphrases, or tired rock clichés (e.g. "play it like you stole it", "melt faces", "rock on", "toan", "boss", "chief", "have some of that", "it's only rock and roll").
 2. Parse the ~100-word player description and answers to infer:
    - "temperature": number between 0.3 (surgical, precision tech) and 0.85 (loose, brash, rock-and-roll street swagger).
    - "disagreement_rate": number between 0.20 and 0.45 based on skepticism of posers, hype, or modern trends.
@@ -35,8 +35,8 @@ CRITICAL RULES:
    - trusted_sources: Array of gear channels, magazines, or trusted sources.
    - distrusted_sources: Array of hype channels, clickbait, or corporate PR avoided.
 4. Write EXACTLY 3 distinct "sample_lines" that demonstrate how this exact player ARGUES technical points about gear. Each line must debate a real hardware aspect (string gauge, pots, nut slots, valve sag, latency, capacitors, mix clarity, speaker breakup) in their authentic voice and cadence.
-5. Derive 3-5 forbidden phrases from the user's hates and banned clichés so the bot never sounds like generic AI filler or a cliché machine.
-6. Provide 4-6 natural British or player slang terms/phrases in "slang" fitting their vibe (e.g. "proper", "rubbish", "in the mix", "crank it", "mate").
+5. Derive 4-6 forbidden phrases from the user's hates and banned clichés (always include AI filler like "Certainly!", "As an AI", "Delve", plus caricature terms like "boss", "chief", "rock on", "have some of that", "it's only rock and roll") so the bot never sounds like generic AI filler or a cartoon caricature.
+6. Provide 4-6 natural technical vocabulary terms or subtle player idioms in "slang" fitting their vibe (e.g. "properly biased", "touch sensitivity", "gain staging", "in the mix", "fair play"). Do NOT use catchphrases or greeting clichés.
 
 USER INPUTS:
 - Proposed Bot Name: ${name || 'User Custom Bot'}

@@ -13,7 +13,6 @@ import {
   STRING_MANUFACTURERS,
   STRING_TYPES_BY_BRAND,
   COMMON_STRING_TYPES,
-  DEFAULT_STRING_GAUGES,
   PICKUP_MANUFACTURERS,
   detectSettingsProvider,
   getBackdropForCategory,

@@ -164,13 +164,15 @@ h2{font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;
 .reaction-btn.dislike-active {
   color: #ef4444;
 }
-.ask-hank-link {
+.ask-hank-link,
+.ask-bot-link {
   font-size: 14px;
   font-weight: 700;
   color: var(--ac2);
   transition: opacity 0.15s ease;
 }
-.ask-hank-link:hover {
+.ask-hank-link:hover,
+.ask-bot-link:hover {
   opacity: 0.85;
 }
 /* backstage */

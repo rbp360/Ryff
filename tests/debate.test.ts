@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach, type Mock } from 'vitest';
 import { selectDebatersForDebate, runDebatePipeline, CandidateItem } from '../src/pipeline/debate';
+import { BotDossier } from '../src/types/bot';
 import { complete } from '../src/lib/llm';
 import { db } from '../src/lib/db';
 
@@ -132,7 +133,7 @@ describe('Milestone M7.3: Multi-Bot Autonomous Debate Pipeline', () => {
         { id: 104, title: 'Neural DSP Plugin Update', summary: 'Quad Cortex firmware.', brands: [], products: [] },
       ];
 
-      const debaters = selectDebatersForDebate(candidates, { userBot: customBot as any });
+      const debaters = selectDebatersForDebate(candidates, { userBot: customBot as unknown as BotDossier });
       expect(debaters.length).toBe(2);
       expect(debaters[0].id).toBe('user_slash_87');
       expect(debaters[1].id).toBe('tim');

@@ -48,6 +48,12 @@ describe('Bot Registry and Dossiers', () => {
     expect(prompt).toContain('Chibson');
     expect(prompt).toContain('Directive: Push back');
     expect(prompt).toContain('Banned phrases');
+    expect(prompt).toContain('Anti-Caricature Law');
+    expect(prompt).toContain('Natural Flow');
+    expect(prompt).toContain('No Obligatory Ending Questions');
+    expect(prompt).toContain('Anti-Plagiarism (Sample Lines & Manifesto)');
+    expect(prompt).toContain('No Parroting / Summarizing Context');
+    expect(prompt).toContain('Hardware Grounding');
   });
 
   it('supports registering a custom user companion bot with 100-word manifesto and player affinities', () => {

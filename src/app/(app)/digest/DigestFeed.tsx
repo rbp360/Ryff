@@ -1,16 +1,18 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { FeedItemCard, UserPreferences } from '@/lib/personalization';
 import { BackButton } from '@/components/BackButton';
 import { getCategoryFallbackImage } from '@/lib/gear-images';
-import { getBot } from '@/lib/bots';
+import { getBot, DEFAULT_BOT_ID } from '@/lib/bots';
+import { BotDossier } from '@/types/bot';
 
 interface DigestFeedProps {
   initialPersonalized: FeedItemCard[];
   initialGlobal: FeedItemCard[];
   initialPreferences?: UserPreferences;
+  initialBot?: BotDossier;
   sourcesCount: number;
   newCount: number;
   updatedTime: string;
@@ -98,11 +100,52 @@ export function DigestFeed({
   initialPersonalized,
   initialGlobal,
   initialPreferences,
+  initialBot,
   sourcesCount,
   newCount,
   updatedTime,
 }: DigestFeedProps) {
-  const activeBot = getBot(initialPreferences?.personality);
+  const [activeBot, setActiveBot] = useState<BotDossier>(() => {
+    if (initialBot) return initialBot;
+    const prefBot = getBot(initialPreferences?.personality);
+    if (prefBot && prefBot.id !== 'hank') return prefBot;
+    return getBot(DEFAULT_BOT_ID);
+  });
+
+  useEffect(() => {
+    let ignore = false;
+    async function loadCompanionBot() {
+      try {
+        const res = await fetch('/api/persona');
+        if (res.ok && !ignore) {
+          const data = await res.json();
+          if (data.bot) {
+            setActiveBot(data.bot);
+            return;
+          }
+        }
+      } catch {
+        // Fallback to local storage if API is unreachable
+      }
+
+      try {
+        const saved = localStorage.getItem('ryff_user_bot');
+        if (saved && !ignore) {
+          const parsed = JSON.parse(saved);
+          if (parsed && parsed.name) {
+            setActiveBot(parsed);
+          }
+        }
+      } catch {
+        // ignore
+      }
+    }
+    loadCompanionBot();
+    return () => {
+      ignore = true;
+    };
+  }, []);
+
   const agentName = activeBot?.name || 'RobBPaul';
   const agentId = activeBot?.id || 'robbpaul';
 
@@ -335,33 +378,47 @@ export function DigestFeed({
                   flexShrink: 0,
                 }}
               >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={activeBot?.avatarImage || `/images/bots/${agentId}.jpg`}
-                  alt={agentName}
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    objectFit: 'cover',
-                    display: 'block',
-                  }}
-                  onError={(e) => {
-                    // Fallback to text initials if image fails to load
-                    e.currentTarget.style.display = 'none';
-                  }}
-                />
-                <span
-                  style={{
-                    position: 'absolute',
-                    textTransform: 'uppercase',
-                    fontSize: '9px',
-                    fontWeight: 800,
-                    zIndex: 0,
-                    color: 'var(--mu, #9ca3af)',
-                  }}
-                >
-                  {(activeBot?.avatarText || agentName).slice(0, 4)}
-                </span>
+                {activeBot?.isUserProxy ? (
+                  <span
+                    style={{
+                      fontSize: '11px',
+                      fontWeight: 800,
+                      color: 'var(--ac, #22c55e)',
+                    }}
+                  >
+                    {(activeBot.avatarText || agentName).slice(0, 3)}
+                  </span>
+                ) : (
+                  /* eslint-disable-next-line @next/next/no-img-element */
+                  <img
+                    src={activeBot?.avatarImage || `/images/bots/${agentId}.jpg`}
+                    alt={agentName}
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'cover',
+                      display: 'block',
+                    }}
+                    onError={(e) => {
+                      // Fallback to text initials if image fails to load
+                      e.currentTarget.style.display = 'none';
+                    }}
+                  />
+                )}
+                {!activeBot?.isUserProxy && (
+                  <span
+                    style={{
+                      position: 'absolute',
+                      textTransform: 'uppercase',
+                      fontSize: '9px',
+                      fontWeight: 800,
+                      zIndex: 0,
+                      color: 'var(--mu, #9ca3af)',
+                    }}
+                  >
+                    {(activeBot?.avatarText || agentName).slice(0, 4)}
+                  </span>
+                )}
               </div>
               <div style={{ flex: 1, minWidth: 0 }}>
                 <p style={{ margin: 0, fontSize: '14px', lineHeight: 1.5, color: '#e2e8f0' }}>{synopsisText}</p>
@@ -394,7 +451,10 @@ export function DigestFeed({
                 </button>
               </div>
 
-              <Link href={`/backstage?bot=${agentId}`} className="ask-hank-link">
+              <Link
+                href={`/backstage?bot=${encodeURIComponent(agentId)}&articleId=${encodeURIComponent(item.id)}&articleTitle=${encodeURIComponent(headlineText)}&articleSummary=${encodeURIComponent(synopsisText || item.summary || '')}&articleUrl=${encodeURIComponent(item.url || '')}`}
+                className="ask-hank-link ask-bot-link"
+              >
                 Ask {agentName} about this ›
               </Link>
             </div>

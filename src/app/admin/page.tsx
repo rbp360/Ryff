@@ -671,7 +671,7 @@ export default async function AdminCommandCentrePage() {
               </thead>
               <tbody className="divide-y divide-slate-800/60 font-mono text-slate-300">
                 {sources.map((src) => {
-                  const isOk = src.last_status && src.last_status.toLowerCase() === 'ok';
+                  const isOk = src.last_status && src.last_status.toLowerCase().startsWith('ok');
                   const isErr = src.last_status && (src.last_status.toLowerCase().includes('error') || src.last_status.includes('403') || src.last_status.includes('429'));
 
                   return (

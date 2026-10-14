@@ -38,7 +38,7 @@ export async function GET(request: NextRequest) {
   let bot = getBot(botParam);
   if (bot.id !== botParam && botParam !== 'robbpaul') {
     try {
-      const userBotRows = await db<{ dossier: any }[]>`
+      const userBotRows = await db<{ dossier: Record<string, unknown> }[]>`
         select dossier from user_bots where id::text = ${botParam} or (user_id = ${session.userId} and is_active = true) limit 1
       `;
       if (userBotRows.length > 0) {
@@ -88,12 +88,12 @@ export async function POST(request: NextRequest) {
     await ensureUserExists(session);
 
     const body = await request.json();
-    const { bot: botParam, botId, message, conversationId } = body;
+    const { bot: botParam, botId, message, conversationId, articleTitle, articleSummary, articleUrl, articleId } = body;
     const requestedId = botId || botParam || 'robbpaul';
     let targetBot = getBot(requestedId);
     if (targetBot.id !== requestedId && requestedId !== 'robbpaul') {
       try {
-        const userBotRows = await db<{ dossier: any }[]>`
+        const userBotRows = await db<{ dossier: Record<string, unknown> }[]>`
           select dossier from user_bots where id::text = ${requestedId} or (user_id = ${session.userId} and is_active = true) limit 1
         `;
         if (userBotRows.length > 0) {
@@ -134,6 +134,13 @@ export async function POST(request: NextRequest) {
 
     let systemInstruction = `${personaPrompt}\n\n${chatRules}`;
 
+    if (articleTitle) {
+      systemInstruction += `\n\nDirective on Discussed Story: The user clicked "Ask ${targetBot.name} about this" for the story: "${sanitiseUntrusted(articleTitle, 150)}".
+- DO NOT summarize, paraphrase, or repeat the story's headline or summary text. The user has already read the card.
+- Give your immediate, candid opinion as ${targetBot.name}. Focus on real hardware facts, circuit details, reliability, usability, and value.
+- Speak naturally with dry player realism. Get straight into the technical merits and practical usability without forced conversational ending questions.`;
+    }
+
     if (context.episode) {
       systemInstruction += `\n\n<today_episode headline="${context.episode.headline}">\n`;
       for (const t of context.episode.topics) {
@@ -153,6 +160,14 @@ export async function POST(request: NextRequest) {
 
     // Build Context XML for User prompt
     let contextXml = `<context>\n`;
+
+    if (articleTitle) {
+      contextXml += `  <discussing_article id="${sanitiseUntrusted(String(articleId || ''), 20)}" title="${sanitiseUntrusted(articleTitle, 150)}" url="${sanitiseUntrusted(articleUrl || '', 200)}">\n`;
+      if (articleSummary) {
+        contextXml += `    <summary>${sanitiseUntrusted(articleSummary, 400)}</summary>\n`;
+      }
+      contextXml += `  </discussing_article>\n`;
+    }
 
     // Today's Episode Topics
     if (context.episode && context.episode.topics.length > 0) {

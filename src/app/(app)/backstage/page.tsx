@@ -184,6 +184,49 @@ function renderMessageContent(content: string, isUser: boolean, activeAccent: st
 function BackstageChatInner() {
   const searchParams = useSearchParams();
   const requestedBotParam = searchParams.get('bot');
+  const articleTitleParam = searchParams.get('articleTitle');
+  const articleSummaryParam = searchParams.get('articleSummary');
+  const articleUrlParam = searchParams.get('articleUrl');
+  const articleIdParam = searchParams.get('articleId');
+
+  const [activeBotId, setActiveBotId] = useState<string>(() => {
+    if (requestedBotParam) {
+      return getBot(requestedBotParam).id;
+    }
+    return DEFAULT_BOT_ID;
+  });
+  const [prevBotParam, setPrevBotParam] = useState(requestedBotParam);
+
+  const [discussingArticle, setDiscussingArticle] = useState<{
+    id?: string;
+    title: string;
+    summary?: string;
+    url?: string;
+  } | null>(() => {
+    if (articleTitleParam) {
+      return {
+        id: articleIdParam || undefined,
+        title: articleTitleParam,
+        summary: articleSummaryParam || undefined,
+        url: articleUrlParam || undefined,
+      };
+    }
+    return null;
+  });
+
+  const [prevArticleParam, setPrevArticleParam] = useState(articleTitleParam);
+  if (articleTitleParam !== prevArticleParam) {
+    setPrevArticleParam(articleTitleParam);
+    if (articleTitleParam) {
+      setDiscussingArticle({
+        id: articleIdParam || undefined,
+        title: articleTitleParam,
+        summary: articleSummaryParam || undefined,
+        url: articleUrlParam || undefined,
+      });
+    }
+  }
+
   const [customUserBot, setCustomUserBot] = useState<BotDossier | null>(null);
 
   // Load custom companion bot from API or localStorage
@@ -232,14 +275,6 @@ function BackstageChatInner() {
     return list;
   }, [customUserBot]);
 
-  const [activeBotId, setActiveBotId] = useState<string>(() => {
-    if (requestedBotParam) {
-      return getBot(requestedBotParam).id;
-    }
-    return DEFAULT_BOT_ID;
-  });
-  const [prevBotParam, setPrevBotParam] = useState(requestedBotParam);
-
   // Sync if URL search parameter changes
   if (requestedBotParam !== prevBotParam) {
     setPrevBotParam(requestedBotParam);
@@ -264,6 +299,7 @@ function BackstageChatInner() {
   const [loadingHistory, setLoadingHistory] = useState(false);
   const [usage, setUsage] = useState<UsageInfo>({ msgsToday: 0, dailyCap: 10 });
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const autoAskedKeyRef = useRef<string | null>(null);
 
   useEffect(() => {
     let ignore = false;
@@ -304,7 +340,10 @@ function BackstageChatInner() {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, loading]);
 
-  async function sendMessage(textToSend?: string) {
+  async function sendMessage(
+    textToSend?: string,
+    articleContext?: { title: string; summary?: string; url?: string; id?: string } | null
+  ) {
     const messageText = textToSend || input;
     if (!messageText.trim() || loading) return;
 
@@ -317,11 +356,20 @@ function BackstageChatInner() {
     if (!textToSend) setInput('');
     setLoading(true);
 
+    const ctx = articleContext !== undefined ? articleContext : discussingArticle;
+
     try {
       const res = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ bot: activeBotId, message: messageText }),
+        body: JSON.stringify({
+          bot: activeBotId,
+          message: messageText,
+          articleTitle: ctx?.title,
+          articleSummary: ctx?.summary,
+          articleUrl: ctx?.url,
+          articleId: ctx?.id,
+        }),
       });
 
       const data = await res.json();
@@ -355,6 +403,24 @@ function BackstageChatInner() {
       setLoading(false);
     }
   }
+
+  // Automatically ask the bot for its opinion when navigated from "Ask {Bot} about this"
+  useEffect(() => {
+    if (!loadingHistory && discussingArticle?.title) {
+      const autoKey = `${activeBotId}:${discussingArticle.title}`;
+      if (autoAskedKeyRef.current !== autoKey) {
+        autoAskedKeyRef.current = autoKey;
+        const promptText = `What's your take on this: "${discussingArticle.title}"?`;
+        const alreadyInHistory = messages.some(
+          (m) => m.role === 'user' && m.content.includes(discussingArticle.title)
+        );
+
+        if (!alreadyInHistory) {
+          sendMessage(promptText, discussingArticle);
+        }
+      }
+    }
+  }, [loadingHistory, discussingArticle, activeBotId, messages]);
 
   return (
     <>
@@ -684,6 +750,120 @@ function BackstageChatInner() {
           </div>
         </div>
       </div>
+
+      {/* Discussing Story Context Card */}
+      {discussingArticle && (
+        <div
+          className="card"
+          style={{
+            marginTop: '12px',
+            marginBottom: '4px',
+            padding: '14px 16px',
+            background: 'linear-gradient(135deg, rgba(20, 20, 24, 0.95), rgba(10, 10, 12, 0.95))',
+            border: `1px solid ${activeTheme.accent}55`,
+            borderRadius: 'var(--r)',
+            boxShadow: `0 4px 20px -4px ${activeTheme.accent}22`,
+            position: 'relative',
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '10px', marginBottom: '8px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <span
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  fontSize: '10px',
+                  fontWeight: 800,
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.06em',
+                  padding: '3px 9px',
+                  borderRadius: '12px',
+                  background: `${activeTheme.accent}22`,
+                  color: activeTheme.accent,
+                  border: `1px solid ${activeTheme.accent}44`,
+                }}
+              >
+                <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: activeTheme.accent, display: 'inline-block' }} />
+                Discussing Story
+              </span>
+              <span style={{ fontSize: '11px', color: 'var(--mu)' }}>
+                Asking {activeBot.name}
+              </span>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => setDiscussingArticle(null)}
+              style={{
+                background: 'transparent',
+                border: 'none',
+                color: 'var(--mu)',
+                fontSize: '11px',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '4px',
+                padding: '2px 6px',
+                borderRadius: '4px',
+              }}
+              title="Clear article context"
+            >
+              Clear context ✕
+            </button>
+          </div>
+
+          <h3
+            style={{
+              margin: '0 0 6px 0',
+              fontSize: '14.5px',
+              fontWeight: 700,
+              color: '#f8fafc',
+              lineHeight: 1.4,
+            }}
+          >
+            {discussingArticle.title}
+          </h3>
+
+          {discussingArticle.summary && (
+            <p
+              style={{
+                margin: '0 0 10px 0',
+                fontSize: '12.5px',
+                lineHeight: 1.45,
+                color: '#94a3b8',
+                display: '-webkit-box',
+                WebkitLineClamp: 2,
+                WebkitBoxOrient: 'vertical',
+                overflow: 'hidden',
+              }}
+            >
+              {discussingArticle.summary}
+            </p>
+          )}
+
+          {discussingArticle.url && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <a
+                href={discussingArticle.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  fontSize: '11.5px',
+                  fontWeight: 600,
+                  color: activeTheme.accent,
+                  textDecoration: 'none',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '4px',
+                }}
+              >
+                Read Original Source ↗
+              </a>
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Message Stream */}
       <div className="thread" style={{ minHeight: '300px', marginBottom: '24px' }}>

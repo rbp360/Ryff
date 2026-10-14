@@ -73,7 +73,8 @@ async function seedSources() {
           on conflict (url) do update set
             name = excluded.name,
             tier = excluded.tier,
-            keyword_prefilter = excluded.keyword_prefilter
+            keyword_prefilter = excluded.keyword_prefilter,
+            active = true
         `;
         insertedCount++;
       }
@@ -89,7 +90,8 @@ async function seedSources() {
           values ('youtube', ${src.name}, ${feedUrl}, ${src.tier || 'video'}, null, true)
           on conflict (url) do update set
             name = excluded.name,
-            tier = excluded.tier
+            tier = excluded.tier,
+            active = true
         `;
         insertedCount++;
       }
