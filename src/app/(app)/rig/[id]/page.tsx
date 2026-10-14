@@ -2,6 +2,7 @@
 
 import { use, useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { BackButton } from '@/components/BackButton';
 import { GearHeroPhoto } from '@/components/GearHeroPhoto';
 import {
@@ -10,11 +11,17 @@ import {
   GUITAR_STRING_GAUGES,
   BASS_STRING_GAUGES,
   STRING_MANUFACTURERS,
+  STRING_TYPES_BY_BRAND,
+  COMMON_STRING_TYPES,
+  DEFAULT_STRING_GAUGES,
   PICKUP_MANUFACTURERS,
   detectSettingsProvider,
   getBackdropForCategory,
   autocompleteDate,
   resolveStringSpecs,
+  formatCustomGauges,
+  parseIndividualGauges,
+  getStringNoteLabels,
   type DetectedProvider,
 } from '@/lib/gear-specs';
 
@@ -24,10 +31,14 @@ interface GearSetupSnapshot {
   tuning?: string;
   stringGauge?: string;
   stringManufacturer?: string;
+  stringType?: string;
   numberOfStrings?: number;
   pickupBridge?: string;
+  pickupBridgeSerial?: string;
   pickupMiddle?: string;
+  pickupMiddleSerial?: string;
   pickupNeck?: string;
+  pickupNeckSerial?: string;
   ampSettings?: string;
   settingsFileUrl?: string;
   nickname?: string;
@@ -57,9 +68,13 @@ interface RigItem {
   tuning?: string | null;
   string_gauge?: string | null;
   string_manufacturer?: string | null;
+  string_type?: string | null;
   pickup_bridge?: string | null;
+  pickup_bridge_serial?: string | null;
   pickup_middle?: string | null;
+  pickup_middle_serial?: string | null;
   pickup_neck?: string | null;
+  pickup_neck_serial?: string | null;
   pickups_summary?: string | null;
   modifications_summary?: string | null;
   valves_summary?: string | null;
@@ -86,6 +101,9 @@ interface RigItemLog {
   component: string | null;
   original_part: string | null;
   event_date: string;
+  is_voided?: boolean;
+  voided_reason?: string | null;
+  voided_at?: string | null;
 }
 
 interface MatchingNewsItem {
@@ -130,6 +148,7 @@ function getStringHealthText(
 export default function GearDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = use(params);
   const itemId = resolvedParams.id;
+  const router = useRouter();
 
   const [item, setItem] = useState<RigItem | null>(null);
   const [logs, setLogs] = useState<RigItemLog[]>([]);
@@ -158,10 +177,16 @@ export default function GearDetailPage({ params }: { params: Promise<{ id: strin
   const [tuningVal, setTuningVal] = useState('');
   const [gaugeVal, setGaugeVal] = useState('');
   const [stringsBrandVal, setStringsBrandVal] = useState('');
+  const [stringTypeVal, setStringTypeVal] = useState('');
   const [stringsCountVal, setStringsCountVal] = useState<number | ''>('');
+  const [isCustomGaugeMode, setIsCustomGaugeMode] = useState(false);
+  const [individualGaugesVal, setIndividualGaugesVal] = useState<string[]>([]);
   const [pickupBridgeVal, setPickupBridgeVal] = useState('');
+  const [pickupBridgeSerialVal, setPickupBridgeSerialVal] = useState('');
   const [pickupMiddleVal, setPickupMiddleVal] = useState('');
+  const [pickupMiddleSerialVal, setPickupMiddleSerialVal] = useState('');
   const [pickupNeckVal, setPickupNeckVal] = useState('');
+  const [pickupNeckSerialVal, setPickupNeckSerialVal] = useState('');
   const [ampSettingsVal, setAmpSettingsVal] = useState('');
   const [presetUrlVal, setPresetUrlVal] = useState('');
   const [notesVal, setNotesVal] = useState('');
@@ -194,18 +219,32 @@ export default function GearDetailPage({ params }: { params: Promise<{ id: strin
           if (data.matchingNews) setNews(data.matchingNews);
 
           // Sync local form state
-          const resolved = resolveStringSpecs(it.string_gauge, it.string_manufacturer, it.current_strings);
+          const resolved = resolveStringSpecs(it.string_gauge, it.string_manufacturer, it.current_strings, it.string_type);
           setTuningVal(it.tuning || '');
-          setGaugeVal(it.string_gauge || resolved.normalizedGauge || resolved.gauge || '');
+          const initialGauge = it.string_gauge || resolved.normalizedGauge || resolved.gauge || '';
+          setGaugeVal(initialGauge);
           setStringsBrandVal(it.string_manufacturer || resolved.manufacturer || '');
+          setStringTypeVal(it.string_type || resolved.stringType || '');
           setStringsCountVal(it.number_of_strings ?? '');
           setPickupBridgeVal(it.pickup_bridge || '');
+          setPickupBridgeSerialVal(it.pickup_bridge_serial || '');
           setPickupMiddleVal(it.pickup_middle || '');
+          setPickupMiddleSerialVal(it.pickup_middle_serial || '');
           setPickupNeckVal(it.pickup_neck || '');
+          setPickupNeckSerialVal(it.pickup_neck_serial || '');
           setAmpSettingsVal(it.amp_settings || '');
           setPresetUrlVal(it.settings_file_url || '');
           setNotesVal(it.notes || '');
           setNicknameVal(it.nickname || '');
+
+          const parsedIndiv = parseIndividualGauges(initialGauge);
+          if (parsedIndiv.length > 0) {
+            setIndividualGaugesVal(parsedIndiv);
+            setIsCustomGaugeMode(initialGauge.includes('(') || initialGauge.toLowerCase().includes('custom'));
+          } else {
+            setIndividualGaugesVal(['9', '11', '16', '24', '32', '42']);
+            setIsCustomGaugeMode(false);
+          }
 
           setEditBrand(it.brand || '');
           setEditModel(it.model || '');
@@ -257,14 +296,22 @@ export default function GearDetailPage({ params }: { params: Promise<{ id: strin
   async function handleSaveSpecs() {
     setIsSavingSpecs(true);
     setError(null);
+    const finalGauge = isCustomGaugeMode && individualGaugesVal.length > 0
+      ? formatCustomGauges(individualGaugesVal)
+      : (gaugeVal || null);
+
     await updateGear({
       tuning: tuningVal || null,
-      string_gauge: gaugeVal || null,
+      string_gauge: finalGauge,
       string_manufacturer: stringsBrandVal || null,
+      string_type: stringTypeVal || null,
       number_of_strings: stringsCountVal || null,
       pickup_bridge: pickupBridgeVal || null,
+      pickup_bridge_serial: pickupBridgeSerialVal || null,
       pickup_middle: pickupMiddleVal || null,
+      pickup_middle_serial: pickupMiddleSerialVal || null,
       pickup_neck: pickupNeckVal || null,
+      pickup_neck_serial: pickupNeckSerialVal || null,
       amp_settings: ampSettingsVal || null,
       settings_file_url: presetUrlVal || null,
       notes: notesVal || null,
@@ -272,6 +319,45 @@ export default function GearDetailPage({ params }: { params: Promise<{ id: strin
     });
     setIsSavingSpecs(false);
     setIsEditingSpecs(false);
+  }
+
+  async function handleToggleVoidLog(logId: number, currentVoid: boolean) {
+    const actionLabel = currentVoid ? 'restore' : 'strike through';
+    let reason: string | undefined = undefined;
+    if (!currentVoid) {
+      const input = window.prompt('Reason for strikethrough (e.g. "Hallucinated entry", "Accidental log"):', 'Hallucinated entry');
+      if (input === null) return; // cancelled
+      reason = input.trim() || 'Marked as void / hallucinated';
+    }
+
+    try {
+      const res = await fetch(`/api/rig/${itemId}/log`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          logId,
+          is_voided: !currentVoid,
+          voided_reason: reason,
+        }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        if (data.item) {
+          setItem(data.item);
+          const resolved = resolveStringSpecs(data.item.string_gauge, data.item.string_manufacturer, data.item.current_strings, data.item.string_type);
+          setGaugeVal(data.item.string_gauge || resolved.normalizedGauge || resolved.gauge || '');
+          setStringsBrandVal(data.item.string_manufacturer || resolved.manufacturer || '');
+          setStringTypeVal(data.item.string_type || resolved.stringType || '');
+        }
+        if (data.logs) setLogs(data.logs);
+        setSaveSuccessMsg(currentVoid ? 'Log entry restored' : 'Log entry struck through');
+        setTimeout(() => setSaveSuccessMsg(null), 3000);
+      } else {
+        setError(data.error || `Failed to ${actionLabel} log`);
+      }
+    } catch {
+      setError(`Network error trying to ${actionLabel} log`);
+    }
   }
 
   function openSettingsModal() {
@@ -309,20 +395,51 @@ export default function GearDetailPage({ params }: { params: Promise<{ id: strin
     setShowSettingsModal(false);
   }
 
+  async function handleDeleteGear() {
+    if (!item) return;
+    const confirmDelete = window.confirm(`Are you sure you want to remove "${item.brand ? `${item.brand} ` : ''}${item.model || item.raw_text}" from your Rig Passport?`);
+    if (!confirmDelete) return;
+
+    try {
+      const res = await fetch(`/api/rig/${itemId}`, { method: 'DELETE' });
+      if (res.ok) {
+        if (typeof window !== 'undefined') {
+          try {
+            localStorage.removeItem(`ryff_gear_photo_${itemId}`);
+          } catch {}
+        }
+        router.push('/rig');
+      } else {
+        const data = await res.json().catch(() => ({}));
+        setError(data.error || 'Failed to delete gear item');
+      }
+    } catch {
+      setError('Network error deleting item');
+    }
+  }
+
   async function handleCreateSnapshot() {
     if (!item) return;
     const now = new Date();
     const monthYear = `${String(now.getMonth() + 1).padStart(2, '0')}/${String(now.getFullYear()).slice(-2)}`;
+    const finalGauge = isCustomGaugeMode && individualGaugesVal.length > 0
+      ? formatCustomGauges(individualGaugesVal)
+      : (item.string_gauge || gaugeVal || undefined);
+
     const newSnapshot: GearSetupSnapshot = {
       savedAt: Date.now(),
       monthYear,
       tuning: item.tuning || tuningVal || undefined,
-      stringGauge: item.string_gauge || gaugeVal || undefined,
+      stringGauge: finalGauge,
       stringManufacturer: item.string_manufacturer || stringsBrandVal || undefined,
+      stringType: item.string_type || stringTypeVal || undefined,
       numberOfStrings: item.number_of_strings || (stringsCountVal ? Number(stringsCountVal) : undefined),
       pickupBridge: item.pickup_bridge || pickupBridgeVal || undefined,
+      pickupBridgeSerial: item.pickup_bridge_serial || pickupBridgeSerialVal || undefined,
       pickupMiddle: item.pickup_middle || pickupMiddleVal || undefined,
+      pickupMiddleSerial: item.pickup_middle_serial || pickupMiddleSerialVal || undefined,
       pickupNeck: item.pickup_neck || pickupNeckVal || undefined,
+      pickupNeckSerial: item.pickup_neck_serial || pickupNeckSerialVal || undefined,
       ampSettings: item.amp_settings || ampSettingsVal || undefined,
       settingsFileUrl: item.settings_file_url || presetUrlVal || undefined,
       nickname: item.nickname || nicknameVal || undefined,
@@ -842,77 +959,274 @@ export default function GearDetailPage({ params }: { params: Promise<{ id: strin
 
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
                   <label style={{ display: 'flex', flexDirection: 'column', gap: '4px', fontSize: '12px', color: 'var(--mu)', fontWeight: 600 }}>
-                    String Gauge
-                    <select
-                      value={gaugeVal}
-                      onChange={(e) => setGaugeVal(e.target.value)}
-                      style={{ background: '#0a0a0a', border: '1px solid var(--ln)', color: '#fff', padding: '8px 10px', borderRadius: '8px' }}
-                    >
-                      <option value="">Select gauge...</option>
-                      {gaugeVal && !gaugeOptions.includes(gaugeVal) && (
-                        <option value={gaugeVal}>{gaugeVal}</option>
-                      )}
-                      {gaugeOptions.map((g) => (
-                        <option key={g} value={g}>
-                          {g}
-                        </option>
+                    String Manufacturer / Brand
+                    <input
+                      value={stringsBrandVal}
+                      onChange={(e) => setStringsBrandVal(e.target.value)}
+                      placeholder="e.g. Elixir, Ernie Ball, D'Addario, Curt Mangan..."
+                      list="string-manufacturers-list"
+                      style={{ background: '#0a0a0a', border: '1px solid var(--ln)', color: '#fff', padding: '8px 10px', borderRadius: '8px', fontSize: '13px' }}
+                    />
+                    <datalist id="string-manufacturers-list">
+                      {STRING_MANUFACTURERS.map((m) => (
+                        <option key={m} value={m} />
                       ))}
-                    </select>
+                    </datalist>
                   </label>
 
                   <label style={{ display: 'flex', flexDirection: 'column', gap: '4px', fontSize: '12px', color: 'var(--mu)', fontWeight: 600 }}>
-                    String Manufacturer
-                    <select
-                      value={stringsBrandVal}
-                      onChange={(e) => setStringsBrandVal(e.target.value)}
-                      style={{ background: '#0a0a0a', border: '1px solid var(--ln)', color: '#fff', padding: '8px 10px', borderRadius: '8px' }}
-                    >
-                      <option value="">Select brand...</option>
-                      {stringsBrandVal && !(STRING_MANUFACTURERS as readonly string[]).includes(stringsBrandVal) && (
-                        <option value={stringsBrandVal}>{stringsBrandVal}</option>
-                      )}
-                      {STRING_MANUFACTURERS.map((m) => (
-                        <option key={m} value={m}>
-                          {m}
-                        </option>
+                    Exact String Type / Coating / Model Line
+                    <input
+                      value={stringTypeVal}
+                      onChange={(e) => setStringTypeVal(e.target.value)}
+                      placeholder="e.g. Polyweb, Nanoweb, NYXL, Paradigm, Flatwound..."
+                      list="string-types-list"
+                      style={{ background: '#0a0a0a', border: '1px solid var(--ln)', color: '#fff', padding: '8px 10px', borderRadius: '8px', fontSize: '13px' }}
+                    />
+                    <datalist id="string-types-list">
+                      {(STRING_TYPES_BY_BRAND[stringsBrandVal] || COMMON_STRING_TYPES).map((t) => (
+                        <option key={t} value={t} />
                       ))}
-                    </select>
+                    </datalist>
                   </label>
                 </div>
 
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', borderTop: '1px solid var(--ln)', paddingTop: '12px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '6px' }}>
+                    <span style={{ fontSize: '12px', color: 'var(--mu)', fontWeight: 700 }}>
+                      String Gauge Configuration
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const nextMode = !isCustomGaugeMode;
+                        setIsCustomGaugeMode(nextMode);
+                        if (nextMode) {
+                          const activeCount = typeof stringsCountVal === 'number' && stringsCountVal > 0 ? stringsCountVal : (isBass ? 4 : 6);
+                          let initialArr = parseIndividualGauges(gaugeVal);
+                          if (initialArr.length === 0) {
+                            initialArr = isBass
+                              ? ['45', '65', '85', '105']
+                              : ['9', '11', '16', '24', '32', '42'];
+                          }
+                          while (initialArr.length < activeCount) initialArr.push('42');
+                          initialArr = initialArr.slice(0, activeCount);
+                          setIndividualGaugesVal(initialArr);
+                          setGaugeVal(formatCustomGauges(initialArr));
+                        }
+                      }}
+                      style={{
+                        fontSize: '11px',
+                        fontWeight: 700,
+                        color: isCustomGaugeMode ? 'var(--ac)' : 'var(--mu)',
+                        background: isCustomGaugeMode ? 'rgba(34, 197, 94, 0.12)' : 'var(--sf)',
+                        border: isCustomGaugeMode ? '1px solid var(--ac)' : '1px solid var(--ln)',
+                        padding: '4px 10px',
+                        borderRadius: '6px',
+                        cursor: 'pointer',
+                      }}
+                    >
+                      {isCustomGaugeMode ? '✓ Custom String Gauges Active' : '✏️ Customise Individual Strings (e.g. 8-42)'}
+                    </button>
+                  </div>
+
+                  {!isCustomGaugeMode ? (
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '8px' }}>
+                      <select
+                        value={gaugeVal}
+                        onChange={(e) => {
+                          const v = e.target.value;
+                          if (v === 'CUSTOM') {
+                            setIsCustomGaugeMode(true);
+                            const activeCount = typeof stringsCountVal === 'number' && stringsCountVal > 0 ? stringsCountVal : (isBass ? 4 : 6);
+                            const initialArr = isBass ? ['45', '65', '85', '105'] : ['8', '11', '16', '22', '32', '42'];
+                            setIndividualGaugesVal(initialArr.slice(0, activeCount));
+                            setGaugeVal(formatCustomGauges(initialArr.slice(0, activeCount)));
+                          } else {
+                            setGaugeVal(v);
+                          }
+                        }}
+                        style={{ background: '#0a0a0a', border: '1px solid var(--ln)', color: '#fff', padding: '8px 10px', borderRadius: '8px', fontSize: '13px' }}
+                      >
+                        <option value="">Select gauge preset...</option>
+                        {gaugeVal && !gaugeOptions.includes(gaugeVal) && gaugeVal !== 'CUSTOM' && (
+                          <option value={gaugeVal}>{gaugeVal}</option>
+                        )}
+                        {gaugeOptions.map((g) => (
+                          <option key={g} value={g}>
+                            {g}
+                          </option>
+                        ))}
+                        <option value="CUSTOM">Custom (Configure Individual Strings per string)...</option>
+                      </select>
+                    </div>
+                  ) : (
+                    (() => {
+                      const activeCount = typeof stringsCountVal === 'number' && stringsCountVal > 0 ? stringsCountVal : (isBass ? 4 : 6);
+                      const noteLabels = getStringNoteLabels(activeCount, isBass);
+                      return (
+                        <div style={{ background: '#0a0a0a', border: '1px dashed var(--ac)', borderRadius: '10px', padding: '12px' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px', flexWrap: 'wrap', gap: '4px' }}>
+                            <span style={{ fontSize: '12px', fontWeight: 800, color: 'var(--ac)' }}>
+                              Forensic Per-String Gauges ({activeCount} Strings)
+                            </span>
+                            <span style={{ fontSize: '11px', color: 'var(--mu)' }}>
+                              Current: <b style={{ color: '#fff' }}>{formatCustomGauges(individualGaugesVal) || 'Set values below'}</b>
+                            </span>
+                          </div>
+
+                          <div style={{ display: 'grid', gridTemplateColumns: `repeat(auto-fit, minmax(75px, 1fr))`, gap: '8px' }}>
+                            {Array.from({ length: activeCount }).map((_, idx) => (
+                              <label key={idx} style={{ display: 'flex', flexDirection: 'column', gap: '3px', fontSize: '11px', color: 'var(--mu)', textAlign: 'center' }}>
+                                <span style={{ fontWeight: 600 }}>{noteLabels[idx] || `String ${idx + 1}`}</span>
+                                <input
+                                  type="text"
+                                  value={individualGaugesVal[idx] || ''}
+                                  placeholder={String((idx + 1) * 7)}
+                                  onChange={(e) => {
+                                    const digits = e.target.value.replace(/[^\d]/g, '');
+                                    const nextArr = [...individualGaugesVal];
+                                    while (nextArr.length < activeCount) nextArr.push('');
+                                    nextArr[idx] = digits;
+                                    setIndividualGaugesVal(nextArr);
+                                    setGaugeVal(formatCustomGauges(nextArr));
+                                  }}
+                                  style={{
+                                    background: '#141414',
+                                    border: '1px solid var(--ln)',
+                                    color: '#fff',
+                                    padding: '7px 4px',
+                                    borderRadius: '6px',
+                                    textAlign: 'center',
+                                    fontSize: '13px',
+                                    fontWeight: 800,
+                                  }}
+                                />
+                              </label>
+                            ))}
+                          </div>
+
+                          <div style={{ display: 'flex', gap: '6px', marginTop: '10px', flexWrap: 'wrap', alignItems: 'center' }}>
+                            <span style={{ fontSize: '11px', color: 'var(--mu)', marginRight: '2px' }}>Presets:</span>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                const preset = ['8', '11', '16', '22', '32', '42'];
+                                setIndividualGaugesVal(preset);
+                                setGaugeVal(formatCustomGauges(preset));
+                              }}
+                              style={{ fontSize: '11px', padding: '3px 8px', background: 'var(--sf)', border: '1px solid var(--ln)', borderRadius: '6px', color: 'var(--tx)', cursor: 'pointer' }}
+                            >
+                              Rob Marcello (8-42)
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                const preset = ['9', '11', '16', '24', '32', '42'];
+                                setIndividualGaugesVal(preset);
+                                setGaugeVal(formatCustomGauges(preset));
+                              }}
+                              style={{ fontSize: '11px', padding: '3px 8px', background: 'var(--sf)', border: '1px solid var(--ln)', borderRadius: '6px', color: 'var(--tx)', cursor: 'pointer' }}
+                            >
+                              Super Light 9s (9-42)
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                const preset = ['9', '11', '16', '26', '36', '46'];
+                                setIndividualGaugesVal(preset);
+                                setGaugeVal(formatCustomGauges(preset));
+                              }}
+                              style={{ fontSize: '11px', padding: '3px 8px', background: 'var(--sf)', border: '1px solid var(--ln)', borderRadius: '6px', color: 'var(--tx)', cursor: 'pointer' }}
+                            >
+                              Hybrid Slinky (9-46)
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                const preset = ['10', '13', '17', '26', '36', '46'];
+                                setIndividualGaugesVal(preset);
+                                setGaugeVal(formatCustomGauges(preset));
+                              }}
+                              style={{ fontSize: '11px', padding: '3px 8px', background: 'var(--sf)', border: '1px solid var(--ln)', borderRadius: '6px', color: 'var(--tx)', cursor: 'pointer' }}
+                            >
+                              Regular 10s (10-46)
+                            </button>
+                          </div>
+                        </div>
+                      );
+                    })()
+                  )}
+                </div>
+
                 <div style={{ borderTop: '1px solid var(--ln)', paddingTop: '12px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                  <span style={{ fontSize: '12px', fontWeight: 800, color: 'var(--tx)' }}>Pickups Configuration</span>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '10px' }}>
-                    <label style={{ display: 'flex', flexDirection: 'column', gap: '4px', fontSize: '11px', color: 'var(--mu)' }}>
-                      Bridge Pickup
-                      <input
-                        value={pickupBridgeVal}
-                        onChange={(e) => setPickupBridgeVal(e.target.value)}
-                        placeholder="e.g. Seymour Duncan JB"
-                        list="pickup-manufacturers"
-                        style={{ background: '#0a0a0a', border: '1px solid var(--ln)', color: '#fff', padding: '8px 10px', borderRadius: '8px', fontSize: '13px' }}
-                      />
-                    </label>
-                    <label style={{ display: 'flex', flexDirection: 'column', gap: '4px', fontSize: '11px', color: 'var(--mu)' }}>
-                      Middle Pickup
-                      <input
-                        value={pickupMiddleVal}
-                        onChange={(e) => setPickupMiddleVal(e.target.value)}
-                        placeholder="e.g. Fender Custom 69"
-                        list="pickup-manufacturers"
-                        style={{ background: '#0a0a0a', border: '1px solid var(--ln)', color: '#fff', padding: '8px 10px', borderRadius: '8px', fontSize: '13px' }}
-                      />
-                    </label>
-                    <label style={{ display: 'flex', flexDirection: 'column', gap: '4px', fontSize: '11px', color: 'var(--mu)' }}>
-                      Neck Pickup
-                      <input
-                        value={pickupNeckVal}
-                        onChange={(e) => setPickupNeckVal(e.target.value)}
-                        placeholder="e.g. Seymour Duncan '59"
-                        list="pickup-manufacturers"
-                        style={{ background: '#0a0a0a', border: '1px solid var(--ln)', color: '#fff', padding: '8px 10px', borderRadius: '8px', fontSize: '13px' }}
-                      />
-                    </label>
+                  <span style={{ fontSize: '12px', fontWeight: 800, color: 'var(--tx)' }}>Pickups Configuration & Serial Numbers</span>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(210px, 1fr))', gap: '10px' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', background: '#0a0a0a', padding: '10px', borderRadius: '8px', border: '1px solid var(--ln)' }}>
+                      <label style={{ display: 'flex', flexDirection: 'column', gap: '4px', fontSize: '11px', color: 'var(--mu)', fontWeight: 700 }}>
+                        Bridge Pickup Model
+                        <input
+                          value={pickupBridgeVal}
+                          onChange={(e) => setPickupBridgeVal(e.target.value)}
+                          placeholder="e.g. Seymour Duncan JB / J90"
+                          list="pickup-manufacturers"
+                          style={{ background: '#141414', border: '1px solid var(--ln)', color: '#fff', padding: '7px 9px', borderRadius: '6px', fontSize: '12px' }}
+                        />
+                      </label>
+                      <label style={{ display: 'flex', flexDirection: 'column', gap: '4px', fontSize: '11px', color: 'var(--mu)' }}>
+                        Bridge Serial # / Specs
+                        <input
+                          value={pickupBridgeSerialVal}
+                          onChange={(e) => setPickupBridgeSerialVal(e.target.value)}
+                          placeholder="e.g. S/N: 202410-08 / 16.4k DCR"
+                          style={{ background: '#141414', border: '1px solid var(--ln)', color: '#fff', padding: '7px 9px', borderRadius: '6px', fontSize: '12px' }}
+                        />
+                      </label>
+                    </div>
+
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', background: '#0a0a0a', padding: '10px', borderRadius: '8px', border: '1px solid var(--ln)' }}>
+                      <label style={{ display: 'flex', flexDirection: 'column', gap: '4px', fontSize: '11px', color: 'var(--mu)', fontWeight: 700 }}>
+                        Middle Pickup Model
+                        <input
+                          value={pickupMiddleVal}
+                          onChange={(e) => setPickupMiddleVal(e.target.value)}
+                          placeholder="e.g. Fender Custom 69 / stock"
+                          list="pickup-manufacturers"
+                          style={{ background: '#141414', border: '1px solid var(--ln)', color: '#fff', padding: '7px 9px', borderRadius: '6px', fontSize: '12px' }}
+                        />
+                      </label>
+                      <label style={{ display: 'flex', flexDirection: 'column', gap: '4px', fontSize: '11px', color: 'var(--mu)' }}>
+                        Middle Serial # / Specs
+                        <input
+                          value={pickupMiddleSerialVal}
+                          onChange={(e) => setPickupMiddleSerialVal(e.target.value)}
+                          placeholder="e.g. S/N: 202410-09"
+                          style={{ background: '#141414', border: '1px solid var(--ln)', color: '#fff', padding: '7px 9px', borderRadius: '6px', fontSize: '12px' }}
+                        />
+                      </label>
+                    </div>
+
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', background: '#0a0a0a', padding: '10px', borderRadius: '8px', border: '1px solid var(--ln)' }}>
+                      <label style={{ display: 'flex', flexDirection: 'column', gap: '4px', fontSize: '11px', color: 'var(--mu)', fontWeight: 700 }}>
+                        Neck Pickup Model
+                        <input
+                          value={pickupNeckVal}
+                          onChange={(e) => setPickupNeckVal(e.target.value)}
+                          placeholder="e.g. Seymour Duncan '59 / stock"
+                          list="pickup-manufacturers"
+                          style={{ background: '#141414', border: '1px solid var(--ln)', color: '#fff', padding: '7px 9px', borderRadius: '6px', fontSize: '12px' }}
+                        />
+                      </label>
+                      <label style={{ display: 'flex', flexDirection: 'column', gap: '4px', fontSize: '11px', color: 'var(--mu)' }}>
+                        Neck Serial # / Specs
+                        <input
+                          value={pickupNeckSerialVal}
+                          onChange={(e) => setPickupNeckSerialVal(e.target.value)}
+                          placeholder="e.g. S/N: 202410-10"
+                          style={{ background: '#141414', border: '1px solid var(--ln)', color: '#fff', padding: '7px 9px', borderRadius: '6px', fontSize: '12px' }}
+                        />
+                      </label>
+                    </div>
                   </div>
                   <datalist id="pickup-manufacturers">
                     {PICKUP_MANUFACTURERS.map((p) => (
@@ -941,45 +1255,62 @@ export default function GearDetailPage({ params }: { params: Promise<{ id: strin
               </div>
             ) : (
               (() => {
-                const resolvedStrings = resolveStringSpecs(item.string_gauge, item.string_manufacturer, item.current_strings);
+                const resolvedStrings = resolveStringSpecs(item.string_gauge, item.string_manufacturer, item.current_strings, item.string_type);
                 return (
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '10px' }}>
                       <div style={{ background: '#0a0a0a', padding: '10px 12px', borderRadius: '8px', border: '1px solid var(--ln)' }}>
                         <small style={{ color: 'var(--mu)', fontSize: '11px', display: 'block' }}>Tuning</small>
-                        <b style={{ fontSize: '13px', color: 'var(--tx)' }}>{item.tuning || ''}</b>
+                        <b style={{ fontSize: '13px', color: 'var(--tx)' }}>{item.tuning || 'Standard'}</b>
                       </div>
                       <div style={{ background: '#0a0a0a', padding: '10px 12px', borderRadius: '8px', border: '1px solid var(--ln)' }}>
                         <small style={{ color: 'var(--mu)', fontSize: '11px', display: 'block' }}>Gauge</small>
-                        <b style={{ fontSize: '13px', color: 'var(--tx)' }}>{resolvedStrings.gauge || ''}</b>
+                        <b style={{ fontSize: '13px', color: 'var(--tx)' }}>{resolvedStrings.gauge || 'Not set'}</b>
                       </div>
                       <div style={{ background: '#0a0a0a', padding: '10px 12px', borderRadius: '8px', border: '1px solid var(--ln)' }}>
-                        <small style={{ color: 'var(--mu)', fontSize: '11px', display: 'block' }}>Strings Brand</small>
-                        <b style={{ fontSize: '13px', color: 'var(--tx)' }}>{resolvedStrings.manufacturer || ''}</b>
+                        <small style={{ color: 'var(--mu)', fontSize: '11px', display: 'block' }}>Strings Brand & Line</small>
+                        <b style={{ fontSize: '13px', color: 'var(--tx)' }}>
+                          {[resolvedStrings.manufacturer, resolvedStrings.stringType].filter(Boolean).join(' ') || 'Not set'}
+                        </b>
                       </div>
                       <div style={{ background: '#0a0a0a', padding: '10px 12px', borderRadius: '8px', border: '1px solid var(--ln)' }}>
                         <small style={{ color: 'var(--mu)', fontSize: '11px', display: 'block' }}>Strings Count</small>
-                        <b style={{ fontSize: '13px', color: 'var(--tx)' }}>{item.number_of_strings ? `${item.number_of_strings} string` : ''}</b>
+                        <b style={{ fontSize: '13px', color: 'var(--tx)' }}>{item.number_of_strings ? `${item.number_of_strings} string` : (isBass ? '4 string' : '6 string')}</b>
                       </div>
                     </div>
 
                 {(item.pickup_bridge || item.pickup_middle || item.pickup_neck || item.pickups_summary) && (
                   <div style={{ marginTop: '4px', borderTop: '1px solid var(--ln)', paddingTop: '10px' }}>
-                    <small style={{ color: 'var(--mu)', fontSize: '11px', display: 'block', marginBottom: '4px' }}>Pickups</small>
+                    <small style={{ color: 'var(--mu)', fontSize: '11px', display: 'block', marginBottom: '6px' }}>Pickups & Serials</small>
                     <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', fontSize: '12px' }}>
                       {item.pickup_bridge && (
-                        <span style={{ background: '#181818', padding: '4px 10px', borderRadius: '6px', border: '1px solid var(--ln)' }}>
+                        <span style={{ background: '#181818', padding: '5px 12px', borderRadius: '6px', border: '1px solid var(--ln)' }}>
                           <b style={{ color: 'var(--ac)' }}>Bridge:</b> {item.pickup_bridge}
+                          {item.pickup_bridge_serial && (
+                            <small style={{ color: 'var(--mu)', marginLeft: '6px', fontWeight: 600 }}>
+                              (S/N: {item.pickup_bridge_serial})
+                            </small>
+                          )}
                         </span>
                       )}
                       {item.pickup_middle && (
-                        <span style={{ background: '#181818', padding: '4px 10px', borderRadius: '6px', border: '1px solid var(--ln)' }}>
+                        <span style={{ background: '#181818', padding: '5px 12px', borderRadius: '6px', border: '1px solid var(--ln)' }}>
                           <b style={{ color: 'var(--ac)' }}>Middle:</b> {item.pickup_middle}
+                          {item.pickup_middle_serial && (
+                            <small style={{ color: 'var(--mu)', marginLeft: '6px', fontWeight: 600 }}>
+                              (S/N: {item.pickup_middle_serial})
+                            </small>
+                          )}
                         </span>
                       )}
                       {item.pickup_neck && (
-                        <span style={{ background: '#181818', padding: '4px 10px', borderRadius: '6px', border: '1px solid var(--ln)' }}>
+                        <span style={{ background: '#181818', padding: '5px 12px', borderRadius: '6px', border: '1px solid var(--ln)' }}>
                           <b style={{ color: 'var(--ac)' }}>Neck:</b> {item.pickup_neck}
+                          {item.pickup_neck_serial && (
+                            <small style={{ color: 'var(--mu)', marginLeft: '6px', fontWeight: 600 }}>
+                              (S/N: {item.pickup_neck_serial})
+                            </small>
+                          )}
                         </span>
                       )}
                       {!item.pickup_bridge && !item.pickup_middle && !item.pickup_neck && item.pickups_summary && (
@@ -1147,14 +1478,55 @@ export default function GearDetailPage({ params }: { params: Promise<{ id: strin
         ) : (
           <div className="tl">
             {logs.map((log) => (
-              <div key={log.id}>
-                <b>
-                  {log.title}
-                  <span className="ltag">{log.event_type}</span>
-                </b>
-                <small>
+              <div key={log.id} style={{ opacity: log.is_voided ? 0.5 : 1, transition: 'all 0.2s ease' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px', flexWrap: 'wrap' }}>
+                  <b style={{ textDecoration: log.is_voided ? 'line-through' : 'none', color: log.is_voided ? 'var(--mu)' : 'var(--tx)' }}>
+                    {log.title}
+                    <span className="ltag">{log.event_type}</span>
+                    {log.is_voided && (
+                      <span
+                        title={log.voided_reason || 'Marked as void / hallucinated'}
+                        style={{
+                          background: 'rgba(239, 68, 68, 0.15)',
+                          border: '1px solid rgba(239, 68, 68, 0.4)',
+                          color: '#f87171',
+                          borderRadius: '4px',
+                          padding: '1px 6px',
+                          fontSize: '10px',
+                          fontWeight: 800,
+                          marginLeft: '8px',
+                          letterSpacing: '0.04em',
+                          textDecoration: 'none',
+                          display: 'inline-block',
+                        }}
+                      >
+                        VOIDED · STRUCK THROUGH
+                      </span>
+                    )}
+                  </b>
+                  <button
+                    type="button"
+                    onClick={() => handleToggleVoidLog(log.id, Boolean(log.is_voided))}
+                    title={log.is_voided ? 'Restore this log entry' : 'Strike through this log entry'}
+                    style={{
+                      background: 'transparent',
+                      border: '1px solid var(--ln)',
+                      borderRadius: '6px',
+                      color: log.is_voided ? 'var(--ac)' : 'var(--mu)',
+                      padding: '3px 8px',
+                      fontSize: '11px',
+                      cursor: 'pointer',
+                      fontWeight: 600,
+                      flexShrink: 0,
+                    }}
+                  >
+                    {log.is_voided ? '↩ Restore' : '✕ Strike through'}
+                  </button>
+                </div>
+                <small style={{ textDecoration: log.is_voided ? 'line-through' : 'none' }}>
                   {new Date(log.event_date).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
                   {log.description ? ` · ${log.description}` : ''}
+                  {log.is_voided && log.voided_reason ? ` (${log.voided_reason})` : ''}
                 </small>
               </div>
             ))}
@@ -1435,21 +1807,42 @@ export default function GearDetailPage({ params }: { params: Promise<{ id: strin
               </label>
             </div>
 
-            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px', marginTop: '10px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '8px', marginTop: '14px', paddingTop: '12px', borderTop: '1px solid var(--ln)' }}>
               <button
                 type="button"
-                onClick={() => setShowSettingsModal(false)}
-                style={{ padding: '8px 14px', borderRadius: '8px', border: '1px solid var(--ln)', fontSize: '12px', color: 'var(--mu)' }}
+                onClick={handleDeleteGear}
+                style={{
+                  padding: '8px 14px',
+                  borderRadius: '8px',
+                  border: '1px solid rgba(239, 68, 68, 0.4)',
+                  background: 'rgba(239, 68, 68, 0.08)',
+                  fontSize: '12px',
+                  color: '#ef4444',
+                  fontWeight: 700,
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                }}
               >
-                Cancel
+                <span>🗑️</span> Remove from Rig
               </button>
-              <button
-                type="submit"
-                disabled={isSavingSpecs}
-                style={{ background: 'var(--ac)', color: '#000', fontWeight: 800, padding: '8px 18px', borderRadius: '8px', fontSize: '12px' }}
-              >
-                {isSavingSpecs ? 'Saving...' : 'Save Changes'}
-              </button>
+              <div style={{ display: 'flex', gap: '8px' }}>
+                <button
+                  type="button"
+                  onClick={() => setShowSettingsModal(false)}
+                  style={{ padding: '8px 14px', borderRadius: '8px', border: '1px solid var(--ln)', fontSize: '12px', color: 'var(--mu)', cursor: 'pointer' }}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={isSavingSpecs}
+                  style={{ background: 'var(--ac)', color: '#000', fontWeight: 800, padding: '8px 18px', borderRadius: '8px', fontSize: '12px', cursor: 'pointer' }}
+                >
+                  {isSavingSpecs ? 'Saving...' : 'Save Changes'}
+                </button>
+              </div>
             </div>
           </form>
         </div>

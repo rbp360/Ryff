@@ -47,12 +47,13 @@ export function cleanGearText(input: string): {
   // Remove budget phrases
   clean = clean.replace(/(?:under\s+)?(?:£|\$|€|gbp\s*)\d+/gi, '').replace(/\d+\s*(?:gbp|pounds|quid)/gi, '');
 
-  // Repeatedly strip leading want/own prefix keywords and any colons/dashes/spaces
+  // Repeatedly strip leading want/own/action prefix keywords and any colons/dashes/spaces
   let previous = '';
   while (previous !== clean) {
     previous = clean;
     clean = clean
-      .replace(/^(want|looking for|saving for|searching for|iso|wtb|i have|i own)\b/i, '')
+      .replace(/^(want|looking for|saving for|searching for|iso|wtb|i have|i own|add a|add an|please add|added a|added an|added|add|i bought a|i bought|bought a|bought|i got a|i got|got a)\b/i, '')
+      .replace(/\b(to my rig|to my passport|to my collection|to rig|to passport|to collection)\b/i, '')
       .replace(/^[\s:–—•·\-,;]+/g, '')
       .replace(/[\s:–—•·\-,;]+$/g, '')
       .trim();

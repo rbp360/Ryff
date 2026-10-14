@@ -321,8 +321,47 @@ export function DigestFeed({
 
             {/* Agent editorial take */}
             <div className="say">
-              <div className="ph round hank-avatar" style={{ textTransform: 'uppercase', fontSize: '9px', fontWeight: 800 }}>
-                {agentName.slice(0, 4)}
+              <div
+                className="round hank-avatar"
+                style={{
+                  position: 'relative',
+                  overflow: 'hidden',
+                  borderRadius: '50%',
+                  background: 'var(--sf, #141417)',
+                  border: '1px solid var(--ln, #26262a)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  flexShrink: 0,
+                }}
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={activeBot?.avatarImage || `/images/bots/${agentId}.jpg`}
+                  alt={agentName}
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover',
+                    display: 'block',
+                  }}
+                  onError={(e) => {
+                    // Fallback to text initials if image fails to load
+                    e.currentTarget.style.display = 'none';
+                  }}
+                />
+                <span
+                  style={{
+                    position: 'absolute',
+                    textTransform: 'uppercase',
+                    fontSize: '9px',
+                    fontWeight: 800,
+                    zIndex: 0,
+                    color: 'var(--mu, #9ca3af)',
+                  }}
+                >
+                  {(activeBot?.avatarText || agentName).slice(0, 4)}
+                </span>
               </div>
               <div style={{ flex: 1, minWidth: 0 }}>
                 <p style={{ margin: 0, fontSize: '14px', lineHeight: 1.5, color: '#e2e8f0' }}>{synopsisText}</p>

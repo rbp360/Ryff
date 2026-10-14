@@ -173,8 +173,119 @@ export const STRING_MANUFACTURERS = [
   'Stringjoy',
   'Thomastik-Infeld',
   'Pyramid',
-  'CUSTOM',
+  'Curt Mangan',
+  'Apex',
+  'Skull Strings',
+  'Dogal',
+  'Optima',
 ] as const;
+
+export const STRING_TYPES_BY_BRAND: Record<string, string[]> = {
+  'Elixir': ['Polyweb', 'Nanoweb', 'Optiweb'],
+  "D'Addario": ['NYXL', 'XS Nickel', 'XT', 'XL Nickel Wound', 'Half Rounds', 'Chromes Flat Wound', 'Pro-Arté (Nylon)', 'Flat Tops', 'Phosphor Bronze'],
+  'Ernie Ball': ['Regular Slinky', 'Super Slinky', 'Power Slinky', 'Hybrid Slinky', 'Paradigm', 'Cobalt Slinky', 'RPS', 'Earthwood Acoustic', 'Flatwound Slinky'],
+  'DR Strings': ['Pure Blues', 'Hi-Beam', 'Black Beauties', 'Dragon-Skin+', 'Tite-Fit', 'Sunbeams', 'Legend Flatwound'],
+  'Rotosound': ['Roto Yellows', 'Roto Pinks', 'British Steels', 'Swing Bass 66', 'Ultramag', 'Top Tape Flatwound'],
+  'Martin': ['Authentic Acoustic Lifespan 2.0', 'Authentic Acoustic SP', 'Retro Monel', 'Darco'],
+  'Stringjoy': ['Signatures (Nickel Wound)', 'Orbiters (Coated)', 'Naturals (Phosphor Bronze)', 'Foxwoods (Coated Phosphor Bronze)', 'Broadways (Pure Nickel)'],
+  'GHS': ['Boomers', 'Sub-Zero Boomers', 'Burnished Nickel', 'Precision Flatwound', 'Vintage Bronze'],
+  'Dunlop': ['Heavy Core', 'Super Bright', 'Performance+', 'Marcus Miller Super Bright'],
+  'La Bella': ['Deep Talkin\' Bass Flatwound', '760FS Flatwound', 'Super Steps', 'Vapor Shield'],
+  'Thomastik-Infeld': ['Jazz Swing Flatwound', 'Power-Brights', 'Infeld Blue/Red'],
+  'Gibson': ['Vintage Reissue Pure Nickel', 'Brite Wires', 'Masterbuilt Premium'],
+  'Fender': ['Original 150 Pure Nickel', 'Super 250s Nickel Plated', 'Pure Vintage'],
+};
+
+export const COMMON_STRING_TYPES = [
+  'Polyweb (Thick Coating / Warm)',
+  'Nanoweb (Ultra-thin Coating / Bright)',
+  'Optiweb (Crisp Natural Feel)',
+  'NYXL (High Output / High Strength)',
+  'XS Coated (Smooth / Long Life)',
+  'Nickel Wound',
+  'Pure Nickel (Warm Vintage Tone)',
+  'Cobalt (Dynamic Response)',
+  'Stainless Steel (Bright / Punchy)',
+  'Flatwound (Smooth / Mellow / Jazz)',
+  'Half-Round / Groundwound',
+  'Phosphor Bronze (Warm Acoustic)',
+  '80/20 Bronze (Bright Acoustic)',
+  'Monel (Dry Woody Vintage Tone)',
+  'Nylon (Classical Tie-End / Ball-End)',
+  'Tapewound (Black Nylon Bass)',
+];
+
+export const DEFAULT_STRING_GAUGES: Record<number, Record<string, string[]>> = {
+  6: {
+    '008-038': ['8', '10', '15', '21', '30', '38'],
+    '009-042': ['9', '11', '16', '24', '32', '42'],
+    '009-046': ['9', '11', '16', '26', '36', '46'],
+    '010-046': ['10', '13', '17', '26', '36', '46'],
+    '010-052': ['10', '13', '17', '30', '42', '52'],
+    '011-048': ['11', '14', '18', '28', '38', '48'],
+    '011-050': ['11', '15', '19', '28', '38', '50'],
+    '011-052': ['11', '14', '18', '30', '42', '52'],
+    '012-054': ['12', '16', '20', '32', '42', '54'],
+    '013-056': ['13', '17', '26', '36', '46', '56'],
+  },
+  7: {
+    '009-052': ['9', '11', '16', '24', '32', '42', '52'],
+    '009-054': ['9', '11', '16', '24', '32', '44', '54'],
+    '010-056': ['10', '13', '17', '26', '36', '46', '56'],
+    '010-059': ['10', '13', '17', '26', '36', '46', '59'],
+    '010-062': ['10', '13', '17', '26', '36', '48', '62'],
+  },
+  8: {
+    '009-065': ['9', '11', '16', '24', '32', '42', '52', '65'],
+    '009-074': ['9', '11', '16', '24', '32', '44', '54', '74'],
+    '010-074': ['10', '13', '17', '26', '36', '46', '54', '74'],
+  },
+  4: {
+    '040-095': ['40', '60', '75', '95'],
+    '040-100': ['40', '60', '80', '100'],
+    '045-100': ['45', '65', '80', '100'],
+    '045-105': ['45', '65', '85', '105'],
+    '050-105': ['50', '70', '85', '105'],
+    '050-110': ['50', '70', '90', '110'],
+  },
+  5: {
+    '040-125': ['40', '60', '75', '95', '125'],
+    '045-125': ['45', '65', '80', '100', '125'],
+    '045-130': ['45', '65', '85', '105', '130'],
+    '045-135': ['45', '65', '85', '105', '135'],
+  },
+};
+
+export function parseIndividualGauges(str: string): string[] {
+  if (!str) return [];
+  // Look for parenthetical list: "8-42 (8, 11, 16, 22, 32, 42)"
+  const parenMatch = str.match(/\(([^)]+)\)/);
+  const target = parenMatch ? parenMatch[1] : str;
+  const parts = target.split(/[\s,–-]+/).map((p) => p.trim()).filter((p) => /^\d{1,3}$/.test(p));
+  return parts;
+}
+
+export function formatCustomGauges(gauges: (number | string)[]): string {
+  const cleaned = gauges.map((g) => String(g).trim()).filter(Boolean);
+  if (cleaned.length === 0) return '';
+  const first = cleaned[0];
+  const last = cleaned[cleaned.length - 1];
+  return `${first}-${last} (${cleaned.join(', ')})`;
+}
+
+export function getStringNoteLabels(count: number, isBass: boolean): string[] {
+  if (isBass) {
+    if (count === 4) return ['1st (G)', '2nd (D)', '3rd (A)', '4th (E)'];
+    if (count === 5) return ['1st (G)', '2nd (D)', '3rd (A)', '4th (E)', '5th (Low B)'];
+    if (count === 6) return ['1st (High C)', '2nd (G)', '3rd (D)', '4th (A)', '5th (E)', '6th (Low B)'];
+  }
+  if (count === 7) return ['1st (High E)', '2nd (B)', '3rd (G)', '4th (D)', '5th (A)', '6th (E)', '7th (Low B)'];
+  if (count === 8) return ['1st (High E)', '2nd (B)', '3rd (G)', '4th (D)', '5th (A)', '6th (E)', '7th (B)', '8th (Low F#)'];
+  if (count === 12) return ['1st (e)', '2nd (E)', '3rd (b)', '4th (B)', '5th (g)', '6th (G)', '7th (d)', '8th (D)', '9th (a)', '10th (A)', '11th (e)', '12th (E)'];
+  return ['1st (High E)', '2nd (B)', '3rd (G)', '4th (D)', '5th (A)', '6th (Low E)'];
+}
+
+
 
 export const PICKUP_MANUFACTURERS = [
   'Seymour Duncan',
@@ -350,22 +461,36 @@ const GAUGE_NORMALIZATIONS: Record<string, string> = {
   '013-056': '013-056 (Extra Heavy / Baritone)',
 };
 
-// Intelligently separates gauge and brand even if stored combined in legacy current_strings
+// Intelligently separates gauge, brand, and type even if stored combined in legacy current_strings
 export function resolveStringSpecs(
   gauge?: string | null,
   manufacturer?: string | null,
-  currentStrings?: string | null
-): { gauge: string; manufacturer: string; normalizedGauge: string } {
+  currentStrings?: string | null,
+  stringType?: string | null
+): { gauge: string; manufacturer: string; stringType: string; normalizedGauge: string; summary: string } {
   let g = (gauge || '').trim();
   let m = (manufacturer || '').trim();
+  let t = (stringType || '').trim();
   const raw = (currentStrings || '').trim();
+
+  // If stringType is missing, check if raw string mentions popular types (e.g. polyweb, nanoweb, optiweb, nyxl, slinky, paradigm, cobalt, flatwound)
+  if (!t && raw) {
+    const rawLower = raw.toLowerCase();
+    const knownTypes = [
+      'Polyweb', 'Nanoweb', 'Optiweb', 'NYXL', 'XS Nickel', 'Regular Slinky', 'Super Slinky',
+      'Power Slinky', 'Hybrid Slinky', 'Paradigm', 'Cobalt', 'Pure Blues', 'Hi-Beam', 'Black Beauties',
+      'Dragon-Skin+', 'Flatwound', 'Half-Round', 'Phosphor Bronze', '80/20 Bronze', 'Monel', 'Retro'
+    ];
+    const match = knownTypes.find((kt) => rawLower.includes(kt.toLowerCase()));
+    if (match) t = match;
+  }
 
   // 1. If explicit gauge is missing, extract gauge pattern (e.g. 9-42, 10-46, 11-52, 009-042)
   if (!g) {
     const combined = `${m} ${raw}`;
-    const match = combined.match(/\b(\d{1,3}\s*[-–]\s*\d{2,3})\b/);
+    const match = combined.match(/\b(\d{1,3}\s*[-–]\s*\d{2,3}(?:\s*\([^)]+\))?)\b/);
     if (match) {
-      g = match[1].replace(/\s+/g, '');
+      g = match[1].replace(/\s+/g, ' ');
     }
   }
 
@@ -374,7 +499,7 @@ export function resolveStringSpecs(
     const lower = raw.toLowerCase();
     const brands = [
       'Elixir', "D'Addario", 'Ernie Ball', 'DR Strings', 'GHS', 'Rotosound',
-      'Martin', 'Fender', 'Gibson', 'Dunlop', 'Curt Mangan', 'Thomastik', 'Cleartone'
+      'Martin', 'Fender', 'Gibson', 'Dunlop', 'Curt Mangan', 'Thomastik', 'Cleartone', 'Stringjoy', 'La Bella'
     ];
     const found = brands.find((b) => lower.includes(b.toLowerCase()));
     if (found) {
@@ -391,9 +516,14 @@ export function resolveStringSpecs(
   const cleanGaugeKey = g.toLowerCase().replace(/\s*\(.*\)/, '').trim();
   const normalized = GAUGE_NORMALIZATIONS[cleanGaugeKey] || g;
 
+  const brandParts = [m, t].filter(Boolean).join(' ');
+  const summary = [brandParts, normalized || g].filter(Boolean).join(' · ');
+
   return {
     gauge: normalized || g || '',
     manufacturer: m || raw || '',
+    stringType: t,
     normalizedGauge: normalized || g || '',
+    summary,
   };
 }

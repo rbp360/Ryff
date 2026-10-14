@@ -6,6 +6,7 @@ import { formatGearTitle } from '@/lib/gear-utils';
 import { BackButton } from '@/components/BackButton';
 import { GearThumbnail } from '@/components/GearThumbnail';
 import { NapkinIngesterModal } from '@/components/NapkinIngesterModal';
+import { AddGearModal } from '@/components/AddGearModal';
 
 export interface RigItemData {
   id: number | string;
@@ -50,6 +51,7 @@ export function RigRoomClient({ initialItems, initialLogs }: RigRoomClientProps)
   const [items, setItems] = useState<RigItemData[]>(initialItems);
   const [logs, setLogs] = useState<RigLogData[]>(initialLogs);
   const [showImportModal, setShowImportModal] = useState(false);
+  const [showAddGearModal, setShowAddGearModal] = useState(false);
 
   // Sync state if initialItems changes
   const [prevInitialItems, setPrevInitialItems] = useState(initialItems);
@@ -340,18 +342,37 @@ export function RigRoomClient({ initialItems, initialLogs }: RigRoomClientProps)
               <p style={{ color: 'var(--mu)', fontSize: '13px', margin: '0 0 16px' }}>
                 Speak or type your guitars, amps, and pedals below, or import existing notes.
               </p>
-              <div style={{ display: 'flex', justifyContent: 'center', gap: '10px' }}>
+              <div style={{ display: 'flex', justifyContent: 'center', gap: '10px', flexWrap: 'wrap' }}>
+                <button
+                  type="button"
+                  onClick={() => setShowAddGearModal(true)}
+                  style={{
+                    padding: '8px 18px',
+                    borderRadius: '8px',
+                    border: '1px solid var(--ac)',
+                    background: 'var(--ac)',
+                    color: '#000',
+                    fontSize: '13px',
+                    fontWeight: 800,
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                  }}
+                >
+                  <span>+</span> Add Gear Manually
+                </button>
                 <button
                   type="button"
                   onClick={() => setShowImportModal(true)}
                   style={{
                     padding: '8px 16px',
                     borderRadius: '8px',
-                    border: '1px solid var(--ac)',
-                    background: 'rgba(34, 197, 94, 0.12)',
-                    color: 'var(--ac)',
+                    border: '1px solid var(--ln)',
+                    background: 'var(--sf)',
+                    color: 'var(--tx)',
                     fontSize: '13px',
-                    fontWeight: 800,
+                    fontWeight: 700,
                     cursor: 'pointer',
                   }}
                 >
@@ -398,6 +419,83 @@ export function RigRoomClient({ initialItems, initialLogs }: RigRoomClientProps)
                   </Link>
                 );
               })}
+
+              {/* Green dashed / dotted manual ADD gear element matching user sketch */}
+              <button
+                type="button"
+                onClick={() => setShowAddGearModal(true)}
+                className="gc gc-add-manual"
+                style={{
+                  background: 'rgba(34, 197, 94, 0.03)',
+                  border: '2px dashed var(--ac)',
+                  borderRadius: 'var(--r)',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  minHeight: '210px',
+                  padding: '20px 14px',
+                  textAlign: 'center',
+                  gap: '12px',
+                  transition: 'all 0.2s ease',
+                  outline: 'none',
+                  boxShadow: 'none',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = 'rgba(34, 197, 94, 0.08)';
+                  e.currentTarget.style.borderColor = '#4ade80';
+                  e.currentTarget.style.boxShadow = '0 0 20px rgba(34, 197, 94, 0.22)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = 'rgba(34, 197, 94, 0.03)';
+                  e.currentTarget.style.borderColor = 'var(--ac)';
+                  e.currentTarget.style.boxShadow = 'none';
+                }}
+              >
+                <div
+                  style={{
+                    width: '48px',
+                    height: '48px',
+                    borderRadius: '50%',
+                    background: 'rgba(34, 197, 94, 0.14)',
+                    border: '1.5px solid var(--ac)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: '26px',
+                    color: 'var(--ac)',
+                    fontWeight: 900,
+                  }}
+                >
+                  +
+                </div>
+                <div>
+                  <b
+                    style={{
+                      color: 'var(--ac)',
+                      fontSize: '15px',
+                      fontWeight: 900,
+                      letterSpacing: '0.04em',
+                      textTransform: 'uppercase',
+                      display: 'block',
+                    }}
+                  >
+                    + ADD GEAR
+                  </b>
+                  <small
+                    style={{
+                      color: 'var(--mu)',
+                      fontSize: '11px',
+                      fontWeight: 600,
+                      display: 'block',
+                      marginTop: '4px',
+                    }}
+                  >
+                    Add instrument, amp, or pedal
+                  </small>
+                </div>
+              </button>
             </div>
           )}
 
@@ -655,6 +753,12 @@ export function RigRoomClient({ initialItems, initialLogs }: RigRoomClientProps)
         isOpen={showImportModal}
         onClose={() => setShowImportModal(false)}
         onImportComplete={refreshRig}
+      />
+
+      <AddGearModal
+        isOpen={showAddGearModal}
+        onClose={() => setShowAddGearModal(false)}
+        onGearAdded={(updatedItems) => setItems(updatedItems)}
       />
     </>
   );

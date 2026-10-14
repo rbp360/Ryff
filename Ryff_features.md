@@ -1,5 +1,104 @@
 # Ryff Feature Log
 
+## Feature: Forensic Instrument Specifications, Custom String Gauges & Passport Strikethrough Log Voiding
+- **Date:** October 14, 2026
+- **Category:** Rig Passport / Forensic Specs / Maintenance History / Audit Trail
+
+### 1. User & Marketing Overview
+- **Forensic Instrument Setup Details:** Musicians now have microscopic control over instrument maintenance and hardware specs. Instead of generic dropdown constraints, players can specify their exact string manufacturer (via free-text with smart recommendations like Curt Mangan, Elixir, Apex, Dogal), exact string coating/product line (e.g. Elixir Polyweb vs. Nanoweb vs. Optiweb, D'Addario NYXL, Ernie Ball Paradigm), and granular per-string gauges.
+- **Custom Per-String Gauges (Rob Marcello Setup):** Guitarists who use custom gauge combinations (e.g. an 8-gauge high E string on top of a 9-42 set: `8, 11, 16, 22, 32, 42`) can now enter the precise decimal gauge for every single string based on the instrument's string count (6, 7, 8, 12 strings, or 4/5/6-string bass). Quick presets are provided alongside custom string-by-string inputs.
+- **Pickup Hardware & Serial Number Tracking:** Added individual Bridge, Middle, and Neck pickup hardware tracking with dedicated serial number and winding spec fields—essential for vintage instruments, boutique pickups, and provenance authentication.
+- **Non-Destructive Passport Strikethrough (Log Voiding):** Solved the issue of accidental, erroneous, or hallucinated maintenance entries (e.g. unintended string changes). In keeping with permanent passport audit trail philosophy, entries are not silently deleted; users can click "Strike through" to strike out the entry with a visible line-through, dimmed opacity, and an audit badge (`VOIDED · STRUCK THROUGH`). Restoring an entry is as simple as clicking "Restore". Voiding automatically recalculates and resets the instrument's `last_restrung_at` date and current strings to the prior active log.
+
+---
+
+### 2. Technical Details (For Developers)
+- **Database Schema Migration ([`db/migrations/0017_rig_specs_and_log_voiding.sql`](file:///c:/Users/rob_b/Ryff/db/migrations/0017_rig_specs_and_log_voiding.sql)):**
+  - Added `string_type text`, `pickup_bridge_serial text`, `pickup_middle_serial text`, and `pickup_neck_serial text` columns to `rig_items`.
+  - Added `is_voided boolean not null default false`, `voided_reason text`, and `voided_at timestamptz` columns to `rig_item_logs`.
+- **API Extensions:**
+  - [`src/app/api/rig/[id]/route.ts`](file:///c:/Users/rob_b/Ryff/src/app/api/rig/%5Bid%5D/route.ts): Added `string_type`, `pickup_bridge_serial`, `pickup_middle_serial`, and `pickup_neck_serial` to allowed mutation fields in `PATCH`.
+  - [`src/app/api/rig/[id]/log/route.ts`](file:///c:/Users/rob_b/Ryff/src/app/api/rig/%5Bid%5D/log/route.ts): Added `PATCH` handler to toggle `is_voided` and update `voided_reason` and `voided_at`. When a log of type `strings` is toggled, it automatically queries the latest non-voided string log to roll back or update `rig_items.last_restrung_at` and `current_strings` (or clears them if no active string change logs remain).
+- **Gear Specs Engine ([`src/lib/gear-specs.ts`](file:///c:/Users/rob_b/Ryff/src/lib/gear-specs.ts)):**
+  - Added `STRING_TYPES_BY_BRAND` mapping for major brands (Elixir, D'Addario, Ernie Ball, GHS, Dunlop, DR, Fender, Gibson, Rotosound, Thomastik, Martin).
+  - Added `COMMON_STRING_TYPES` fallback datalist.
+  - Added `formatCustomGauges`, `parseIndividualGauges`, `DEFAULT_STRING_GAUGES`, and `getStringNoteLabels`.
+  - Updated `resolveStringSpecs` to incorporate `string_type` into formatted summaries and snapshots.
+- **Frontend Component ([`src/app/(app)/rig/[id]/page.tsx`](file:///c:/Users/rob_b/Ryff/src/app/%28app%29/rig/%5Bid%5D/page.tsx)):**
+  - Free-text string brand input with `<datalist id="string-brands-list">`.
+  - Free-text string type input with dynamic `<datalist id="string-types-list">` that updates based on the selected brand.
+  - Per-string numerical gauge inputs for strings 1 through N, with live gauge set calculation and 1-click presets (Rob Marcello 8-42, Super Light 9-42, Hybrid 9-46, Regular 10-46).
+  - Dedicated Model + Serial # / Specs fields for Bridge, Middle, and Neck pickups, with serial badge rendering in view mode.
+  - Passport Timeline Strikethrough action button with confirmation state, line-through rendering, red status tag, and instant rollback.
+
+---
+
+### 3. White-Label & Domain-Agnostic Utility
+- **Immutable Audit Trail with Voiding across Verticals:** In any domain tracking maintenance records (e.g., service histories on classic cars, battery replacements or overhaul services on luxury timepieces, component replacements on high-performance bicycles), physical passports require immutable accountability. Striking through an entry with a reason and timestamp preserves audit integrity without polluting active telemetry (such as next scheduled service or current odometer/mileage).
+- **Granular Hardware Subcomponent Fingerprinting:** The multi-pickup serial number and custom-part spec architecture translates directly to any multi-component asset (e.g. tracking movement caliber serials vs. case serials on luxury watches, fork/frame/drivetrain serials on bespoke bicycles, or engine/transmission codes on collector cars).
+
+---
+
+## Feature: Manual Gear Addition & Asset Photo Preservation Architecture
+- **Date:** October 14, 2026
+- **Category:** Rig Passport / Inventory UX / Photo Upload Reliability
+
+### 1. User & Marketing Overview
+- **Dedicated "+ ADD" Grid Tile:** Added a prominent, interactive "+ ADD GEAR" card styled with Ryff's signature green dashed border (`border: 2px dashed var(--ac)`) and subtle hover illumination directly in the Rig Passport grid, making it instantly obvious how to add new gear to a collection.
+- **Manual Gear Ingestion Modal:** Musicians can now register guitars, amps, pedals, drums, synths, and studio gear with structured fields: Category selector, Brand, Model, Nickname, Serial Number (with privacy toggle), and custom photo upload with live Reverb stock photo preview.
+- **Bulletproof Custom Photo Persistence:** Resolved photo reversion issues where user-uploaded photos of personal gear (e.g. PRS Custom 24) were overwritten or reverted to stock Reverb images. Uploaded photos now abort in-flight stock queries, persist securely to Cloudinary, verify DB PATCH responses, and cache locally (`localStorage`) for instant zero-latency recovery.
+- **Gear Deletion & Cleanup:** Added a clean "Remove from Rig" button inside the gear detail settings drawer with confirmation modal, allowing musicians to easily prune decommissioned or misentered gear.
+
+---
+
+### 2. Technical Details (For Developers)
+- **Modal Component ([`src/components/AddGearModal.tsx`](file:///c:/Users/rob_b/Ryff/src/components/AddGearModal.tsx)):**
+  - Interactive gear creation modal with category selector pills (guitar, bass, amp, pedal, drums, keys, studio, other).
+  - Live debounce fetching of Reverb stock photos while the user types brand and model.
+  - Integrated Cloudinary unsigned direct upload (`preset: unsigned-rigistry`) with drag-and-drop support.
+  - Automatically submits to `POST /api/rig` and updates local passport state without requiring a full page reload.
+- **Photo Engine Hardening ([`src/components/GearHeroPhoto.tsx`](file:///c:/Users/rob_b/Ryff/src/components/GearHeroPhoto.tsx)):**
+  - Added `AbortController` (`stockAbortRef`) to terminate in-flight Reverb stock image queries immediately upon user uploading a custom photo, preventing race condition overwrites.
+  - Added strict error checking to `saveImageUrlToDatabase` (throws on `!res.ok`), surfaces error banners, and writes to `localStorage.setItem('ryff_gear_photo_' + itemId, url)` as client-side fallback storage.
+  - Enhanced drag-and-drop validation to check file extensions (`.jpg, .jpeg, .png, .webp, .heic`) so Windows Explorer drops with empty MIME types are accepted.
+- **API Extension ([`src/app/api/rig/route.ts`](file:///c:/Users/rob_b/Ryff/src/app/api/rig/route.ts)):**
+  - Updated `POST /api/rig` to accept structured attributes: `image_url`, `serial_number`, `serial_visible`, `nickname`, `year_manufacture`, `color`, and `notes`.
+  - Automatically enriches gear entries missing a custom photo with verified Reverb marketplace photos via `fetchReverbStockImage`.
+- **Gear Deletion ([`src/app/(app)/rig/[id]/page.tsx`](file:///c:/Users/rob_b/Ryff/src/app/%28app%29/rig/%5Bid%5D/page.tsx)):**
+  - Wired "Remove from Rig" button to `DELETE /api/rig/${itemId}` with confirmation and router redirect to `/rig`.
+- **Text Sanitation ([`src/lib/gear-utils.ts`](file:///c:/Users/rob_b/Ryff/src/lib/gear-utils.ts)):**
+  - Added regex cleaners to strip conversational phrases ("Add a...", "I bought a...", "...to my rig") from quick input bars to prevent malformed item names.
+
+---
+
+### 3. White-Label & Domain-Agnostic Utility
+- **Turnkey Physical Asset Vault:** This pattern serves as a general-purpose asset tracking and logging engine for any enthusiast or collector vertical (e.g., vintage watches, sneaker collections, espresso setups, cycling bikes & components, power tools).
+- **Hybrid Stock + Custom Asset Visuals:** Combining public marketplace stock photo resolution (e.g., Reverb, eBay, Chrono24) with drag-and-drop personal photo uploads gives end users immediate visual gratification while enabling bespoke personalization of their unique assets.
+
+---
+
+## Feature: Digest Feed Bot Avatar Picture Integration
+- **Date:** October 14, 2026
+- **Category:** Digest UX / Bot Avatar Rendering / Visual Polish
+
+### 1. User & Marketing Overview
+- **Visual Identity in Feed Summaries:** Replaced the generic placeholder text badge ("HANK" / truncated initials) in each `/digest` editorial summary take with the active companion bot's official portrait photo (e.g., RobBPaul, Tim, Stevie, McGee, Hank).
+- **Graceful Fallbacks:** If an image fails or is unavailable, the component falls back cleanly to the bot's initials, ensuring a consistent visual layout across all screens.
+
+---
+
+### 2. Technical Details (For Developers)
+- **Component Update ([`src/app/(app)/digest/DigestFeed.tsx`](file:///c:/Users/rob_b/Ryff/src/app/%28app%29/digest/DigestFeed.tsx)):**
+  - Updated the `.say` block avatar element from a dashed text-only box (`.ph.round`) to a circular avatar image container using `activeBot?.avatarImage || /images/bots/${agentId}.jpg`.
+  - Added an `onError` handler on the `<img>` to hide broken images and reveal the underlying initials span fallback.
+
+---
+
+### 3. White-Label & Domain-Agnostic Utility
+- **Persona Presentation Across Vertical Feeds:** In any domain-specific curated digest (e.g. vintage watches, specialty coffee, cycling), commentary bubbles display the curator or persona expert's verified portrait instead of hardcoded initials or text placeholders, enhancing visual recognition and connection.
+
+---
+
 ## Feature: Bot Quality & Grounding Overhaul — Anti-Cliché Safeguards, Hardware Evidence Grounding & Onboarding Blueprint (Milestones M7.3 & M7.4)
 - **Date:** October 13, 2026
 - **Category:** Bot Persona Quality / Prompt Engineering / Anti-Caricature Guardrails / Onboarding Architecture

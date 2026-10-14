@@ -24,16 +24,44 @@ export function GearHeroPhoto({
   onImageUpdated,
 }: GearHeroPhotoProps) {
   const router = useRouter();
-  const [currentUrl, setCurrentUrl] = useState<string | null>(initialImageUrl || null);
+  const [currentUrl, setCurrentUrl] = useState<string | null>(() => {
+    if (initialImageUrl) return initialImageUrl;
+    if (typeof window !== 'undefined') {
+      try {
+        return localStorage.getItem(`ryff_gear_photo_${itemId}`);
+      } catch {}
+    }
+    return null;
+  });
   const [isDragging, setIsDragging] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [isFetchingStock, setIsFetchingStock] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
-  const [stockSource, setStockSource] = useState<'custom' | 'reverb' | 'logo' | 'category'>(
-    initialImageUrl ? 'custom' : 'category'
-  );
+  const [successMsg, setSuccessMsg] = useState<string | null>(null);
+  const [stockSource, setStockSource] = useState<'custom' | 'reverb' | 'logo' | 'category'>(() => {
+    if (initialImageUrl) {
+      return initialImageUrl.includes('cloudinary') || !initialImageUrl.includes('reverb.com') ? 'custom' : 'reverb';
+    }
+    if (typeof window !== 'undefined') {
+      try {
+        const cached = localStorage.getItem(`ryff_gear_photo_${itemId}`);
+        if (cached) return 'custom';
+      } catch {}
+    }
+    return 'category';
+  });
+
+  // Adjust state during render if initialImageUrl prop changes (canonical React pattern)
+  const [prevInitialImageUrl, setPrevInitialImageUrl] = useState(initialImageUrl);
+  if (initialImageUrl !== prevInitialImageUrl) {
+    setPrevInitialImageUrl(initialImageUrl);
+    setCurrentUrl(initialImageUrl || null);
+    const isCustom = initialImageUrl ? (initialImageUrl.includes('cloudinary') || !initialImageUrl.includes('reverb.com')) : false;
+    setStockSource(isCustom ? 'custom' : (initialImageUrl ? 'reverb' : 'category'));
+  }
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const stockAbortRef = useRef<AbortController | null>(null);
   const fallback = getCategoryFallbackImage(category);
 
   const saveImageUrlToDatabase = useCallback(async (url: string | null) => {
@@ -43,18 +71,52 @@ export function GearHeroPhoto({
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ image_url: url }),
       });
+      const data = await res.json().catch(() => ({}));
       if (!res.ok) {
-        console.warn('Failed to persist image_url to database');
-      } else {
-        if (onImageUpdated) onImageUpdated(url);
-        router.refresh();
+        throw new Error(data.error || `Failed to save photo (status ${res.status})`);
       }
+
+      // Persist to local client backup for bulletproof recovery
+      if (typeof window !== 'undefined') {
+        try {
+          if (url) {
+            localStorage.setItem(`ryff_gear_photo_${itemId}`, url);
+          } else {
+            localStorage.removeItem(`ryff_gear_photo_${itemId}`);
+          }
+        } catch {
+          // ignore localStorage quota errors
+        }
+      }
+
+      if (onImageUpdated) onImageUpdated(url);
+      router.refresh();
+      return true;
     } catch (err) {
       console.error('Error saving image to DB:', err);
+      throw err;
     }
   }, [itemId, onImageUpdated, router]);
 
+  // If initialImageUrl was missing but recovered from localStorage, re-persist to database in background
+  useEffect(() => {
+    if (!initialImageUrl && currentUrl && typeof window !== 'undefined') {
+      saveImageUrlToDatabase(currentUrl).catch(() => {});
+    }
+  }, [initialImageUrl, currentUrl, saveImageUrlToDatabase]);
+
   const fetchStock = useCallback(async (indexToFetch: number = 0, autoSave: boolean = false) => {
+    // If user already has a custom uploaded photo, DO NOT overwrite with stock!
+    if (stockSource === 'custom' || currentUrl?.includes('cloudinary')) {
+      return;
+    }
+
+    if (stockAbortRef.current) {
+      stockAbortRef.current.abort();
+    }
+    const controller = new AbortController();
+    stockAbortRef.current = controller;
+
     setIsFetchingStock(true);
     setErrorMsg(null);
     try {
@@ -64,38 +126,43 @@ export function GearHeroPhoto({
         category: category || '',
         pickIndex: indexToFetch.toString(),
       });
-      const res = await fetch(`/api/stock-image?${params.toString()}`);
+      const res = await fetch(`/api/stock-image?${params.toString()}`, { signal: controller.signal });
       const data = await res.json();
       if (data.imageUrl) {
         setCurrentUrl(data.imageUrl);
         setStockSource(data.source || 'reverb');
 
         if (autoSave && data.source === 'reverb') {
-          await saveImageUrlToDatabase(data.imageUrl);
+          await saveImageUrlToDatabase(data.imageUrl).catch(() => {});
         }
       } else {
         setCurrentUrl(fallback);
         setStockSource('category');
       }
-    } catch {
+    } catch (err: unknown) {
+      if (err instanceof DOMException && err.name === 'AbortError') return;
       setCurrentUrl(fallback);
       setStockSource('category');
     } finally {
       setIsFetchingStock(false);
     }
-  }, [brand, model, rawText, category, fallback, saveImageUrlToDatabase]);
+  }, [brand, model, rawText, category, fallback, saveImageUrlToDatabase, stockSource, currentUrl]);
 
-  // If no initial custom image is saved, attempt to auto-fetch Reverb stock image on load
+  // If no initial custom image is saved and no local backup, auto-fetch Reverb stock image on load
   useEffect(() => {
     let ignore = false;
-    if (!initialImageUrl && (brand || model || rawText)) {
+    const hasCachedPhoto = typeof window !== 'undefined' && localStorage.getItem(`ryff_gear_photo_${itemId}`);
+    if (!initialImageUrl && !hasCachedPhoto && (brand || model || rawText)) {
+      const controller = new AbortController();
+      stockAbortRef.current = controller;
+
       const params = new URLSearchParams({
         brand: brand || '',
         model: model || rawText || '',
         category: category || '',
         pickIndex: '0',
       });
-      fetch(`/api/stock-image?${params.toString()}`)
+      fetch(`/api/stock-image?${params.toString()}`, { signal: controller.signal })
         .then((res) => res.json())
         .then((data) => {
           if (!ignore) {
@@ -108,7 +175,8 @@ export function GearHeroPhoto({
             }
           }
         })
-        .catch(() => {
+        .catch((err) => {
+          if (err instanceof DOMException && err.name === 'AbortError') return;
           if (!ignore) {
             setCurrentUrl(fallback);
             setStockSource('category');
@@ -118,20 +186,29 @@ export function GearHeroPhoto({
     return () => {
       ignore = true;
     };
-  }, [initialImageUrl, brand, model, rawText, category, fallback]);
-
+  }, [initialImageUrl, itemId, brand, model, rawText, category, fallback]);
 
   async function uploadFileToCloudinary(file: File) {
-    if (!file.type.startsWith('image/')) {
-      setErrorMsg('Please upload a valid image file (PNG, JPG, WebP).');
+    const isImageMime = file.type && file.type.startsWith('image/');
+    const isImageExt = /\.(jpe?g|png|webp|gif|avif|heic|heif|bmp)$/i.test(file.name || '');
+    if (!isImageMime && !isImageExt) {
+      setErrorMsg('Please upload a valid image file (PNG, JPG, WebP, HEIC).');
       return;
+    }
+
+    // Cancel any in-flight stock lookups so they cannot overwrite user photo
+    if (stockAbortRef.current) {
+      stockAbortRef.current.abort();
     }
 
     const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || 'dfkt03pao';
     const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET || 'unsigned-rigistry';
+    const previousUrl = currentUrl;
+    const previousSource = stockSource;
 
     setIsUploading(true);
     setErrorMsg(null);
+    setSuccessMsg(null);
 
     try {
       const formData = new FormData();
@@ -145,16 +222,36 @@ export function GearHeroPhoto({
 
       if (!res.ok) {
         const errorData = await res.json().catch(() => ({}));
-        throw new Error(errorData?.error?.message || `Upload failed (status ${res.status})`);
+        throw new Error(errorData?.error?.message || `Upload to Cloudinary failed (status ${res.status})`);
       }
 
       const data = await res.json();
       const secureUrl = data.secure_url;
+      if (!secureUrl) {
+        throw new Error('No image URL returned from upload server.');
+      }
+
+      // Persist to database FIRST
+      await saveImageUrlToDatabase(secureUrl);
+
+      // Log the photo update in item history
+      await fetch(`/api/rig/${itemId}/log`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          event_type: 'photo',
+          title: 'Hero Photo Updated',
+          description: 'Uploaded personal instrument photo',
+        }),
+      }).catch(() => {});
 
       setCurrentUrl(secureUrl);
       setStockSource('custom');
-      await saveImageUrlToDatabase(secureUrl);
+      setSuccessMsg('Personal photo saved to gear passport!');
+      setTimeout(() => setSuccessMsg(null), 4000);
     } catch (err) {
+      setCurrentUrl(previousUrl);
+      setStockSource(previousSource);
       setErrorMsg(err instanceof Error ? err.message : 'Upload failed. Please try again.');
     } finally {
       setIsUploading(false);
@@ -194,12 +291,16 @@ export function GearHeroPhoto({
   async function handleRemoveCustomPhoto() {
     setCurrentUrl(null);
     setStockSource('category');
-    await saveImageUrlToDatabase(null);
+    try {
+      await saveImageUrlToDatabase(null);
+    } catch {
+      // ignore
+    }
     fetchStock(0, false);
   }
 
   const displayUrl = currentUrl || fallback;
-  const isCustom = stockSource === 'custom';
+  const isCustom = stockSource === 'custom' || Boolean(currentUrl && currentUrl.includes('cloudinary'));
 
   return (
     <div style={{ position: 'relative', width: '100%', maxWidth: '360px', margin: '0 auto 16px' }}>
@@ -336,7 +437,14 @@ export function GearHeroPhoto({
       {/* Error Message */}
       {errorMsg && (
         <p style={{ color: '#ef4444', fontSize: '12px', marginTop: '6px', fontWeight: 600 }}>
-          {errorMsg}
+          ⚠️ {errorMsg}
+        </p>
+      )}
+
+      {/* Success Message */}
+      {successMsg && (
+        <p style={{ color: 'var(--ac)', fontSize: '12px', marginTop: '6px', fontWeight: 700 }}>
+          ✅ {successMsg}
         </p>
       )}
 

@@ -169,6 +169,106 @@ export async function POST(
   }
 }
 
+export async function PATCH(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const session = await getSession();
+  if (!session?.userId) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  const { id } = await params;
+  const itemId = parseInt(id, 10);
+  if (isNaN(itemId)) {
+    return NextResponse.json({ error: 'Invalid ID' }, { status: 400 });
+  }
+
+  try {
+    const body = await request.json();
+    const { logId, is_voided, voided_reason } = body;
+
+    if (!logId) {
+      return NextResponse.json({ error: 'Log ID required' }, { status: 400 });
+    }
+
+    const voidVal = Boolean(is_voided);
+    const updatedLogs = await db`
+      update rig_item_logs
+      set
+        is_voided = ${voidVal},
+        voided_reason = ${voidVal ? (voided_reason || 'Marked as void / hallucinated') : null},
+        voided_at = ${voidVal ? new Date() : null}
+      where id = ${logId} and rig_item_id = ${itemId} and user_id = ${session.userId}
+      returning *
+    `;
+
+    if (updatedLogs.length === 0) {
+      return NextResponse.json({ error: 'Log entry not found' }, { status: 404 });
+    }
+
+    const targetLog = updatedLogs[0];
+
+    // If this log affected string changes, re-evaluate string status from active non-voided logs
+    if (['strings', 'string_change'].includes(targetLog.event_type)) {
+      const activeStringLogs = await db`
+        select * from rig_item_logs
+        where rig_item_id = ${itemId}
+          and user_id = ${session.userId}
+          and event_type in ('strings', 'string_change')
+          and is_voided = false
+        order by event_date desc, created_at desc
+        limit 1
+      `;
+
+      if (activeStringLogs.length > 0) {
+        const latest = activeStringLogs[0];
+        await db`
+          update rig_items set
+            last_restrung_at = ${latest.event_date}::timestamptz,
+            current_strings = coalesce(${latest.description}, current_strings),
+            updated_at = now()
+          where id = ${itemId} and user_id = ${session.userId}
+        `;
+      } else {
+        // No active string logs remain: clear the hallucinated/voided string change!
+        await db`
+          update rig_items set
+            last_restrung_at = null,
+            updated_at = now()
+          where id = ${itemId} and user_id = ${session.userId}
+        `;
+      }
+    }
+
+    // Fetch updated item & all logs to return fresh state
+    const updatedItem = await db`
+      select * from rig_items
+      where id = ${itemId} and user_id = ${session.userId}
+      limit 1
+    `;
+
+    const allLogs = await db`
+      select * from rig_item_logs
+      where rig_item_id = ${itemId} and user_id = ${session.userId}
+      order by event_date desc, created_at desc
+    `;
+
+    return NextResponse.json({
+      ok: true,
+      log: targetLog,
+      item: updatedItem[0],
+      logs: allLogs,
+    });
+  } catch (err) {
+    console.error('Failed to update log void status:', err);
+    return NextResponse.json(
+      { error: err instanceof Error ? err.message : 'Failed to update log' },
+      { status: 500 }
+    );
+  }
+}
+
 export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -194,3 +294,4 @@ export async function DELETE(
 
   return NextResponse.json({ ok: true });
 }
+
