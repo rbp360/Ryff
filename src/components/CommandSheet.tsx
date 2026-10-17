@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { usePathname } from 'next/navigation';
 import { useAudioRecorder } from '@/hooks/useAudioRecorder';
 
@@ -82,9 +82,18 @@ export function CommandSheet({ initialCommandMode = 'text_and_voice' }: CommandS
         .then((res) => res.json())
         .then((data) => {
           if (data?.items) {
+            interface RigItemPayload {
+              id: number | string;
+              kind?: string;
+              brand?: string | null;
+              model?: string | null;
+              raw_text?: string;
+              nickname?: string | null;
+              category?: string;
+            }
             const owned = data.items
-              .filter((it: any) => it.kind === 'own')
-              .map((it: any) => ({
+              .filter((it: RigItemPayload) => it.kind === 'own')
+              .map((it: RigItemPayload) => ({
                 id: Number(it.id),
                 name: [it.brand, it.model || it.raw_text].filter(Boolean).join(' '),
                 nickname: it.nickname || null,
@@ -193,69 +202,74 @@ export function CommandSheet({ initialCommandMode = 'text_and_voice' }: CommandS
   }
 
   // Handle text command submission (with optional override text or gearId)
-  async function handleSendCommand(
-    e?: React.FormEvent,
-    overrideText?: string,
-    overrideGearId?: number | string
-  ) {
-    if (e) e.preventDefault();
-    const clean = (overrideText !== undefined ? overrideText : inputText).trim();
-    if (!clean || isProcessing) return;
+  const handleSendCommand = useCallback(
+    async (
+      e?: React.FormEvent,
+      overrideText?: string,
+      overrideGearId?: number | string
+    ) => {
+      if (e) e.preventDefault();
+      const clean = (overrideText !== undefined ? overrideText : inputText).trim();
+      if (!clean || isProcessing) return;
 
-    setIsProcessing(true);
-    setApiError(null);
-    setCommandResult(null);
+      setIsProcessing(true);
+      setApiError(null);
+      setCommandResult(null);
 
-    const targetGearId = overrideGearId !== undefined ? String(overrideGearId) : gearId;
+      const targetGearId = overrideGearId !== undefined ? String(overrideGearId) : gearId;
 
-    try {
-      const res = await fetch('/api/command', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          text: clean,
-          context: {
-            screen: pathname,
-            gearId: targetGearId,
-          },
-        }),
-      });
-
-      const data = await res.json();
-      if (res.ok) {
-        if (data.ownedGear && data.ownedGear.length > 0) {
-          setOwnedGearList(data.ownedGear);
-        }
-        setCommandResult({
-          text: data.text,
-          status: data.status,
-          intent: data.intent,
-          tool: data.tool,
-          answer: data.answer,
-          proposals: data.proposals || [],
-          ambiguous: data.ambiguous,
-          unresolved: data.unresolved,
-          message: data.message,
-          gearContext: data.context?.gearContext,
+      try {
+        const res = await fetch('/api/command', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            text: clean,
+            context: {
+              screen: pathname,
+              gearId: targetGearId,
+            },
+          }),
         });
-        setSavedActionIds([]);
-        setUndoneActionIds([]);
-        setSkippedActionIds([]);
-        setEditingActionId(null);
-        setActionEdits({});
-        setInputText('');
-      } else {
-        setApiError(data.error || 'Failed to process command.');
+
+        const data = await res.json();
+        if (res.ok) {
+          if (data.ownedGear && data.ownedGear.length > 0) {
+            setOwnedGearList(data.ownedGear);
+          }
+          setCommandResult({
+            text: data.text,
+            status: data.status,
+            intent: data.intent,
+            tool: data.tool,
+            answer: data.answer,
+            proposals: data.proposals || [],
+            ambiguous: data.ambiguous,
+            unresolved: data.unresolved,
+            message: data.message,
+            gearContext: data.context?.gearContext,
+          });
+          setSavedActionIds([]);
+          setUndoneActionIds([]);
+          setSkippedActionIds([]);
+          setEditingActionId(null);
+          setActionEdits({});
+          setInputText('');
+        } else {
+          setApiError(data.error || 'Failed to process command.');
+        }
+      } catch {
+        setApiError('Network error sending command.');
+      } finally {
+        setIsProcessing(false);
       }
-    } catch {
-      setApiError('Network error sending command.');
-    } finally {
-      setIsProcessing(false);
-    }
-  }
+    },
+    [gearId, inputText, isProcessing, pathname]
+  );
 
   const handleSendCommandRef = useRef(handleSendCommand);
-  handleSendCommandRef.current = handleSendCommand;
+  useEffect(() => {
+    handleSendCommandRef.current = handleSendCommand;
+  }, [handleSendCommand]);
 
   // Listen for programmatic command triggers (e.g. from Rig Room bottom bar)
   useEffect(() => {

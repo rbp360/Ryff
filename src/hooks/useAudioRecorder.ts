@@ -35,7 +35,9 @@ export function useAudioRecorder(
   const [error, setError] = useState<string | null>(null);
 
   const onAutoStopRef = useRef<((result: AudioRecordResult) => void) | undefined>(options?.onAutoStop);
-  onAutoStopRef.current = options?.onAutoStop;
+  useEffect(() => {
+    onAutoStopRef.current = options?.onAutoStop;
+  }, [options?.onAutoStop]);
 
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);

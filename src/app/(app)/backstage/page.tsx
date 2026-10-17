@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef, useMemo, Suspense } from 'react';
+import { useState, useEffect, useRef, useMemo, useCallback, Suspense } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { BackButton } from '@/components/BackButton';
@@ -340,69 +340,72 @@ function BackstageChatInner() {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, loading]);
 
-  async function sendMessage(
-    textToSend?: string,
-    articleContext?: { title: string; summary?: string; url?: string; id?: string } | null
-  ) {
-    const messageText = textToSend || input;
-    if (!messageText.trim() || loading) return;
+  const sendMessage = useCallback(
+    async (
+      textToSend?: string,
+      articleContext?: { title: string; summary?: string; url?: string; id?: string } | null
+    ) => {
+      const messageText = textToSend || input;
+      if (!messageText.trim() || loading) return;
 
-    const userMsg: ChatMessage = { role: 'user', content: messageText };
-    setMessages((prev) => {
-      const updated = [...prev, userMsg];
-      historyCacheRef.current[activeBotId] = updated;
-      return updated;
-    });
-    if (!textToSend) setInput('');
-    setLoading(true);
-
-    const ctx = articleContext !== undefined ? articleContext : discussingArticle;
-
-    try {
-      const res = await fetch('/api/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          bot: activeBotId,
-          message: messageText,
-          articleTitle: ctx?.title,
-          articleSummary: ctx?.summary,
-          articleUrl: ctx?.url,
-          articleId: ctx?.id,
-        }),
-      });
-
-      const data = await res.json();
-      if (data.usage) {
-        setUsage(data.usage);
-      }
-
-      const replyContent = !res.ok
-        ? data.text || data.error || 'Unable to complete message.'
-        : data.text || '';
-
-      const assistantMsg: ChatMessage = {
-        role: 'assistant',
-        content: replyContent,
-      };
-
+      const userMsg: ChatMessage = { role: 'user', content: messageText };
       setMessages((prev) => {
-        const updated = [...prev, assistantMsg];
+        const updated = [...prev, userMsg];
         historyCacheRef.current[activeBotId] = updated;
         return updated;
       });
-    } catch {
-      setMessages((prev) => [
-        ...prev,
-        {
+      if (!textToSend) setInput('');
+      setLoading(true);
+
+      const ctx = articleContext !== undefined ? articleContext : discussingArticle;
+
+      try {
+        const res = await fetch('/api/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            bot: activeBotId,
+            message: messageText,
+            articleTitle: ctx?.title,
+            articleSummary: ctx?.summary,
+            articleUrl: ctx?.url,
+            articleId: ctx?.id,
+          }),
+        });
+
+        const data = await res.json();
+        if (data.usage) {
+          setUsage(data.usage);
+        }
+
+        const replyContent = !res.ok
+          ? data.text || data.error || 'Unable to complete message.'
+          : data.text || '';
+
+        const assistantMsg: ChatMessage = {
           role: 'assistant',
-          content: 'Network error. Please try again.',
-        },
-      ]);
-    } finally {
-      setLoading(false);
-    }
-  }
+          content: replyContent,
+        };
+
+        setMessages((prev) => {
+          const updated = [...prev, assistantMsg];
+          historyCacheRef.current[activeBotId] = updated;
+          return updated;
+        });
+      } catch {
+        setMessages((prev) => [
+          ...prev,
+          {
+            role: 'assistant',
+            content: 'Network error. Please try again.',
+          },
+        ]);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [activeBotId, discussingArticle, input, loading, setInput]
+  );
 
   // Automatically ask the bot for its opinion when navigated from "Ask {Bot} about this"
   useEffect(() => {
@@ -420,7 +423,7 @@ function BackstageChatInner() {
         }
       }
     }
-  }, [loadingHistory, discussingArticle, activeBotId, messages]);
+  }, [loadingHistory, discussingArticle, activeBotId, messages, sendMessage]);
 
   return (
     <>

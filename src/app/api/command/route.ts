@@ -70,14 +70,23 @@ export async function POST(request: NextRequest) {
     }
 
     // Fetch user's owned gear to prime speech transcription, route matching, and UI disambiguation
-    const ownedGear = await db`
+    interface OwnedGearRow {
+      id: number | string;
+      brand: string | null;
+      model: string | null;
+      nickname?: string | null;
+      category?: string;
+      raw_text?: string | null;
+    }
+
+    const ownedGear = (await db`
       select id, brand, model, nickname, category, raw_text
       from rig_items
       where user_id = ${session.userId} and kind = 'own'
       order by id asc
-    `;
+    `) as unknown as OwnedGearRow[];
 
-    const ownedSummaries = ownedGear.map((g: any) => {
+    const ownedSummaries = ownedGear.map((g: OwnedGearRow) => {
       const title = [g.brand, g.model || g.raw_text].filter(Boolean).join(' ');
       return g.nickname ? `${title} (nickname: "${g.nickname}")` : title;
     });
@@ -87,7 +96,7 @@ export async function POST(request: NextRequest) {
       : undefined;
 
     if (context?.gearId) {
-      const active = ownedGear.find((g: any) => String(g.id) === String(context.gearId));
+      const active = ownedGear.find((g: OwnedGearRow) => String(g.id) === String(context.gearId));
       if (active) {
         const activeTitle = [active.brand, active.model || active.raw_text, active.nickname ? `"${active.nickname}"` : null]
           .filter(Boolean)
@@ -108,7 +117,7 @@ export async function POST(request: NextRequest) {
         ok: true,
         status: 'transcribed',
         text: transcription.text,
-        ownedGear: ownedGear.map((g: any) => ({
+        ownedGear: ownedGear.map((g: OwnedGearRow) => ({
           id: Number(g.id),
           name: [g.brand, g.model || g.raw_text].filter(Boolean).join(' '),
           nickname: g.nickname || null,
@@ -141,7 +150,7 @@ export async function POST(request: NextRequest) {
       unresolved: routed.unresolved,
       message: routed.message,
       costUsd: routed.costUsd,
-      ownedGear: ownedGear.map((g: any) => ({
+      ownedGear: ownedGear.map((g: OwnedGearRow) => ({
         id: Number(g.id),
         name: [g.brand, g.model || g.raw_text].filter(Boolean).join(' '),
         nickname: g.nickname || null,
