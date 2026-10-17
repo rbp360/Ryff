@@ -1,5 +1,44 @@
 # Ryff Feature Log
 
+## Feature: Rig Room Voice Speech-to-Text, Real-Time Audio Equalizer & Smart Fuzzy Gear Resolution
+- **Date:** October 17, 2026
+- **Category:** Voice Input / Speech-to-Text / Audio Signal Feedback / Gear Resolution & Command Routing
+
+### 1. User & Marketing Overview
+- **Real-Time Voice Signal & Equalizer Feedback:** Musicians no longer have to guess whether their microphone is picking up sound. Both the Rig Room sticky recording bar and the global Command Sheet now feature a live Web Audio API animated equalizer with 5 reactive green level bars and real-time "Signal OK" vs "Listening..." status indicators that pulse dynamically as you speak.
+- **Accurate Rig Room Speech-to-Text:** Fixed the issue where recording a 15-second voice memo in the Rig Room returned to an empty box. Speech is now transcribed directly into the input bar using Google Gemini Flash, with an active "Transcribing speech with Gemini..." progress spinner.
+- **Instant Action Proposals via Command Sheet:** When musicians speak maintenance actions or gear queries (e.g., *"nuno N2 changed strings to ernie ball 10s"*), the transcribed text is immediately displayed in their input box and automatically routed into the Ryff Command Sheet with the exact instrument matched, proposing structured log entries or gear additions ready for 1-click review, editing, and confirmation.
+- **Smart Fuzzy Resolution for Nicknames & Typographical Variations:** Solved the problem where speech transcription variations (e.g., hearing *"Nuna N2"* when the user owns a Washburn N2 nicknamed *"Nuno"*) caused speech rejection. The gear resolver now strips common qualifiers, leverages brand and nickname tokens, and applies Levenshtein fuzzy distance matching across the user's owned equipment.
+- **Auto-Resizing Command Text Box:** The command input area dynamically expands up to 180px to accommodate long multi-line spoken or typed entries, ensuring musicians can review their entire statement without awkward scrolling.
+
+---
+
+### 2. Technical Details (For Developers)
+- **Web Audio API Real-Time Equalizer ([`src/hooks/useAudioRecorder.ts`](file:///c:/Users/rob_b/Ryff/src/hooks/useAudioRecorder.ts)):**
+  - Upgraded `useAudioRecorder` with `AudioContext` and `AnalyserNode` (`fftSize = 64`), calculating normalized root-mean-square frequency volume (`audioLevel: 0-100%`) on `requestAnimationFrame`.
+  - Added clean lifecycle teardown for audio tracks, animation frames, and suspended context resumption.
+  - Added `onAutoStop` callback support to automatically capture and transcribe audio when the duration ceiling (15s or 30s) expires.
+- **Rig Room Voice Transcription Pipeline ([`src/app/(app)/rig/RigRoomClient.tsx`](file:///c:/Users/rob_b/Ryff/src/app/%28app%29/rig/RigRoomClient.tsx)):**
+  - Replaced legacy `handleAudioLog` (which attempted direct silent writes to `/api/rig/[targetId]/log` without transcribing) with `useAudioRecorder(15)`.
+  - Added `isTranscribing` state, real-time equalizer UI, cancel button, and error notice banner.
+  - Routed audio through `POST /api/command`, populated `inputText` with `data.text`, and dispatched `ryff_open_command` to open the Command Sheet.
+  - Updated `handleTextSubmit` to detect maintenance and conversational keywords, routing natural language commands into `CommandSheet`.
+- **Fuzzy Resolution Engine ([`src/lib/command/resolve.ts`](file:///c:/Users/rob_b/Ryff/src/lib/command/resolve.ts)):**
+  - Enhanced `resolveTargetGear` with multi-token normalization, common qualifier stripping, and Levenshtein similarity distance matching ($D \le 2$).
+  - Correctly resolves phonetic variations like `"Nuna N2"` to `"Washburn N2"` with nickname `"Nuno"`.
+- **Audio Transcriber Gear Priming ([`src/app/api/command/route.ts`](file:///c:/Users/rob_b/Ryff/src/app/api/command/route.ts), [`src/lib/command/transcribe.ts`](file:///c:/Users/rob_b/Ryff/src/lib/command/transcribe.ts)):**
+  - Eagerly loads all user-owned gear, models, and nicknames and injects them as vocabulary hints into the Gemini audio transcription prompt so gear names are accurately recognized during acoustic decoding.
+- **Auto-Resizing Input Area ([`src/components/CommandSheet.tsx`](file:///c:/Users/rob_b/Ryff/src/components/CommandSheet.tsx)):**
+  - Replaced fixed single-line input with auto-resizing `<textarea>` (`scrollHeight` clamped between 44px and 180px) and Enter to submit / Shift+Enter for newlines.
+  - Added `ryff_open_command` custom event listener to seamlessly receive commands from any part of the application.
+
+---
+
+### 3. White-Label & Domain-Agnostic Utility
+- **Hands-Free Equipment Maintenance in Noisy Environments:** In automotive garages (mechanics under a car), industrial plant operations, or medical device servicing, hands-free voice logging is critical. The combination of a visible live audio signal meter (verifying mic pickup over ambient noise), domain vocabulary priming (learning vehicle VINs, watch calibers, or equipment IDs), and fuzzy phonetic matching ensures technical voice logs are captured accurately without requiring greasy or gloved hands to touch the screen.
+
+---
+
 ## Feature: Anti-Caricature Prompt Hardening, Anti-Parrot Directives & Bot Voice De-Clichéd
 - **Date:** October 14, 2026
 - **Category:** Companion Bot Intelligence / Persona Architecture / Backstage & Debate Quality / Tone Hardening
@@ -1523,6 +1562,41 @@ Automated news generation, feed health, and multi-bot debate synthesis have been
 ### 3. White-Label & Domain-Agnostic Utility
 - **Universal Multi-Agent Feed Curation:** Any white-label platform (e.g. automotive tuning, luxury horology, running shoe diagnostics) can dynamically pair the user's selected advisor persona with domain-specific news summaries, routing direct follow-up discussions to that specific AI advisor.
 - **Self-Healing Visual Fallback Architecture:** Guarantees that third-party feed scraping without imagery always presents a polished, branded aesthetic aligned with the platform's design system.
+
+---
+
+## Feature: Adaptive Speech Input Auto-Sizing, Primed Transcription Vocabulary & Fault-Tolerant Gear Disambiguation
+- **Date:** October 17, 2026
+- **Category:** Multimodal AI / Speech Recognition / Command System / UX Resilience
+
+### 1. User & Marketing Overview
+- **Full-View Auto-Expanding Input Box:** Replaced the legacy single-line input in the "Tell Ryff" Command Sheet with an auto-resizing multi-line textarea that dynamically expands (up to 180px with smooth scroll). Users who dictate long speech memos or complex maintenance logs can now review, inspect, and edit every single word of their transcript before sending. Supports Enter to send and Shift+Enter for newlines.
+- **Primed Speech Transcription Context:** When speaking to Ryff, the audio transcription engine is now automatically primed with the user's actual gear collection, model names (e.g. N2, CE24, 750XL), nicknames (e.g. "Nuno", "Bluebird"), and specialized guitar hardware terminology (e.g. Floyd Rose, tremolo springs, tuning, string gauges). This eliminates speech recognition mishearings (e.g. "nuno N2" being misheard as "nuna N2").
+- **Intelligent Fault-Tolerant Gear Resolution:** Upgraded the gear resolution engine with conversational qualifier stripping ("my new...", "my main...", "the vintage..."), token matching, reverse containment, and fuzzy Levenshtein distance scoring. Near-misses or phonetically similar nicknames (such as "Nuna N2" -> "Nuno" Washburn N2) now resolve automatically with high confidence.
+- **Zero-Loss Interactive Questioning:** When a spoken reference cannot be matched or is ambiguous between two instruments, Ryff no longer rejects or discards the user's input. Long dictations detailing string changes, gauges, tuning, and hardware tweaks are fully preserved, displaying 1-click candidate selection pills ("Which instrument did you mean?") and a gear selector in the proposal edit card. Tapping any instrument instantly binds the update without requiring the user to re-record or re-type.
+
+---
+
+### 2. Technical Details (For Developers)
+- **UI Component ([`src/components/CommandSheet.tsx`](file:///c:/Users/rob_b/Ryff/src/components/CommandSheet.tsx)):**
+  - Replaced single-line `<input>` with `<textarea>` and `useEffect` auto-resizing on `inputText` (`scrollHeight` clamped to 44px–180px).
+  - Added eager owned-gear caching (`/api/rig`), updated `handleSendCommand` to support `overrideText` and `overrideGearId`.
+  - Updated ambiguous and unresolved UI with 1-click re-routing pills, deduplicated unresolved strings, and added target instrument `<select>` in the inline proposal edit form.
+- **API Route ([`src/app/api/command/route.ts`](file:///c:/Users/rob_b/Ryff/src/app/api/command/route.ts)):**
+  - Updated POST handler to query user's owned gear (`where kind = 'own'`) and format `gearContext` with brand, model, and nicknames.
+  - Passed this context to `transcribeAudio` even on global non-passport screens, and returned `ownedGear` in API response for instant client-side candidate binding.
+- **Audio Transcription ([`src/lib/command/transcribe.ts`](file:///c:/Users/rob_b/Ryff/src/lib/command/transcribe.ts)):**
+  - Augmented `systemInstruction` with guitar hardware terms, tuning names, string gauges, and user nickname vocabulary priming.
+- **Resolution Engine ([`src/lib/command/resolve.ts`](file:///c:/Users/rob_b/Ryff/src/lib/command/resolve.ts)):**
+  - Enhanced `resolveGearReference` with `cleanRef` descriptor stripping, exact model matching, reverse containment (`rawClean.includes(model)`), and token-level fuzzy Levenshtein scoring.
+- **Router ([`src/lib/command/router.ts`](file:///c:/Users/rob_b/Ryff/src/lib/command/router.ts)):**
+  - Deduplicated `ambiguousGroups` and `unresolvedRefs` across multi-action commands, and populated `candidates` with compact owned gear.
+
+---
+
+### 3. White-Label & Domain-Agnostic Utility
+- **Speech Transcription Priming & Fault-Tolerant Entity Resolution:** In any vertical (e.g. automotive fleet logs, luxury watch collections, bicycle maintenance), users use personal nicknames or conversational qualifiers ("my new daily", "the Sub", "my gravel bike"). Priming the transcriber with the user's assets and utilizing fuzzy token resolution prevents speech misinterpretations.
+- **Non-Destructive Interactive Resolution:** When voice dictating complex multi-field service records (e.g. oil weight, tire pressure, service dates), failing on asset name matching should never discard the parsed operational data. Keeping the staged record and offering a 1-tap asset picker delivers an intuitive, fault-tolerant experience.
 
 
 

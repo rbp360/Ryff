@@ -1,0 +1,14 @@
+RYFF
+
+	- Its deleted my PRS picture again
+	- Needs a manual 'add' feature
+	- Feeds still aren't working (ie errors, timeouts)
+- Feeds aren't being re-generated/considered automatically (ie. i I cant see today news)
+	- Need to test if its actually parsing the YT videos
+- Does it let me talk in all of my gear?
+	- Loads of layout issues with the Bot response (grammar, quotes etc)
+	- AI logic doesn't work for adding (see 'add a washburn N2 to my rig' disaster)
+
+- Can we use AI to work out what the user means (ie if they say "Caparison" they mean a guitar) and then can we vectorise this so that we always know that a "Caparison" is a guitar and that consistent pictures are then served to the user and this vectorisation is something that 
+
+	- We need a 'generate name' button in the 'bot character name' line.  Have a green button at the end of that line (it doesn't need to be that long anyway that did, given a name is likely to be short) The green button should enter a 

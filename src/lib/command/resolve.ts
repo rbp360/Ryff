@@ -23,16 +23,33 @@ export type ResolveGearResult =
   | { status: 'ambiguous'; candidates: GearItem[]; ref: string }
   | { status: 'unresolved'; ref: string };
 
+function levenshteinDistance(a: string, b: string): number {
+  const m = a.length;
+  const n = b.length;
+  const dp: number[][] = Array.from({ length: m + 1 }, () => Array(n + 1).fill(0));
+  for (let i = 0; i <= m; i++) dp[i][0] = i;
+  for (let j = 0; j <= n; j++) dp[0][j] = j;
+  for (let i = 1; i <= m; i++) {
+    for (let j = 1; j <= n; j++) {
+      dp[i][j] = a[i - 1] === b[j - 1]
+        ? dp[i - 1][j - 1]
+        : 1 + Math.min(dp[i - 1][j], dp[i][j - 1], dp[i - 1][j - 1]);
+    }
+  }
+  return dp[m][n];
+}
+
 function cleanRef(str: string): string {
   return str
     .toLowerCase()
-    .replace(/^(the|my|this|an|a)\s+/i, '')
+    .replace(/^(the|my|this|an|a|our)\s+/i, '')
+    .replace(/^(new|old|main|favourite|favorite|vintage|custom|backup)\s+/i, '')
     .replace(/[^\w\s-]/g, '')
     .trim();
 }
 
 /**
- * Resolves a colloquial gear reference (e.g. "the PRS", "my Strat", "5150", "this guitar")
+ * Resolves a colloquial gear reference (e.g. "the PRS", "my Strat", "5150", "this guitar", "Nuna N2")
  * against the user's owned gear in the database.
  * 
  * Rules:
@@ -142,9 +159,9 @@ export async function resolveGearReference(
     return { status: 'ambiguous', candidates: items, ref: gearRef };
   }
 
-  // 2. Check nickname matches first (e.g. "Lucille", "Old Black", "Red Special")
+  // 2. Check nickname matches first (e.g. "Lucille", "Old Black", "Red Special", "Bluebird")
   const nicknameMatches = items.filter(
-    (it) => it.nickname && it.nickname.toLowerCase().includes(rawClean)
+    (it) => it.nickname && it.nickname.toLowerCase() === rawClean
   );
   if (nicknameMatches.length === 1) {
     return { status: 'resolved', gear: nicknameMatches[0] };
@@ -152,11 +169,24 @@ export async function resolveGearReference(
     return { status: 'ambiguous', candidates: nicknameMatches, ref: gearRef };
   }
 
-  // 3. Exact and substring matching against model and raw_text
+  // 3. Exact model matches (e.g. "CE 24", "N2", "DSL50")
+  const exactModelMatches = items.filter(
+    (it) => it.model && it.model.toLowerCase() === rawClean
+  );
+  if (exactModelMatches.length === 1) {
+    return { status: 'resolved', gear: exactModelMatches[0] };
+  } else if (exactModelMatches.length > 1) {
+    return { status: 'ambiguous', candidates: exactModelMatches, ref: gearRef };
+  }
+
+  // 4. Substring & reverse substring matching against model and raw_text
   const modelMatches = items.filter((it) => {
     const model = (it.model || '').toLowerCase();
     const raw = (it.raw_text || '').toLowerCase();
-    return model.includes(rawClean) || raw.includes(rawClean);
+    return (
+      (model && (model.includes(rawClean) || (rawClean.length > 2 && rawClean.includes(model)))) ||
+      (raw && (raw.includes(rawClean) || (rawClean.length > 3 && rawClean.includes(raw))))
+    );
   });
 
   if (modelMatches.length === 1) {
@@ -165,7 +195,7 @@ export async function resolveGearReference(
     return { status: 'ambiguous', candidates: modelMatches, ref: gearRef };
   }
 
-  // 4. Match brand and brand aliases (e.g. "PRS", "Strat", "Paul Reed Smith", "Fender")
+  // 5. Match brand and brand aliases (e.g. "PRS", "Strat", "Paul Reed Smith", "Fender")
   let normalizedBrandQuery = rawClean;
   try {
     const lookup = await getRigistryLookup();
@@ -192,7 +222,7 @@ export async function resolveGearReference(
     return { status: 'ambiguous', candidates: brandMatches, ref: gearRef };
   }
 
-  // 5. Category matching (e.g. "the acoustic", "the bass", "my amp")
+  // 6. Category matching (e.g. "the acoustic", "the bass", "my amp")
   const categoryMatches = items.filter((it) => {
     const cat = (it.category || '').toLowerCase();
     return cat.includes(rawClean) || rawClean.includes(cat);
@@ -202,6 +232,56 @@ export async function resolveGearReference(
     return { status: 'resolved', gear: categoryMatches[0] };
   } else if (categoryMatches.length > 1) {
     return { status: 'ambiguous', candidates: categoryMatches, ref: gearRef };
+  }
+
+  // 7. Token and fuzzy Levenshtein scoring fallback
+  // Handles speech mishearings (e.g. "Nuna N2" -> "Nuno" Washburn N2)
+  const queryTokens = rawClean.split(/\s+/).filter(Boolean);
+  const scoredCandidates = items.map((it) => {
+    let score = 0;
+    const b = (it.brand || '').toLowerCase();
+    const m = (it.model || '').toLowerCase();
+    const n = (it.nickname || '').toLowerCase();
+
+    for (const t of queryTokens) {
+      if (m && (t === m || m === t)) score += 80;
+      if (n && (t === n || n === t)) score += 80;
+      if (b && (t === b || b === t)) score += 40;
+
+      // Fuzzy nickname match (e.g. "nuna" vs "nuno" distance 1)
+      if (n && t.length >= 3 && n.length >= 3) {
+        const dist = levenshteinDistance(t, n);
+        if (dist <= 1) score += 65;
+        else if (dist <= 2 && n.length >= 5) score += 35;
+      }
+      // Fuzzy model match
+      if (m && t.length >= 3 && m.length >= 3) {
+        const dist = levenshteinDistance(t, m);
+        if (dist <= 1) score += 55;
+      }
+    }
+    return { item: it, score };
+  }).filter((s) => s.score > 0).sort((a, b) => b.score - a.score);
+
+  if (scoredCandidates.length > 0) {
+    // If single candidate or top candidate has high confidence and strong separation
+    if (
+      scoredCandidates.length === 1 ||
+      (scoredCandidates[0].score >= 60 &&
+        scoredCandidates[0].score - (scoredCandidates[1]?.score || 0) >= 25)
+    ) {
+      return { status: 'resolved', gear: scoredCandidates[0].item };
+    }
+
+    // If multiple candidates have close scores, return as ambiguous (never guess)
+    const topScore = scoredCandidates[0].score;
+    const closeCandidates = scoredCandidates
+      .filter((s) => s.score >= topScore - 20)
+      .map((s) => s.item);
+
+    if (closeCandidates.length > 1) {
+      return { status: 'ambiguous', candidates: closeCandidates, ref: gearRef };
+    }
   }
 
   return { status: 'unresolved', ref: gearRef };

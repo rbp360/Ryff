@@ -46,14 +46,16 @@ export function CommandSheet({ initialCommandMode = 'text_and_voice' }: CommandS
   const [editingActionId, setEditingActionId] = useState<number | null>(null);
   const [actionEdits, setActionEdits] = useState<Record<number, Record<string, string | number | undefined>>>({});
   const [undoToast, setUndoToast] = useState<{ actionId: number; title: string; visible: boolean } | null>(null);
+  const [ownedGearList, setOwnedGearList] = useState<Array<{ id: number; name: string; category?: string; nickname?: string | null }>>([]);
 
-  const textInputRef = useRef<HTMLInputElement>(null);
+  const textInputRef = useRef<HTMLTextAreaElement>(null);
 
   // Audio recording hook
   const {
     isRecording,
     recordingSeconds,
     maxSeconds,
+    audioLevel,
     startRecording,
     stopRecording,
     cancelRecording,
@@ -63,6 +65,37 @@ export function CommandSheet({ initialCommandMode = 'text_and_voice' }: CommandS
   // Extract gearId if active screen is a Gear Passport page
   const gearIdMatch = pathname.match(/^\/rig\/(\d+)/);
   const gearId = gearIdMatch ? gearIdMatch[1] : undefined;
+
+  // Auto-resize textarea to fit content smoothly up to 180px
+  useEffect(() => {
+    if (textInputRef.current) {
+      textInputRef.current.style.height = 'auto';
+      const scrollH = textInputRef.current.scrollHeight;
+      textInputRef.current.style.height = `${Math.min(Math.max(scrollH, 44), 180)}px`;
+    }
+  }, [inputText]);
+
+  // Eagerly cache user's owned gear when Command Sheet opens
+  useEffect(() => {
+    if (isOpen && ownedGearList.length === 0) {
+      fetch('/api/rig')
+        .then((res) => res.json())
+        .then((data) => {
+          if (data?.items) {
+            const owned = data.items
+              .filter((it: any) => it.kind === 'own')
+              .map((it: any) => ({
+                id: Number(it.id),
+                name: [it.brand, it.model || it.raw_text].filter(Boolean).join(' '),
+                nickname: it.nickname || null,
+                category: it.category || 'guitar',
+              }));
+            setOwnedGearList(owned);
+          }
+        })
+        .catch(() => {});
+    }
+  }, [isOpen, ownedGearList.length]);
 
   // Listen for preference updates from Setup screen
   useEffect(() => {
@@ -140,6 +173,9 @@ export function CommandSheet({ initialCommandMode = 'text_and_voice' }: CommandS
         const data = await res.json();
         if (res.ok && data.text) {
           setInputText(data.text);
+          if (data.ownedGear && data.ownedGear.length > 0) {
+            setOwnedGearList(data.ownedGear);
+          }
           // Focus text input so the user can easily review or correct before sending
           textInputRef.current?.focus();
         } else {
@@ -156,15 +192,21 @@ export function CommandSheet({ initialCommandMode = 'text_and_voice' }: CommandS
     }
   }
 
-  // Handle text command submission
-  async function handleSendCommand(e?: React.FormEvent) {
+  // Handle text command submission (with optional override text or gearId)
+  async function handleSendCommand(
+    e?: React.FormEvent,
+    overrideText?: string,
+    overrideGearId?: number | string
+  ) {
     if (e) e.preventDefault();
-    const clean = inputText.trim();
+    const clean = (overrideText !== undefined ? overrideText : inputText).trim();
     if (!clean || isProcessing) return;
 
     setIsProcessing(true);
     setApiError(null);
     setCommandResult(null);
+
+    const targetGearId = overrideGearId !== undefined ? String(overrideGearId) : gearId;
 
     try {
       const res = await fetch('/api/command', {
@@ -174,13 +216,16 @@ export function CommandSheet({ initialCommandMode = 'text_and_voice' }: CommandS
           text: clean,
           context: {
             screen: pathname,
-            gearId,
+            gearId: targetGearId,
           },
         }),
       });
 
       const data = await res.json();
       if (res.ok) {
+        if (data.ownedGear && data.ownedGear.length > 0) {
+          setOwnedGearList(data.ownedGear);
+        }
         setCommandResult({
           text: data.text,
           status: data.status,
@@ -208,6 +253,25 @@ export function CommandSheet({ initialCommandMode = 'text_and_voice' }: CommandS
       setIsProcessing(false);
     }
   }
+
+  const handleSendCommandRef = useRef(handleSendCommand);
+  handleSendCommandRef.current = handleSendCommand;
+
+  // Listen for programmatic command triggers (e.g. from Rig Room bottom bar)
+  useEffect(() => {
+    function handleOpenCommand(e: Event) {
+      const customEvent = e as CustomEvent<{ initialText?: string; autoSubmit?: boolean }>;
+      setIsOpen(true);
+      if (customEvent.detail?.initialText) {
+        setInputText(customEvent.detail.initialText);
+        if (customEvent.detail.autoSubmit) {
+          handleSendCommandRef.current(undefined, customEvent.detail.initialText);
+        }
+      }
+    }
+    window.addEventListener('ryff_open_command', handleOpenCommand);
+    return () => window.removeEventListener('ryff_open_command', handleOpenCommand);
+  }, []);
 
   // Confirm single proposed action
   async function handleConfirmAction(actionId: number, title?: string) {
@@ -515,6 +579,21 @@ export function CommandSheet({ initialCommandMode = 'text_and_voice' }: CommandS
                     <span style={{ fontSize: '13px', fontWeight: 800, color: '#fff' }}>
                       Listening... Speak your command or question
                     </span>
+                    {/* Live Audio Signal Meter */}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '3px', height: '14px', marginLeft: '6px' }} title={`Audio signal: ${audioLevel}%`}>
+                      {[0.5, 1.0, 0.7, 0.9, 0.4].map((scale, i) => (
+                        <span
+                          key={i}
+                          style={{
+                            width: '3px',
+                            borderRadius: '2px',
+                            background: audioLevel > 5 ? 'var(--ac)' : 'rgba(255, 255, 255, 0.25)',
+                            height: `${Math.max(4, Math.min(14, Math.round((audioLevel / 100) * 14 * scale + (audioLevel > 5 ? 3 : 0))))}px`,
+                            transition: 'height 0.08s ease',
+                          }}
+                        />
+                      ))}
+                    </div>
                   </div>
                   <span style={{ fontSize: '12px', fontWeight: 800, color: 'var(--ac)' }}>
                     0:{recordingSeconds < 10 ? `0${recordingSeconds}` : recordingSeconds} / 0:{maxSeconds}
@@ -605,10 +684,7 @@ export function CommandSheet({ initialCommandMode = 'text_and_voice' }: CommandS
                               <button
                                 key={cand.id}
                                 type="button"
-                                onClick={() => {
-                                  setInputText(`${commandResult.text} on the ${cand.name}`);
-                                  textInputRef.current?.focus();
-                                }}
+                                onClick={() => handleSendCommand(undefined, commandResult.text, cand.id)}
                                 style={{
                                   background: 'rgba(255, 255, 255, 0.08)',
                                   border: '1px solid var(--ln)',
@@ -618,9 +694,13 @@ export function CommandSheet({ initialCommandMode = 'text_and_voice' }: CommandS
                                   fontSize: '12px',
                                   fontWeight: 700,
                                   cursor: 'pointer',
+                                  display: 'inline-flex',
+                                  alignItems: 'center',
+                                  gap: '6px',
                                 }}
                               >
-                                {cand.name}
+                                <span>🎸</span>
+                                <span>{cand.name}</span>
                               </button>
                             ))}
                           </div>
@@ -629,19 +709,59 @@ export function CommandSheet({ initialCommandMode = 'text_and_voice' }: CommandS
                     </div>
                   )}
 
-                  {/* Unresolved References Notice */}
+                  {/* Unresolved References Notice & Quick Re-match */}
                   {commandResult.unresolved && commandResult.unresolved.length > 0 && (
                     <div
                       style={{
                         background: 'rgba(255, 255, 255, 0.04)',
                         border: '1px solid var(--ln)',
-                        borderRadius: '10px',
-                        padding: '10px 14px',
-                        fontSize: '12px',
+                        borderRadius: '12px',
+                        padding: '12px 14px',
+                        fontSize: '12.5px',
                         color: 'var(--mu)',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '8px',
                       }}
                     >
-                      Could not match &ldquo;{commandResult.unresolved.join(', ')}&rdquo; to any owned gear in your Rig Passport.
+                      <div>
+                        Could not match &ldquo;{Array.from(new Set(commandResult.unresolved)).join(', ')}&rdquo; to any owned gear in your Rig Passport.
+                      </div>
+                      {ownedGearList.length > 0 && (
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                          <span style={{ fontSize: '11px', fontWeight: 700, color: '#fbbf24' }}>
+                            Did you mean one of your instruments? Tap to apply this update:
+                          </span>
+                          <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                            {ownedGearList.map((g) => (
+                              <button
+                                key={g.id}
+                                type="button"
+                                onClick={() => handleSendCommand(undefined, commandResult.text, g.id)}
+                                style={{
+                                  background: 'rgba(255, 255, 255, 0.08)',
+                                  border: '1px solid var(--ln)',
+                                  color: '#fff',
+                                  padding: '5px 11px',
+                                  borderRadius: '8px',
+                                  fontSize: '12px',
+                                  fontWeight: 700,
+                                  cursor: 'pointer',
+                                  display: 'inline-flex',
+                                  alignItems: 'center',
+                                  gap: '5px',
+                                }}
+                              >
+                                <span>🎸</span>
+                                <span>
+                                  {g.name}
+                                  {g.nickname ? ` (${g.nickname})` : ''}
+                                </span>
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      )}
                     </div>
                   )}
 
@@ -819,6 +939,44 @@ export function CommandSheet({ initialCommandMode = 'text_and_voice' }: CommandS
                                 </span>
                                 {prop.tool === 'log_maintenance' ? (
                                   <>
+                                    {ownedGearList.length > 0 && (
+                                      <div>
+                                        <label style={{ fontSize: '11px', color: 'var(--mu)', display: 'block', marginBottom: '4px' }}>
+                                          Target Instrument:
+                                        </label>
+                                        <select
+                                          value={
+                                            (currentEdit.resolved_gear_id as number) ??
+                                            prop.arguments?.resolved_gear_id ??
+                                            prop.targetGear?.id ??
+                                            ''
+                                          }
+                                          onChange={(e) =>
+                                            handleEditField(
+                                              actionId,
+                                              'resolved_gear_id',
+                                              e.target.value ? Number(e.target.value) : undefined
+                                            )
+                                          }
+                                          style={{
+                                            width: '100%',
+                                            background: '#1a1a1a',
+                                            border: '1px solid var(--ln)',
+                                            borderRadius: '6px',
+                                            color: '#fff',
+                                            padding: '6px 10px',
+                                            fontSize: '12px',
+                                            outline: 'none',
+                                          }}
+                                        >
+                                          {ownedGearList.map((g) => (
+                                            <option key={g.id} value={g.id}>
+                                              {g.name} {g.nickname ? `("${g.nickname}")` : ''}
+                                            </option>
+                                          ))}
+                                        </select>
+                                      </div>
+                                    )}
                                     <div style={{ display: 'flex', gap: '8px' }}>
                                       <input
                                         type="date"
@@ -1206,13 +1364,19 @@ export function CommandSheet({ initialCommandMode = 'text_and_voice' }: CommandS
               )}
 
               {/* Command Input Form */}
-              <form onSubmit={handleSendCommand} style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+              <form onSubmit={handleSendCommand} style={{ display: 'flex', gap: '8px', alignItems: 'flex-end' }}>
                 <div style={{ position: 'relative', flex: 1 }}>
-                  <input
+                  <textarea
                     ref={textInputRef}
-                    type="text"
+                    rows={1}
                     value={inputText}
                     onChange={(e) => setInputText(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        handleSendCommand();
+                      }
+                    }}
                     placeholder={
                       gearId
                         ? 'Tell Ryff about this gear (e.g. Changed strings to 10-46 today)...'
@@ -1221,14 +1385,21 @@ export function CommandSheet({ initialCommandMode = 'text_and_voice' }: CommandS
                     disabled={isProcessing || isRecording}
                     style={{
                       width: '100%',
+                      minHeight: '46px',
+                      maxHeight: '180px',
+                      resize: 'none',
                       background: '#0a0a0a',
                       border: '1px solid var(--ln)',
                       color: 'var(--tx)',
                       padding: '12px 14px',
                       borderRadius: '12px',
                       fontSize: '13.5px',
+                      lineHeight: '1.45',
                       outline: 'none',
+                      overflowY: 'auto',
                       transition: 'border-color 0.15s',
+                      fontFamily: 'inherit',
+                      display: 'block',
                     }}
                     onFocus={(e) => (e.target.style.borderColor = 'var(--ac)')}
                     onBlur={(e) => (e.target.style.borderColor = 'var(--ln)')}

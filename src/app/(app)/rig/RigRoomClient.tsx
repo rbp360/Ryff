@@ -7,6 +7,7 @@ import { BackButton } from '@/components/BackButton';
 import { GearThumbnail } from '@/components/GearThumbnail';
 import { NapkinIngesterModal } from '@/components/NapkinIngesterModal';
 import { AddGearModal } from '@/components/AddGearModal';
+import { useAudioRecorder, AudioRecordResult } from '@/hooks/useAudioRecorder';
 
 export interface RigItemData {
   id: number | string;
@@ -84,11 +85,8 @@ export function RigRoomClient({ initialItems, initialLogs }: RigRoomClientProps)
   // Bottom Input & Voice Memo State
   const [inputText, setInputText] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isRecording, setIsRecording] = useState(false);
-  const [recordingSeconds, setRecordingSeconds] = useState(0);
-  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
-  const audioChunksRef = useRef<Blob[]>([]);
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const [isTranscribing, setIsTranscribing] = useState(false);
+  const [transcribeNotice, setTranscribeNotice] = useState<string | null>(null);
 
   // Add Log Entry Form State
   const [showLogForm, setShowLogForm] = useState(false);
@@ -105,81 +103,65 @@ export function RigRoomClient({ initialItems, initialLogs }: RigRoomClientProps)
   const ownedItems = items.filter((i) => i.kind === 'own');
   const wantedItems = items.filter((i) => i.kind === 'want');
 
-  // Voice recording handlers (15s cap)
-  async function startRecording() {
-    audioChunksRef.current = [];
+  // Process recorded audio through Gemini speech-to-text
+  async function handleProcessAudio(recordResult: AudioRecordResult) {
+    setIsTranscribing(true);
+    setTranscribeNotice(null);
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      const mediaRecorder = new MediaRecorder(stream, {
-        mimeType: MediaRecorder.isTypeSupported('audio/webm;codecs=opus')
-          ? 'audio/webm;codecs=opus'
-          : MediaRecorder.isTypeSupported('audio/webm')
-          ? 'audio/webm'
-          : 'audio/mp4',
+      const res = await fetch('/api/command', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          audioBase64: recordResult.audioBase64,
+          audioMimeType: recordResult.audioMimeType,
+          context: {
+            screen: '/rig',
+          },
+        }),
       });
 
-      mediaRecorderRef.current = mediaRecorder;
-      mediaRecorder.ondataavailable = (e) => {
-        if (e.data && e.data.size > 0) audioChunksRef.current.push(e.data);
-      };
-
-      mediaRecorder.onstop = async () => {
-        stream.getTracks().forEach((track) => track.stop());
-        if (timerRef.current) clearInterval(timerRef.current);
-        const mimeType = mediaRecorder.mimeType || 'audio/webm';
-        const audioBlob = new Blob(audioChunksRef.current, { type: mimeType });
-        await handleAudioLog(audioBlob, mimeType);
-      };
-
-      mediaRecorder.start(250);
-      setIsRecording(true);
-      setRecordingSeconds(0);
-
-      timerRef.current = setInterval(() => {
-        setRecordingSeconds((prev) => {
-          if (prev >= 14) {
-            stopRecording();
-            return 15;
-          }
-          return prev + 1;
-        });
-      }, 1000);
+      const data = await res.json();
+      if (res.ok && data.text) {
+        setInputText(data.text);
+        // Automatically open the Command Sheet to present the proposal & action confirmation
+        window.dispatchEvent(
+          new CustomEvent('ryff_open_command', {
+            detail: { initialText: data.text, autoSubmit: true },
+          })
+        );
+      } else {
+        setTranscribeNotice(data.error || 'Speech transcription failed. Please try again.');
+      }
     } catch {
-      alert('Microphone access was denied or is not supported.');
-      setIsRecording(false);
-    }
-  }
-
-  function stopRecording() {
-    if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
-      mediaRecorderRef.current.stop();
-    }
-    setIsRecording(false);
-    if (timerRef.current) clearInterval(timerRef.current);
-  }
-
-  async function handleAudioLog(audioBlob: Blob, mimeType: string) {
-    setIsSubmitting(true);
-    try {
-      const reader = new FileReader();
-      reader.readAsDataURL(audioBlob);
-      reader.onloadend = async () => {
-        const base64Audio = (reader.result as string).split(',')[1];
-        // If an item is selected or first owned item exists, log to it
-        const targetId = ownedItems[0]?.id;
-        if (targetId) {
-          const res = await fetch(`/api/rig/${targetId}/log`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ audioBase64: base64Audio, audioMimeType: mimeType }),
-          });
-          if (res.ok) {
-            refreshRig();
-          }
-        }
-      };
+      setTranscribeNotice('Network error transcribing audio.');
     } finally {
-      setIsSubmitting(false);
+      setIsTranscribing(false);
+    }
+  }
+
+  const {
+    isRecording,
+    recordingSeconds,
+    maxSeconds,
+    audioLevel,
+    startRecording,
+    stopRecording,
+    cancelRecording,
+    error: recorderError,
+  } = useAudioRecorder(15, {
+    onAutoStop: (result) => {
+      handleProcessAudio(result);
+    },
+  });
+
+  async function handleFinishRecording() {
+    setIsTranscribing(true);
+    setTranscribeNotice(null);
+    const result = await stopRecording();
+    if (result && result.audioBase64) {
+      await handleProcessAudio(result);
+    } else {
+      setIsTranscribing(false);
     }
   }
 
@@ -187,11 +169,27 @@ export function RigRoomClient({ initialItems, initialLogs }: RigRoomClientProps)
     const text = inputText.trim();
     if (!text || isSubmitting) return;
 
+    // Detect if this looks like a command / question / maintenance log rather than simple gear naming
+    const isMaintenanceOrCommand =
+      text.includes('?') ||
+      /\b(string|strings|restring|clean|cleaned|setup|tune|valve|tube|pot|action|intonation|bought|sold|sell|how|what|why|who|recommend|tell|log|maintenance|service)\b/i.test(
+        text
+      );
+
+    if (isMaintenanceOrCommand) {
+      window.dispatchEvent(
+        new CustomEvent('ryff_open_command', {
+          detail: { initialText: text, autoSubmit: true },
+        })
+      );
+      setInputText('');
+      return;
+    }
+
     setIsSubmitting(true);
     setInputText('');
 
     try {
-      // Check if it's adding gear or logging
       const res = await fetch('/api/rig', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -505,9 +503,156 @@ export function RigRoomClient({ initialItems, initialLogs }: RigRoomClientProps)
             </div>
           )}
 
-          {/* Sticky Bottom Bar with Quick-Mic */}
+          {/* Notice banner for errors */}
+          {(recorderError || transcribeNotice) && (
+            <div
+              style={{
+                position: 'sticky',
+                bottom: '124px',
+                zIndex: 41,
+                background: 'rgba(239, 68, 68, 0.15)',
+                border: '1px solid #ef4444',
+                color: '#fca5a5',
+                padding: '8px 14px',
+                borderRadius: '12px',
+                fontSize: '12px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                marginBottom: '8px',
+              }}
+            >
+              <span>{recorderError || transcribeNotice}</span>
+              <button
+                type="button"
+                onClick={() => setTranscribeNotice(null)}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  color: '#fca5a5',
+                  cursor: 'pointer',
+                  fontWeight: 800,
+                  fontSize: '14px',
+                  padding: '0 4px',
+                }}
+              >
+                ✕
+              </button>
+            </div>
+          )}
+
+          {/* Sticky Bottom Bar with Quick-Mic & Live Equalizer */}
           <div className="comp" style={{ position: 'sticky', bottom: '66px', zIndex: 40 }}>
             {isRecording ? (
+              <div
+                style={{
+                  flex: 1,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '12px',
+                  background: '#161616',
+                  borderRadius: '24px',
+                  padding: '10px 16px',
+                  border: '1px solid var(--ac, #22c55e)',
+                  boxShadow: '0 4px 20px rgba(0,0,0,0.5)',
+                }}
+              >
+                {/* Live pulsing recording dot */}
+                <span
+                  style={{
+                    width: '10px',
+                    height: '10px',
+                    borderRadius: '50%',
+                    background: '#ef4444',
+                    boxShadow: '0 0 10px rgba(239, 68, 68, 0.8)',
+                    animation: 'pulse 1s infinite',
+                    flexShrink: 0,
+                  }}
+                />
+
+                <span style={{ fontSize: '13px', fontWeight: 800, color: 'var(--tx)', whiteSpace: 'nowrap' }}>
+                  Recording ({recordingSeconds}s / {maxSeconds}s)
+                </span>
+
+                {/* Real-time Web Audio API Equalizer Meter */}
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '3px',
+                    height: '20px',
+                    padding: '0 8px',
+                    background: 'rgba(255,255,255,0.04)',
+                    borderRadius: '10px',
+                  }}
+                  title={`Microphone input level: ${audioLevel}%`}
+                >
+                  {[0.6, 1.1, 1.5, 1.0, 0.7].map((mult, idx) => {
+                    const rawH = (audioLevel / 100) * 18 * mult;
+                    const barHeight = Math.max(3, Math.min(18, Math.round(rawH)));
+                    const isLive = audioLevel > 5;
+                    return (
+                      <span
+                        key={idx}
+                        style={{
+                          width: '3px',
+                          height: `${barHeight}px`,
+                          borderRadius: '2px',
+                          background: isLive ? 'var(--ac, #22c55e)' : '#444',
+                          transition: 'height 0.08s ease, background-color 0.1s ease',
+                        }}
+                      />
+                    );
+                  })}
+                  <span
+                    style={{
+                      fontSize: '10px',
+                      fontWeight: 700,
+                      marginLeft: '4px',
+                      color: audioLevel > 5 ? 'var(--ac, #22c55e)' : 'var(--mu)',
+                    }}
+                  >
+                    {audioLevel > 5 ? 'Signal OK' : 'Listening...'}
+                  </span>
+                </div>
+
+                {/* Cancel & Done buttons */}
+                <div style={{ marginLeft: 'auto', display: 'flex', gap: '6px', alignItems: 'center' }}>
+                  <button
+                    type="button"
+                    onClick={cancelRecording}
+                    style={{
+                      background: 'rgba(255,255,255,0.08)',
+                      color: 'var(--mu)',
+                      fontSize: '11px',
+                      fontWeight: 700,
+                      padding: '5px 9px',
+                      borderRadius: '12px',
+                      border: 'none',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleFinishRecording}
+                    style={{
+                      background: 'var(--ac)',
+                      color: '#000',
+                      fontSize: '11px',
+                      fontWeight: 800,
+                      padding: '5px 12px',
+                      borderRadius: '12px',
+                      border: 'none',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    Done
+                  </button>
+                </div>
+              </div>
+            ) : isTranscribing ? (
               <div
                 style={{
                   flex: 1,
@@ -517,36 +662,24 @@ export function RigRoomClient({ initialItems, initialLogs }: RigRoomClientProps)
                   background: '#161616',
                   borderRadius: '24px',
                   padding: '10px 16px',
-                  border: '1px solid var(--ac)',
+                  border: '1px solid var(--ac, #22c55e)',
                 }}
               >
                 <span
                   style={{
-                    width: '10px',
-                    height: '10px',
+                    width: '14px',
+                    height: '14px',
+                    border: '2px solid rgba(255,255,255,0.2)',
+                    borderTopColor: 'var(--ac, #22c55e)',
                     borderRadius: '50%',
-                    background: '#ef4444',
-                    animation: 'pulse 1s infinite',
+                    animation: 'spin 0.8s linear infinite',
+                    display: 'inline-block',
+                    flexShrink: 0,
                   }}
                 />
-                <span style={{ fontSize: '13px', fontWeight: 800, color: 'var(--tx)' }}>
-                  Recording ({recordingSeconds}s / 15s)...
+                <span style={{ fontSize: '13px', fontWeight: 700, color: 'var(--tx)' }}>
+                  Transcribing speech with Gemini...
                 </span>
-                <button
-                  type="button"
-                  onClick={stopRecording}
-                  style={{
-                    marginLeft: 'auto',
-                    background: 'var(--ac)',
-                    color: '#000',
-                    fontSize: '11px',
-                    fontWeight: 800,
-                    padding: '4px 10px',
-                    borderRadius: '12px',
-                  }}
-                >
-                  Done
-                </button>
               </div>
             ) : (
               <>
@@ -563,6 +696,7 @@ export function RigRoomClient({ initialItems, initialLogs }: RigRoomClientProps)
                   type="button"
                   onClick={startRecording}
                   aria-label="Record voice memo"
+                  title="Speak command or gear note (15s limit)"
                   style={{
                     width: '42px',
                     padding: 0,
@@ -574,10 +708,37 @@ export function RigRoomClient({ initialItems, initialLogs }: RigRoomClientProps)
                     background: 'var(--sf)',
                     border: '1px solid var(--ln)',
                     color: 'var(--ac)',
+                    cursor: 'pointer',
                   }}
                 >
                   🎙️
                 </button>
+                {inputText.trim().length > 0 && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      window.dispatchEvent(
+                        new CustomEvent('ryff_open_command', {
+                          detail: { initialText: inputText.trim(), autoSubmit: true },
+                        })
+                      );
+                      setInputText('');
+                    }}
+                    title="Review & run action proposal with Ryff"
+                    style={{
+                      background: 'var(--ac)',
+                      color: '#000',
+                      fontWeight: 800,
+                      fontSize: '12px',
+                      padding: '8px 12px',
+                      borderRadius: '16px',
+                      border: 'none',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    ⚡ Tell Ryff
+                  </button>
+                )}
                 <button type="button" onClick={handleTextSubmit} disabled={isSubmitting}>
                   Send
                 </button>

@@ -30,7 +30,7 @@ export async function transcribeAudio(input: TranscribeAudioInput): Promise<Tran
     const mimeType = input.audioMimeType || 'audio/webm';
 
     const systemInstruction = `You are a high-accuracy, verbatim audio transcriber specializing in music, guitars, amplifiers, effects pedals, and audio equipment.
-Accurately transcribe the user's speech. Pay special attention to instrument and audio brands (e.g., Fender, Gibson, PRS, Ibanez, Soldano, Marshall, Strymon, Boss, Dunlop, Elixir, Ernie Ball, D'Addario), model names (e.g., Stratocaster, Les Paul, CE24, 5150, SLO-100, Helix, ToneX), gauges (e.g., 9-42, 10-46), pickups, valves, dates, and prices.
+Accurately transcribe the user's speech. Pay special attention to instrument and audio brands (e.g., Fender, Gibson, PRS, Ibanez, Washburn, Charvel, Soldano, Marshall, Strymon, Boss, Dunlop, Elixir, Ernie Ball, D'Addario), model names (e.g., Stratocaster, Les Paul, N2, CE24, 5150, SLO-100, Helix, ToneX), guitar hardware (e.g., Floyd Rose, tremolo, springs, truss rod), nicknames (e.g., Nuno, Bluebird, RBP1), tunings (e.g., E flat, Drop D), string gauges (e.g., 9-42, 10-42, 10-46), pickups, valves, dates, and prices.
 Output ONLY the raw transcribed sentence or question. Do not include quotes, explanatory notes, markdown formatting, or timestamps.`;
 
     const contents = [
@@ -45,7 +45,7 @@ Output ONLY the raw transcribed sentence or question. Do not include quotes, exp
           },
           {
             text: input.gearContext
-              ? `Transcribe this audio memo. Active gear context: ${input.gearContext}. Output verbatim text only.`
+              ? `Transcribe this audio memo verbatim. Equipment and vocabulary context: ${input.gearContext}. Output verbatim text only.`
               : 'Transcribe this voice command. Output verbatim text only.',
           },
         ],

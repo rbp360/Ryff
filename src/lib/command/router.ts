@@ -370,15 +370,19 @@ Important instructions:
           batchId,
         });
       } else if (resolution.status === 'ambiguous') {
-        ambiguousGroups.push({
-          ref: resolution.ref,
-          candidates: resolution.candidates.map((c) => ({
-            id: c.id,
-            name: formatGearTitle(c.brand, c.model, c.raw_text),
-          })),
-        });
+        if (!ambiguousGroups.some((g) => g.ref.toLowerCase() === resolution.ref.toLowerCase())) {
+          ambiguousGroups.push({
+            ref: resolution.ref,
+            candidates: resolution.candidates.map((c) => ({
+              id: c.id,
+              name: formatGearTitle(c.brand, c.model, c.raw_text),
+            })),
+          });
+        }
       } else {
-        unresolvedRefs.push(resolution.ref);
+        if (!unresolvedRefs.some((r) => r.toLowerCase() === resolution.ref.toLowerCase())) {
+          unresolvedRefs.push(resolution.ref);
+        }
       }
     } else if (raw.tool === 'add_want') {
       const parsedArgs = addWantSchema.safeParse({
@@ -506,6 +510,7 @@ Important instructions:
     intent: 'action',
     status: finalStatus,
     proposals: validProposals,
+    candidates: compactGearList.map((g) => ({ id: g.id, name: g.name })),
     ambiguous: ambiguousGroups.length > 0 ? ambiguousGroups : undefined,
     unresolved: unresolvedRefs.length > 0 ? unresolvedRefs : undefined,
     costUsd: actionCost,

@@ -69,22 +69,30 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // If context includes gearId, optionally load gear summary to assist transcription
-    let gearContext: string | undefined;
+    // Fetch user's owned gear to prime speech transcription, route matching, and UI disambiguation
+    const ownedGear = await db`
+      select id, brand, model, nickname, category, raw_text
+      from rig_items
+      where user_id = ${session.userId} and kind = 'own'
+      order by id asc
+    `;
+
+    const ownedSummaries = ownedGear.map((g: any) => {
+      const title = [g.brand, g.model || g.raw_text].filter(Boolean).join(' ');
+      return g.nickname ? `${title} (nickname: "${g.nickname}")` : title;
+    });
+
+    let gearContext: string | undefined = ownedSummaries.length > 0
+      ? `Owned instruments: ${ownedSummaries.join(', ')}`
+      : undefined;
+
     if (context?.gearId) {
-      const gearIdNum = parseInt(context.gearId, 10);
-      if (!isNaN(gearIdNum)) {
-        const [gear] = await db`
-          select brand, model, raw_text, nickname
-          from rig_items
-          where id = ${gearIdNum} and user_id = ${session.userId}
-          limit 1
-        `;
-        if (gear) {
-          gearContext = [gear.brand, gear.model || gear.raw_text, gear.nickname ? `"${gear.nickname}"` : null]
-            .filter(Boolean)
-            .join(' ');
-        }
+      const active = ownedGear.find((g: any) => String(g.id) === String(context.gearId));
+      if (active) {
+        const activeTitle = [active.brand, active.model || active.raw_text, active.nickname ? `"${active.nickname}"` : null]
+          .filter(Boolean)
+          .join(' ');
+        gearContext = `Active instrument: ${activeTitle}. ${gearContext || ''}`.trim();
       }
     }
 
@@ -100,6 +108,12 @@ export async function POST(request: NextRequest) {
         ok: true,
         status: 'transcribed',
         text: transcription.text,
+        ownedGear: ownedGear.map((g: any) => ({
+          id: Number(g.id),
+          name: [g.brand, g.model || g.raw_text].filter(Boolean).join(' '),
+          nickname: g.nickname || null,
+          category: g.category,
+        })),
         context: {
           ...context,
           gearContext,
@@ -127,6 +141,12 @@ export async function POST(request: NextRequest) {
       unresolved: routed.unresolved,
       message: routed.message,
       costUsd: routed.costUsd,
+      ownedGear: ownedGear.map((g: any) => ({
+        id: Number(g.id),
+        name: [g.brand, g.model || g.raw_text].filter(Boolean).join(' '),
+        nickname: g.nickname || null,
+        category: g.category,
+      })),
       context: {
         ...context,
         gearContext,

@@ -11,6 +11,7 @@ export interface UseAudioRecorderReturn {
   isRecording: boolean;
   recordingSeconds: number;
   maxSeconds: number;
+  audioLevel: number;
   startRecording: () => Promise<void>;
   stopRecording: () => Promise<AudioRecordResult | null>;
   cancelRecording: () => void;
@@ -18,18 +19,33 @@ export interface UseAudioRecorderReturn {
   clearError: () => void;
 }
 
+export interface UseAudioRecorderOptions {
+  onAutoStop?: (result: AudioRecordResult) => void;
+}
+
 const MAX_RECORDING_SECONDS = 30;
 
-export function useAudioRecorder(maxDuration = MAX_RECORDING_SECONDS): UseAudioRecorderReturn {
+export function useAudioRecorder(
+  maxDuration = MAX_RECORDING_SECONDS,
+  options?: UseAudioRecorderOptions
+): UseAudioRecorderReturn {
   const [isRecording, setIsRecording] = useState(false);
   const [recordingSeconds, setRecordingSeconds] = useState(0);
+  const [audioLevel, setAudioLevel] = useState(0);
   const [error, setError] = useState<string | null>(null);
+
+  const onAutoStopRef = useRef<((result: AudioRecordResult) => void) | undefined>(options?.onAutoStop);
+  onAutoStopRef.current = options?.onAutoStop;
 
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
   const streamRef = useRef<MediaStream | null>(null);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const resolvePromiseRef = useRef<((value: AudioRecordResult | null) => void) | null>(null);
+
+  const audioContextRef = useRef<AudioContext | null>(null);
+  const analyserRef = useRef<AnalyserNode | null>(null);
+  const animFrameRef = useRef<number | null>(null);
 
   const clearTimer = useCallback(() => {
     if (timerRef.current) {
@@ -38,12 +54,26 @@ export function useAudioRecorder(maxDuration = MAX_RECORDING_SECONDS): UseAudioR
     }
   }, []);
 
+  const cleanupAudioContext = useCallback(() => {
+    if (animFrameRef.current) {
+      cancelAnimationFrame(animFrameRef.current);
+      animFrameRef.current = null;
+    }
+    if (audioContextRef.current && audioContextRef.current.state !== 'closed') {
+      audioContextRef.current.close().catch(() => {});
+      audioContextRef.current = null;
+    }
+    analyserRef.current = null;
+    setAudioLevel(0);
+  }, []);
+
   const cleanupStream = useCallback(() => {
+    cleanupAudioContext();
     if (streamRef.current) {
       streamRef.current.getTracks().forEach((track) => track.stop());
       streamRef.current = null;
     }
-  }, []);
+  }, [cleanupAudioContext]);
 
   const cancelRecording = useCallback(() => {
     clearTimer();
@@ -54,6 +84,7 @@ export function useAudioRecorder(maxDuration = MAX_RECORDING_SECONDS): UseAudioR
     audioChunksRef.current = [];
     setIsRecording(false);
     setRecordingSeconds(0);
+    setAudioLevel(0);
     if (resolvePromiseRef.current) {
       resolvePromiseRef.current(null);
       resolvePromiseRef.current = null;
@@ -63,6 +94,7 @@ export function useAudioRecorder(maxDuration = MAX_RECORDING_SECONDS): UseAudioR
   const stopRecording = useCallback((): Promise<AudioRecordResult | null> => {
     return new Promise((resolve) => {
       clearTimer();
+      cleanupAudioContext();
       resolvePromiseRef.current = resolve;
 
       if (!mediaRecorderRef.current || mediaRecorderRef.current.state === 'inactive') {
@@ -75,7 +107,7 @@ export function useAudioRecorder(maxDuration = MAX_RECORDING_SECONDS): UseAudioR
       mediaRecorderRef.current.stop();
       setIsRecording(false);
     });
-  }, [clearTimer, cleanupStream]);
+  }, [clearTimer, cleanupAudioContext, cleanupStream]);
 
   const startRecording = useCallback(async () => {
     setError(null);
@@ -90,6 +122,42 @@ export function useAudioRecorder(maxDuration = MAX_RECORDING_SECONDS): UseAudioR
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       streamRef.current = stream;
+
+      // Set up Web Audio Analyser for real-time visual feedback
+      try {
+        const AudioCtxClass =
+          window.AudioContext ||
+          (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+        if (AudioCtxClass) {
+          const audioCtx = new AudioCtxClass();
+          if (audioCtx.state === 'suspended') {
+            audioCtx.resume().catch(() => {});
+          }
+          audioContextRef.current = audioCtx;
+          const analyser = audioCtx.createAnalyser();
+          analyser.fftSize = 64;
+          analyserRef.current = analyser;
+          const source = audioCtx.createMediaStreamSource(stream);
+          source.connect(analyser);
+
+          const dataArray = new Uint8Array(analyser.frequencyBinCount);
+          const checkLevel = () => {
+            if (!analyserRef.current) return;
+            analyserRef.current.getByteFrequencyData(dataArray);
+            let sum = 0;
+            for (let i = 0; i < dataArray.length; i++) {
+              sum += dataArray[i];
+            }
+            const avg = sum / dataArray.length;
+            const normalized = Math.min(Math.round((avg / 40) * 100), 100);
+            setAudioLevel(normalized);
+            animFrameRef.current = requestAnimationFrame(checkLevel);
+          };
+          animFrameRef.current = requestAnimationFrame(checkLevel);
+        }
+      } catch (audioErr) {
+        console.warn('AudioContext level meter initialization failed:', audioErr);
+      }
 
       const mimeType = MediaRecorder.isTypeSupported('audio/webm;codecs=opus')
         ? 'audio/webm;codecs=opus'
@@ -146,7 +214,11 @@ export function useAudioRecorder(maxDuration = MAX_RECORDING_SECONDS): UseAudioR
       timerRef.current = setInterval(() => {
         setRecordingSeconds((prev) => {
           if (prev >= maxDuration - 1) {
-            stopRecording();
+            stopRecording().then((res) => {
+              if (res && onAutoStopRef.current) {
+                onAutoStopRef.current(res);
+              }
+            });
             return maxDuration;
           }
           return prev + 1;
@@ -175,6 +247,7 @@ export function useAudioRecorder(maxDuration = MAX_RECORDING_SECONDS): UseAudioR
     isRecording,
     recordingSeconds,
     maxSeconds: maxDuration,
+    audioLevel,
     startRecording,
     stopRecording,
     cancelRecording,
