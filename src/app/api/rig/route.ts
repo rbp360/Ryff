@@ -1,7 +1,8 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse, after } from 'next/server';
 import { db } from '../../../lib/db';
 import { getSession } from '../../../lib/session';
 import { logEvent } from '../../../lib/events';
+import { syncDirtyRigItems } from '../../../lib/knowledge/sync';
 import { parseGearLineWithRigistry } from '../../../lib/rigistry-parser';
 import { fetchReverbStockImage } from '../../../lib/gear-images';
 
@@ -182,6 +183,7 @@ export async function POST(request: NextRequest) {
       }
     });
 
+    after(() => syncDirtyRigItems(25).catch((e) => console.warn('[Knowledge] sweep failed:', e)));
     await logEvent('rig_saved', { count: parsedItems.length, mode: shouldAppend ? 'append' : 'replace' }, session.userId);
 
     const updated = await db`

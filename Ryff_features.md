@@ -1600,3 +1600,26 @@ Automated news generation, feed health, and multi-bot debate synthesis have been
 
 
 
+
+
+---
+
+## Feature: Gear Knowledge Brain: Vectorised Player Gear Memory for Bots (pgvector RAG + SQL Stats)
+
+### 1. User & Marketing Overview
+- **Date:** 2026-11-01
+- **What it is:** Every guitar a player registers now teaches the whole system. If one player logs the most obscure pickup in the world, Ryff resolves it once into a canonical catalogue entry and every bot (and every later user who enters the same part, however they spell it) benefits automatically. No one has to re-enter it.
+- **Smarter bots:** Chat bots now recognise rare gear, quote real community numbers (e.g. "62% of Ryff players run 10-46, sample of 340") and can find rigs that match a vibe ("sludgy doom guitars").
+- **Privacy-first:** Only anonymous spec narratives are learned. Serial numbers, nicknames, prices and user IDs never enter the knowledge store.
+
+### 2. Technical Details (For Developers)
+- **Migration:** [`db/migrations/0019_gear_knowledge_vectors.sql`](file:///c:/Users/rob_b/Ryff/db/migrations/0019_gear_knowledge_vectors.sql): enables `pgvector`; adds `canonical_components` (768-dim, HNSW), `component_aliases` (raw string cache), `rig_item_components` (item slot to component link), `rig_item_knowledge` (anonymous passport chunk + embedding).
+- **Embeddings:** [`src/lib/knowledge/embeddings.ts`](file:///c:/Users/rob_b/Ryff/src/lib/knowledge/embeddings.ts): Gemini `gemini-embedding-001` (`EMBEDDING_MODEL`), 768 dims, L2-normalised. Returns `null` without a key; everything degrades to exact-match/SQL.
+- **Entity resolution:** [`components.ts`](file:///c:/Users/rob_b/Ryff/src/lib/knowledge/components.ts): alias cache, then vector match (cosine ≥ 0.90 auto-links), else LLM normaliser (`MODEL_FAST`, zod-validated JSON, deterministic fallback), upsert canonical + embed.
+- **Sync:** [`sync.ts`](file:///c:/Users/rob_b/Ryff/src/lib/knowledge/sync.ts): `syncRigItemKnowledge` (resolve pickups/strings, build passport doc, hash-skip unchanged, embed) and `syncDirtyRigItems` sweeper. Triggered by `after()` in `PATCH /api/rig/[id]` and `POST /api/rig`, pipeline Stage 6, and `pnpm knowledge:sync` backfill ([`scripts/sync-knowledge.ts`](file:///c:/Users/rob_b/Ryff/scripts/sync-knowledge.ts)).
+- **Retrieval:** [`search.ts`](file:///c:/Users/rob_b/Ryff/src/lib/knowledge/search.ts): Pattern A `searchGearKnowledge` (semantic) and Pattern B `getPlayerRegistryStats` (pure SQL aggregates: gauge, tuning, string brand, pickups; filters brand/strings/scale). `retrieveKnowledgeContext` feeds `<community_gear_knowledge>` into [`/api/chat`](file:///c:/Users/rob_b/Ryff/src/app/api/chat/route.ts); rules added to [`prompts/chat.system.md`](file:///c:/Users/rob_b/Ryff/prompts/chat.system.md). Rule: vectors identify and describe; SQL counts.
+- **Tests:** [`tests/knowledge.test.ts`](file:///c:/Users/rob_b/Ryff/tests/knowledge.test.ts).
+- **Not yet built:** image embeddings (SigLIP/CLIP) and feeding knowledge into the debate/digest pipeline.
+
+### 3. White-Label & Domain-Agnostic Utility
+Any crowdsourced-asset vertical gets a self-building catalogue: running shoes (model/midsole dedup, "most runners use size X"), cars (aftermarket parts resolved once, "most common tyre for this model"), watches (obscure straps/movements). Change the `category` enum and the normaliser prompt; the alias cache, vector dedup, anonymous RAG chunks and SQL stats layer are reusable as-is.

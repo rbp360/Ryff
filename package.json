@@ -12,6 +12,7 @@
     "migrate": "tsx scripts/migrate.ts",
     "seed": "tsx scripts/seed-sources.ts",
     "seed:rigistry": "tsx scripts/seed-rigistry.ts",
+    "knowledge:sync": "tsx scripts/sync-knowledge.ts",
     "check:feeds": "tsx scripts/check-feeds.ts",
     "invites": "tsx scripts/create-invites.ts --count 100",
     "pipeline": "tsx scripts/run-pipeline.ts",

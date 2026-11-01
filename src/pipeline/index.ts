@@ -4,6 +4,7 @@ import { digestPendingItems } from './digest';
 import { runDebatePipeline } from './debate';
 import { runDealsPipeline, DealsStageResult } from './deals';
 import { checkPipelineSpendCap } from '@/lib/usage';
+import { syncDirtyRigItems } from '@/lib/knowledge/sync';
 
 export interface PipelineOptions {
   limitDebateItems?: number;
@@ -125,6 +126,14 @@ export async function runPipeline(options: PipelineOptions = {}): Promise<Pipeli
     console.log(`\n--- [Pipeline Run #${runId}] Stage 5: Retention Cleanup ---`);
     const retentionStats = await runRetentionCleanup();
     stageStats.retention = retentionStats;
+
+    // Stage 6: Gear knowledge sync (resolve + embed new/changed player rigs)
+    console.log(`\n--- [Pipeline Run #${runId}] Stage 6: Gear Knowledge Sync ---`);
+    try {
+      (stageStats as Record<string, unknown>).knowledge = await syncDirtyRigItems(50);
+    } catch (kErr) {
+      console.warn('[Pipeline] Knowledge sync skipped:', kErr instanceof Error ? kErr.message : kErr);
+    }
 
     const durationSec = ((Date.now() - startTime) / 1000).toFixed(1);
 

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '../../../../lib/db';
 import { getSession } from '../../../../lib/session';
+import { queueRigKnowledgeSync } from '../../../../lib/knowledge/queue';
 
 export async function GET(
   request: NextRequest,
@@ -141,6 +142,7 @@ export async function PATCH(
       return NextResponse.json({ error: 'Gear item not found' }, { status: 404 });
     }
 
+    queueRigKnowledgeSync(itemId);
     return NextResponse.json({ ok: true, item: updated[0] });
   } catch (err) {
     console.error('Failed to update rig item:', err);

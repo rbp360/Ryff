@@ -7,6 +7,7 @@ import { getSession, ensureUserExists } from '../../../lib/session';
 import { checkUserUsage, recordMessageUsage } from '../../../lib/usage';
 import { validateUserInput, renderTokens, sanitiseUntrusted } from '../../../lib/guard';
 import { retrieveChatContext } from '../../../lib/retrieval';
+import { retrieveKnowledgeContext } from '../../../lib/knowledge/search';
 import { complete, LLMMessage } from '../../../lib/llm';
 import { logEvent } from '../../../lib/events';
 import { env } from '../../../lib/env';
@@ -126,6 +127,7 @@ export async function POST(request: NextRequest) {
 
     // 3. Retrieve Rich Context (Episode, News Items, Rig, Deals)
     const context = await retrieveChatContext(session.userId, cleanUserText);
+    const knowledge = await retrieveKnowledgeContext(cleanUserText);
 
     // 4. Build System & Context Blocks
     const shouldDisagree = Math.random() < targetBot.disagreement_rate;
@@ -237,6 +239,25 @@ export async function POST(request: NextRequest) {
         }
         contextXml += `  </user_tastes>\n`;
       }
+    }
+
+    // Community gear knowledge brain (vector-retrieved components/passports + SQL player stats)
+    if (knowledge.components.length > 0 || knowledge.passports.length > 0 || knowledge.stats) {
+      contextXml += `  <community_gear_knowledge>\n`;
+      for (const c of knowledge.components) {
+        contextXml += `    <known_component category="${sanitiseUntrusted(c.category, 20)}" players_using="${c.owners}">${sanitiseUntrusted(c.canonical_text, 300)}</known_component>\n`;
+      }
+      for (const p of knowledge.passports) {
+        contextXml += `    <player_rig>${sanitiseUntrusted(p.document_chunk, 350)}</player_rig>\n`;
+      }
+      if (knowledge.stats) {
+        contextXml += `    <player_stats metric="${knowledge.stats.metric}" sample_size="${knowledge.stats.sampleSize}">\n`;
+        for (const r of knowledge.stats.rows) {
+          contextXml += `      <stat value="${sanitiseUntrusted(r.value, 80)}" count="${r.count}" percent="${r.percentage}" />\n`;
+        }
+        contextXml += `    </player_stats>\n`;
+      }
+      contextXml += `  </community_gear_knowledge>\n`;
     }
 
     contextXml += `</context>`;
