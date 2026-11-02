@@ -31,8 +31,8 @@ interface GearKnowledgeCardProps {
 }
 
 export function GearKnowledgeCard({
-  brand,
-  model,
+  brand: _brand,
+  model: _model,
   stringGauge,
   tuning,
   knowledge,
@@ -333,7 +333,7 @@ export function GearKnowledgeCard({
                   📊 Real-World Community Registry Stats
                 </h3>
                 <p style={{ margin: '3px 0 0', fontSize: '11px', color: 'var(--mu)' }}>
-                  Aggregated from registered player instruments. Pure SQL analytics.
+                  Aggregated from registered player instruments{_brand ? ` (relevant to ${_brand}${_model ? ` ${_model}` : ''})` : ''}. Pure SQL analytics.
                 </p>
               </div>
               <button

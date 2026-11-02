@@ -83,7 +83,6 @@ export function AddGearModal({ isOpen, onClose, onGearAdded }: AddGearModalProps
     const b = brand.trim();
     const m = model.trim();
     if (!b && !m) {
-      setStockPhotoUrl(null);
       return;
     }
 
@@ -291,7 +290,10 @@ export function AddGearModal({ isOpen, onClose, onGearAdded }: AddGearModalProps
 
   if (!isOpen) return null;
 
-  const previewDisplayUrl = customPhotoUrl || stockPhotoUrl || getCategoryFallbackImage(category);
+  const previewDisplayUrl =
+    customPhotoUrl ||
+    (brand.trim() || model.trim() ? stockPhotoUrl : null) ||
+    getCategoryFallbackImage(category);
   const hasInputs = brand.trim().length > 0 || model.trim().length > 0;
 
   return (
