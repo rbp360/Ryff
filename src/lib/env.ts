@@ -41,6 +41,7 @@ const envSchema = z.object({
   MODEL_FAST: z.string().default('gemini-3.5-flash-lite'),
   MODEL_SMART: z.string().default('gemini-3.5-flash'),
   EMBEDDING_MODEL: z.string().default('gemini-embedding-001'),
+  IMAGE_EMBEDDING_MODEL: z.string().default('gemini-embedding-2'),
   CONTACT_EMAIL: z.string().default('bedlamthebandbedlam@gmail.com'),
   SITE_URL: z.string().default('http://localhost:3000'),
   ADMIN_EMAILS: z.string().optional(),

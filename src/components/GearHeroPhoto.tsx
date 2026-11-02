@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect, useCallback, DragEvent, ChangeEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import { getCategoryFallbackImage } from '@/lib/gear-images';
+import { VisualLookAlikesModal } from './VisualLookAlikesModal';
 
 interface GearHeroPhotoProps {
   itemId: number | string;
@@ -60,6 +61,7 @@ export function GearHeroPhoto({
     }
     return 'category';
   });
+  const [showLookAlikes, setShowLookAlikes] = useState(false);
 
   // Adjust state during render if initialImageUrl prop changes (canonical React pattern)
   const [prevInitialImageUrl, setPrevInitialImageUrl] = useState(initialImageUrl);
@@ -512,7 +514,32 @@ export function GearHeroPhoto({
           </span>
         </div>
 
-        <div style={{ display: 'flex', gap: '8px' }}>
+        <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+          {/* Visual Look-Alikes Button */}
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              setShowLookAlikes(true);
+            }}
+            title="Search for visual look-alikes across Ryff community instruments"
+            style={{
+              background: 'rgba(56, 189, 248, 0.12)',
+              border: '1px solid rgba(56, 189, 248, 0.3)',
+              color: '#38bdf8',
+              fontSize: '11px',
+              fontWeight: 700,
+              padding: '5px 10px',
+              borderRadius: '8px',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '4px',
+            }}
+          >
+            <span>🔍</span> Visual Twins
+          </button>
+
           {/* Remove custom upload */}
           {isCustom && (
             <button
@@ -537,6 +564,14 @@ export function GearHeroPhoto({
           )}
         </div>
       </div>
+
+      <VisualLookAlikesModal
+        isOpen={showLookAlikes}
+        onClose={() => setShowLookAlikes(false)}
+        rigItemId={itemId}
+        itemName={formatAltText(brand, model, rawText)}
+        currentImageUrl={displayUrl}
+      />
     </div>
   );
 }

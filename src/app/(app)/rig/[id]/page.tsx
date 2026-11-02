@@ -5,6 +5,8 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { BackButton } from '@/components/BackButton';
 import { GearHeroPhoto } from '@/components/GearHeroPhoto';
+import { GearKnowledgeCard, GearKnowledgeData } from '@/components/GearKnowledgeCard';
+import { VisualLookAlikesModal } from '@/components/VisualLookAlikesModal';
 import {
   GUITAR_TUNINGS,
   BASS_TUNINGS,
@@ -152,6 +154,8 @@ export default function GearDetailPage({ params }: { params: Promise<{ id: strin
   const [item, setItem] = useState<RigItem | null>(null);
   const [logs, setLogs] = useState<RigItemLog[]>([]);
   const [news, setNews] = useState<MatchingNewsItem[]>([]);
+  const [knowledge, setKnowledge] = useState<GearKnowledgeData | null>(null);
+  const [showLookAlikesModal, setShowLookAlikesModal] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [saveSuccessMsg, setSaveSuccessMsg] = useState<string | null>(null);
@@ -216,6 +220,7 @@ export default function GearDetailPage({ params }: { params: Promise<{ id: strin
           setItem(it);
           setLogs(data.logs || []);
           if (data.matchingNews) setNews(data.matchingNews);
+          if (data.knowledge) setKnowledge(data.knowledge);
 
           // Sync local form state
           const resolved = resolveStringSpecs(it.string_gauge, it.string_manufacturer, it.current_strings, it.string_type);
@@ -860,6 +865,20 @@ export default function GearDetailPage({ params }: { params: Promise<{ id: strin
             </p>
           )}
         </div>
+      </div>
+
+      {/* COMMUNITY KNOWLEDGE & VECTOR BRAIN */}
+      <div style={{ position: 'relative', zIndex: 2, marginTop: '24px' }}>
+        <GearKnowledgeCard
+          itemId={item.id}
+          brand={item.brand}
+          model={item.model}
+          category={item.category}
+          stringGauge={item.string_gauge}
+          tuning={item.tuning}
+          knowledge={knowledge}
+          onOpenLookAlikes={() => setShowLookAlikesModal(true)}
+        />
       </div>
 
       {/* DETAILED SPECIFICATIONS & PRESETS SECTION */}
@@ -1867,6 +1886,14 @@ export default function GearDetailPage({ params }: { params: Promise<{ id: strin
           </form>
         </div>
       )}
+
+      <VisualLookAlikesModal
+        isOpen={showLookAlikesModal}
+        onClose={() => setShowLookAlikesModal(false)}
+        rigItemId={item.id}
+        itemName={[item.brand, item.model || item.raw_text].filter(Boolean).join(' ')}
+        currentImageUrl={item.image_url}
+      />
     </div>
   );
 }

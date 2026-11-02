@@ -34,3 +34,32 @@ export async function embedText(text: string, task: EmbedTask): Promise<number[]
   return out ? out[0] : null;
 }
 
+
+
+/** Multimodal embedding model; images and text share one space, so no taskType is passed. */
+async function embedMultimodal(parts: Array<Record<string, unknown>>): Promise<number[] | null> {
+  const apiKey = env.GEMINI_API_KEY || process.env.GEMINI_API_KEY;
+  if (!apiKey) return null;
+  try {
+    const ai = new GoogleGenAI({ apiKey });
+    const res = await ai.models.embedContent({
+      model: env.IMAGE_EMBEDDING_MODEL,
+      contents: [{ parts }],
+      config: { outputDimensionality: EMBEDDING_DIMS },
+    });
+    const v = res.embeddings?.[0]?.values || [];
+    return v.length === EMBEDDING_DIMS ? l2Normalize(v) : null;
+  } catch (err) {
+    console.warn('[ImageEmbeddings] failed:', err instanceof Error ? err.message.slice(0, 120) : err);
+    return null;
+  }
+}
+
+export async function embedImage(bytes: Buffer, mimeType: string): Promise<number[] | null> {
+  return embedMultimodal([{ inlineData: { data: bytes.toString('base64'), mimeType } }]);
+}
+
+/** Text embedded into the multimodal space, for text -> image search. */
+export async function embedTextForImageSearch(text: string): Promise<number[] | null> {
+  return embedMultimodal([{ text }]);
+}

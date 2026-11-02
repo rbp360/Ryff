@@ -1623,3 +1623,77 @@ Automated news generation, feed health, and multi-bot debate synthesis have been
 
 ### 3. White-Label & Domain-Agnostic Utility
 Any crowdsourced-asset vertical gets a self-building catalogue: running shoes (model/midsole dedup, "most runners use size X"), cars (aftermarket parts resolved once, "most common tyre for this model"), watches (obscure straps/movements). Change the `category` enum and the normaliser prompt; the alias cache, vector dedup, anonymous RAG chunks and SQL stats layer are reusable as-is.
+
+
+---
+
+## Feature: Visual Gear Memory: Photo-to-Gear Identification via Multimodal Image Embeddings
+
+### 1. User & Marketing Overview
+- **Date:** 2026-11-01
+- **What it is:** Snap a photo of an instrument and Ryff suggests the brand and model by comparing it to every guitar other players have registered. Bots can also find rigs by visual description ("sunburst offset with a tremolo").
+- **Why it matters:** Rare guitars get recognised from a picture, and every new photo makes the system better at it.
+
+### 2. Technical Details (For Developers)
+- **Model:** Gemini `gemini-embedding-2` (`IMAGE_EMBEDDING_MODEL`), natively multimodal: images and text share one 768-dim space, so no separate CLIP/SigLIP service is needed. Kept separate from the `gemini-embedding-001` text vectors (incompatible spaces).
+- **Migration:** [`0020_rig_item_image_vectors.sql`](file:///c:/Users/rob_b/Ryff/db/migrations/0020_rig_item_image_vectors.sql) (`rig_item_image_vectors`, HNSW cosine).
+- **Code:** [`src/lib/knowledge/images.ts`](file:///c:/Users/rob_b/Ryff/src/lib/knowledge/images.ts): safe loader (https/data only, private hosts refused, 8MB and MIME caps), `syncRigItemImage` (skips unchanged URL/model), `identifyGearFromImage` (similarity-weighted kNN vote on brand+model, returns confidence), `searchGearByVisualDescription` (text to image). Multimodal embed helpers in [`embeddings.ts`](file:///c:/Users/rob_b/Ryff/src/lib/knowledge/embeddings.ts).
+- **Sync:** runs inside `syncRigItemKnowledge` and `syncDirtyRigItems` (rig saves, pipeline Stage 6, `pnpm knowledge:sync`).
+- **API:** `POST /api/knowledge/identify` (multipart `image`, auth required): [`route.ts`](file:///c:/Users/rob_b/Ryff/src/app/api/knowledge/identify/route.ts). Advisory output; UI should ask the user to confirm.
+- **Tests:** [`tests/knowledge-images.test.ts`](file:///c:/Users/rob_b/Ryff/tests/knowledge-images.test.ts).
+
+### 3. White-Label & Domain-Agnostic Utility
+Identify-by-photo works for any collectable or asset vertical: watches, sneakers, bikes, cars, pedals. The crowd's photos become the reference set; swap nothing but the brand/model fields used for the vote.
+
+
+---
+
+## Feature: Guitar Passport UI: AI Vision Identification, Community Knowledge Brain & Visual Twins
+
+### 1. User & Marketing Overview
+- **Date:** 2026-11-01
+- **What it is:** A comprehensive, interactive user interface empowering guitar players to identify instruments from photos with AI vision, explore community-wide rig statistics, and inspect visual twins registered by other players.
+- **AI Guitar Scanner on Ingestion:** When adding a guitar, dropping or uploading a photo automatically triggers Gemini Vision analysis, detecting brand, model, and category with confidence scoring, and offering a 1-click "Apply to Form" action alongside candidate pills. If uncatalogued, users are alerted that their instrument is teaching Ryff's brain for future players.
+- **Passport Community Brain Card:** Each guitar's passport displays its real-time vector status (Gemini Text-001 RAG vector and Gemini Multimodal Embedding 2 visual vector), resolved canonical components (pickups, strings), and an inspectable privacy-safe bot grounding summary.
+- **Visual Twins Explorer:** Clicking "Visual Twins" on any passport hero photo or brain card opens an interactive drawer showing the closest matching community instruments by visual similarity percentage and photo.
+- **Community Stats Modal:** An interactive analytics explorer allowing players to view real-world string gauge distributions, tunings, and pickup combinations from verified player registrations.
+
+### 2. Technical Details (For Developers)
+- **UI Components:**
+  - [`src/components/AddGearModal.tsx`](file:///c:/Users/rob_b/Ryff/src/components/AddGearModal.tsx): Enhanced with real-time AI vision identification state (`isIdentifying`, `visionResult`), 1-click spec application, candidate pills, and new gear discovery notifications.
+  - [`src/components/GearHeroPhoto.tsx`](file:///c:/Users/rob_b/Ryff/src/components/GearHeroPhoto.tsx): Added "Visual Twins" button and integrated modal launcher.
+  - [`src/components/VisualLookAlikesModal.tsx`](file:///c:/Users/rob_b/Ryff/src/components/VisualLookAlikesModal.tsx): Interactive look-alike modal displaying reference gear, vector status badge, match grid with thumbnail images, brand/model, and cosine similarity progress bars.
+  - [`src/components/GearKnowledgeCard.tsx`](file:///c:/Users/rob_b/Ryff/src/components/GearKnowledgeCard.tsx): Displays RAG/Visual vector statuses, canonical components (bridge, middle, neck, strings) with manufacturer verification badges, inspectable anonymized RAG chunk, and interactive SQL stats modal.
+  - [`src/app/(app)/rig/[id]/page.tsx`](file:///c:/Users/rob_b/Ryff/src/app/(app)/rig/[id]/page.tsx): Updated to load knowledge data from `/api/rig/[id]` and render the GearKnowledgeCard and VisualLookAlikesModal.
+- **API Enhancements:**
+  - [`src/app/api/knowledge/identify/route.ts`](file:///c:/Users/rob_b/Ryff/src/app/api/knowledge/identify/route.ts): Added `GET` endpoint for fetching visual look-alikes by `rigItemId`, and expanded `POST` to handle both `multipart/form-data` and JSON `{ imageUrl }`.
+  - [`src/app/api/knowledge/stats/route.ts`](file:///c:/Users/rob_b/Ryff/src/app/api/knowledge/stats/route.ts): Added REST endpoint querying `getPlayerRegistryStats` for real-time SQL distributions (`string_gauge`, `tuning`, `bridge_pickup`).
+  - [`src/app/api/rig/[id]/route.ts`](file:///c:/Users/rob_b/Ryff/src/app/api/rig/[id]/route.ts): Enriched GET response with `knowledge` payload (`hasTextVector`, `hasImageVector`, `documentChunk`, and canonical `components`).
+- **Verification:** Verified with TypeScript compilation (`tsc --noEmit`), unit test suite, and database vector queries.
+
+### 3. White-Label & Domain-Agnostic Utility
+- **Universal Visual Asset Identification:** Useful for any vertical involving crowdsourced physical goods: identifying luxury watch references from wrist shots, bicycle frames/components from photos, or vintage car parts. The UI provides instant user feedback with confidence scoring and fallback to crowd-contributed reference catalogs.
+- **Community Intelligence Dashboard:** Demonstrates how deterministic SQL telemetry (counts, distributions) can be paired with vector search and presented cleanly to end users across diverse asset categories.
+
+
+---
+
+## Feature: Streamlined Passport Ingestion Form & Modal Dismissal Fix
+
+### 1. User & Marketing Overview
+- **Date:** 2026-11-02
+- **What it is:** Fixed an issue where the "Add Gear to Passport" modal was prematurely closing during input, and eliminated redundant, confusing fields.
+- **Unified Identity:** Replaced the legacy duplicate "Gear Name or Model" field with direct, dedicated **Brand / Maker** and **Model Designation** inputs.
+- **Accidental Close Prevention:** Prevented accidental form submission when pressing Enter in text fields, and guarded backdrop clicks so that layout adjustments (such as live stock photo fetching) no longer close the modal mid-typing.
+
+### 2. Technical Details (For Developers)
+- **Component Updated:** [`src/components/AddGearModal.tsx`](file:///c:/Users/rob_b/Ryff/src/components/AddGearModal.tsx).
+- **Redundancy Elimination:** Removed the free-text `gearName` heuristic space-splitting. The item's identity is cleanly derived from `brand` and `model`.
+- **Keyboard & Backdrop Guarding:**
+  - Added `onKeyDown={(e) => { if (e.key === 'Enter') e.preventDefault(); }}` on all input fields.
+  - Replaced backdrop `onClick` with strict `onMouseDown` check (`e.target === e.currentTarget`) and added `e.stopPropagation()` on inner card containers to prevent mouse drag and layout-shift dismissals.
+  - Debounced Reverb stock image fetching on `brand` and `model` with fixed-aspect-ratio containers to avoid sudden layout jumps.
+- **Testing:** Passed `tsc --noEmit` and all knowledge unit tests.
+
+### 3. White-Label & Domain-Agnostic Utility
+- Any inventory or passport registration flow across different verticals (e.g. vintage watches: Brand & Reference Number; vehicles: Make & Model; bicycles: Maker & Frame Model) benefits from eliminating ambiguous free-text name splitting in favor of clean primary attributes with accidental-dismissal guards.

@@ -36,7 +36,35 @@ export async function GET(
     order by event_date desc, created_at desc
   `;
 
-  return NextResponse.json({ item, logs });
+  const [knowledgeRow] = await db`
+    select text_embedding is not null as has_text_vector, document_chunk
+    from rig_item_knowledge
+    where rig_item_id = ${itemId}
+  `;
+
+  const [imageVectorRow] = await db`
+    select image_embedding is not null as has_image_vector
+    from rig_item_image_vectors
+    where rig_item_id = ${itemId}
+  `;
+
+  const components = await db`
+    select rc.slot, rc.raw_text, c.manufacturer, c.model_name, c.sub_type, c.category, c.verified
+    from rig_item_components rc
+    join canonical_components c on c.id = rc.component_id
+    where rc.rig_item_id = ${itemId}
+  `;
+
+  return NextResponse.json({
+    item,
+    logs,
+    knowledge: {
+      hasTextVector: Boolean(knowledgeRow?.has_text_vector),
+      documentChunk: knowledgeRow?.document_chunk || null,
+      hasImageVector: Boolean(imageVectorRow?.has_image_vector),
+      components: components || [],
+    },
+  });
 }
 
 export async function PATCH(

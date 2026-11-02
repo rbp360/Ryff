@@ -7,9 +7,9 @@ async function main() {
   let total = 0;
   for (;;) {
     const res = await syncDirtyRigItems(batch);
-    total += res.synced;
-    console.log(`[knowledge:sync] attempted=${res.attempted} synced=${res.synced} failed=${res.failed}`);
-    if (res.attempted === 0 || res.synced === 0) break;
+    total += res.synced + res.images.embedded;
+    console.log(`[knowledge:sync] attempted=${res.attempted} synced=${res.synced} images=${res.images.embedded} failed=${res.failed}`);
+    if (res.synced === 0 && res.images.embedded === 0) break;
   }
   console.log(`[knowledge:sync] done, ${total} items synced.`);
   await db.end();

@@ -22,7 +22,7 @@ const CATEGORIES = [
 ];
 
 export function AddGearModal({ isOpen, onClose, onGearAdded }: AddGearModalProps) {
-  const [gearName, setGearName] = useState('');
+  // Primary gear identity (Clean & Non-redundant: Brand + Model)
   const [brand, setBrand] = useState('');
   const [model, setModel] = useState('');
   const [category, setCategory] = useState('guitar');
@@ -36,6 +36,18 @@ export function AddGearModal({ isOpen, onClose, onGearAdded }: AddGearModalProps
   const [stockPhotoUrl, setStockPhotoUrl] = useState<string | null>(null);
   const [isUploadingPhoto, setIsUploadingPhoto] = useState(false);
   const [isSearchingStock, setIsSearchingStock] = useState(false);
+  const [isIdentifying, setIsIdentifying] = useState(false);
+  const [visionResult, setVisionResult] = useState<{
+    best: { brand: string; model: string; confidence: number; votes: number } | null;
+    matches: Array<{
+      rig_item_id: number;
+      brand: string | null;
+      model: string | null;
+      category: string | null;
+      image_url?: string | null;
+      score: number;
+    }>;
+  } | null>(null);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
@@ -48,7 +60,6 @@ export function AddGearModal({ isOpen, onClose, onGearAdded }: AddGearModalProps
   if (isOpen !== prevIsOpen) {
     setPrevIsOpen(isOpen);
     if (isOpen) {
-      setGearName('');
       setBrand('');
       setModel('');
       setCategory('guitar');
@@ -57,40 +68,22 @@ export function AddGearModal({ isOpen, onClose, onGearAdded }: AddGearModalProps
       setSerialVisible(false);
       setCustomPhotoUrl(null);
       setStockPhotoUrl(null);
+      setVisionResult(null);
+      setIsIdentifying(false);
       setErrorMsg(null);
       setUploadError(null);
       setShowAdvanced(false);
     }
   }
 
-  // When gearName changes, heuristically split brand/model if user hasn't manually edited them
-  function handleNameChange(val: string) {
-    setGearName(val);
-    const trimmed = val.trim();
-    if (!trimmed) {
-      setBrand('');
-      setModel('');
-      setStockPhotoUrl(null);
-      return;
-    }
-
-    const parts = trimmed.split(/\s+/);
-    if (parts.length === 1) {
-      setBrand(parts[0]);
-      setModel(parts[0]);
-    } else {
-      setBrand(parts[0]);
-      setModel(parts.slice(1).join(' '));
-    }
-  }
-
-  // Live stock preview search debounce
+  // Live Reverb stock preview search debounce based on Brand and Model
   useEffect(() => {
     if (!isOpen || customPhotoUrl) return;
 
-    const b = brand.trim() || gearName.trim();
-    const m = model.trim() || gearName.trim();
+    const b = brand.trim();
+    const m = model.trim();
     if (!b && !m) {
+      setStockPhotoUrl(null);
       return;
     }
 
@@ -105,7 +98,7 @@ export function AddGearModal({ isOpen, onClose, onGearAdded }: AddGearModalProps
       try {
         const params = new URLSearchParams({
           brand: b,
-          model: m,
+          model: m || b,
           category,
           pickIndex: '0',
         });
@@ -121,13 +114,13 @@ export function AddGearModal({ isOpen, onClose, onGearAdded }: AddGearModalProps
       } finally {
         if (!controller.signal.aborted) setIsSearchingStock(false);
       }
-    }, 450);
+    }, 500);
 
     return () => {
       clearTimeout(timeout);
       controller.abort();
     };
-  }, [isOpen, brand, model, gearName, category, customPhotoUrl]);
+  }, [isOpen, brand, model, category, customPhotoUrl]);
 
   async function uploadPhotoToCloudinary(file: File) {
     const isImageMime = file.type && file.type.startsWith('image/');
@@ -171,9 +164,63 @@ export function AddGearModal({ isOpen, onClose, onGearAdded }: AddGearModalProps
     }
   }
 
+  async function identifyImageFile(file: File) {
+    setIsIdentifying(true);
+    setVisionResult(null);
+    try {
+      const fd = new FormData();
+      fd.append('image', file);
+      const res = await fetch('/api/knowledge/identify', {
+        method: 'POST',
+        body: fd,
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (data.ok) {
+          setVisionResult({
+            best: data.best,
+            matches: data.matches || [],
+          });
+        }
+      }
+    } catch (err) {
+      console.warn('[Vision] Identify failed:', err);
+    } finally {
+      setIsIdentifying(false);
+    }
+  }
+
+  async function identifyFromUrl(url: string) {
+    if (!url || isIdentifying) return;
+    setIsIdentifying(true);
+    setVisionResult(null);
+    try {
+      const res = await fetch('/api/knowledge/identify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ imageUrl: url }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (data.ok) {
+          setVisionResult({
+            best: data.best,
+            matches: data.matches || [],
+          });
+        }
+      }
+    } catch (err) {
+      console.warn('[Vision] Identify from URL failed:', err);
+    } finally {
+      setIsIdentifying(false);
+    }
+  }
+
   function handleFileChange(e: ChangeEvent<HTMLInputElement>) {
     if (e.target.files && e.target.files[0]) {
-      uploadPhotoToCloudinary(e.target.files[0]);
+      const f = e.target.files[0];
+      uploadPhotoToCloudinary(f);
+      identifyImageFile(f);
     }
   }
 
@@ -181,23 +228,27 @@ export function AddGearModal({ isOpen, onClose, onGearAdded }: AddGearModalProps
     e.preventDefault();
     e.stopPropagation();
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-      uploadPhotoToCloudinary(e.dataTransfer.files[0]);
+      const f = e.dataTransfer.files[0];
+      uploadPhotoToCloudinary(f);
+      identifyImageFile(f);
     }
   }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    const finalRaw = gearName.trim();
-    if (!finalRaw && !model.trim()) {
-      setErrorMsg('Please enter a gear name or model.');
+    const b = brand.trim();
+    const m = model.trim();
+    if (!b && !m) {
+      setErrorMsg('Please enter a Brand or Model for your gear.');
       return;
     }
 
     setIsSubmitting(true);
     setErrorMsg(null);
 
-    const effectiveBrand = brand.trim() || undefined;
-    const effectiveModel = model.trim() || finalRaw;
+    const effectiveBrand = b || undefined;
+    const effectiveModel = m || b;
+    const finalRaw = `${b ? b + ' ' : ''}${m}`.trim();
     const effectiveImage = customPhotoUrl || stockPhotoUrl || undefined;
 
     try {
@@ -207,7 +258,7 @@ export function AddGearModal({ isOpen, onClose, onGearAdded }: AddGearModalProps
         body: JSON.stringify({
           items: [
             {
-              raw_text: finalRaw || `${effectiveBrand || ''} ${effectiveModel}`.trim(),
+              raw_text: finalRaw,
               brand: effectiveBrand,
               model: effectiveModel,
               category,
@@ -241,6 +292,7 @@ export function AddGearModal({ isOpen, onClose, onGearAdded }: AddGearModalProps
   if (!isOpen) return null;
 
   const previewDisplayUrl = customPhotoUrl || stockPhotoUrl || getCategoryFallbackImage(category);
+  const hasInputs = brand.trim().length > 0 || model.trim().length > 0;
 
   return (
     <div
@@ -255,8 +307,11 @@ export function AddGearModal({ isOpen, onClose, onGearAdded }: AddGearModalProps
         justifyContent: 'center',
         padding: '16px',
       }}
-      onClick={(e) => {
-        if (e.target === e.currentTarget) onClose();
+      onMouseDown={(e) => {
+        // Only close if mouse is clicked directly on the outer backdrop
+        if (e.target === e.currentTarget) {
+          onClose();
+        }
       }}
     >
       <div
@@ -275,6 +330,8 @@ export function AddGearModal({ isOpen, onClose, onGearAdded }: AddGearModalProps
           gap: '18px',
           position: 'relative',
         }}
+        onMouseDown={(e) => e.stopPropagation()}
+        onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -283,7 +340,7 @@ export function AddGearModal({ isOpen, onClose, onGearAdded }: AddGearModalProps
               <span style={{ color: 'var(--ac)' }}>+</span> Add Gear to Passport
             </h2>
             <p style={{ margin: '4px 0 0', fontSize: '12px', color: 'var(--mu)' }}>
-              Add an instrument, amplifier, or pedal to your digital rig.
+              Register your instrument with specs, photo, and serial details.
             </p>
           </div>
           <button
@@ -311,32 +368,61 @@ export function AddGearModal({ isOpen, onClose, onGearAdded }: AddGearModalProps
         )}
 
         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-          {/* Main Gear Name Input */}
-          <div>
-            <label style={{ display: 'block', fontSize: '12px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--tx)', marginBottom: '6px' }}>
-              Gear Name or Model <span style={{ color: 'var(--ac)' }}>*</span>
-            </label>
-            <input
-              type="text"
-              autoFocus
-              value={gearName}
-              onChange={(e) => handleNameChange(e.target.value)}
-              placeholder="e.g. Washburn N2, PRS Custom 24, Boss Katana 50..."
-              style={{
-                width: '100%',
-                background: '#0a0a0a',
-                border: '1px solid var(--ln)',
-                color: '#fff',
-                padding: '12px 14px',
-                borderRadius: '10px',
-                fontSize: '14px',
-                fontWeight: 600,
-                outline: 'none',
-              }}
-            />
+          {/* Core Brand & Model Inputs (No redundant single "gear name" field) */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+            <div>
+              <label style={{ display: 'block', fontSize: '11px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--tx)', marginBottom: '6px' }}>
+                Brand / Maker <span style={{ color: 'var(--ac)' }}>*</span>
+              </label>
+              <input
+                type="text"
+                autoFocus
+                value={brand}
+                onChange={(e) => setBrand(e.target.value)}
+                onKeyDown={(e) => {
+                  // Prevent accidental submit when pressing Enter in inputs
+                  if (e.key === 'Enter') e.preventDefault();
+                }}
+                placeholder="e.g. Fender, Gibson, Washburn"
+                style={{
+                  width: '100%',
+                  background: '#0a0a0a',
+                  border: '1px solid var(--ln)',
+                  color: '#fff',
+                  padding: '11px 12px',
+                  borderRadius: '8px',
+                  fontSize: '13px',
+                }}
+              />
+            </div>
+
+            <div>
+              <label style={{ display: 'block', fontSize: '11px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--tx)', marginBottom: '6px' }}>
+                Model Designation <span style={{ color: 'var(--ac)' }}>*</span>
+              </label>
+              <input
+                type="text"
+                value={model}
+                onChange={(e) => setModel(e.target.value)}
+                onKeyDown={(e) => {
+                  // Prevent accidental submit when pressing Enter in inputs
+                  if (e.key === 'Enter') e.preventDefault();
+                }}
+                placeholder="e.g. Stratocaster, Les Paul, N2"
+                style={{
+                  width: '100%',
+                  background: '#0a0a0a',
+                  border: '1px solid var(--ln)',
+                  color: '#fff',
+                  padding: '11px 12px',
+                  borderRadius: '8px',
+                  fontSize: '13px',
+                }}
+              />
+            </div>
           </div>
 
-          {/* Category Chips */}
+          {/* Category Selector */}
           <div>
             <label style={{ display: 'block', fontSize: '11px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--mu)', marginBottom: '8px' }}>
               Category
@@ -350,7 +436,7 @@ export function AddGearModal({ isOpen, onClose, onGearAdded }: AddGearModalProps
                     type="button"
                     onClick={() => setCategory(cat.id)}
                     style={{
-                      background: isSelected ? 'rgba(34, 197, 94, 0.15)' : '#181818',
+                      background: isSelected ? 'rgba(34, 197, 94, 0.14)' : 'rgba(255, 255, 255, 0.04)',
                       border: isSelected ? '1px solid var(--ac)' : '1px solid var(--ln)',
                       color: isSelected ? 'var(--ac)' : 'var(--tx)',
                       padding: '6px 12px',
@@ -375,9 +461,9 @@ export function AddGearModal({ isOpen, onClose, onGearAdded }: AddGearModalProps
           {/* Photo Dropzone & Preview */}
           <div>
             <label style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '11px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--mu)', marginBottom: '6px' }}>
-              <span>Gear Photo</span>
-              <span style={{ fontSize: '10px', color: customPhotoUrl ? 'var(--ac)' : 'var(--mu)' }}>
-                {customPhotoUrl ? '✓ User Photo Uploaded' : isSearchingStock ? 'Searching Reverb stock...' : 'Reverb Stock Photo'}
+              <span>Gear Photo &amp; AI Vision</span>
+              <span style={{ fontSize: '10px', color: customPhotoUrl ? 'var(--ac)' : isSearchingStock ? '#38bdf8' : 'var(--mu)' }}>
+                {customPhotoUrl ? '✓ Custom Photo' : isSearchingStock ? 'Finding Reverb photo...' : stockPhotoUrl ? 'Reverb Stock Photo' : 'Drop photo to scan'}
               </span>
             </label>
 
@@ -433,7 +519,7 @@ export function AddGearModal({ isOpen, onClose, onGearAdded }: AddGearModalProps
                 }}
               >
                 <span style={{ fontSize: '11px', fontWeight: 700, color: '#fff', display: 'flex', alignItems: 'center', gap: '5px' }}>
-                  📷 {isUploadingPhoto ? 'Uploading photo...' : customPhotoUrl ? 'Tap to change custom photo' : 'Tap or drop your photo to customize'}
+                  📷 {isUploadingPhoto ? 'Uploading photo...' : customPhotoUrl ? 'Tap to change photo' : 'Tap or drop your photo to customize / scan'}
                 </span>
                 {customPhotoUrl && (
                   <button
@@ -463,9 +549,166 @@ export function AddGearModal({ isOpen, onClose, onGearAdded }: AddGearModalProps
                 {uploadError}
               </p>
             )}
+
+            {/* AI Vision Status & Results */}
+            {isIdentifying && (
+              <div
+                style={{
+                  marginTop: '10px',
+                  background: 'rgba(34, 197, 94, 0.08)',
+                  border: '1px solid rgba(34, 197, 94, 0.25)',
+                  borderRadius: '10px',
+                  padding: '10px 14px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '10px',
+                }}
+              >
+                <div
+                  style={{
+                    width: '14px',
+                    height: '14px',
+                    border: '2px solid rgba(34, 197, 94, 0.2)',
+                    borderTopColor: 'var(--ac)',
+                    borderRadius: '50%',
+                    animation: 'spin 0.8s linear infinite',
+                  }}
+                />
+                <span style={{ fontSize: '11px', fontWeight: 700, color: 'var(--ac)' }}>
+                  Gemini Vision analyzing guitar shape &amp; community database...
+                </span>
+              </div>
+            )}
+
+            {!isIdentifying && visionResult && visionResult.best && (
+              <div
+                style={{
+                  marginTop: '10px',
+                  background: 'linear-gradient(135deg, rgba(34, 197, 94, 0.12), rgba(16, 185, 129, 0.04))',
+                  border: '1px solid rgba(34, 197, 94, 0.35)',
+                  borderRadius: '10px',
+                  padding: '12px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '8px',
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <span style={{ fontSize: '18px' }}>✨</span>
+                    <div>
+                      <div style={{ fontSize: '10px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--ac)' }}>
+                        AI Vision Match ({Math.round((visionResult.best.confidence || 0) * 100)}%)
+                      </div>
+                      <b style={{ fontSize: '13px', color: '#fff' }}>
+                        {visionResult.best.brand} {visionResult.best.model}
+                      </b>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (!visionResult.best) return;
+                      setBrand(visionResult.best.brand);
+                      setModel(visionResult.best.model);
+                      const found = visionResult.matches.find((m) => m.brand === visionResult.best?.brand && m.category);
+                      if (found?.category) setCategory(found.category);
+                    }}
+                    style={{
+                      background: 'var(--ac)',
+                      color: '#000',
+                      fontWeight: 800,
+                      fontSize: '11px',
+                      padding: '6px 12px',
+                      borderRadius: '6px',
+                      border: 'none',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    ✓ Apply to Form
+                  </button>
+                </div>
+
+                {visionResult.matches.length > 1 && (
+                  <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', alignItems: 'center', marginTop: '2px' }}>
+                    <span style={{ fontSize: '10px', color: 'var(--mu)', fontWeight: 700 }}>Or select:</span>
+                    {visionResult.matches.slice(0, 3).map((m, idx) => (
+                      <button
+                        key={idx}
+                        type="button"
+                        onClick={() => {
+                          if (m.brand) setBrand(m.brand);
+                          if (m.model) setModel(m.model);
+                          if (m.category) setCategory(m.category);
+                        }}
+                        style={{
+                          background: 'rgba(255,255,255,0.06)',
+                          border: '1px solid var(--ln)',
+                          color: 'var(--tx)',
+                          fontSize: '10px',
+                          padding: '3px 8px',
+                          borderRadius: '6px',
+                          cursor: 'pointer',
+                        }}
+                      >
+                        {m.brand} {m.model} ({Math.round(m.score * 100)}%)
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {!isIdentifying && visionResult && !visionResult.best && (
+              <div
+                style={{
+                  marginTop: '10px',
+                  background: 'rgba(255, 255, 255, 0.04)',
+                  border: '1px dashed var(--ln)',
+                  borderRadius: '10px',
+                  padding: '10px 12px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '10px',
+                }}
+              >
+                <span style={{ fontSize: '18px' }}>✨</span>
+                <div style={{ fontSize: '11px', color: 'var(--mu)' }}>
+                  <b style={{ color: 'var(--tx)', display: 'block' }}>Unique Instrument Discovery</b>
+                  No visual twin in the library yet. Once saved, this photo will train Ryff&apos;s multimodal brain for future players!
+                </div>
+              </div>
+            )}
+
+            {/* Quick scan trigger if custom photo exists and not yet scanned */}
+            {!isIdentifying && !visionResult && customPhotoUrl && (
+              <div style={{ marginTop: '8px', display: 'flex', justifyContent: 'flex-end' }}>
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (customPhotoUrl) identifyFromUrl(customPhotoUrl);
+                  }}
+                  style={{
+                    background: 'rgba(56, 189, 248, 0.08)',
+                    border: '1px solid rgba(56, 189, 248, 0.25)',
+                    color: '#38bdf8',
+                    fontSize: '11px',
+                    fontWeight: 700,
+                    padding: '5px 10px',
+                    borderRadius: '8px',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '4px',
+                  }}
+                >
+                  <span>⚡</span> Identify Specs from Photo
+                </button>
+              </div>
+            )}
           </div>
 
-          {/* Toggle Advanced / Specifics */}
+          {/* Toggle Optional Nickname & Serial Number */}
           <div>
             <button
               type="button"
@@ -483,48 +726,24 @@ export function AddGearModal({ isOpen, onClose, onGearAdded }: AddGearModalProps
                 padding: '4px 0',
               }}
             >
-              <span>{showAdvanced ? '▾ Hide specifics' : '▸ Add brand, serial, nickname & details'}</span>
+              <span>{showAdvanced ? '▾ Hide nickname & serial number' : '▸ Add nickname (pet name) & serial number'}</span>
             </button>
           </div>
 
           {showAdvanced && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', padding: '12px', background: '#0a0a0a', borderRadius: '10px', border: '1px solid var(--ln)' }}>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
-                <div>
-                  <label style={{ display: 'block', fontSize: '11px', color: 'var(--mu)', fontWeight: 600, marginBottom: '4px' }}>
-                    Brand
-                  </label>
-                  <input
-                    type="text"
-                    value={brand}
-                    onChange={(e) => setBrand(e.target.value)}
-                    placeholder="e.g. Washburn"
-                    style={{ width: '100%', background: '#141414', border: '1px solid var(--ln)', color: '#fff', padding: '8px 10px', borderRadius: '6px', fontSize: '12px' }}
-                  />
-                </div>
-                <div>
-                  <label style={{ display: 'block', fontSize: '11px', color: 'var(--mu)', fontWeight: 600, marginBottom: '4px' }}>
-                    Model
-                  </label>
-                  <input
-                    type="text"
-                    value={model}
-                    onChange={(e) => setModel(e.target.value)}
-                    placeholder="e.g. N2"
-                    style={{ width: '100%', background: '#141414', border: '1px solid var(--ln)', color: '#fff', padding: '8px 10px', borderRadius: '6px', fontSize: '12px' }}
-                  />
-                </div>
-              </div>
-
               <div>
                 <label style={{ display: 'block', fontSize: '11px', color: 'var(--mu)', fontWeight: 600, marginBottom: '4px' }}>
-                  Nickname (Optional)
+                  Nickname (Optional pet name, e.g. &ldquo;Number One&rdquo;, &ldquo;Bluebird&rdquo;)
                 </label>
                 <input
                   type="text"
                   value={nickname}
                   onChange={(e) => setNickname(e.target.value)}
-                  placeholder="e.g. Number One, Bluebird, Main Rig"
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') e.preventDefault();
+                  }}
+                  placeholder="e.g. Number One, Bluebird, Main Gig Guitar"
                   style={{ width: '100%', background: '#141414', border: '1px solid var(--ln)', color: '#fff', padding: '8px 10px', borderRadius: '6px', fontSize: '12px' }}
                 />
               </div>
@@ -537,6 +756,9 @@ export function AddGearModal({ isOpen, onClose, onGearAdded }: AddGearModalProps
                   type="text"
                   value={serialNumber}
                   onChange={(e) => setSerialNumber(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') e.preventDefault();
+                  }}
                   placeholder="Serial # (kept private by default)"
                   style={{ width: '100%', background: '#141414', border: '1px solid var(--ln)', color: '#fff', padding: '8px 10px', borderRadius: '6px', fontSize: '12px' }}
                 />
@@ -574,7 +796,7 @@ export function AddGearModal({ isOpen, onClose, onGearAdded }: AddGearModalProps
             </button>
             <button
               type="submit"
-              disabled={isSubmitting || (!gearName.trim() && !model.trim())}
+              disabled={isSubmitting || !hasInputs}
               style={{
                 padding: '9px 20px',
                 borderRadius: '8px',
@@ -584,7 +806,7 @@ export function AddGearModal({ isOpen, onClose, onGearAdded }: AddGearModalProps
                 fontSize: '13px',
                 fontWeight: 800,
                 cursor: 'pointer',
-                opacity: (!gearName.trim() && !model.trim()) || isSubmitting ? 0.6 : 1,
+                opacity: !hasInputs || isSubmitting ? 0.6 : 1,
                 display: 'flex',
                 alignItems: 'center',
                 gap: '6px',

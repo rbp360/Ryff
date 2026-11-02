@@ -2,6 +2,7 @@ import crypto from 'crypto';
 import { db } from '../db';
 import { resolveComponent } from './components';
 import { embedText } from './embeddings';
+import { syncRigItemImage, syncDirtyRigItemImages } from './images';
 import {
   ComponentSlot,
   PassportDocComponents,
@@ -21,6 +22,14 @@ interface SlotSource {
  * passport document and (re)embeds it. Idempotent: skips the embedding call when the document is unchanged.
  */
 export async function syncRigItemKnowledge(rigItemId: number): Promise<{ synced: boolean; reason?: string }> {
+  const res = await syncRigItemText(rigItemId);
+  await syncRigItemImage(rigItemId).catch((err) =>
+    console.warn('[Knowledge] image sync failed:', err instanceof Error ? err.message : err)
+  );
+  return res;
+}
+
+async function syncRigItemText(rigItemId: number): Promise<{ synced: boolean; reason?: string }> {
   const [item] = await db`
     select id, brand, model, category, kind, deleted, year_manufacture, color, number_of_strings, tuning,
            string_gauge, string_type, string_manufacturer, pickup_bridge, pickup_middle, pickup_neck,
@@ -96,7 +105,7 @@ export async function syncRigItemKnowledge(rigItemId: number): Promise<{ synced:
 }
 
 /** Sweeps owned items that were never synced or changed since their last sync. */
-export async function syncDirtyRigItems(limit = 25): Promise<{ attempted: number; synced: number; failed: number }> {
+export async function syncDirtyRigItems(limit = 25): Promise<{ attempted: number; synced: number; failed: number; images: { attempted: number; embedded: number } }> {
   const rows = await db`
     select ri.id from rig_items ri
     left join rig_item_knowledge k on k.rig_item_id = ri.id
@@ -116,7 +125,8 @@ export async function syncDirtyRigItems(limit = 25): Promise<{ attempted: number
       console.warn(`[Knowledge] sync failed for rig_item ${r.id}:`, err instanceof Error ? err.message : err);
     }
   }
-  return { attempted: rows.length, synced, failed };
+  const images = await syncDirtyRigItemImages(limit);
+  return { attempted: rows.length, synced, failed, images };
 }
 
 function clean(v: unknown): string | null {
