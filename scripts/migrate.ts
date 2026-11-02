@@ -78,7 +78,13 @@ async function runMigrations() {
     }
 
     console.log('All migrations executed successfully.');
-  } catch (err) {
+  } catch (err: unknown) {
+    const msg = err instanceof Error ? err.message : String(err);
+    if (msg.includes('extension "vector" is not available')) {
+      console.error('\n[pgvector Notice] The target PostgreSQL database does not have the "vector" extension installed.');
+      console.error('If running in Docker / GitHub Actions CI, use the "pgvector/pgvector:pg16" container image.');
+      console.error('On Neon / Supabase, pgvector is enabled natively.\n');
+    }
     console.error('Migration failed:', err);
     process.exit(1);
   } finally {

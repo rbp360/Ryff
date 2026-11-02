@@ -1697,3 +1697,21 @@ Identify-by-photo works for any collectable or asset vertical: watches, sneakers
 
 ### 3. White-Label & Domain-Agnostic Utility
 - Any inventory or passport registration flow across different verticals (e.g. vintage watches: Brand & Reference Number; vehicles: Make & Model; bicycles: Maker & Frame Model) benefits from eliminating ambiguous free-text name splitting in favor of clean primary attributes with accidental-dismissal guards.
+
+
+---
+
+## Feature: CI Pipeline pgvector Container Support & Migration Diagnostics
+
+### 1. User & Marketing Overview
+- **Date:** 2026-11-02
+- **What it is:** Added native `pgvector` container support to GitHub Actions continuous integration so automated builds and migration tests run with vector database support enabled.
+- **Why it matters:** Ensures pull requests and CI test runs successfully execute vector schema migrations (canonical component embeddings and image vectors) under the same environment parity as production Neon databases.
+
+### 2. Technical Details (For Developers)
+- **CI Workflow Updated:** [`.github/workflows/ci.yml`](file:///c:/Users/rob_b/Ryff/.github/workflows/ci.yml): Changed the PostgreSQL service container image from bare `postgres:16` to `pgvector/pgvector:pg16`.
+- **Migration Script Diagnostics:** [`scripts/migrate.ts`](file:///c:/Users/rob_b/Ryff/scripts/migrate.ts): Added explicit diagnostic catch notice explaining the missing extension and pointing to the `pgvector/pgvector:pg16` image if run on unsupported local instances.
+- **Testing:** Verified clean execution with `pnpm lint`, `pnpm typecheck`, and unit tests.
+
+### 3. White-Label & Domain-Agnostic Utility
+- Ensures seamless Docker and CI runner setup for any white-labeled AI asset registry utilizing vector embeddings across GitHub Actions pipelines.
