@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>RYFF — 1-Page Sales Leaflet</title>
+  <style>
+    @page {
+      size: A4 portrait;
+      margin: 0;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+
+    html, body {
+      width: 210mm;
+      height: 297mm;
+      background: #040506;
+      color: #f3f4f6;
+      font-family: 'Inter', 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
+      overflow: hidden;
+    }
+
+    .page {
+      width: 210mm;
+      height: 297mm;
+      padding: 13.5mm 14.5mm 11.5mm;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      background:
+        radial-gradient(circle at 15% 7%, rgba(34, 197, 94, 0.085), transparent 34%),
+        radial-gradient(circle at 88% 20%, rgba(56, 189, 248, 0.055), transparent 30%),
+        #040506;
+    }
+
+    /* HEADER */
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid #1b2127;
+    }
+
+    .hero-badge {
+      width: 104px;
+      height: 104px;
+      min-width: 104px;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid #242d35;
+      background: #0b0d0f;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.65), 0 0 24px rgba(34, 197, 94, 0.14);
+    }
+
+    .hero-badge img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .header-copy {
+      flex: 1;
+    }
+
+    .eyebrow {
+      font-size: 9.8px;
+      font-weight: 800;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #22c55e;
+      margin-bottom: 5px;
+    }
+
+    .headline {
+      font-size: 25px;
+      font-weight: 900;
+      line-height: 1.07;
+      letter-spacing: -0.015em;
+      text-transform: uppercase;
+      color: #ffffff;
+      margin-bottom: 7px;
+    }
+
+    .headline .accent {
+      color: #22c55e;
+      display: block;
+    }
+
+    .subhead {
+      font-size: 11.6px;
+      line-height: 1.44;
+      color: #a6b0bc;
+      max-width: 535px;
+    }
+
+    .subhead strong {
+      color: #f3f4f6;
+      font-weight: 700;
+    }
+
+    /* CARDS STACK */
+    .cards {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin: 12px 0;
+    }
+
+    .card {
+      background: linear-gradient(180deg, #0e1115 0%, #0a0c0f 100%);
+      border: 1px solid #1d242b;
+      border-left: 3.5px solid #22c55e;
+      border-radius: 10px;
+      padding: 15px 17px;
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+    }
+
+    .card.cyan {
+      border-left-color: #38bdf8;
+    }
+
+    .card-top {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+      padding-bottom: 2px;
+    }
+
+    .card-title {
+      font-size: 12.6px;
+      font-weight: 900;
+      letter-spacing: 0.055em;
+      text-transform: uppercase;
+      color: #22c55e;
+    }
+
+    .card.cyan .card-title {
+      color: #38bdf8;
+    }
+
+    .card-tag {
+      font-size: 10.4px;
+      font-style: italic;
+      color: #828d99;
+      white-space: nowrap;
+    }
+
+    /* ROSTER PILL BAR INSIDE CARD 1 */
+    .roster-strip {
+      display: grid;
+      grid-template-columns: repeat(5, auto);
+      align-items: center;
+      justify-content: space-between;
+      background: #07090b;
+      border: 1px solid #192027;
+      border-radius: 8px;
+      padding: 7px 11px;
+      margin-top: 2px;
+    }
+
+    .bot-chip {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 9.8px;
+      color: #e2e8f0;
+      font-weight: 700;
+      line-height: 1.15;
+    }
+
+    .bot-chip .bot-meta {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .bot-chip span.role {
+      font-size: 8.6px;
+      color: #7b8694;
+      font-weight: 600;
+    }
+
+    .bot-chip img {
+      width: 25px;
+      height: 25px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 1.5px solid #303b46;
+    }
+
+    /* BULLETS */
+    .bullets {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 6.5px;
+    }
+
+    .bullets li {
+      position: relative;
+      padding-left: 14px;
+      font-size: 11.2px;
+      line-height: 1.42;
+      color: #bcc5d0;
+    }
+
+    .bullets li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 6px;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: #22c55e;
+    }
+
+    .card.cyan .bullets li::before {
+      background: #38bdf8;
+    }
+
+    .bullets li strong {
+      color: #ffffff;
+      font-weight: 700;
+    }
+
+    .pill-inline {
+      display: inline-block;
+      font-size: 9.8px;
+      font-weight: 700;
+      color: #4ade80;
+      background: rgba(34, 197, 94, 0.11);
+      border: 1px solid rgba(34, 197, 94, 0.3);
+      border-radius: 4px;
+      padding: 0.5px 5.5px;
+      margin: 0 2px;
+      vertical-align: baseline;
+      white-space: nowrap;
+    }
+
+    /* NAPKIN CALLOUT */
+    .napkin-bar {
+      background: rgba(34, 197, 94, 0.06);
+      border: 1px solid rgba(34, 197, 94, 0.3);
+      border-radius: 9px;
+      padding: 10.5px 14px;
+      font-size: 10.8px;
+      line-height: 1.4;
+      color: #cbd5e1;
+    }
+
+    .napkin-bar strong {
+      color: #22c55e;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    /* BOTTOM CTA */
+    .bottom-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .cta-box {
+      background: #0c0f13;
+      border: 1px solid #1f272f;
+      border-radius: 10px;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    .cta-left {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+    }
+
+    .pick-icon {
+      width: 46px;
+      height: 46px;
+      min-width: 46px;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid #28323c;
+      background: #070809;
+    }
+
+    .pick-icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .cta-title {
+      font-size: 14px;
+      font-weight: 900;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      color: #ffffff;
+      margin-bottom: 2.5px;
+    }
+
+    .cta-sub {
+      font-size: 10.3px;
+      color: #8e98a4;
+    }
+
+    .cta-sub strong {
+      color: #e5e7eb;
+    }
+
+    .cta-btn {
+      background: #22c55e;
+      color: #041208;
+      font-size: 11.8px;
+      font-weight: 900;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 11px 22px;
+      border-radius: 8px;
+      box-shadow: 0 0 20px rgba(34, 197, 94, 0.3);
+      white-space: nowrap;
+    }
+
+    /* FOOTER */
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 9px;
+      color: #56606d;
+      letter-spacing: 0.03em;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <!-- HEADER -->
+    <header class="header">
+      <div class="hero-badge">
+        <img src="../../public/ryff_main.jpg" alt="RYFF" />
+      </div>
+      <div class="header-copy">
+        <div class="eyebrow">SongDeck Guitar Intelligence</div>
+        <h1 class="headline">
+          Your Rig. Your Custom Bot.
+          <span class="accent">The Unfiltered Second Opinion.</span>
+        </h1>
+        <p class="subhead">
+          Voice-logged gear provenance, rig-matched daily news, and an <strong>anti-hype AI bench tech</strong> that challenges your GAS before you spend a penny.
+        </p>
+      </div>
+    </header>
+
+    <!-- MAIN FEATURE CARDS -->
+    <div class="cards">
+      <!-- 1. BUILD YOUR BOT -->
+      <section class="card cyan">
+        <div class="card-top">
+          <div class="card-title">1. 60-Second Custom Bot (&ldquo;The Barstool Audition&rdquo;)</div>
+          <div class="card-tag">GAS enabler or devil&rsquo;s advocate?</div>
+        </div>
+        <ul class="bullets">
+          <li><strong>100-word manifesto:</strong> Drop your heroes, pet peeves, and tone biases to compile a custom bot with its own <em>Hill to Die On</em>.</li>
+          <li><strong>Zero polite AI waffle:</strong> Grounded in real circuits, solder, and live mixes&mdash;built to push back, never flatter you.</li>
+          <li><strong>5 built-in sparring foils:</strong> Jump straight in with our house roster, or pit your custom bot against its natural opposite:</li>
+        </ul>
+        <div class="roster-strip">
+          <div class="bot-chip"><img src="../../public/images/bots/hank.jpg" alt="Hank" /><div class="bot-meta">Hank<span class="role">Vintage Luthier</span></div></div>
+          <div class="bot-chip"><img src="../../public/images/bots/tim.jpg" alt="Tim" /><div class="bot-meta">Tim<span class="role">DSP Architect</span></div></div>
+          <div class="bot-chip"><img src="../../public/images/bots/stevie.jpg" alt="Stevie" /><div class="bot-meta">Stevie<span class="role">Valve Purist</span></div></div>
+          <div class="bot-chip"><img src="../../public/images/bots/mcgee.jpg" alt="McGee" /><div class="bot-meta">McGee<span class="role">High-Gain Modder</span></div></div>
+          <div class="bot-chip"><img src="../../public/images/bots/robbpaul.jpg" alt="RobBPaul" /><div class="bot-meta">RobBPaul<span class="role">Gig Pragmatist</span></div></div>
+        </div>
+      </section>
+
+      <!-- 2. RIG PASSPORT -->
+      <section class="card">
+        <div class="card-top">
+          <div class="card-title">2. Forensic Rig Passport</div>
+          <div class="card-tag">Zero form-filling &middot; Buyer-grade provenance</div>
+        </div>
+        <ul class="bullets">
+          <li><strong>Hands-free voice logging:</strong> Say <em>&ldquo;Elixir 9s on the Nuno, tweaked the springs&rdquo;</em>&mdash;live mic EQ, nickname match, and 1-tap undo.</li>
+          <li><strong>Micro-spec &amp; preset vault:</strong> Custom gauges <span class="pill-inline">8&ndash;42 hybrids</span>, pickup serials, snapshots, and Helix / Quad Cortex / Kemper links.</li>
+          <li><strong>Smart alerts &amp; audit trail:</strong> Learns your real restring cycle and keeps a strikethrough service log buyers can trust.</li>
+        </ul>
+      </section>
+
+      <!-- 3. RADAR & BACKSTAGE -->
+      <section class="card">
+        <div class="card-top">
+          <div class="card-title">3. Rig-Matched Radar &amp; Backstage</div>
+          <div class="card-tag">47+ feeds &middot; Filtered twice daily</div>
+        </div>
+        <ul class="bullets">
+          <li><strong>Kills the gear noise:</strong> Scans 47+ blogs, forums, and YouTube&mdash;flagging your rig <span class="pill-inline">Matches: Marshall DSL50</span> and hero players.</li>
+          <li><strong>Daily 4-round showdowns:</strong> Opposing bots debate the day&rsquo;s biggest gear drops so you hear both sides before buying the buzz.</li>
+          <li><strong>1-tap &ldquo;Ask Your Bot&rdquo;:</strong> Jump from any story straight into Backstage for an instant teardown&mdash;never a parroted summary.</li>
+        </ul>
+      </section>
+
+      <!-- 4. THE TRADER -->
+      <section class="card">
+        <div class="card-top">
+          <div class="card-title">4. The Trader</div>
+          <div class="card-tag">24/7 used market leverage</div>
+        </div>
+        <ul class="bullets">
+          <li><strong>Rig sanity check first:</strong> Hunts used marketplaces under your budget&mdash;only <em>after</em> agreeing the piece fills a real gap in your setup.</li>
+          <li><strong>Hard negotiation ammo:</strong> Exposes days unsold <span class="pill-inline">142d on market</span> and past price drops <span class="pill-inline">&pound;950 &rarr; &pound;850</span> before you bid.</li>
+          <li><strong>Geo-locked alerts:</strong> Strictly filtered to your shipping zone (UK, US, or Worldwide)&mdash;zero customs surprises.</li>
+        </ul>
+      </section>
+
+      <!-- NAPKIN INGESTER -->
+      <div class="napkin-bar">
+        <strong>Napkin Ingester &middot; 1-Tap Import:</strong> Paste messy Apple Notes, receipts, or CSVs. Ryff separates the gear, resolves UK/US date clashes, and imports years of rig history in seconds.
+      </div>
+    </div>
+
+    <!-- BOTTOM CTA -->
+    <div class="bottom-wrap">
+      <div class="cta-box">
+        <div class="cta-left">
+          <div class="pick-icon">
+            <img src="../../public/ryff_pick.jpg" alt="RYFF Pick" />
+          </div>
+          <div>
+            <div class="cta-title">Take Control of Your Tone</div>
+            <div class="cta-sub">No credit card required &middot; Free Rig Passport &amp; Radar &middot; <strong>Full Backstage &amp; Custom Bots: &pound;4/mo</strong></div>
+          </div>
+        </div>
+        <div class="cta-btn">Start Free</div>
+      </div>
+
+      <footer class="footer">
+        <span>RYFF &middot; SongDeck Architecture &middot; 1-Page Sales Leaflet</span>
+        <span>A4 &middot; Page 1 of 1</span>
+      </footer>
+    </div>
+  </div>
+</body>
+</html>
