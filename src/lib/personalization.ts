@@ -38,14 +38,33 @@ export interface FeedItemCard {
  * Retrieves a user's followed brands, favorite players, command input mode, and personality
  */
 export async function getUserPreferences(userId: string): Promise<UserPreferences> {
-  const rows = await db`
-    select favorite_players, followed_brands, reverb_region, command_input_mode, personality
-    from users
-    where id = ${userId}
-    limit 1
-  `;
+  try {
+    const rows = await db`
+      select favorite_players, followed_brands, reverb_region, command_input_mode, personality
+      from users
+      where id = ${userId}
+      limit 1
+    `;
 
-  if (rows.length === 0) {
+    if (rows.length === 0) {
+      return {
+        favoritePlayers: [],
+        followedBrands: [],
+        reverbRegion: 'SHIPS_TO_UK',
+        commandInputMode: 'text_and_voice',
+        personality: 'hank',
+      };
+    }
+
+    return {
+      favoritePlayers: rows[0].favorite_players || [],
+      followedBrands: rows[0].followed_brands || [],
+      reverbRegion: (rows[0].reverb_region as UserPreferences['reverbRegion']) || 'SHIPS_TO_UK',
+      commandInputMode: (rows[0].command_input_mode as UserPreferences['commandInputMode']) || 'text_and_voice',
+      personality: (rows[0].personality as PersonalityMode) || 'hank',
+    };
+  } catch (err) {
+    console.warn('[personalization] Unable to fetch user preferences from database, using defaults:', err);
     return {
       favoritePlayers: [],
       followedBrands: [],
@@ -54,14 +73,6 @@ export async function getUserPreferences(userId: string): Promise<UserPreference
       personality: 'hank',
     };
   }
-
-  return {
-    favoritePlayers: rows[0].favorite_players || [],
-    followedBrands: rows[0].followed_brands || [],
-    reverbRegion: (rows[0].reverb_region as UserPreferences['reverbRegion']) || 'SHIPS_TO_UK',
-    commandInputMode: (rows[0].command_input_mode as UserPreferences['commandInputMode']) || 'text_and_voice',
-    personality: (rows[0].personality as PersonalityMode) || 'hank',
-  };
 }
 
 /**

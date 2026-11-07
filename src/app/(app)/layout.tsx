@@ -3,6 +3,8 @@ import { CommandSheet } from '@/components/CommandSheet';
 import { getSession, DEV_ADMIN_USER } from '@/lib/session';
 import { getUserPreferences } from '@/lib/personalization';
 
+export const dynamic = 'force-dynamic';
+
 export default async function AppLayout({
   children,
 }: {
