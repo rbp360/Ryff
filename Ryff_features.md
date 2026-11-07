@@ -1,5 +1,43 @@
 # Ryff Feature Log
 
+## Feature: AURA Prestige Automotive 360° Interactive Telemetry Studio, Collector-Grade Parts Audit & Streamlined Sanctuary Upgrade
+- **Date:** November 7, 2026
+- **Category:** White-Label Re-Issue / 360° Interactive Vehicle Studio / Concours Provenance / Motorsport Telemetry & Maintenance Ledger
+- **Workspace Navigation:** [`/prestige`](file:///c:/Users/rob_b/Ryff/src/app/prestige/page.tsx) &bull; [`/prestige/[id]`](file:///c:/Users/rob_b/Ryff/src/app/prestige/%5Bid%5D/page.tsx) &bull; [`Car360WalkaroundStudio.tsx`](file:///c:/Users/rob_b/Ryff/src/components/prestige/Car360WalkaroundStudio.tsx) &bull; [`car-data.ts`](file:///c:/Users/rob_b/Ryff/src/lib/prestige/car-data.ts)
+
+### 1. User & Marketing Overview
+- **Streamlined Garage Landing with Car Cards Front & Centre ([`/prestige`](file:///c:/Users/rob_b/Ryff/src/app/prestige/page.tsx)):** Kept the main landing page clean and direct—displaying the collector's 3-car stable cards immediately without duplicating the 360° vector stage on the home screen. Each car card puts **Servicing & Parts** front and centre, showing the latest official dealer service stamp, replaced parts/fluids, installed OEM+ hardware (with OEM crate custody status), and key consumable health (ceramic rotor mass %, tyre heat cycles, and paint microns).
+- **Service & Parts Ledger as Default Passport View ([`/prestige/[id]`](file:///c:/Users/rob_b/Ryff/src/app/prestige/%5Bid%5D/page.tsx)):** Clicking any car card opens its dedicated Vehicle Passport directly onto the **Service & Parts Ledger** tab, accompanied by a sleek top vehicle identity card with live consumable health (Ceramic Rotor Mass, Tyre Heat Cycles, DME Over-Rev Hours, and Paint Depth/PPF).
+- **Dedicated 360° Walkaround Studio Tab ([`Car360WalkaroundStudio.tsx`](file:///c:/Users/rob_b/Ryff/src/components/prestige/Car360WalkaroundStudio.tsx)):** Housed the interactive 360° turntable walkaround inside its own dedicated `360° Walkaround Studio` tab inside each car's passport so it never clutters the primary maintenance workflow.
+- **360° Collector-Grade Parts & Provenance Audit:** Upgraded all vehicle specifications, parts, fluids, and diagnostic metrics to match what true high-net-worth supercar collectors and motorsport engineers demand:
+  - **Porsche 992 GT3 RS Weissach:** PIWIS 4 DME Over-Rev Ranges 1–6 readout (`0/0/0/0/0/0 ignitions` across `112.4` operating hours), Proceq Carboteq continuous-carbon rotor mass percentages (`FL 96% | FR 95% | RL 97% | RR 97%`) on Surface Transforms `ST-KIT-1042` discs with Pagid RSC1 pads, centre-lock wheel nut torque specs (`600 Nm` with Castrol Optimol Paste TA), Kline Innovation Inconel 625 exhaust (`KLN-992-GT3RS-INC`), Manthey 4-wheel optical alignment with kinematic toe and ride height rake (`98mm F / 122mm R`), and factory option build codes (`P70`, `450`, `56R`, `2UH`, `Q1K`).
+  - **Ferrari 488 Pista Tailor Made:** Ferrari DEIS electronic telemetry and CCM3 carbon-ceramic wear calculation (`92% front / 94% rear`), ultrasonic factory paint thickness verification (`132 µm` under Topaz Level 5 edge-wrapped PPF & Modesta BC-04), Novitec Rosso Inconel 200-cell sport catalysts with gold thermal shielding stored with dk Engineering custody, and Tailor Made commission codes (`TM01`, `CEFS`, `CEL2`, `4HAR`, `LOGO`).
+  - **McLaren 765LT Spider MSO (#142 of 765):** McLaren MDS2 diagnostic verification, Proactive Chassis Control II (PCC II) nitrogen accumulator pressures (`140.2 Bar` across all four corners with Pentosin CHF 202), McLaren Senna-spec CCM-R woven carbon-ceramic rotors (`95% mass`), Pirelli P-Zero Trofeo R (`MC2`) heat-cycle tracking (`Cycle 7/10`), and MSO Woking build codes (`MSO-CB`, `CFP-123`, `MSO-FN`, `SEN-ST`).
+- **Streamlined, Tight Sanctuary UX:** Consolidated redundant hero banners and tab clutter into a tight, high-contrast obsidian-and-champagne-gold interface. Replaced the 5-tab passport bar with a focused 4-tab layout (**Provenance & Component Telemetry**, **Service Ledger**, **OEM+ Modifications**, **Circuit Setups**) and added a live 4-card Consumable Health Matrix (DME Over-Rev, Ceramic Rotor Mass, Tyre Heat Cycles & DOT Code, and Paint Microns & PPF).
+- **High-Precision Maintenance Logging with 1-Tap Enthusiast Presets:** Upgraded the passport logging modal with structured engineering measurement fields (DME Over-Rev readout, rotor wear percentages, torque specs, master technician sign-off, invoice reference, OEM part storage crate location, and cold/hot tyre bleed windows) plus 1-tap authentic motorsport part and fluid chips.
+
+---
+
+### 2. Technical Details (For Developers)
+- **360° Interactive Studio Component ([`src/components/prestige/Car360WalkaroundStudio.tsx`](file:///c:/Users/rob_b/Ryff/src/components/prestige/Car360WalkaroundStudio.tsx)):**
+  - Built a zero-dependency interactive turntable using React pointer capture (`onPointerDown`, `onPointerMove`, `onPointerUp`) and trigonometric 3D CSS perspective transforms (`rotateX`, `rotateY`, `scaleX`) synchronized with custom multi-layer vector silhouettes (`gt3rs`, `pista`, `765lt`).
+  - Implemented 3 visual inspection modes (`studio`, `xray`, `aero`) and interactive parallax hotspot pins (`WalkaroundHotspot[]`) that snap the turntable to the component's inspection angle and display live telemetry metrics.
+- **Expanded Collector Data Schema ([`src/lib/prestige/car-data.ts`](file:///c:/Users/rob_b/Ryff/src/lib/prestige/car-data.ts)):**
+  - Added `ServiceSubItem`, `WalkaroundHotspot`, and `ConsumableTelemetry` interfaces to `PrestigeCar`.
+  - Added `engineNumber`, `paintCode`, `factoryOptions`, `consumables` (DME over-rev, carbon-ceramic wear per corner, tyre heat cycles & DOT codes, paint microns, CTEK vault conditioner & humidity), and `detailedMeasurements` on service records.
+- **Streamlined Sanctuary & Passport Views ([`src/app/prestige/page.tsx`](file:///c:/Users/rob_b/Ryff/src/app/prestige/page.tsx), [`src/app/prestige/[id]/CarPassportClient.tsx`](file:///c:/Users/rob_b/Ryff/src/app/prestige/%5Bid%5D/CarPassportClient.tsx), [`src/app/prestige/layout.tsx`](file:///c:/Users/rob_b/Ryff/src/app/prestige/layout.tsx)):**
+  - Integrated the live `Car360WalkaroundStudio` with a vehicle switcher directly onto `/prestige` and as the unified hero stage on `/prestige/[id]`.
+  - Added 1-tap enthusiast part presets (`ENTHUSIAST_SERVICE_PRESETS`, `ENTHUSIAST_MOD_PRESETS`) and structured diagnostic sub-items in `CarPassportClient.tsx`.
+  - Updated [`/prestige/track`](file:///c:/Users/rob_b/Ryff/src/app/prestige/track/page.tsx), [`/prestige/reminders`](file:///c:/Users/rob_b/Ryff/src/app/prestige/reminders/page.tsx), and [`/prestige/market`](file:///c:/Users/rob_b/Ryff/src/app/prestige/market/page.tsx) to surface kinematic toe, ride height rake, ceramic mass, heat cycles, and matching-numbers engine/VIN provenance.
+
+---
+
+### 3. White-Label & Domain-Agnostic Utility
+- **Interactive 360° Subsystem Inspection for Any High-Value Physical Asset:** The `Car360WalkaroundStudio` architecture (interactive turntable + X-Ray/Vector modes + pinned telemetry nodes) is directly reusable across other ultra-luxury or mission-critical white-label verticals—such as **Haute Horology** (inspecting tourbillon cages, mainspring torque, and caseback hallmarks), **Private Aviation & Yachts** (hull ultrasonic thickness, turbine hot-section hours, avionics bus health), or **Specialized Industrial / Medical Robotics** (joint actuator wear, calibration certificates, and preventative maintenance logs).
+- **Structured Consumable & Custody Ledger:** Separating reversible upgrades (with documented original OEM part storage locations) from sub-component wear telemetry (remaining mass %, heat cycles, diagnostic fault counters, and fastener torque verification) provides an institutional-grade audit trail that protects resale value across any collector or regulated asset class.
+
+---
+
 ## Feature: AURA Prestige Automotive Mockup Suite & White-Label Vehicle Passport
 - **Date:** November 6, 2026
 - **Category:** White-Label Re-Issue / Prestige Automotive / Digital Vehicle Passport / Provenance & Telemetry
