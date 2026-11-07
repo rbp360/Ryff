@@ -1,5 +1,49 @@
 # Ryff Feature Log
 
+## Feature: AURA Prestige Automotive Mockup Suite & White-Label Vehicle Passport
+- **Date:** November 6, 2026
+- **Category:** White-Label Re-Issue / Prestige Automotive / Digital Vehicle Passport / Provenance & Telemetry
+- **Workspace Navigation:** [`/prestige`](file:///c:/Users/rob_b/Ryff/src/app/prestige/page.tsx) &bull; [`/prestige/[id]`](file:///c:/Users/rob_b/Ryff/src/app/prestige/%5Bid%5D/page.tsx) &bull; [`/prestige/track`](file:///c:/Users/rob_b/Ryff/src/app/prestige/track/page.tsx) &bull; [`/prestige/reminders`](file:///c:/Users/rob_b/Ryff/src/app/prestige/reminders/page.tsx) &bull; [`/prestige/market`](file:///c:/Users/rob_b/Ryff/src/app/prestige/market/page.tsx)
+
+### 1. User & Marketing Overview
+- **Dedicated Prestige Automotive Mockup Experience:** Built an ultra-high-end UI mockup ("AURA") showcasing Ryff's architecture repurposed for prestige and collector supercars (Porsche 992 GT3 RS Weissach, Ferrari 488 Pista, McLaren 765LT Spider).
+- **Distraction-Free Collector Environment:** Completely removes the guitar newsfeed stream, Reverb wanted-list scrapers, and guitar debate bots in favor of an elite dark-mode gallery, asset ledger, and engineering cockpit accented in brushed gold, obsidian, and slate.
+- **Bespoke Vehicle Passport:** Each supercar has an interactive digital passport tracking verified main-dealer service records, DME over-rev / ECU health stamps, reversible modifications with stored OEM part status, circuit-specific telemetry setups, and component life alerts.
+- **Real-Time In-Browser Passport Logging:** Collectors can log new service entries, aftermarket modifications, and circuit telemetry profiles via interactive modal forms with instant state updates.
+- **Circuit Telemetry & Track Setup Profiles:** Logs circuit-specific tire pressures (cold vs hot target PSI), front/rear camber, damper bump/rebound clicks, active aero wing angles of attack, and lap time benchmarks across Silverstone GP, Spa Francorchamps, and Anglesey.
+- **Prestige Care & Component Life Reminders:** Proactive reminder center tracking time/mileage intervals for high-boiling point racing brake fluid (e.g., Castrol SRF), semi-slick tread depth (Cup 2 R / Trofeo R), ceramic disc wear, and factory warranty renewals.
+- **Portfolio Valuation & Provenance Index:** Tracks acquisition capital versus live collector market appraisal with an aggregate portfolio index and 99.2% provenance rating.
+
+---
+
+### 2. Technical Details (For Developers)
+- **Data Model & Types ([`src/lib/prestige/car-data.ts`](file:///c:/Users/rob_b/Ryff/src/lib/prestige/car-data.ts)):**
+  - Defined TypeScript interfaces for `PrestigeCar`, `ServiceRecord`, `ModificationRecord`, `TrackSetupProfile`, and `ReminderItem`.
+  - Populated comprehensive test dataset featuring three iconic prestige performance vehicles with detailed VINs, factory specs, and real-world track setup geometries.
+- **Dedicated Prestige Layout & Navigation ([`src/app/prestige/layout.tsx`](file:///c:/Users/rob_b/Ryff/src/app/prestige/layout.tsx), [`src/components/prestige/PrestigeNav.tsx`](file:///c:/Users/rob_b/Ryff/src/components/prestige/PrestigeNav.tsx)):**
+  - Independent layout container bypassing the guitar newsfeed and bot widgets, equipped with a top vault header, quick switchers, and a bottom gold-accented navigation bar.
+- **Fleet Showcase & Overview ([`src/app/prestige/page.tsx`](file:///c:/Users/rob_b/Ryff/src/app/prestige/page.tsx)):**
+  - Renders the collector's stable with key metrics (Total Fleet Value, Combined BHP, urgent maintenance action alerts, and individual vehicle cards).
+- **Interactive Passport Client ([`src/app/prestige/[id]/CarPassportClient.tsx`](file:///c:/Users/rob_b/Ryff/src/app/prestige/%5Bid%5D/CarPassportClient.tsx), [`src/app/prestige/[id]/page.tsx`](file:///c:/Users/rob_b/Ryff/src/app/prestige/%5Bid%5D/page.tsx)):**
+  - Tabbed interface (`overview`, `services`, `modifications`, `track`, `reminders`).
+  - Interactive client-side logging modal permitting instant addition of verified service stamps, modifications, and circuit telemetry records.
+- **Reminders & Track Dedicated Pages ([`src/app/prestige/reminders/page.tsx`](file:///c:/Users/rob_b/Ryff/src/app/prestige/reminders/page.tsx), [`src/app/prestige/track/page.tsx`](file:///c:/Users/rob_b/Ryff/src/app/prestige/track/page.tsx), [`src/app/prestige/market/page.tsx`](file:///c:/Users/rob_b/Ryff/src/app/prestige/market/page.tsx)):**
+  - Aggregated views for fleet-wide component life monitoring, multi-circuit telemetry benchmarks, and secondary market valuation breakdowns.
+
+---
+
+### 3. White-Label & Domain-Agnostic Utility
+- **Proof-of-Concept for High-Value Asset Management:** Demonstrates how Ryff's core asset-logging and maintenance architecture cleanly maps from musical instruments to luxury automotive stables, horology collections, private aviation, or marine yachts.
+- **Domain Transformation of Intervals & Setups:**
+  - Guitar Restring Intervals &rarr; Track Brake Fluid Flushes & Semi-Slick Heat Cycles.
+  - Guitar Pickups & Amp Settings &rarr; Exhaust Downpipes, Dyno Maps, and Active Aero / Damper Clicks.
+  - Reverb Wanted Scrapers &rarr; Auction House & Provenance Valuation Index (RM Sotheby’s, Collecting Cars).
+  - Guitar Bots & Newsfeed &rarr; Stripped away to create an ultra-exclusive private owner vault experience.
+
+---
+
+
+
 ## Feature: Rig Room Voice Speech-to-Text, Real-Time Audio Equalizer & Smart Fuzzy Gear Resolution
 - **Date:** October 17, 2026
 - **Category:** Voice Input / Speech-to-Text / Audio Signal Feedback / Gear Resolution & Command Routing

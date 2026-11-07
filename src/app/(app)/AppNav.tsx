@@ -9,6 +9,7 @@ const NAV_ITEMS = [
   { href: '/backstage', icon: '♫', label: 'Backstage' },
   { href: '/trader', icon: '◎', label: 'Trader' },
   { href: '/rig', icon: '◈', label: 'Rig Passport' },
+  { href: '/prestige', icon: '✦', label: 'Car Stable' },
 ];
 
 export function AppNav() {
