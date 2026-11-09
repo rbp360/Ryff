@@ -1,5 +1,35 @@
 # Ryff Feature Log
 
+## Feature: Frictionless Email Sign-In & Deferred Bot Save Onboarding Flow
+- **Date:** November 9, 2026
+- **Category:** Authentication / User Onboarding / Deferred Registration / Bot Persistence
+
+### 1. User & Marketing Overview
+- **Frictionless "Build First, Save Later" Bot Onboarding:** Visitors can now dive straight into the Bot Creation Studio (`/onboarding/bot`) without being blocked by an upfront registration or invite-code wall. They can write their musician manifesto, tweak gear biases, and compile their custom bot persona with Gemini AI completely friction-free.
+- **Save & Spar Prompt Modal:** Only when the user is delighted with their compiled bot and clicks *"Approve & Spar in Backstage"*, the app prompts them for their email to save their companion. No password is required for test access; entering their email instantly creates their profile, saves the bot to their permanent roster in Neon PostgreSQL, and launches them directly into Backstage sparring.
+- **Streamlined Email-Only Sign In:** Updated the main sign-in page (`/login`) so users can sign in or register with just their email. Invite codes are now optional for testing, allowing rapid user evaluation and multi-device bot recovery.
+
+---
+
+### 2. Technical Details (For Developers)
+- **Frictionless Email Authentication Endpoint ([`src/app/api/auth/route.ts`](file:///c:/Users/rob_b/Ryff/src/app/api/auth/route.ts)):**
+  - Added `GET /api/auth` to inspect active session state (`{ authenticated: boolean, user: UserSession | null }`).
+  - Updated `POST /api/auth` to support passwordless email-only authentication when no `inviteCode` is supplied: queries `users` by normalized email, creates a new cadre user on the fly if not found, logs the `signup` event, and issues a 30-day signed JWT `guitarbot_session` cookie.
+  - Preserved invite code validation when an invite code is explicitly entered.
+- **Deferred Save Modal in Bot Studio ([`src/app/onboarding/bot/page.tsx`](file:///c:/Users/rob_b/Ryff/src/app/onboarding/bot/page.tsx)):**
+  - Added `useEffect` checking `/api/auth` status on mount.
+  - Refactored `handleSaveAndSpar`: if the user is unauthenticated, opens a blurred modal prompt asking for their email to save the bot.
+  - Submitting the modal authenticates via `/api/auth`, automatically invokes `executeSave` to store the custom bot in `user_bots`, updates `localStorage`, and routes to `/backstage?bot=[botId]`.
+- **Login Page Simplification ([`src/app/login/page.tsx`](file:///c:/Users/rob_b/Ryff/src/app/login/page.tsx)):**
+  - Made the `inviteCode` input field optional, updated copy to reflect email-first sign-in, and defaulted adult/consent flags for testing convenience.
+
+---
+
+### 3. White-Label & Domain-Agnostic Utility
+- **"Taste Before Commitment" Value Hook:** Across any white-label vertical (e.g. tuning a race car suspension advisor, creating an artisan coffee roasting coach, designing a bespoke horology advisor), forcing users through a registration form before they see value drastically degrades conversion. Letting users experience the AI compiler first and capturing their email only when saving high-value user-created assets maximizes adoption and user retention.
+
+---
+
 ## Feature: Custom Bot Onboarding End-to-End & Database UUID Schema Alignment
 - **Date:** November 9, 2026
 - **Category:** Bot Onboarding / Persona Architecture / Database Schema Alignment / Deployment Reliability

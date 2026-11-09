@@ -8,8 +8,8 @@ export default function LoginPage() {
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [inviteCode, setInviteCode] = useState('');
-  const [isAdult, setIsAdult] = useState(false);
-  const [consent, setConsent] = useState(false);
+  const [isAdult, setIsAdult] = useState(true);
+  const [consent, setConsent] = useState(true);
   const [ukResident, setUkResident] = useState(true);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -72,7 +72,7 @@ export default function LoginPage() {
             className="w-12 h-12 rounded-xl object-cover border border-emerald-500/30 mb-2 shadow-lg inline-block"
           />
           <h1 className="text-2xl font-bold text-white tracking-tight">Sign In to RYFF</h1>
-          <p className="text-sm text-slate-400">Enter your private invite code to access Hank & Vee</p>
+          <p className="text-sm text-slate-400">Sign in with your email to access Backstage, Rig Room &amp; custom bots</p>
         </div>
 
         {error && (
@@ -95,13 +95,15 @@ export default function LoginPage() {
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-400 mb-1 uppercase tracking-wider">Invite Code</label>
+            <div className="flex items-center justify-between mb-1">
+              <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider">Invite Code</label>
+              <span className="text-[10px] text-slate-500 font-mono">Optional</span>
+            </div>
             <input
               type="text"
-              required
               value={inviteCode}
               onChange={(e) => setInviteCode(e.target.value.toUpperCase())}
-              placeholder="CADRE-XXXX"
+              placeholder="CADRE-XXXX (Optional for testing)"
               className="w-full bg-slate-950 border border-slate-800 rounded-lg px-4 py-2.5 text-slate-200 text-sm focus:outline-none focus:border-cyan-500 uppercase font-mono tracking-wider transition"
             />
           </div>
@@ -147,7 +149,7 @@ export default function LoginPage() {
             disabled={loading}
             className="w-full bg-cyan-600 hover:bg-cyan-500 disabled:opacity-50 text-white font-medium py-2.5 rounded-lg text-sm transition shadow-md cursor-pointer"
           >
-            {loading ? 'Authenticating...' : 'Sign In'}
+            {loading ? 'Authenticating...' : 'Sign In with Email →'}
           </button>
         </form>
 

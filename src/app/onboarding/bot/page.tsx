@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { BotDossier } from '@/types/bot';
@@ -73,6 +73,32 @@ export default function BotStudioPage() {
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // Authentication & Save-Prompt State
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
+  const [showSaveModal, setShowSaveModal] = useState(false);
+  const [userEmail, setUserEmail] = useState('');
+  const [saveModalError, setSaveModalError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let ignore = false;
+    fetch('/api/auth')
+      .then((res) => res.json())
+      .then((data) => {
+        if (!ignore) {
+          setIsAuthenticated(Boolean(data?.authenticated));
+          if (data?.user?.email) {
+            setUserEmail(data.user.email);
+          }
+        }
+      })
+      .catch(() => {
+        if (!ignore) setIsAuthenticated(false);
+      });
+    return () => {
+      ignore = true;
+    };
+  }, []);
+
   // Word count for manifesto
   const wordCount = manifesto.trim() ? manifesto.trim().split(/\s+/).length : 0;
 
@@ -126,8 +152,7 @@ export default function BotStudioPage() {
     }
   }
 
-  async function handleSaveAndSpar() {
-    if (!compiledDossier) return;
+  async function executeSave(dossier: BotDossier) {
     setIsSaving(true);
     setError(null);
 
@@ -135,15 +160,20 @@ export default function BotStudioPage() {
       const res = await fetch('/api/persona', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ dossier: compiledDossier }),
+        body: JSON.stringify({ dossier }),
       });
 
       const data = await res.json();
       if (!res.ok) {
+        if (res.status === 401) {
+          setIsAuthenticated(false);
+          setShowSaveModal(true);
+          return;
+        }
         throw new Error(data.error || 'Failed to save custom bot');
       }
 
-      const savedBot = data.bot || compiledDossier;
+      const savedBot = data.bot || dossier;
       // Store in localStorage as active companion fallback
       try {
         localStorage.setItem('ryff_user_bot', JSON.stringify(savedBot));
@@ -154,6 +184,51 @@ export default function BotStudioPage() {
       router.push(`/backstage?bot=${savedBot.id}`);
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Error saving bot');
+    } finally {
+      setIsSaving(false);
+    }
+  }
+
+  async function handleSaveAndSpar() {
+    if (!compiledDossier) return;
+    setError(null);
+
+    // If unauthenticated or unknown, prompt to save with email
+    if (!isAuthenticated) {
+      setShowSaveModal(true);
+      return;
+    }
+
+    await executeSave(compiledDossier);
+  }
+
+  async function handleModalSave(e: React.FormEvent) {
+    e.preventDefault();
+    if (!compiledDossier) return;
+    if (!userEmail.trim()) {
+      setSaveModalError('Please enter a valid email address.');
+      return;
+    }
+
+    setIsSaving(true);
+    setSaveModalError(null);
+
+    try {
+      const authRes = await fetch('/api/auth', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: userEmail.trim() }),
+      });
+      const authData = await authRes.json();
+      if (!authRes.ok) {
+        throw new Error(authData.error || 'Sign in failed');
+      }
+
+      setIsAuthenticated(true);
+      setShowSaveModal(false);
+      await executeSave(compiledDossier);
+    } catch (err: unknown) {
+      setSaveModalError(err instanceof Error ? err.message : 'Failed to sign in and save bot');
       setIsSaving(false);
     }
   }
@@ -753,6 +828,159 @@ export default function BotStudioPage() {
           )}
         </div>
       </main>
+
+      {/* Save Bot & Sign-in Modal */}
+      {showSaveModal && compiledDossier && (
+        <div
+          style={{
+            position: 'fixed',
+            inset: 0,
+            background: 'rgba(0, 0, 0, 0.82)',
+            backdropFilter: 'blur(10px)',
+            zIndex: 100,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '20px',
+          }}
+          onClick={(e) => {
+            if (e.target === e.currentTarget && !isSaving) setShowSaveModal(false);
+          }}
+        >
+          <div
+            style={{
+              width: '100%',
+              maxWidth: '460px',
+              background: '#0c0f14',
+              border: '1px solid rgba(34, 197, 94, 0.35)',
+              borderRadius: '16px',
+              padding: '28px',
+              boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.9), 0 0 30px rgba(34, 197, 94, 0.15)',
+              position: 'relative',
+            }}
+          >
+            <div style={{ textAlign: 'center', marginBottom: '20px' }}>
+              <div
+                style={{
+                  width: '48px',
+                  height: '48px',
+                  borderRadius: '12px',
+                  background: 'rgba(34, 197, 94, 0.12)',
+                  border: '1px solid rgba(34, 197, 94, 0.3)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '24px',
+                  margin: '0 auto 12px',
+                }}
+              >
+                🎸
+              </div>
+              <h2 style={{ fontSize: '20px', fontWeight: 900, color: '#fff', margin: '0 0 6px' }}>
+                Save {compiledDossier.name}
+              </h2>
+              <p style={{ fontSize: '12px', color: 'var(--mu)', lineHeight: 1.5, margin: 0 }}>
+                Enter your email address to save your custom companion to your roster and unlock Backstage sparring.
+              </p>
+            </div>
+
+            {saveModalError && (
+              <div
+                style={{
+                  padding: '10px 12px',
+                  background: 'rgba(239, 68, 68, 0.15)',
+                  border: '1px solid rgba(239, 68, 68, 0.35)',
+                  borderRadius: '8px',
+                  fontSize: '12px',
+                  color: '#fca5a5',
+                  marginBottom: '16px',
+                }}
+              >
+                {saveModalError}
+              </div>
+            )}
+
+            <form onSubmit={handleModalSave} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+              <div>
+                <label
+                  style={{
+                    display: 'block',
+                    fontSize: '11px',
+                    fontWeight: 700,
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.05em',
+                    color: 'var(--mu)',
+                    marginBottom: '6px',
+                  }}
+                >
+                  Your Email Address
+                </label>
+                <input
+                  type="email"
+                  required
+                  autoFocus
+                  value={userEmail}
+                  onChange={(e) => setUserEmail(e.target.value)}
+                  placeholder="you@example.com"
+                  style={{
+                    width: '100%',
+                    background: '#05070a',
+                    border: '1px solid var(--ln)',
+                    borderRadius: '10px',
+                    padding: '12px 14px',
+                    color: '#fff',
+                    fontSize: '14px',
+                    outline: 'none',
+                    boxSizing: 'border-box',
+                  }}
+                />
+              </div>
+
+              <button
+                type="submit"
+                disabled={isSaving}
+                style={{
+                  width: '100%',
+                  background: 'var(--ac)',
+                  color: '#000',
+                  border: 'none',
+                  borderRadius: '10px',
+                  padding: '13px',
+                  fontSize: '14px',
+                  fontWeight: 900,
+                  cursor: isSaving ? 'not-allowed' : 'pointer',
+                  opacity: isSaving ? 0.7 : 1,
+                  boxShadow: '0 4px 14px rgba(34, 197, 94, 0.3)',
+                }}
+              >
+                {isSaving ? 'Saving & Opening Backstage...' : `Save & Spar with ${compiledDossier.name} →`}
+              </button>
+
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '6px' }}>
+                <span style={{ fontSize: '11px', color: 'var(--mu)' }}>
+                  No password needed. Re-enter email anytime.
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setShowSaveModal(false)}
+                  disabled={isSaving}
+                  style={{
+                    background: 'none',
+                    border: 'none',
+                    color: 'var(--mu)',
+                    fontSize: '11px',
+                    fontWeight: 700,
+                    cursor: 'pointer',
+                    textDecoration: 'underline',
+                  }}
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
