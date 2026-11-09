@@ -1,5 +1,34 @@
 # Ryff Feature Log
 
+## Feature: Custom Bot Onboarding End-to-End & Database UUID Schema Alignment
+- **Date:** November 9, 2026
+- **Category:** Bot Onboarding / Persona Architecture / Database Schema Alignment / Deployment Reliability
+
+### 1. User & Marketing Overview
+- **Self-Serve Custom Companion Onboarding ("The Barstool Audition"):** Users can now complete the entire onboarding journey from signup to custom bot creation seamlessly on the live deployment. After entering their invite code and setting up their rig, musicians can launch the Bot Creation Studio (`/onboarding/bot`), craft a custom AI companion by providing a ~100-word player manifesto and answering gear affinity questions, and immediately start sparring in Backstage.
+- **AI-Compiled Authentic Sparring Personas:** Gemini extracts hardware biases, calculates behavioral dials (temperature 0.3–0.85, disagreement rate 20–45%), derives custom slang, sets forbidden clichés, and generates authentic technical argument lines anchored in physical audio reality.
+- **Instant Backstage Handoff:** Once approved, the custom bot is immediately persisted to the user's active profile in the database, registered in the runtime cache, saved to local storage, and loaded as the primary sparring partner in Backstage chat.
+
+---
+
+### 2. Technical Details (For Developers)
+- **Database UUID Schema Alignment ([`src/app/api/persona/generate/route.ts`](file:///c:/Users/rob_b/Ryff/src/app/api/persona/generate/route.ts), [`src/app/api/persona/route.ts`](file:///c:/Users/rob_b/Ryff/src/app/api/persona/route.ts)):**
+  - Resolved a PostgreSQL error (`invalid input syntax for type uuid: "user_..."`) where `POST /api/persona/generate` previously generated timestamp-prefixed string IDs, while the Neon PostgreSQL `user_bots` table defines `id UUID PRIMARY KEY`.
+  - Replaced legacy string slug generation in `generate/route.ts` with `crypto.randomUUID()`.
+  - Added strict UUID validation (`isValidUuid`) and `randomUUID()` fallback in `POST /api/persona`.
+  - Ensured structured JSON insertion into PostgreSQL with `db.json(dossier as any)` to prevent double-stringification.
+- **Defensive JSON Parsing for Bot Dossiers ([`src/app/api/persona/route.ts`](file:///c:/Users/rob_b/Ryff/src/app/api/persona/route.ts), [`src/app/api/chat/route.ts`](file:///c:/Users/rob_b/Ryff/src/app/api/chat/route.ts), [`src/app/(app)/digest/page.tsx`](file:///c:/Users/rob_b/Ryff/src/app/(app)/digest/page.tsx)):**
+  - Added safe deserialization checks (`typeof raw === 'string' ? JSON.parse(raw) : raw`) across all routes reading `user_bots.dossier`, ensuring that dynamic custom bots always resolve to complete `BotDossier` objects.
+- **Client-Side Handoff Synchronization ([`src/app/onboarding/bot/page.tsx`](file:///c:/Users/rob_b/Ryff/src/app/onboarding/bot/page.tsx)):**
+  - Updated `handleSaveAndSpar` to receive the confirmed `data.bot` object from the server response, synchronize `localStorage.setItem('ryff_user_bot', ...)`, and redirect cleanly to `/backstage?bot=${savedBot.id}`.
+
+---
+
+### 3. White-Label & Domain-Agnostic Utility
+- **Domain-Agnostic Companion Compiler & Schema Portability:** Any white-label vertical requiring user-generated sparring bots (e.g., classic car restoration mechanics, horology watchmakers, running shoe fitters, cycling equipment tuners) can reuse this questionnaire-to-LLM-compiler pipeline. Ensuring strict UUID typing and defensive JSON deserialization allows the bot onboarding lifecycle to be deployed safely on any relational SQL backend (PostgreSQL, Supabase, Neon) without data conversion errors.
+
+---
+
 ## Feature: Rig Room Voice Speech-to-Text, Real-Time Audio Equalizer & Smart Fuzzy Gear Resolution
 - **Date:** October 17, 2026
 - **Category:** Voice Input / Speech-to-Text / Audio Signal Feedback / Gear Resolution & Command Routing

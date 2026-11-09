@@ -39,11 +39,12 @@ export async function GET(request: NextRequest) {
   let bot = getBot(botParam);
   if (bot.id !== botParam && botParam !== 'robbpaul') {
     try {
-      const userBotRows = await db<{ dossier: BotDossier }[]>`
+      const userBotRows = await db<{ dossier: BotDossier | string }[]>`
         select dossier from user_bots where id::text = ${botParam} or (user_id = ${session.userId} and is_active = true) limit 1
       `;
       if (userBotRows.length > 0) {
-        bot = userBotRows[0].dossier;
+        const raw = userBotRows[0].dossier;
+        bot = typeof raw === 'string' ? JSON.parse(raw) : raw;
       }
     } catch {
       // fallback to resolved bot
@@ -94,11 +95,12 @@ export async function POST(request: NextRequest) {
     let targetBot = getBot(requestedId);
     if (targetBot.id !== requestedId && requestedId !== 'robbpaul') {
       try {
-        const userBotRows = await db<{ dossier: BotDossier }[]>`
+        const userBotRows = await db<{ dossier: BotDossier | string }[]>`
           select dossier from user_bots where id::text = ${requestedId} or (user_id = ${session.userId} and is_active = true) limit 1
         `;
         if (userBotRows.length > 0) {
-          targetBot = userBotRows[0].dossier;
+          const raw = userBotRows[0].dossier;
+          targetBot = typeof raw === 'string' ? JSON.parse(raw) : raw;
         }
       } catch {
         // fallback to default

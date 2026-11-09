@@ -143,14 +143,15 @@ export default function BotStudioPage() {
         throw new Error(data.error || 'Failed to save custom bot');
       }
 
+      const savedBot = data.bot || compiledDossier;
       // Store in localStorage as active companion fallback
       try {
-        localStorage.setItem('ryff_user_bot', JSON.stringify(compiledDossier));
+        localStorage.setItem('ryff_user_bot', JSON.stringify(savedBot));
       } catch {
         // ignore storage errors
       }
 
-      router.push(`/backstage?bot=${compiledDossier.id}`);
+      router.push(`/backstage?bot=${savedBot.id}`);
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Error saving bot');
       setIsSaving(false);

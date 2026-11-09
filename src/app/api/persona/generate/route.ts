@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { randomUUID } from 'crypto';
 import { complete } from '@/lib/llm';
 import { env } from '@/lib/env';
 import { BotDossier } from '@/types/bot';
@@ -102,7 +103,7 @@ Return ONLY a valid, parseable JSON object matching this schema with no markdown
       }
     }
 
-    const botId = `user_${Date.now().toString(36)}_${Math.random().toString(36).substring(2, 6)}`;
+    const botId = randomUUID();
     const finalName = parsedDossier.name || name || 'My Companion';
     const initials = finalName
       .split(' ')

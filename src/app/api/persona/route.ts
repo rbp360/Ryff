@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { randomUUID } from 'crypto';
 import { db } from '@/lib/db';
 import { getSession, ensureUserExists } from '@/lib/session';
 import { registerCustomBot, getBot } from '@/lib/bots';
@@ -37,7 +38,8 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ bot: null });
     }
 
-    const userBot = rows[0].dossier;
+    const rawBot = rows[0].dossier;
+    const userBot: BotDossier = typeof rawBot === 'string' ? JSON.parse(rawBot) : rawBot;
     registerCustomBot(userBot);
 
     return NextResponse.json({ bot: userBot });
@@ -63,6 +65,15 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Invalid dossier payload' }, { status: 400 });
     }
 
+    // Ensure valid UUID for user_bots table
+    const isValidUuid = (id?: string) =>
+      typeof id === 'string' &&
+      /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(id);
+
+    const botId = isValidUuid(dossier.id) ? dossier.id : randomUUID();
+    dossier.id = botId;
+    dossier.isUserProxy = true;
+
     // Deactivate previous custom bots for this user
     await db`
       update user_bots
@@ -71,17 +82,13 @@ export async function POST(request: NextRequest) {
     `;
 
     // Insert new active custom bot
-    const botId = dossier.id || `user_${Date.now().toString(36)}`;
-    dossier.id = botId;
-    dossier.isUserProxy = true;
-
     await db`
       insert into user_bots (id, user_id, name, dossier, is_active, created_at, updated_at)
       values (
         ${botId},
         ${session.userId},
         ${dossier.name},
-        ${JSON.stringify(dossier)},
+        ${db.json(dossier as any)},
         true,
         now(),
         now()

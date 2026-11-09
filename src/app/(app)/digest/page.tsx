@@ -35,7 +35,8 @@ export default async function DigestPage() {
 
   let activeBot: BotDossier;
   if (userBotRows.length > 0 && userBotRows[0]?.dossier) {
-    activeBot = userBotRows[0].dossier;
+    const raw = userBotRows[0].dossier;
+    activeBot = typeof raw === 'string' ? JSON.parse(raw) : raw;
   } else if (
     userPreferences?.personality &&
     userPreferences.personality !== 'hank' &&
